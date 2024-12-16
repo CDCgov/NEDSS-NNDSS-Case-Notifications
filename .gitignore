@@ -4,12 +4,20 @@
 # Ignore Gradle build output directory
 build
 
+.idea
+.vscode
 
 /data-extract-service/build
 /data-extract-service/.gradle
+/data-extract-service/.idea
+/data-extract-service/.vscode
 
 /std-processor-service/build
 /std-processor-service/.gradle
+/std-processor-service/.idea
+/std-processor-service/.vscode
 
 /non-std-processor-service/build
 /non-std-processor-service/.gradle
+/non-std-processor-service/.idea
+/non-std-processor-service/.vscode

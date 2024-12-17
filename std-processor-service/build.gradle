@@ -14,6 +14,7 @@ java {
 }
 
 configurations {
+    jaxb
     compileOnly {
         extendsFrom annotationProcessor
     }
@@ -24,17 +25,46 @@ repositories {
 }
 
 dependencies {
-//    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.apache.kafka:kafka-streams'
     implementation 'org.springframework.kafka:spring-kafka'
+    implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.0'
+    implementation 'com.microsoft.sqlserver:mssql-jdbc:12.8.1.jre11'
+    implementation 'com.zaxxer:HikariCP:5.1.0'
+
+    runtimeOnly 'org.glassfish.jaxb:jaxb-runtime:4.0.2'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.kafka:spring-kafka-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    jaxb 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.0'
+    jaxb 'org.glassfish.jaxb:jaxb-xjc:4.0.2'
 }
 
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+
+task jaxb {
+    System.setProperty('javax.xml.accessExternalSchema', 'all')
+    def jaxbTargetDir = file("src/main/java")
+    doLast {
+        jaxbTargetDir.mkdirs()
+        ant.taskdef(
+                name: 'xjc',
+                classname: 'com.sun.tools.xjc.XJCTask',
+                classpath: configurations.jaxb.asPath
+        )
+        ant.jaxbTargetDir = jaxbTargetDir
+        ant.xjc(
+                destdir: '${jaxbTargetDir}',
+                package: 'gov.cdc.stdprocessorservice.model.generated.jaxb',
+                schema: 'src/main/resources/xsd/message.xsd'
+        )
+    }
+}
+
+compileJava.dependsOn jaxb

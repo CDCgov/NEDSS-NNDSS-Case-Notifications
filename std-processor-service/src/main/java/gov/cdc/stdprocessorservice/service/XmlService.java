@@ -1,7 +1,7 @@
 package gov.cdc.stdprocessorservice.service;
 
 import gov.cdc.stdprocessorservice.model.generated.jaxb.NBSNNDIntermediaryMessage;
-import gov.cdc.stdprocessorservice.repository.CNTraportqOutRepository;
+import gov.cdc.stdprocessorservice.repository.odse.CNTraportqOutRepository;
 import jakarta.annotation.PostConstruct;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;

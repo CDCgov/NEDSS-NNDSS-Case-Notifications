@@ -1,8 +1,8 @@
 package gov.cdc.stdprocessorservice.service;
 
 import gov.cdc.stdprocessorservice.model.generated.jaxb.NBSNNDIntermediaryMessage;
-import gov.cdc.stdprocessorservice.repository.LookupMmwrRepository;
-import gov.cdc.stdprocessorservice.repository.LookupNNDLookupRepository;
+import gov.cdc.stdprocessorservice.repository.odse.LookupMmwrRepository;
+import gov.cdc.stdprocessorservice.repository.odse.LookupNNDLookupRepository;
 import org.springframework.stereotype.Service;
 
 @Service

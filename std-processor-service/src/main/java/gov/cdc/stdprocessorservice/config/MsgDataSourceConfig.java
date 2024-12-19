@@ -22,17 +22,17 @@ import java.util.HashMap;
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(
-        entityManagerFactoryRef = "odseEntityManagerFactory",
-        transactionManagerRef = "odseTransactionManager",
+        entityManagerFactoryRef = "msgEntityManagerFactory",
+        transactionManagerRef = "msgTransactionManager",
         basePackages = {
-                "gov.cdc.stdprocessorservice.repository.odse",
+                "gov.cdc.stdprocessorservice.repository.msg",
         }
 )
-public class OdseDataSourceConfig {
+public class MsgDataSourceConfig {
     @Value("${spring.datasource.driverClassName}")
     private String driverClassName;
 
-    @Value("${spring.datasource.odse.url}")
+    @Value("${spring.datasource.msg.url}")
     private String dbUrl;
 
     @Value("${spring.datasource.username}")
@@ -41,8 +41,8 @@ public class OdseDataSourceConfig {
     @Value("${spring.datasource.password}")
     private String dbUserPassword;
 
-    @Bean(name = "odseDataSource")
-    public DataSource odseDataSource() {
+    @Bean(name = "msgDataSource")
+    public DataSource msgDataSource() {
         DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
 
         dataSourceBuilder.driverClassName(driverClassName);
@@ -53,26 +53,26 @@ public class OdseDataSourceConfig {
         return dataSourceBuilder.build();
     }
 
-    @Bean(name = "odseEntityManagerFactoryBuilder")
-    public EntityManagerFactoryBuilder odseEntityManagerFactoryBuilder() {
+    @Bean(name = "msgEntityManagerFactoryBuilder")
+    public EntityManagerFactoryBuilder msgEntityManagerFactoryBuilder() {
         return new EntityManagerFactoryBuilder(new HibernateJpaVendorAdapter(), new HashMap<>(), null);
     }
 
-    @Bean(name = "odseEntityManagerFactory")
-    public LocalContainerEntityManagerFactoryBean odseEntityManagerFactory(
-            EntityManagerFactoryBuilder odseEntityManagerFactoryBuilder,
-            @Qualifier("odseDataSource") DataSource odseDataSource) {
-        return odseEntityManagerFactoryBuilder
-                .dataSource(odseDataSource)
-                .packages("gov.cdc.stdprocessorservice.repository.odse")
-                .persistenceUnit("odse")
+    @Bean(name = "msgEntityManagerFactory")
+    public LocalContainerEntityManagerFactoryBean msgEntityManagerFactory(
+            EntityManagerFactoryBuilder msgEntityManagerFactoryBuilder,
+            @Qualifier("msgDataSource") DataSource msgDataSource) {
+        return msgEntityManagerFactoryBuilder
+                .dataSource(msgDataSource)
+                .packages("gov.cdc.stdprocessorservice.repository.msg")
+                .persistenceUnit("msg")
                 .build();
     }
 
     @Primary
-    @Bean(name = "odseTransactionManager")
-    public PlatformTransactionManager odseTransactionManager(
-            @Qualifier("odseEntityManagerFactory") EntityManagerFactory odseEntityManagerFactory) {
-        return new JpaTransactionManager(odseEntityManagerFactory);
+    @Bean(name = "msgTransactionManager")
+    public PlatformTransactionManager msgTransactionManager(
+            @Qualifier("msgEntityManagerFactory") EntityManagerFactory msgEntityManagerFactory) {
+        return new JpaTransactionManager(msgEntityManagerFactory);
     }
 }

@@ -1,12 +1,24 @@
 package gov.cdc.stdprocessorservice.service;
 
 import gov.cdc.stdprocessorservice.model.generated.jaxb.NBSNNDIntermediaryMessage;
+import gov.cdc.stdprocessorservice.repository.LookupMmwrRepository;
+import gov.cdc.stdprocessorservice.repository.LookupNNDLookupRepository;
 import org.springframework.stereotype.Service;
 
 @Service
 public class MapperUtilService {
-    public void mapToCodedAnswer() {
-        // Lookup table
+    private final LookupNNDLookupRepository lookupNNDLookupRepository;
+    private final LookupMmwrRepository lookupMmwrRepository;
+
+    public MapperUtilService(LookupNNDLookupRepository lookupNNDLookupRepository, LookupMmwrRepository lookupMmwrRepository) {
+        this.lookupNNDLookupRepository = lookupNNDLookupRepository;
+        this.lookupMmwrRepository = lookupMmwrRepository;
+    }
+
+    public String mapToCodedAnswer(String intput, String questionCode) {
+        // RHAPSODY LOOK UP: output, tablename, result col name, default value, query col X, query value X
+        String result = lookupNNDLookupRepository.findToCodeByFromUniqueIdAndConceptCd(questionCode, intput);
+        return result;
     }
 
     public String mapToData(NBSNNDIntermediaryMessage.MessageElement.DataElement input) {
@@ -57,6 +69,8 @@ public class MapperUtilService {
 
     public String mapToDate(String week, String year, String output) {
         boolean result1 =true; //= RhapsodyTableLookup(output,"MMWR","WEEK_ENDING","NOT_MAPPED","MMWR_WEEK",week, "MMWR_YEAR", StrToUpper(year) );
+
+        output = String.valueOf(lookupMmwrRepository.findTopWeekEndingByMmwrWeekAndMmwrYear(Integer.valueOf(week), Integer.valueOf(year)));
         if (output.trim().isEmpty() || (week.equalsIgnoreCase("NULL") && year.equalsIgnoreCase("NULL"))) {
             output = "";
         }
@@ -105,11 +119,13 @@ public class MapperUtilService {
     public String mapToMultiCodedAnswer(String input, String questionCode, String toUniqueId, String output) {
         if(output.startsWith("CHECKER"))
         {
-            boolean result  = true; //RhapsodyTableLookup(output,"NNDLookup","TO_UNIQUE_ID","NOT_MAPPED","FROM_UNIQUE_ID",questionCode, "CONCEPT_CD", StrToUpper(input) );
+//            boolean result  = true; //RhapsodyTableLookup(output,"NNDLookup","TO_UNIQUE_ID","NOT_MAPPED","FROM_UNIQUE_ID",questionCode, "CONCEPT_CD", StrToUpper(input) );
+            output = lookupNNDLookupRepository.findToCodeByFromUniqueIdAndConceptCd(questionCode, input);
         }
         else{
 
-            boolean result1  = true; //RhapsodyTableLookup(output,"NNDLookup","TO_CODE","NOT_MAPPED","FROM_UNIQUE_ID",questionCode, "TO_UNIQUE_ID", toUniqueId, "CONCEPT_CD", StrToUpper(input) );
+           // boolean result1  = true; //RhapsodyTableLookup(output,"NNDLookup","TO_CODE","NOT_MAPPED","FROM_UNIQUE_ID",questionCode, "TO_UNIQUE_ID", toUniqueId, "CONCEPT_CD", StrToUpper(input) );
+            output = lookupNNDLookupRepository.findToCodeByFromUniqueIdToUniqueIdAndConceptCd(questionCode, toUniqueId, input);
             if (output.trim().isEmpty() || input.startsWith("NULL")) {
                 output = "";
             }

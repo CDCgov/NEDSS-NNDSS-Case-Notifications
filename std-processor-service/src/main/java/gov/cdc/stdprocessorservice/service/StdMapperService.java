@@ -2,12 +2,13 @@ package gov.cdc.stdprocessorservice.service;
 
 import gov.cdc.stdprocessorservice.model.Netss;
 import gov.cdc.stdprocessorservice.model.generated.jaxb.NBSNNDIntermediaryMessage;
+import gov.cdc.stdprocessorservice.service.interfaces.IStdMapperService;
 import org.springframework.stereotype.Service;
 
 import static gov.cdc.stdprocessorservice.util.StringHelper.*;
 
 @Service
-public class StdMapperService {
+public class StdMapperService implements IStdMapperService {
 
     private final MapperUtilService mapperUtilService;
 

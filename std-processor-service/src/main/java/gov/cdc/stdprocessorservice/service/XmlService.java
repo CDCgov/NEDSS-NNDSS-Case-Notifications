@@ -2,6 +2,7 @@ package gov.cdc.stdprocessorservice.service;
 
 import gov.cdc.stdprocessorservice.model.generated.jaxb.NBSNNDIntermediaryMessage;
 import gov.cdc.stdprocessorservice.repository.odse.CNTraportqOutRepository;
+import gov.cdc.stdprocessorservice.service.interfaces.IXmlService;
 import jakarta.annotation.PostConstruct;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Service;
 import java.io.StringReader;
 
 @Service
-public class XmlService {
+public class XmlService implements IXmlService {
 
     private final CNTraportqOutRepository cnTraportqOutRepository;
 
@@ -19,7 +20,7 @@ public class XmlService {
         this.cnTraportqOutRepository = cnTraportqOutRepository;
     }
 
-    @PostConstruct
+//    @PostConstruct
     public void init() {
         var test = cnTraportqOutRepository.findTopByRecordStatusCd("UNPROCESSED");
         mappingXmlStringToObject(test.getMessagePayload());

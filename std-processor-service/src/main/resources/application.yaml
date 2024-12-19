@@ -25,3 +25,12 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: none
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVER:localhost:9092}
+    group-id: std-processor-group
+    consumer:
+      maxPollIntervalMs: 30000
+
+kafka:
+  topic:
+    std-topic: std-topic

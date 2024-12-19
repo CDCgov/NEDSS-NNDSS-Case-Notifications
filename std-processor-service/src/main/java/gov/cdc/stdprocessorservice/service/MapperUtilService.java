@@ -3,10 +3,11 @@ package gov.cdc.stdprocessorservice.service;
 import gov.cdc.stdprocessorservice.model.generated.jaxb.NBSNNDIntermediaryMessage;
 import gov.cdc.stdprocessorservice.repository.odse.LookupMmwrRepository;
 import gov.cdc.stdprocessorservice.repository.odse.LookupNNDLookupRepository;
+import gov.cdc.stdprocessorservice.service.interfaces.IMapperUtilService;
 import org.springframework.stereotype.Service;
 
 @Service
-public class MapperUtilService {
+public class MapperUtilService implements IMapperUtilService {
     private final LookupNNDLookupRepository lookupNNDLookupRepository;
     private final LookupMmwrRepository lookupMmwrRepository;
 
@@ -68,7 +69,7 @@ public class MapperUtilService {
     }
 
     public String mapToDate(String week, String year, String output) {
-        boolean result1 =true; //= RhapsodyTableLookup(output,"MMWR","WEEK_ENDING","NOT_MAPPED","MMWR_WEEK",week, "MMWR_YEAR", StrToUpper(year) );
+      //  boolean result1 =true; //= RhapsodyTableLookup(output,"MMWR","WEEK_ENDING","NOT_MAPPED","MMWR_WEEK",week, "MMWR_YEAR", StrToUpper(year) );
 
         output = String.valueOf(lookupMmwrRepository.findTopWeekEndingByMmwrWeekAndMmwrYear(Integer.valueOf(week), Integer.valueOf(year)));
         if (output.trim().isEmpty() || (week.equalsIgnoreCase("NULL") && year.equalsIgnoreCase("NULL"))) {

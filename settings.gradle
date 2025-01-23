@@ -12,3 +12,6 @@ include 'std-processor-service'
 
 include 'non-std-processor-service'
 
+include 'notification-processor-service'
+
+

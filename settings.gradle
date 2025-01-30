@@ -6,11 +6,11 @@
  */
 
 rootProject.name = 'NEDSS-NNDSS-Case-Notifications'
-include 'data-extraction-service'
+//include 'data-extraction-service'
 
-include 'std-processor-service'
+//include 'std-processor-service'
 
-include 'non-std-processor-service'
+//include 'non-std-processor-service'
 
 include 'notification-processor-service'
 

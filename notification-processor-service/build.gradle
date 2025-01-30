@@ -15,9 +15,13 @@ java {
 
 repositories {
     mavenCentral()
+    flatDir {
+        dirs 'libs'  // please look at the libs folder :)
+    }
 }
 
 dependencies {
+    implementation 'ca.uhn.hapi:hapi-base:2.5.1'
     implementation 'org.springframework.boot:spring-boot-starter'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'

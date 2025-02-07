@@ -3,8 +3,7 @@ package gov.cdc.notificationprocessor.util;
 import ca.uhn.hl7v2.model.DataTypeException;
 import ca.uhn.hl7v2.model.v25.message.ORU_R01;
 import ca.uhn.hl7v2.model.v25.segment.MSH;
-import ca.uhn.hl7v2.model.v25.segment.OBX;
-import ca.uhn.hl7v2.model.v25.segment.PID;
+
 import gov.cdc.notificationprocessor.constants.Constants;
 import gov.cdc.notificationprocessor.consumer.KafkaConsumerService;
 import org.slf4j.Logger;
@@ -175,12 +174,13 @@ public class NBSNNDMessageParser extends DefaultHandler {
                     }
                     case "MSH-21.1"-> {
                         nndMessageVersion = mshFieldValue;
+                        nameSpaceIDGroup1 = mshFieldValue;
                         msh.getMessageProfileIdentifier(0).getEntityIdentifier().setValue(nndMessageVersion);
                     }
 
-                    case "MSH-21.2" -> msh.getMessageProfileIdentifier(0).getNamespaceID().setValue(mshFieldValue);
-                    case "MSH-21.3" -> msh.getMessageProfileIdentifier(0).getUniversalID().setValue(mshFieldValue);
-                    case "MSH-21.4" -> msh.getMessageProfileIdentifier(0).getUniversalIDType().setValue(mshFieldValue);
+                    case "MSH-21.2" -> nameSpaceIDGroup1 = mshFieldValue;//msh.getMessageProfileIdentifier(0).getNamespaceID().setValue(mshFieldValue);
+                    case "MSH-21.3" -> universalIDGroup1 = mshFieldValue;//msh.getMessageProfileIdentifier(0).getUniversalID().setValue(mshFieldValue);
+                    case "MSH-21.4" -> universalIDTypeGroup1 = mshFieldValue;//msh.getMessageProfileIdentifier(0).getUniversalIDType().setValue(mshFieldValue);
                 }
             }else if (Objects.equals(segmentFieldsWithValues.get(Constants.ORDER_GROUP_ID), "2")){
                 switch (mshField) {
@@ -201,20 +201,20 @@ public class NBSNNDMessageParser extends DefaultHandler {
 
             //process MSH21 field
             if (isSingleProfile){
+                msh.getMessageProfileIdentifier(0).getEntityIdentifier().setValue(entityIdentifierGroup2);
+                msh.getMessageProfileIdentifier(0).getNamespaceID().setValue(nameSpaceIDGroup2);
+                msh.getMessageProfileIdentifier(0).getUniversalID().setValue(universalIDGroup2);
+                msh.getMessageProfileIdentifier(0).getUniversalIDType().setValue(universalIDTypeGroup2);
+            }else{
+                msh.getMessageProfileIdentifier(0).getEntityIdentifier().setValue(entityIdentifierGroup1);
+                msh.getMessageProfileIdentifier(0).getNamespaceID().setValue(nameSpaceIDGroup1);
+                msh.getMessageProfileIdentifier(0).getUniversalID().setValue(universalIDGroup1);
+                msh.getMessageProfileIdentifier(0).getUniversalIDType().setValue(universalIDTypeGroup1);
+
                 msh.getMessageProfileIdentifier(1).getEntityIdentifier().setValue(entityIdentifierGroup2);
                 msh.getMessageProfileIdentifier(1).getNamespaceID().setValue(nameSpaceIDGroup2);
                 msh.getMessageProfileIdentifier(1).getUniversalID().setValue(universalIDGroup2);
                 msh.getMessageProfileIdentifier(1).getUniversalIDType().setValue(universalIDTypeGroup2);
-            }else{
-                msh.getMessageProfileIdentifier(1).getEntityIdentifier().setValue(entityIdentifierGroup1);
-                msh.getMessageProfileIdentifier(1).getNamespaceID().setValue(nameSpaceIDGroup1);
-                msh.getMessageProfileIdentifier(1).getUniversalID().setValue(universalIDGroup1);
-                msh.getMessageProfileIdentifier(1).getUniversalIDType().setValue(universalIDTypeGroup1);
-
-                msh.getMessageProfileIdentifier(2).getEntityIdentifier().setValue(entityIdentifierGroup2);
-                msh.getMessageProfileIdentifier(2).getNamespaceID().setValue(nameSpaceIDGroup2);
-                msh.getMessageProfileIdentifier(2).getUniversalID().setValue(universalIDGroup2);
-                msh.getMessageProfileIdentifier(2).getUniversalIDType().setValue(universalIDTypeGroup2);
             }
         }
     }

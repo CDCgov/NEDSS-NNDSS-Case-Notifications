@@ -44,6 +44,8 @@ public class NBSNNDMessageParser extends DefaultHandler {
     private Integer zipcodeIndex;
     private Integer countryIndex;
     private Integer addressTypeIndex;
+    private Integer citizenshipTypeIndex;
+    private Integer identityReliabilityCodeIndex;
 
     //private OBX obx;
     private PID pid;
@@ -59,6 +61,13 @@ public class NBSNNDMessageParser extends DefaultHandler {
         pid = oruMessage.getPATIENT_RESULT().getPATIENT().getPID();
         raceIndex = 0;
         cityIndex = 0;
+        stateIndex = 0;
+        zipcodeIndex = 0;
+        countryIndex = 0;
+        addressTypeIndex = 0;
+        citizenshipTypeIndex = 0;
+        identityReliabilityCodeIndex = 0;
+
         try {
             // set static fields
             msh.getFieldSeparator().setValue(Constants.FIELD_SEPARATOR);
@@ -284,6 +293,103 @@ public class NBSNNDMessageParser extends DefaultHandler {
             countryIndex += 1;
         }else if (pidField.startsWith("PID-11.10")) {
             pid.getPid11_PatientAddress(0).getCensusTract().setValue(pidFieldValue);
+        }else if (pidField.startsWith("PID-15.0")) {
+            //TODO - need to find an XML message with PID-15 in order to extract values from the correct data type field
+            pid.getPid15_PrimaryLanguage().getIdentifier().setValue(pidFieldValue);
+            //pid.getPid15_PrimaryLanguage().getText().setValue(pidFieldValue);
+            //pid.getPid15_PrimaryLanguage().getNameOfCodingSystem().setValue(pidFieldValue);
+            //pid.getPid15_PrimaryLanguage().getAlternateIdentifier().setValue(pidFieldValue);
+            //pid.getPid15_PrimaryLanguage().getAlternateText().setValue(pidFieldValue);
+            //pid.getPid15_PrimaryLanguage().getNameOfAlternateCodingSystem().setValue(pidFieldValue);
+
+        }else if (pidField.startsWith("PID-16.0")) {
+            //TODO - need to find an XML message with PID-16 in order to extract values from the correct data type field
+            pid.getPid16_MaritalStatus().getIdentifier().setValue(pidFieldValue);
+//            pid.getPid16_MaritalStatus().getText().setValue(pidFieldValue);
+//            pid.getPid16_MaritalStatus().getNameOfCodingSystem().setValue(pidFieldValue);
+//            pid.getPid16_MaritalStatus().getAlternateIdentifier().setValue(pidFieldValue);
+//            pid.getPid16_MaritalStatus().getAlternateText().setValue(pidFieldValue);
+//            pid.getPid16_MaritalStatus().getNameOfAlternateCodingSystem().setValue(pidFieldValue);
+        }else if (pidField.startsWith("PID-17.0")) {
+            //TODO - need to find an XML message with PID-17 in order to extract values from the correct data type field
+            pid.getPid17_Religion().getIdentifier().setValue(pidFieldValue);
+//            pid.getPid17_Religion().getText().setValue(pidFieldValue);
+//            pid.getPid17_Religion().getNameOfCodingSystem().setValue(pidFieldValue);
+//            pid.getPid17_Religion().getAlternateIdentifier().setValue(pidFieldValue);
+//            pid.getPid17_Religion().getAlternateText().setValue(pidFieldValue);
+//            pid.getPid17_Religion().getNameOfAlternateCodingSystem().setValue(pidFieldValue);
+        }else if (pidField.startsWith("PID-22.0")) {
+            //TODO - need to find an XML message with PID-22 in order to extract values from the correct data type field
+            pid.getPid22_EthnicGroup(0).getIdentifier().setValue(pidFieldValue);
+//            pid.getPid22_EthnicGroup(0).getText().setValue(pidFieldValue);
+//            pid.getPid22_EthnicGroup(0).getNameOfCodingSystem().setValue(pidFieldValue);
+//            pid.getPid22_EthnicGroup(0).getAlternateIdentifier().setValue(pidFieldValue);
+//            pid.getPid22_EthnicGroup(0).getAlternateText().setValue(pidFieldValue);
+//            pid.getPid22_EthnicGroup(0).getNameOfAlternateCodingSystem().setValue(pidFieldValue);
+        }else if (pidField.startsWith("PID-23.0")) {
+            pid.getPid23_BirthPlace().setValue(pidFieldValue);
+        }else if (pidField.startsWith("PID-24.0")) {
+            pid.getPid24_MultipleBirthIndicator().setValue(pidFieldValue);
+        }else if (pidField.startsWith("PID-25.0")) {
+            pid.getPid25_BirthOrder().setValue(pidFieldValue);
+        }else if (pidField.startsWith("PID-26.0")) {
+            pid.getPid26_Citizenship(citizenshipTypeIndex).getIdentifier().setValue(pidFieldValue);
+//            pid.getPid26_Citizenship(citizenshipTypeIndex).getText().setValue(pidFieldValue);
+//            pid.getPid26_Citizenship(citizenshipTypeIndex).getNameOfCodingSystem().setValue(pidFieldValue);
+//            pid.getPid26_Citizenship(citizenshipTypeIndex).getAlternateIdentifier().setValue(pidFieldValue);
+//            pid.getPid26_Citizenship(citizenshipTypeIndex).getAlternateText().setValue(pidFieldValue);
+//            pid.getPid26_Citizenship(citizenshipTypeIndex).getNameOfAlternateCodingSystem().setValue(pidFieldValue);
+            citizenshipTypeIndex += 1;
+        }else if (pidField.startsWith("PID-27.0")) {
+            pid.getPid27_VeteransMilitaryStatus().getIdentifier().setValue(pidFieldValue);
+//            pid.getPid27_VeteransMilitaryStatus().getText().setValue(pidFieldValue);
+//            pid.getPid27_VeteransMilitaryStatus().getNameOfCodingSystem().setValue(pidFieldValue);
+//            pid.getPid27_VeteransMilitaryStatus().getAlternateIdentifier().setValue(pidFieldValue);
+//            pid.getPid27_VeteransMilitaryStatus().getAlternateText().setValue(pidFieldValue);
+//            pid.getPid27_VeteransMilitaryStatus().getNameOfAlternateCodingSystem().setValue(pidFieldValue);
+        }else if (pidField.startsWith("PID-29.0")) {
+            //TODO - requires custom handling MapToTsDataTYpe(), need to see an example of the field in the xml
+            logger.info("TODO PID-29");
+        }else if (pidField.startsWith("PID-30.0")) {
+            pid.getPid30_PatientDeathIndicator().setValue(pidFieldValue);
+        }else if (pidField.startsWith("PID-31.0")) {
+            pid.getPid31_IdentityUnknownIndicator().setValue(pidFieldValue);
+        }else if (pidField.startsWith("PID-32.0")) {
+            pid.getPid32_IdentityReliabilityCode(identityReliabilityCodeIndex).setValue(pidFieldValue);
+            identityReliabilityCodeIndex +=1;
+        }else if (pidField.startsWith("PID-33.0")) {
+            //TODO - requires custom handling MapToTSDataTYpe(), need to see an example of the field in the xml
+            logger.info("TODO PID-33");
+        }else if (pidField.startsWith("PID-34.1")) {
+            //TODO extract values from the right elements from xml file
+            pid.getPid34_LastUpdateFacility().getNamespaceID().setValue(pidFieldValue);
+        }else if (pidField.startsWith("PID-34.2")) {
+            pid.getPid34_LastUpdateFacility().getUniversalID().setValue(pidFieldValue);
+        }else if (pidField.startsWith("PID-34.3")) {
+            pid.getPid34_LastUpdateFacility().getUniversalIDType().setValue(pidFieldValue);
+        }else if (pidField.startsWith("PID-35")) {
+            pid.getPid35_SpeciesCode().getIdentifier().setValue(pidFieldValue);
+//            pid.getPid35_SpeciesCode().getText().setValue(pidFieldValue);
+//            pid.getPid35_SpeciesCode().getNameOfCodingSystem().setValue(pidFieldValue);
+//            pid.getPid35_SpeciesCode().getAlternateIdentifier().setValue(pidFieldValue);
+//            pid.getPid35_SpeciesCode().getAlternateText().setValue(pidFieldValue);
+//            pid.getPid35_SpeciesCode().getNameOfAlternateCodingSystem().setValue(pidFieldValue);
+        }else if (pidField.startsWith("PID-36")) {
+            pid.getPid36_BreedCode().getIdentifier().setValue(pidFieldValue);
+//            pid.getPid36_BreedCode().getText().setValue(pidFieldValue);
+//            pid.getPid36_BreedCode().getNameOfCodingSystem().setValue(pidFieldValue);
+//            pid.getPid36_BreedCode().getAlternateIdentifier().setValue(pidFieldValue);
+//            pid.getPid36_BreedCode().getAlternateText().setValue(pidFieldValue);
+//            pid.getPid36_BreedCode().getNameOfAlternateCodingSystem().setValue(pidFieldValue);
+        }else if (pidField.startsWith("PID-37")) {
+            pid.getPid37_Strain().setValue(pidFieldValue);
+        }else if (pidField.startsWith("PID-38")) {
+            pid.getPid38_ProductionClassCode().getIdentifier().setValue(pidFieldValue);
+//            pid.getPid38_ProductionClassCode().getText().setValue(pidFieldValue);
+//            pid.getPid38_ProductionClassCode().getNameOfCodingSystem().setValue(pidFieldValue);
+//            pid.getPid38_ProductionClassCode().getAlternateIdentifier().setValue(pidFieldValue);
+//            pid.getPid38_ProductionClassCode().getAlternateText().setValue(pidFieldValue);
+//            pid.getPid38_ProductionClassCode().getNameOfAlternateCodingSystem().setValue(pidFieldValue);
         }
     }
 }

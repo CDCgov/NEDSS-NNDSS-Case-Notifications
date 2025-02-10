@@ -4,6 +4,7 @@ import ca.uhn.hl7v2.model.DataTypeException;
 import ca.uhn.hl7v2.model.v25.message.ORU_R01;
 import ca.uhn.hl7v2.model.v25.segment.MSH;
 
+import ca.uhn.hl7v2.model.v25.segment.PID;
 import gov.cdc.notificationprocessor.constants.Constants;
 import gov.cdc.notificationprocessor.consumer.KafkaConsumerService;
 import org.slf4j.Logger;
@@ -37,8 +38,9 @@ public class NBSNNDMessageParser extends DefaultHandler {
     private String universalIDTypeGroup2; //msh21.4
     private String nndMessageVersion;
     private String messageType;
+    private Integer raceIndex;
     //private OBX obx;
-    //private PID pid;
+    private PID pid;
     private ORU_R01 oruMessage;
 
     public Map<String,String> segmentFieldsWithValues = new HashMap<>();
@@ -48,11 +50,16 @@ public class NBSNNDMessageParser extends DefaultHandler {
         logger.info("Starting the parsing process");
         oruMessage = new ORU_R01();
         msh = oruMessage.getMSH();
+        pid = oruMessage.getPATIENT_RESULT().getPATIENT().getPID();
+        raceIndex = 0;
         try {
+            // set static fields
             msh.getFieldSeparator().setValue(Constants.FIELD_SEPARATOR);
             msh.getEncodingCharacters().setValue(Constants.ENCODING_CHARACTERS);
             msh.getMessageType().getMessageCode().setValue(Constants.MESSAGE_CODE);
             msh.getMessageType().getTriggerEvent().setValue(Constants.MESSAGE_TRIGGER_EVENT);
+            pid.getSetIDPID().setValue("1");
+            pid.getPatientName(0).getNameTypeCode().setValue("S");
         } catch (DataTypeException e) {
             throw new RuntimeException(e);
         }
@@ -99,6 +106,12 @@ public class NBSNNDMessageParser extends DefaultHandler {
                     throw new RuntimeException(e);
                 }
 
+            }else if (segmentFieldsWithValues.get(Constants.HL_SEVEN_SEGMENT_FIELD).startsWith("PID")) {
+                try {
+                    processPIDFields(segmentFieldsWithValues);
+                }catch (DataTypeException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }else if (isWithinMessageElement) {
             switch (currentElement) {
@@ -126,7 +139,7 @@ public class NBSNNDMessageParser extends DefaultHandler {
 
     /**
      * sets the value for all MSH fields found in the xml
-     * @param mshSegmentFields object that holds fields for processing MSH fields
+     * @param mshSegmentFields object that holds fields necessary for processing MSH fields
      */
     private void processMSHFields(Map<String, String> mshSegmentFields) throws DataTypeException {
         String mshField = mshSegmentFields.get(Constants.HL_SEVEN_SEGMENT_FIELD);
@@ -170,7 +183,6 @@ public class NBSNNDMessageParser extends DefaultHandler {
                     case "MSH-21.0" -> {
                         isSingleProfile = false;
                         entityIdentifierGroup1 = mshFieldValue;
-
                     }
                     case "MSH-21.1"-> {
                         nndMessageVersion = mshFieldValue;
@@ -178,9 +190,9 @@ public class NBSNNDMessageParser extends DefaultHandler {
                         msh.getMessageProfileIdentifier(0).getEntityIdentifier().setValue(nndMessageVersion);
                     }
 
-                    case "MSH-21.2" -> nameSpaceIDGroup1 = mshFieldValue;//msh.getMessageProfileIdentifier(0).getNamespaceID().setValue(mshFieldValue);
-                    case "MSH-21.3" -> universalIDGroup1 = mshFieldValue;//msh.getMessageProfileIdentifier(0).getUniversalID().setValue(mshFieldValue);
-                    case "MSH-21.4" -> universalIDTypeGroup1 = mshFieldValue;//msh.getMessageProfileIdentifier(0).getUniversalIDType().setValue(mshFieldValue);
+                    case "MSH-21.2" -> nameSpaceIDGroup1 = mshFieldValue;
+                    case "MSH-21.3" -> universalIDGroup1 = mshFieldValue;
+                    case "MSH-21.4" -> universalIDTypeGroup1 = mshFieldValue;
                 }
             }else if (Objects.equals(segmentFieldsWithValues.get(Constants.ORDER_GROUP_ID), "2")){
                 switch (mshField) {
@@ -216,6 +228,34 @@ public class NBSNNDMessageParser extends DefaultHandler {
                 msh.getMessageProfileIdentifier(1).getUniversalID().setValue(universalIDGroup2);
                 msh.getMessageProfileIdentifier(1).getUniversalIDType().setValue(universalIDTypeGroup2);
             }
+        }
+    }
+
+    private void processPIDFields(Map<String, String> pidSegmentFields) throws DataTypeException {
+        String pidField = pidSegmentFields.get(Constants.HL_SEVEN_SEGMENT_FIELD);
+        String pidFieldValue = pidSegmentFields.get(Constants.HL_SEVEN_SEGMENT_FIELD_VALUE);
+
+        if (pidField.startsWith("PID-3.1")){
+            pid.getPatientIdentifierList(0).getIDNumber().setValue(pidFieldValue);
+        }else if (pidField.startsWith("PID-3.4.1")){
+            pid.getPatientIdentifierList(0).getAssigningAuthority().getNamespaceID().setValue(pidFieldValue);
+        }else if (pidField.startsWith("PID-3.4.2")){
+            pid.getPatientIdentifierList(0).getAssigningAuthority().getUniversalID().setValue(pidFieldValue);
+        }else if (pidField.startsWith("PID-3.4.3")){
+            pid.getPatientIdentifierList(0).getAssigningAuthority().getUniversalIDType().setValue(pidFieldValue);
+        }else if (pidField.startsWith("PID-7.0")){
+            //TODO
+            logger.info("PID-7.0 {}", pidFieldValue);
+            pid.getPid7_DateTimeOfBirth().getTime().setValue(pidFieldValue);
+        }else if (pidField.startsWith("PID-8.0")) {
+            pid.getPid8_AdministrativeSex().setValue(pidFieldValue);
+        }else if (pidField.startsWith("PID-10.0")) {
+            //TODO - need to find an XML message with PID-10 in order to extract values from the correct data type field
+            pid.getPid10_Race(raceIndex).getIdentifier().setValue(pidFieldValue);
+            //pid.getPid10_Race(raceIndex).getText().setValue(pidFieldValue);
+            //pid.getPid10_Race(raceIndex).getAlternateIdentifier().setValue(pidFieldValue);
+            //pid.getPid10_Race(raceIndex).getAlternateText().setValue(pidFieldValue);
+            //pid.getPid10_Race(raceIndex).getCe6_NameOfAlternateCodingSystem().setValue(pidFieldValue);
         }
     }
 }

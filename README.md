@@ -1,16 +1,32 @@
-# STD/NonSTD Case Notifications
+# Processing `STD` and `NON-STD` Case Notifications
 ## Overview
-## Prerequisites
+This service is built using the Spring Boot framework and is designed to listen for notifications on a Kafka Topic. These notifications are categorized as either STD or Non-STD and are in XML format. The service performs the following tasks:
+
+- **Kafka Integration**: It subscribes to a specific Kafka Topic where both STD and Non-STD notifications are published.
+
+- **XML Parsing**: uses the SAX library to efficiently parse the incoming data.
+
+- **Dynamically building HL7 ORU_R01 Message**: while parsing the XML, the service dynamically constructs an HL7 message of type ORU_R01. This message format is commonly used for diagnostic reporting in healthcare, and the service generates it based on the parsed data.
+
+- **Base64 Encoding**: The HL7 message is then encoded using base64 encoding. 
+
+- **Routing Logic**: Based on the type of notification (either STD or Non-STD), the service processes the message through two different routing paths:STD Route & Non-STD Route.
+
+## Configuration
+## Installation
+### Prerequisites
 - Java 21
-- Spring Framework
+- Spring Boot Framework
 - Apache Kafka
 - SAX Parser(default Java Library)
 - hapi-base:2.5.1
 - hapi-structures-v25:2.5.1
 - Gradle(For dependency management)
+## Build
 
-## Installation
+## How to Run Tests
 
+> **Note**: Under Development.
 
 **General disclaimer** This repository was created for use by CDC programs to collaborate on public health related projects in support of the [CDC mission](https://www.cdc.gov/about/organization/mission.htm).  GitHub is not hosted by the CDC, but is a third party website used by CDC and its partners to share information and collaborate on software. CDC use of GitHub does not imply an endorsement of any one particular service, product, or enterprise. 
 

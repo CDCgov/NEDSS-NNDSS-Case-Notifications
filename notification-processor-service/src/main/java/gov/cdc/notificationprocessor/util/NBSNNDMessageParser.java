@@ -39,6 +39,12 @@ public class NBSNNDMessageParser extends DefaultHandler {
     private String nndMessageVersion;
     private String messageType;
     private Integer raceIndex;
+    private Integer cityIndex;
+    private Integer stateIndex;
+    private Integer zipcodeIndex;
+    private Integer countryIndex;
+    private Integer addressTypeIndex;
+
     //private OBX obx;
     private PID pid;
     private ORU_R01 oruMessage;
@@ -52,6 +58,7 @@ public class NBSNNDMessageParser extends DefaultHandler {
         msh = oruMessage.getMSH();
         pid = oruMessage.getPATIENT_RESULT().getPATIENT().getPID();
         raceIndex = 0;
+        cityIndex = 0;
         try {
             // set static fields
             msh.getFieldSeparator().setValue(Constants.FIELD_SEPARATOR);
@@ -256,6 +263,27 @@ public class NBSNNDMessageParser extends DefaultHandler {
             //pid.getPid10_Race(raceIndex).getAlternateIdentifier().setValue(pidFieldValue);
             //pid.getPid10_Race(raceIndex).getAlternateText().setValue(pidFieldValue);
             //pid.getPid10_Race(raceIndex).getCe6_NameOfAlternateCodingSystem().setValue(pidFieldValue);
+            raceIndex += 1;
+        }else if (pidField.startsWith("PID-11.3")) {
+            pid.getPid11_PatientAddress(cityIndex).getCity().setValue(pidFieldValue);
+            cityIndex += 1;
+        }else if (pidField.startsWith("PID-11.4")) {
+            pid.getPid11_PatientAddress(stateIndex).getStateOrProvince().setValue(pidFieldValue);
+            stateIndex += 1;
+        }else if (pidField.startsWith("PID-11.5")) {
+            pid.getPid11_PatientAddress(zipcodeIndex).getZipOrPostalCode().setValue(pidFieldValue);
+            zipcodeIndex += 1;
+        }else if (pidField.startsWith("PID-11.6")) {
+            pid.getPid11_PatientAddress(countryIndex).getCountry().setValue(pidFieldValue);
+            countryIndex += 1;
+        }else if (pidField.startsWith("PID-11.7")) {
+            pid.getPid11_PatientAddress(addressTypeIndex).getAddressType().setValue(pidFieldValue);
+            addressTypeIndex += 1;
+        }else if (pidField.startsWith("PID-11.9")) {
+            pid.getPid11_PatientAddress(countryIndex).getCountyParishCode().setValue(pidFieldValue);
+            countryIndex += 1;
+        }else if (pidField.startsWith("PID-11.10")) {
+            pid.getPid11_PatientAddress(0).getCensusTract().setValue(pidFieldValue);
         }
     }
 }

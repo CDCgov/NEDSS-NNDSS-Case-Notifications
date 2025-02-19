@@ -12,5 +12,6 @@ public class Constants {
     public static final String MESSAGE_TRIGGER_EVENT = "R01";
     public static final String STRING_DATATYPE = "stringData";
     public static final String ID_CODED_VALUE = "idCodedValue";
+    public static final String TIME_DATA_TYPE = "time";
     public static final String GENERIC_MMG_VERSION = "Generic_MMG_V2.0";
 }

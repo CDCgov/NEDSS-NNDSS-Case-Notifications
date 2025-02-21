@@ -1,0 +1,182 @@
+[
+  {
+    "service": "NND_Case_Note",
+    "action": "send",
+    "total_service_action_pairs": 1,
+    "serial_number": 1,
+    "message_profile_id": "Arbo_Case_Map_v1.0",
+    "condition_code": "",
+    "status_code": "ACTIVE",
+    "notes": "Arboviral Case Notification Message Mapping Guide v.1"
+  },
+  {
+    "service": "NND_Case_Note",
+    "action": "send",
+    "total_service_action_pairs": 1,
+    "serial_number": 2,
+    "message_profile_id": "CRS_MMG_V1.0",
+    "condition_code": "",
+    "status_code": "ACTIVE",
+    "notes": "Cogenital Rubella Syndrome Message Mapping Guide v.1.0"
+  },
+  {
+    "service": "NND_Case_Note",
+    "action": "send",
+    "total_service_action_pairs": 1,
+    "serial_number": 3,
+    "message_profile_id": "Gen_Case_Map_v1.0",
+    "condition_code": "",
+    "status_code": "ACTIVE",
+    "notes": "Generic Case Notification Message Mapping Guide v.1"
+  },
+  {
+    "service": "NND_Case_Note",
+    "action": "send",
+    "total_service_action_pairs": 1,
+    "serial_number": 4,
+    "message_profile_id": "Generic_MMG_V2.0",
+    "condition_code": "50225",
+    "status_code": "ACTIVE",
+    "notes": "Generic Case Notification Message Mapping Guide v.2"
+  },
+  {
+    "service": "NND_Case_Note",
+    "action": "send",
+    "total_service_action_pairs": 1,
+    "serial_number": 5,
+    "message_profile_id": "CongenitalSyphilis_MMG_V1.0",
+    "condition_code": "",
+    "status_code": "ACTIVE",
+    "notes": "Congenital Syphilis Case Notification Message Mapping Guide v.1"
+  },
+  {
+    "service": "NND_Case_Note",
+    "action": "send",
+    "total_service_action_pairs": 1,
+    "serial_number": 6,
+    "message_profile_id": "Hepatitis_MMG_V1.0",
+    "condition_code": "",
+    "status_code": "ACTIVE",
+    "notes": "Hepatitis Message Mapping Guide v1"
+  },
+  {
+    "service": "NND_Case_Note",
+    "action": "send",
+    "total_service_action_pairs": 1,
+    "serial_number": 7,
+    "message_profile_id": "Mumps_MMG_V1.0",
+    "condition_code": "",
+    "status_code": "ACTIVE",
+    "notes": "Mumps Message Mapping Guide v1.0"
+  },
+  {
+    "service": "NND_Case_Note",
+    "action": "send",
+    "total_service_action_pairs": 1,
+    "serial_number": 8,
+    "message_profile_id": "Pertussis_MMG_V1.0",
+    "condition_code": "50225",
+    "status_code": "ACTIVE",
+    "notes": "Pertussis Case Notification Message Mapping Guide v.1"
+  },
+  {
+    "service": "NND_Case_Note",
+    "action": "send",
+    "total_service_action_pairs": 1,
+    "serial_number": 9,
+    "message_profile_id": "Arbo_Case_Map_v1.0",
+    "condition_code": "",
+    "status_code": "ACTIVE",
+    "notes": "Sexually Transmitted Disease (STD) Message Mapping Guide v1"
+  },
+  {
+    "service": "NND_Case_Note",
+    "action": "send",
+    "total_service_action_pairs": 1,
+    "serial_number": 10,
+    "message_profile_id": "STD_MMG_V1.0",
+    "condition_code": "",
+    "status_code": "ACTIVE",
+    "notes": "Streptococcus Pneumoniae Message Mapping Guide v1"
+  },
+  {
+    "service": "NND_Case_Note",
+    "action": "send",
+    "total_service_action_pairs": 1,
+    "serial_number": 11,
+    "message_profile_id": "IPM_Case_Map_v1.0",
+    "condition_code": "",
+    "status_code": "ACTIVE",
+    "notes": "Influenza-Associated Pediatric Mortality Case Notification Message Mapping Guide v.1"
+  },
+  {
+    "service": "NND_Case_Note",
+    "action": "send",
+    "total_service_action_pairs": 1,
+    "serial_number": 12,
+    "message_profile_id": "MAL_Case_Map_v1.0",
+    "condition_code": "",
+    "status_code": "ACTIVE",
+    "notes": "Malaria Message Mapping Guide v1.0"
+  },
+  {
+    "service": "NND_Case_Note",
+    "action": "send",
+    "total_service_action_pairs": 1,
+    "serial_number": 13,
+    "message_profile_id": "Measles_MMG_V1.0",
+    "condition_code": "",
+    "status_code": "ACTIVE",
+    "notes": "Measles Message Mapping Guide v1.0"
+  },
+  {
+    "service": "NND_Case_Note",
+    "action": "send",
+    "total_service_action_pairs": 1,
+    "serial_number": 14,
+    "message_profile_id": "Rubella_MMG_V1.0",
+    "condition_code": "",
+    "status_code": "ACTIVE",
+    "notes": "Rubella Message Mapping Guide v1"
+  },
+  {
+    "service": "NND_Case_Note",
+    "action": "send",
+    "total_service_action_pairs": 1,
+    "serial_number": 15,
+    "message_profile_id": "TB_Case_Map_v2.0",
+    "condition_code": "",
+    "status_code": "ACTIVE",
+    "notes": "TB Case Notification Message Mapping Guide v.2"
+  },
+  {
+    "service": "NND_Case_Note",
+    "action": "send",
+    "total_service_action_pairs": 1,
+    "serial_number": 16,
+    "message_profile_id": "Var_Case_Map_v2.0",
+    "condition_code": "",
+    "status_code": "ACTIVE",
+    "notes": "Varicella Case Notification Message Mapping Guide v.2"
+  },
+  {
+    "service": "NND_Case_Note",
+    "action": "send",
+    "total_service_action_pairs": 1,
+    "serial_number": 17,
+    "message_profile_id": "Varicella_MMG_V3.0",
+    "condition_code": "",
+    "status_code": "ACTIVE",
+    "notes": "Varicella Case Notification Message Mapping Guide v.3"
+  },
+  {
+    "service": "NND_Case_Note",
+    "action": "send",
+    "total_service_action_pairs": 1,
+    "serial_number": 18,
+    "message_profile_id": "TB_MMG_V3.0",
+    "condition_code": "",
+    "status_code": "ACTIVE",
+    "notes": "TB Case Notification Message Mapping Guide v.3"
+  }
+]

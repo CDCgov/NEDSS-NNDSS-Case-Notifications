@@ -1,6 +1,7 @@
 package gov.cdc.notificationprocessor.util;
 
 import ca.uhn.hl7v2.model.DataTypeException;
+import ca.uhn.hl7v2.model.v25.datatype.DTM;
 import ca.uhn.hl7v2.model.v25.message.ORU_R01;
 import ca.uhn.hl7v2.model.v25.segment.MSH;
 
@@ -8,6 +9,8 @@ import ca.uhn.hl7v2.model.v25.segment.OBR;
 import ca.uhn.hl7v2.model.v25.segment.PID;
 import gov.cdc.notificationprocessor.constants.Constants;
 import gov.cdc.notificationprocessor.consumer.KafkaConsumerService;
+import gov.cdc.notificationprocessor.service.DateTypeProcessingService;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
@@ -169,9 +172,14 @@ public class NBSNNDMessageParser extends DefaultHandler {
                     segmentFieldsWithValues.put(Constants.HL_SEVEN_SEGMENT_FIELD_VALUE, dataType);
                     break;
                 case Constants.QUESTION_DATA_TYPE_NND:
-                    String questionIdentifierNND = currentField.toString().trim();
-                    segmentFieldsWithValues.put(Constants.QUESTION_DATA_TYPE_NND, questionIdentifierNND);
+                    String questionDatatypeNND = currentField.toString().trim();
+                    segmentFieldsWithValues.put(Constants.QUESTION_DATA_TYPE_NND, questionDatatypeNND);
                     break;
+                case Constants.QUESTION_IDENTIFIER_NND:
+                    String questionIdentifierNND = currentField.toString().trim();
+                    segmentFieldsWithValues.put(Constants.QUESTION_IDENTIFIER_NND, questionIdentifierNND);
+                    break;
+
             }
         }
         logger.info("MSH message is {} ", oruMessage.getMessage());
@@ -274,7 +282,8 @@ public class NBSNNDMessageParser extends DefaultHandler {
     private void processPIDFields(Map<String, String> pidSegmentFields) throws DataTypeException {
         String pidField = pidSegmentFields.get(Constants.HL_SEVEN_SEGMENT_FIELD);
         String pidFieldValue = pidSegmentFields.get(Constants.HL_SEVEN_SEGMENT_FIELD_VALUE);
-
+        String questionDataTypeNND = pidSegmentFields.get(Constants.QUESTION_DATA_TYPE_NND);
+        String questionIdentifierNND = pidSegmentFields.get(Constants.QUESTION_IDENTIFIER_NND);
         if (pidField.startsWith("PID-3.1")){
             pid.getPatientIdentifierList(0).getIDNumber().setValue(pidFieldValue);
         }else if (pidField.startsWith("PID-3.4.1")){
@@ -284,9 +293,17 @@ public class NBSNNDMessageParser extends DefaultHandler {
         }else if (pidField.startsWith("PID-3.4.3")){
             pid.getPatientIdentifierList(0).getAssigningAuthority().getUniversalIDType().setValue(pidFieldValue);
         }else if (pidField.startsWith("PID-7.0")){
-            //TODO
-            logger.info("PID-7.0 {}", pidFieldValue);
-            pid.getPid7_DateTimeOfBirth().getTime().setValue(pidFieldValue);
+            // build map with input fields needed to convert to build date string
+            Map<String, String > fields = new HashMap<>();
+            fields.put(Constants.HL_SEVEN_SEGMENT_FIELD,pidFieldValue);
+            fields.put("mmgVersion", messageType);
+            fields.put("inputDataType", questionDataTypeNND);
+            fields.put("questionIdentifier", questionIdentifierNND);
+            fields.put("hl7Segment", "PID-7.0");
+            DateTypeProcessingService dateTypeProcessingService = new DateTypeProcessingService();
+            String dateFormat = dateTypeProcessingService.process(fields);
+            logger.info("dateFormat for pid-7 {}", dateFormat);
+            pid.getPid7_DateTimeOfBirth().getTime().setValue(dateFormat);
         }else if (pidField.startsWith("PID-8.0")) {
             pid.getPid8_AdministrativeSex().setValue(pidFieldValue);
         }else if (pidField.startsWith("PID-10.0")) {
@@ -457,10 +474,12 @@ public class NBSNNDMessageParser extends DefaultHandler {
             universalServiceIDNameOfCodingSystemGroup2 = obrFieldValue;
         }else if (obrField.startsWith("OBR-7.0")){
             //TODO - custom function is needed, below just placeholder
-            obr.getObr7_ObservationDateTime().getTime().setValue(obrFieldValue);
+            logger.info("OBR-7");
+            //obr.getObr7_ObservationDateTime().getTime().setValue(obrFieldValue);
         }else if (obrField.startsWith("OBR-22.0")){
             //TODO - custom function is needed, below just placeholder
-            obr.getObr22_ResultsRptStatusChngDateTime().getTime().setValue(obrFieldValue);
+            logger.info("OBR-22");
+            //obr.getObr22_ResultsRptStatusChngDateTime().getTime().setValue(obrFieldValue);
         }else if (obrField.startsWith("OBR-25.0")){
             obr.getObr25_ResultStatus().setValue(obrFieldValue);
         }else if (obrField.startsWith("OBR-31.0")){

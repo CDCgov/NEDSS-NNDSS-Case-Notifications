@@ -4,6 +4,8 @@ public class Constants {
     public static final String HL_SEVEN_SEGMENT_FIELD = "hl7SegmentField";
     public static final String HL_SEVEN_SEGMENT_FIELD_VALUE = "hl7SegmentFieldValue";
     public static final String QUESTION_DATA_TYPE_NND = "questionDataTypeNND";
+    public static final String QUESTION_IDENTIFIER_NND = "questionIdentifierNND";
+    public static final String JSON_FILE_NAME ="jsonFileName";
     public static final String ORDER_GROUP_ID = "orderGroupId";
     public static final String MESSAGE_ELEMENT = "MessageElement";
     public static final String FIELD_SEPARATOR = "|";
@@ -14,4 +16,5 @@ public class Constants {
     public static final String ID_CODED_VALUE = "idCodedValue";
     public static final String TIME_DATA_TYPE = "time";
     public static final String GENERIC_MMG_VERSION = "Generic_MMG_V2.0";
+    public static final String DATA_TYPES_JSON = "dataTypes.json";
 }

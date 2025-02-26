@@ -5,7 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gov.cdc.notificationprocessor.constants.Constants;
 
-import gov.cdc.notificationprocessor.model.DataTypeModel;
+import gov.cdc.notificationprocessor.model.DateTypeModel;
 import gov.cdc.notificationprocessor.util.JsonReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,11 +31,11 @@ import java.util.Optional;
 
         String outputDataType = mapInputToOutputDataType(inputDataType);
 
-        List<DataTypeModel> dataTypeModels = loadDataTypesFromJson();
-        Optional<DataTypeModel> matchedDataType = findMatchingDataType(dataTypeModels, mmgVersion, inputDataType);
+        List<DateTypeModel> dataTypeModels = loadDataTypesFromJson();
+        Optional<DateTypeModel> matchedDataType = findMatchingDataType(dataTypeModels, mmgVersion, inputDataType);
 
         if (matchedDataType.isPresent()) {
-            outputDataType = matchedDataType.get().getDataType();
+            outputDataType = matchedDataType.get().dataType();
         }
 
         String dateFormatted = formatDateField(hl7SegmentDateField, inputDataType, outputDataType);
@@ -130,7 +130,7 @@ import java.util.Optional;
         return "";
     }
 
-    private List<DataTypeModel> loadDataTypesFromJson() {
+    private List<DateTypeModel> loadDataTypesFromJson() {
         String jsonData = JsonReader.readJsonFromResources(Constants.DATA_TYPES_JSON);
         try {
             return mapper.readValue(jsonData, new TypeReference<>() {
@@ -148,9 +148,9 @@ import java.util.Optional;
      * @param inputDataType The core data type to be used for matching
      * @return first found match
      */
-    private Optional<DataTypeModel> findMatchingDataType(List<DataTypeModel> dataTypeModels, String mmgVersion, String inputDataType) {
+    private Optional<DateTypeModel> findMatchingDataType(List<DateTypeModel> dataTypeModels, String mmgVersion, String inputDataType) {
         return dataTypeModels.stream()
-                .filter(dataModel -> dataModel.getMmgVersion().equals(mmgVersion) && dataModel.getCoreDataType().equals(inputDataType))
+                .filter(dataModel -> dataModel.mmgVersion().equals(mmgVersion) && dataModel.coreDataType().equals(inputDataType))
                 .findFirst();
     }
 

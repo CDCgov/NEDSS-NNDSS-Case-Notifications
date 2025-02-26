@@ -7,19 +7,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * The DataTypeModel class This class is intended to be used for
  * deserialization of DataTypes JSON  into Java objects using Jackson annotations.
  */
-public class DataTypeModel {
-    private final String serialNumber;
-    private final String questionIdentifier;
-    private final String hl7SegmentField;
-    private final String mmgVersion;
-    private final String dataType;
-    private final String coreDataType;
-    private final String mask;
-    private final String width;
-    private final String note;
-
+public record DateTypeModel(String serialNumber, String questionIdentifier, String hl7SegmentField, String mmgVersion,
+                            String dataType, String coreDataType, String mask, String width, String note) {
     @JsonCreator
-    public DataTypeModel(@JsonProperty("serial_number") String serialNumber,
+    public DateTypeModel(@JsonProperty("serial_number") String serialNumber,
                          @JsonProperty("question_identifier") String questionIdentifier,
                          @JsonProperty("hl7_segment_field") String hl7SegmentField,
                          @JsonProperty("mmg_version") String mmgVersion,
@@ -38,41 +29,6 @@ public class DataTypeModel {
         this.width = width;
         this.note = note;
     }
-    public String getSerialNumber() {
-        return serialNumber;
-    }
-
-    public String getQuestionIdentifier() {
-        return questionIdentifier;
-    }
-
-    public String getHl7SegmentField() {
-        return hl7SegmentField;
-    }
-
-    public String getMmgVersion() {
-        return mmgVersion;
-    }
-
-    public String getDataType() {
-        return dataType;
-    }
-
-    public String getCoreDataType() {
-        return coreDataType;
-    }
-
-    public String getMask() {
-        return mask;
-    }
-
-    public String getWidth() {
-        return width;
-    }
-
-    public String getNote() {
-        return note;
-    }
 
     @Override
     public String toString() {
@@ -85,7 +41,7 @@ public class DataTypeModel {
                 ", coreDataType = " + coreDataType +
                 ", mask = " + mask +
                 ", width = " + width +
-                ", node = " + note;
+                ", note = " + note;
     }
 
 }

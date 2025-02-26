@@ -17,10 +17,10 @@ import java.util.Optional;
 /**
  * Implementation of HL7FieldProcessor that reads DataTypes.json from Resources
  * creates list of Java Objects.
- */public class DateTypeProcessingService implements Hl7FieldProcessor {
+ */public class DateTypeProcessing implements Hl7FieldProcessor {
 
     private final ObjectMapper mapper = new ObjectMapper();
-    private static final Logger logger = LoggerFactory.getLogger(DateTypeProcessingService.class);
+    private static final Logger logger = LoggerFactory.getLogger(DateTypeProcessing.class);
 
     @Override
     public String process(Map<String, String> inputFields) {

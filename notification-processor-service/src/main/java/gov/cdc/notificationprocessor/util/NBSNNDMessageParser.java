@@ -8,7 +8,8 @@ import ca.uhn.hl7v2.model.v25.segment.OBR;
 import ca.uhn.hl7v2.model.v25.segment.PID;
 import gov.cdc.notificationprocessor.constants.Constants;
 import gov.cdc.notificationprocessor.consumer.KafkaConsumerService;
-import gov.cdc.notificationprocessor.service.DateTypeProcessingService;
+import gov.cdc.notificationprocessor.service.DateTypeProcessing;
+import gov.cdc.notificationprocessor.service.OBR31SegmentProcessing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
@@ -176,6 +177,10 @@ public class NBSNNDMessageParser extends DefaultHandler {
                 case Constants.QUESTION_IDENTIFIER_NND:
                     String questionIdentifierNND = currentField.toString().trim();
                     segmentFieldsWithValues.put(Constants.QUESTION_IDENTIFIER_NND, questionIdentifierNND);
+                    break;
+                case Constants.CE_CONDITION_CODE:
+                    String conditionCode = currentField.toString().trim();
+                    segmentFieldsWithValues.put(Constants.CE_CONDITION_CODE, conditionCode);
                     break;
 
             }
@@ -431,6 +436,7 @@ public class NBSNNDMessageParser extends DefaultHandler {
         String orderGroupID = obrSegmentFields.get(Constants.ORDER_GROUP_ID);
         String questionDataTypeNND = obrSegmentFields.get(Constants.QUESTION_DATA_TYPE_NND);;
         String questionIdentifierNND = obrSegmentFields.get(Constants.QUESTION_IDENTIFIER_NND);
+        String conditionCode = obrSegmentFields.get(Constants.CE_CONDITION_CODE);
         if (obrField.startsWith("OBR-3.1")){
             obr.getObr3_FillerOrderNumber().getEntityIdentifier().setValue(obrFieldValue);
             stateLocalID = obr.getObr3_FillerOrderNumber().getEntityIdentifier().getValue();
@@ -474,6 +480,12 @@ public class NBSNNDMessageParser extends DefaultHandler {
             obr.getObr25_ResultStatus().setValue(obrFieldValue);
         }else if (obrField.startsWith("OBR-31.0")){
             //TODO - custom function is needed, below just placeholder
+            Map<String,String> fields = new HashMap<>();
+            fields.put("conditionCode", conditionCode);
+            fields.put("status_code", "ACTIVE");
+            fields.put("message_profile_id", messageType);
+            OBR31SegmentProcessing segment = new OBR31SegmentProcessing();
+            segment.process(fields);
             obr.getObr31_ReasonForStudy(0).getText().setValue(obrFieldValue);
         }
 
@@ -485,7 +497,7 @@ public class NBSNNDMessageParser extends DefaultHandler {
         fields.put("inputDataType", questionDataTypeNND);
         fields.put("questionIdentifier", questionIdentifierNND);
         fields.put("hl7Segment", segmentField);
-        DateTypeProcessingService dateTypeProcessingService = new DateTypeProcessingService();
+        DateTypeProcessing dateTypeProcessingService = new DateTypeProcessing();
         return dateTypeProcessingService.process(fields);
     }
 }

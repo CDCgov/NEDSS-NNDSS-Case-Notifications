@@ -291,7 +291,7 @@ public class NBSNNDMessageParser extends DefaultHandler {
         }else if (pidField.startsWith("PID-3.4.3")){
             pid.getPatientIdentifierList(0).getAssigningAuthority().getUniversalIDType().setValue(pidFieldValue);
         }else if (pidField.startsWith("PID-7.0")){
-            String dateFormat = getDateFormat(pidFieldValue, questionDataTypeNND, questionIdentifierNND);
+            String dateFormat = getDateFormat(pidFieldValue, questionDataTypeNND, questionIdentifierNND,"PID-7");
             logger.info("dateFormat for pid-7 {}", dateFormat);
             pid.getPid7_DateTimeOfBirth().getTime().setValue(dateFormat);
         }else if (pidField.startsWith("PID-8.0")) {
@@ -379,7 +379,7 @@ public class NBSNNDMessageParser extends DefaultHandler {
             pid.getPid27_VeteransMilitaryStatus().getAlternateText().setValue(pidFieldValue);
             pid.getPid27_VeteransMilitaryStatus().getNameOfAlternateCodingSystem().setValue(pidFieldValue);
         }else if (pidField.startsWith("PID-29.0")) {
-            String dateFormat = getDateFormat(pidFieldValue, questionDataTypeNND, questionIdentifierNND);
+            String dateFormat = getDateFormat(pidFieldValue, questionDataTypeNND, questionIdentifierNND,"PID-29.0");
             pid.getPid29_PatientDeathDateAndTime().getTime().setValue(dateFormat);
         }else if (pidField.startsWith("PID-30.0")) {
             pid.getPid30_PatientDeathIndicator().setValue(pidFieldValue);
@@ -389,7 +389,7 @@ public class NBSNNDMessageParser extends DefaultHandler {
             pid.getPid32_IdentityReliabilityCode(identityReliabilityCodeIndex).setValue(pidFieldValue);
             identityReliabilityCodeIndex +=1;
         }else if (pidField.startsWith("PID-33.0")) {
-            String dateFormat = getDateFormat(pidFieldValue, questionDataTypeNND, questionIdentifierNND);
+            String dateFormat = getDateFormat(pidFieldValue, questionDataTypeNND, questionIdentifierNND, "PID-33.0");
             pid.getPid33_LastUpdateDateTime().getTime().setValue(dateFormat);
         }else if (pidField.startsWith("PID-34.1")) {
             pid.getPid34_LastUpdateFacility().getNamespaceID().setValue(pidFieldValue);
@@ -423,22 +423,14 @@ public class NBSNNDMessageParser extends DefaultHandler {
         }
     }
 
-    private String getDateFormat(String pidFieldValue, String questionDataTypeNND, String questionIdentifierNND) {
-        Map<String, String > fields = new HashMap<>();
-        fields.put(Constants.HL_SEVEN_SEGMENT_FIELD, pidFieldValue);
-        fields.put("mmgVersion", messageType);
-        fields.put("inputDataType", questionDataTypeNND);
-        fields.put("questionIdentifier", questionIdentifierNND);
-        fields.put("hl7Segment", "PID-7.0");
-        DateTypeProcessingService dateTypeProcessingService = new DateTypeProcessingService();
-        return dateTypeProcessingService.process(fields);
-    }
+
 
     private void processOBRFields(Map<String, String> obrSegmentFields) throws DataTypeException {
         String obrField = obrSegmentFields.get(Constants.HL_SEVEN_SEGMENT_FIELD);
         String obrFieldValue = obrSegmentFields.get(Constants.HL_SEVEN_SEGMENT_FIELD_VALUE);
         String orderGroupID = obrSegmentFields.get(Constants.ORDER_GROUP_ID);
-
+        String questionDataTypeNND = obrSegmentFields.get(Constants.QUESTION_DATA_TYPE_NND);;
+        String questionIdentifierNND = obrSegmentFields.get(Constants.QUESTION_IDENTIFIER_NND);
         if (obrField.startsWith("OBR-3.1")){
             obr.getObr3_FillerOrderNumber().getEntityIdentifier().setValue(obrFieldValue);
             stateLocalID = obr.getObr3_FillerOrderNumber().getEntityIdentifier().getValue();
@@ -473,13 +465,11 @@ public class NBSNNDMessageParser extends DefaultHandler {
         }else if (obrField.startsWith("OBR-4.3") && Objects.equals(orderGroupID, "2")){
             universalServiceIDNameOfCodingSystemGroup2 = obrFieldValue;
         }else if (obrField.startsWith("OBR-7.0")){
-            //TODO - custom function is needed, below just placeholder
-            logger.info("OBR-7");
-            //obr.getObr7_ObservationDateTime().getTime().setValue(obrFieldValue);
+            String dateFormat = getDateFormat(obrFieldValue, questionDataTypeNND, questionIdentifierNND,"OBR-7.0");
+            obr.getObr7_ObservationDateTime().getTime().setValue(dateFormat);
         }else if (obrField.startsWith("OBR-22.0")){
-            //TODO - custom function is needed, below just placeholder
-            logger.info("OBR-22");
-            //obr.getObr22_ResultsRptStatusChngDateTime().getTime().setValue(obrFieldValue);
+            String dateFormat = getDateFormat(obrFieldValue, questionDataTypeNND, questionIdentifierNND,"OBR-22.0");
+            obr.getObr22_ResultsRptStatusChngDateTime().getTime().setValue(dateFormat);
         }else if (obrField.startsWith("OBR-25.0")){
             obr.getObr25_ResultStatus().setValue(obrFieldValue);
         }else if (obrField.startsWith("OBR-31.0")){
@@ -487,5 +477,15 @@ public class NBSNNDMessageParser extends DefaultHandler {
             obr.getObr31_ReasonForStudy(0).getText().setValue(obrFieldValue);
         }
 
+    }
+    private String getDateFormat(String pidFieldValue, String questionDataTypeNND, String questionIdentifierNND, String segmentField) {
+        Map<String, String > fields = new HashMap<>();
+        fields.put(Constants.HL_SEVEN_SEGMENT_FIELD, pidFieldValue);
+        fields.put("mmgVersion", messageType);
+        fields.put("inputDataType", questionDataTypeNND);
+        fields.put("questionIdentifier", questionIdentifierNND);
+        fields.put("hl7Segment", segmentField);
+        DateTypeProcessingService dateTypeProcessingService = new DateTypeProcessingService();
+        return dateTypeProcessingService.process(fields);
     }
 }

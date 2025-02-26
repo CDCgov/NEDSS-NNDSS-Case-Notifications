@@ -1,7 +1,6 @@
 package gov.cdc.notificationprocessor.util;
 
 import ca.uhn.hl7v2.model.DataTypeException;
-import ca.uhn.hl7v2.model.v25.datatype.DTM;
 import ca.uhn.hl7v2.model.v25.message.ORU_R01;
 import ca.uhn.hl7v2.model.v25.segment.MSH;
 
@@ -10,7 +9,6 @@ import ca.uhn.hl7v2.model.v25.segment.PID;
 import gov.cdc.notificationprocessor.constants.Constants;
 import gov.cdc.notificationprocessor.consumer.KafkaConsumerService;
 import gov.cdc.notificationprocessor.service.DateTypeProcessingService;
-import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
@@ -293,15 +291,7 @@ public class NBSNNDMessageParser extends DefaultHandler {
         }else if (pidField.startsWith("PID-3.4.3")){
             pid.getPatientIdentifierList(0).getAssigningAuthority().getUniversalIDType().setValue(pidFieldValue);
         }else if (pidField.startsWith("PID-7.0")){
-            // build map with input fields needed to convert to build date string
-            Map<String, String > fields = new HashMap<>();
-            fields.put(Constants.HL_SEVEN_SEGMENT_FIELD,pidFieldValue);
-            fields.put("mmgVersion", messageType);
-            fields.put("inputDataType", questionDataTypeNND);
-            fields.put("questionIdentifier", questionIdentifierNND);
-            fields.put("hl7Segment", "PID-7.0");
-            DateTypeProcessingService dateTypeProcessingService = new DateTypeProcessingService();
-            String dateFormat = dateTypeProcessingService.process(fields);
+            String dateFormat = getDateFormat(pidFieldValue, questionDataTypeNND, questionIdentifierNND);
             logger.info("dateFormat for pid-7 {}", dateFormat);
             pid.getPid7_DateTimeOfBirth().getTime().setValue(dateFormat);
         }else if (pidField.startsWith("PID-8.0")) {
@@ -389,8 +379,8 @@ public class NBSNNDMessageParser extends DefaultHandler {
             pid.getPid27_VeteransMilitaryStatus().getAlternateText().setValue(pidFieldValue);
             pid.getPid27_VeteransMilitaryStatus().getNameOfAlternateCodingSystem().setValue(pidFieldValue);
         }else if (pidField.startsWith("PID-29.0")) {
-            //TODO - requires custom handling MapToTsDataTYpe(), need to see an example of the field in the xml
-            logger.info("TODO PID-29");
+            String dateFormat = getDateFormat(pidFieldValue, questionDataTypeNND, questionIdentifierNND);
+            pid.getPid29_PatientDeathDateAndTime().getTime().setValue(dateFormat);
         }else if (pidField.startsWith("PID-30.0")) {
             pid.getPid30_PatientDeathIndicator().setValue(pidFieldValue);
         }else if (pidField.startsWith("PID-31.0")) {
@@ -399,10 +389,9 @@ public class NBSNNDMessageParser extends DefaultHandler {
             pid.getPid32_IdentityReliabilityCode(identityReliabilityCodeIndex).setValue(pidFieldValue);
             identityReliabilityCodeIndex +=1;
         }else if (pidField.startsWith("PID-33.0")) {
-            //TODO - requires custom handling MapToTSDataTYpe(), need to see an example of the field in the xml
-            logger.info("TODO PID-33");
+            String dateFormat = getDateFormat(pidFieldValue, questionDataTypeNND, questionIdentifierNND);
+            pid.getPid33_LastUpdateDateTime().getTime().setValue(dateFormat);
         }else if (pidField.startsWith("PID-34.1")) {
-            //TODO extract values from the right elements from xml file
             pid.getPid34_LastUpdateFacility().getNamespaceID().setValue(pidFieldValue);
         }else if (pidField.startsWith("PID-34.2")) {
             pid.getPid34_LastUpdateFacility().getUniversalID().setValue(pidFieldValue);
@@ -432,6 +421,17 @@ public class NBSNNDMessageParser extends DefaultHandler {
             pid.getPid38_ProductionClassCode().getAlternateText().setValue(pidFieldValue);
             pid.getPid38_ProductionClassCode().getNameOfAlternateCodingSystem().setValue(pidFieldValue);
         }
+    }
+
+    private String getDateFormat(String pidFieldValue, String questionDataTypeNND, String questionIdentifierNND) {
+        Map<String, String > fields = new HashMap<>();
+        fields.put(Constants.HL_SEVEN_SEGMENT_FIELD, pidFieldValue);
+        fields.put("mmgVersion", messageType);
+        fields.put("inputDataType", questionDataTypeNND);
+        fields.put("questionIdentifier", questionIdentifierNND);
+        fields.put("hl7Segment", "PID-7.0");
+        DateTypeProcessingService dateTypeProcessingService = new DateTypeProcessingService();
+        return dateTypeProcessingService.process(fields);
     }
 
     private void processOBRFields(Map<String, String> obrSegmentFields) throws DataTypeException {

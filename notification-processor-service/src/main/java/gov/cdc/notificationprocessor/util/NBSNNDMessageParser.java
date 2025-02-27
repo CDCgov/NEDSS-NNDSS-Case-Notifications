@@ -1,11 +1,14 @@
 package gov.cdc.notificationprocessor.util;
 
+import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.DataTypeException;
 import ca.uhn.hl7v2.model.v25.message.ORU_R01;
 import ca.uhn.hl7v2.model.v25.segment.MSH;
 
 import ca.uhn.hl7v2.model.v25.segment.OBR;
 import ca.uhn.hl7v2.model.v25.segment.PID;
+import ca.uhn.hl7v2.parser.PipeParser;
+import com.google.gson.Gson;
 import gov.cdc.notificationprocessor.constants.Constants;
 import gov.cdc.notificationprocessor.consumer.KafkaConsumerService;
 import gov.cdc.notificationprocessor.service.DateTypeProcessing;
@@ -24,6 +27,7 @@ public class NBSNNDMessageParser extends DefaultHandler {
     private String currentElement = "";
     private Boolean isSingleProfile = true;
     private Boolean isWithinMessageElement = false;
+
     private Boolean genericMMG = false;
     private String fillerOrderNumberUniversalID2 = "";
     private String fillerOrderNumberUniversalIDType2 = "";
@@ -105,7 +109,14 @@ public class NBSNNDMessageParser extends DefaultHandler {
     }
     @Override
     public void endDocument() {
-        logger.info("Completed the parsing process");
+        PipeParser parser = new PipeParser();
+        try {
+            String encodedMessage = parser.encode(oruMessage);
+            logger.info("Completed parsing process with hl7 message {} ", encodedMessage);
+        } catch (HL7Exception e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     @Override
@@ -132,7 +143,6 @@ public class NBSNNDMessageParser extends DefaultHandler {
     @Override
     public void endElement(String uri, String localName, String qName) {
         if (qName.equals(Constants.MESSAGE_ELEMENT)) {
-            logger.info("Completed <MessageElement> processing for {}", currentElement);
             isWithinMessageElement = false;
             currentField.setLength(0);
 
@@ -182,10 +192,29 @@ public class NBSNNDMessageParser extends DefaultHandler {
                     String conditionCode = currentField.toString().trim();
                     segmentFieldsWithValues.put(Constants.CE_CONDITION_CODE, conditionCode);
                     break;
+                case Constants.CE_CODED_VALUE_DESCRIPTION:
+                    String codedValueDescription = currentField.toString().trim();
+                    segmentFieldsWithValues.put(Constants.CE_CODED_VALUE_DESCRIPTION, codedValueDescription);
+                    break;
+                case Constants.CE_CODED_VALUE_CODING_SYSTEM:
+                    String codedValueCodingSystem = currentField.toString().trim();
+                    segmentFieldsWithValues.put(Constants.CE_CODED_VALUE_CODING_SYSTEM, codedValueCodingSystem);
+                    break;
+                case Constants.CE_LOCAL_CODED_VALUE:
+                    String localCodedValue = currentField.toString().trim();
+                    segmentFieldsWithValues.put(Constants.CE_LOCAL_CODED_VALUE, localCodedValue);
+                    break;
+                case Constants.CE_LOCAL_CODED_VALUE_DESCRIPTION:
+                    String localCodedValueDescription = currentField.toString().trim();
+                    segmentFieldsWithValues.put(Constants.CE_LOCAL_CODED_VALUE_DESCRIPTION, localCodedValueDescription);
+                    break;
+                case Constants.CE_LOCAL_CODED_VALUE_CODING_SYSTEM:
+                    String localCodedValueCodingSystem = currentField.toString().trim();
+                    segmentFieldsWithValues.put(Constants.CE_LOCAL_CODED_VALUE_CODING_SYSTEM, localCodedValueCodingSystem);
+                    break;
 
             }
         }
-        logger.info("MSH message is {} ", oruMessage.getMessage());
     }
 
     /**
@@ -260,8 +289,6 @@ public class NBSNNDMessageParser extends DefaultHandler {
                 }
             }
 
-            logger.info("MSH-21 message is {} ", segmentFieldsWithValues);
-
             //process MSH21 field
             if (isSingleProfile){
                 msh.getMessageProfileIdentifier(0).getEntityIdentifier().setValue(entityIdentifierGroup2);
@@ -279,6 +306,7 @@ public class NBSNNDMessageParser extends DefaultHandler {
                 msh.getMessageProfileIdentifier(1).getUniversalID().setValue(universalIDGroup2);
                 msh.getMessageProfileIdentifier(1).getUniversalIDType().setValue(universalIDTypeGroup2);
             }
+            segmentFieldsWithValues.clear();
         }
     }
 
@@ -297,7 +325,6 @@ public class NBSNNDMessageParser extends DefaultHandler {
             pid.getPatientIdentifierList(0).getAssigningAuthority().getUniversalIDType().setValue(pidFieldValue);
         }else if (pidField.startsWith("PID-7.0")){
             String dateFormat = getDateFormat(pidFieldValue, questionDataTypeNND, questionIdentifierNND,"PID-7");
-            logger.info("dateFormat for pid-7 {}", dateFormat);
             pid.getPid7_DateTimeOfBirth().getTime().setValue(dateFormat);
         }else if (pidField.startsWith("PID-8.0")) {
             pid.getPid8_AdministrativeSex().setValue(pidFieldValue);
@@ -426,9 +453,8 @@ public class NBSNNDMessageParser extends DefaultHandler {
             pid.getPid38_ProductionClassCode().getAlternateText().setValue(pidFieldValue);
             pid.getPid38_ProductionClassCode().getNameOfAlternateCodingSystem().setValue(pidFieldValue);
         }
+        segmentFieldsWithValues.clear();
     }
-
-
 
     private void processOBRFields(Map<String, String> obrSegmentFields) throws DataTypeException {
         String obrField = obrSegmentFields.get(Constants.HL_SEVEN_SEGMENT_FIELD);
@@ -437,6 +463,11 @@ public class NBSNNDMessageParser extends DefaultHandler {
         String questionDataTypeNND = obrSegmentFields.get(Constants.QUESTION_DATA_TYPE_NND);;
         String questionIdentifierNND = obrSegmentFields.get(Constants.QUESTION_IDENTIFIER_NND);
         String conditionCode = obrSegmentFields.get(Constants.CE_CONDITION_CODE);
+        String codedValueDescription = obrSegmentFields.get(Constants.CE_CODED_VALUE_DESCRIPTION);
+        String codedValueCodingSystem = obrSegmentFields.get(Constants.CE_CODED_VALUE_CODING_SYSTEM);
+        String localCodedValue = obrSegmentFields.get(Constants.CE_LOCAL_CODED_VALUE);
+        String localCodedValueDescription = obrSegmentFields.get(Constants.CE_LOCAL_CODED_VALUE_DESCRIPTION);
+        String localCodedValueCodingSystem = obrSegmentFields.get(Constants.CE_LOCAL_CODED_VALUE_CODING_SYSTEM);
         if (obrField.startsWith("OBR-3.1")){
             obr.getObr3_FillerOrderNumber().getEntityIdentifier().setValue(obrFieldValue);
             stateLocalID = obr.getObr3_FillerOrderNumber().getEntityIdentifier().getValue();
@@ -449,7 +480,6 @@ public class NBSNNDMessageParser extends DefaultHandler {
         }else if (obrField.startsWith("OBR-3.3") && Objects.equals(orderGroupID, "2")){
             obr.getObr3_FillerOrderNumber().getUniversalIDType().setValue(obrFieldValue);
             fillerOrderNumberUniversalID2 = obrFieldValue;
-
         }else if (obrField.startsWith("OBR-3.4") && Objects.equals(orderGroupID, "1")){
             obr.getObr3_FillerOrderNumber().getUniversalIDType().setValue(obrFieldValue);
         }else if (obrField.startsWith("OBR-3.4") && Objects.equals(orderGroupID, "2")){
@@ -464,7 +494,6 @@ public class NBSNNDMessageParser extends DefaultHandler {
             universalServiceIDTextGroup1 = obrFieldValue;
         }else if (obrField.startsWith("OBR-4.2") && Objects.equals(orderGroupID, "2")){
             universalServiceIdentifierGroup2 = obrFieldValue;
-
         }else if (obrField.startsWith("OBR-4.3") && Objects.equals(orderGroupID, "1")){
             obr.getObr4_UniversalServiceIdentifier().getNameOfCodingSystem().setValue("LN");
             universalServiceIDNameOfCodingSystemGroup1 = obrFieldValue;
@@ -479,16 +508,36 @@ public class NBSNNDMessageParser extends DefaultHandler {
         }else if (obrField.startsWith("OBR-25.0")){
             obr.getObr25_ResultStatus().setValue(obrFieldValue);
         }else if (obrField.startsWith("OBR-31.0")){
-            //TODO - custom function is needed, below just placeholder
+            // build map with input parameters needed for matching
             Map<String,String> fields = new HashMap<>();
             fields.put("conditionCode", conditionCode);
             fields.put("status_code", "ACTIVE");
             fields.put("message_profile_id", messageType);
+            // instantiate class
             OBR31SegmentProcessing segment = new OBR31SegmentProcessing();
-            segment.process(fields);
-            obr.getObr31_ReasonForStudy(0).getText().setValue(obrFieldValue);
-        }
+            // result holds string to be deserialized
+            String result = segment.process(fields);
+            Gson gson = new Gson();
+            MappedFields mappedServiceActionCondition = gson.fromJson(result, MappedFields.class);
 
+            //process the results and update OBR-31 field
+            if (Objects.equals(mappedServiceActionCondition.mappedService, "") || Objects.equals(mappedServiceActionCondition.mappedAction, "")){
+                obr.getObr31_ReasonForStudy(0).getIdentifier().setValue(conditionCode);
+            }else if(Objects.equals(mappedServiceActionCondition.mappedConditionCode, "")){
+                obr.getObr31_ReasonForStudy(0).getIdentifier().setValue(mappedServiceActionCondition.mappedConditionCode);
+            }else{
+                obr.getObr31_ReasonForStudy(0).getIdentifier().setValue(conditionCode);
+            }
+
+            //update other fields
+            obr.getObr31_ReasonForStudy(0).getText().setValue(codedValueDescription);
+            obr.getObr31_ReasonForStudy(0).getNameOfCodingSystem().setValue(codedValueCodingSystem);
+            obr.getObr31_ReasonForStudy(0).getAlternateIdentifier().setValue(localCodedValue);
+            obr.getObr31_ReasonForStudy(0).getAlternateText().setValue(localCodedValueDescription);
+            obr.getObr31_ReasonForStudy(0).getCe6_NameOfAlternateCodingSystem().setValue(localCodedValueCodingSystem);
+        }
+        logger.info(" we are {} ", obr.getMessage());
+        segmentFieldsWithValues.clear();
     }
     private String getDateFormat(String pidFieldValue, String questionDataTypeNND, String questionIdentifierNND, String segmentField) {
         Map<String, String > fields = new HashMap<>();
@@ -499,5 +548,11 @@ public class NBSNNDMessageParser extends DefaultHandler {
         fields.put("hl7Segment", segmentField);
         DateTypeProcessing dateTypeProcessingService = new DateTypeProcessing();
         return dateTypeProcessingService.process(fields);
+    }
+
+    public static class MappedFields {
+        public String mappedService;
+        public String mappedAction;
+        public String mappedConditionCode;
     }
 }

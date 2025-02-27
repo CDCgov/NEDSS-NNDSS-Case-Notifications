@@ -24,7 +24,7 @@ import java.util.Optional;
 
     @Override
     public String process(Map<String, String> inputFields) {
-        String segmentField = inputFields.get("hl7Segment");
+        //String segmentField = inputFields.get("hl7Segment");
         String hl7SegmentDateField = inputFields.get("hl7SegmentField");
         String inputDataType = inputFields.get("inputDataType");
         String mmgVersion = inputFields.get("mmgVersion");
@@ -58,7 +58,7 @@ import java.util.Optional;
         //month
         if (outputDataType.equalsIgnoreCase("DT4") || outputDataType.equals("TS4")) {
             matchFound = true;
-        }else if (!matchFound) {
+        }else {
             if (hl7SegmentDateField.length() <7) {
                 month = "00";
             }else{

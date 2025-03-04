@@ -2,6 +2,7 @@ package gov.cdc.notificationprocessor.consumer;
 
 import gov.cdc.notificationprocessor.model.MessageElement;
 import gov.cdc.notificationprocessor.model.NBSNNDIntermediaryMessage;
+import gov.cdc.notificationprocessor.util.HL7MessageBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -27,21 +28,16 @@ public class KafkaConsumerService {
 
         try {
             File xmlFile = new File("src/main/resources/sample_010724.xml");
-
             JAXBContext context = JAXBContext.newInstance(NBSNNDIntermediaryMessage.class);
             Unmarshaller unmarshaller = context.createUnmarshaller();
 
-            NBSNNDIntermediaryMessage object = (NBSNNDIntermediaryMessage) unmarshaller.unmarshal(xmlFile);
-            //use the object created to build hl7 message
-            for ( MessageElement messageElement: object.getMessageElement()){
-                //process each MessageElement here
-                logger.info(messageElement.getHl7SegmentField());
-            }
+            NBSNNDIntermediaryMessage nbsnndIntermediaryMessage= (NBSNNDIntermediaryMessage) unmarshaller.unmarshal(xmlFile);
+            //Instantiate class to start building HL7 Message
+            HL7MessageBuilder messageBuilder = new HL7MessageBuilder(nbsnndIntermediaryMessage);
+            messageBuilder.handler();
 
         }catch (Exception e) {
             logger.error("Exception occurred while parsing/processing NBSNNDMessage xml file", e);
         }
-
-        //check if its std or non std and call handler accordingly.
     }
 }

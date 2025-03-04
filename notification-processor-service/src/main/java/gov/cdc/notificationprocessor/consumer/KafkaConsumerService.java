@@ -1,13 +1,16 @@
 package gov.cdc.notificationprocessor.consumer;
 
-import gov.cdc.notificationprocessor.util.NBSNNDMessageParser;
+import gov.cdc.notificationprocessor.model.MessageElement;
+import gov.cdc.notificationprocessor.model.NBSNNDIntermediaryMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Unmarshaller;
+
 import java.io.File;
+
 
 /**
  * KafkaConsumerService listens to a kafka topic and processes notifications it receives.
@@ -23,25 +26,22 @@ public class KafkaConsumerService {
         logger.info("Processing notification routes for STD/NonSTD for now manual");
 
         try {
-            SAXParserFactory factory = SAXParserFactory.newInstance();
-            SAXParser saxParser = factory.newSAXParser();
             File xmlFile = new File("src/main/resources/sample_010724.xml");
-            NBSNNDMessageParser handler  = new NBSNNDMessageParser();
-            saxParser.parse(xmlFile, handler);
+
+            JAXBContext context = JAXBContext.newInstance(NBSNNDIntermediaryMessage.class);
+            Unmarshaller unmarshaller = context.createUnmarshaller();
+
+            NBSNNDIntermediaryMessage object = (NBSNNDIntermediaryMessage) unmarshaller.unmarshal(xmlFile);
+            //use the object created to build hl7 message
+            for ( MessageElement messageElement: object.getMessageElement()){
+                //process each MessageElement here
+                logger.info(messageElement.getHl7SegmentField());
+            }
+
         }catch (Exception e) {
             logger.error("Exception occurred while parsing/processing NBSNNDMessage xml file", e);
         }
 
-
-
-
-
-
-
-
         //check if its std or non std and call handler accordingly.
-
-
     }
-
 }

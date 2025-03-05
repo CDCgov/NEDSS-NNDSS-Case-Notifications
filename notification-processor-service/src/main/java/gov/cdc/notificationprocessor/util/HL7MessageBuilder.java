@@ -9,12 +9,14 @@ import ca.uhn.hl7v2.model.v25.segment.OBR;
 import ca.uhn.hl7v2.model.v25.segment.OBX;
 import ca.uhn.hl7v2.model.v25.segment.PID;
 
+import com.google.gson.Gson;
 import gov.cdc.notificationprocessor.constants.Constants;
 
 import gov.cdc.notificationprocessor.model.MessageElement;
 import gov.cdc.notificationprocessor.model.NBSNNDIntermediaryMessage;
 
 import gov.cdc.notificationprocessor.service.DateTypeProcessing;
+import gov.cdc.notificationprocessor.service.OBR31SegmentProcessing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,7 +43,7 @@ public class HL7MessageBuilder{
     String universalIDGroup2 = "";
     String universalIDTypeGroup2 = "";
 
-    private String stateLocalID;
+    private String stateLocalID = "";
     private Integer raceIndex = 0;
     private Integer cityIndex = 0;
     private Integer stateIndex = 0;
@@ -50,6 +52,38 @@ public class HL7MessageBuilder{
     private Integer addressTypeIndex = 0;
     private Integer citizenshipTypeIndex = 0;
     private Integer identityReliabilityCodeIndex = 0;
+
+    //Repeating block for lab
+    int drugCounter = 0;
+    int dupRepeatCongenitalCounter = 0;
+    int inv290Inv291Counter = 0;
+    int inv290Inv291Counter1 = 0;
+    int inv290Inv291Counter2 = 0;
+    int std121ObxInc = -1;
+    int std121obxOrderGroupId = 0;
+    int std121ObsValue = -1;
+    String NBS246observationSubID ="";
+    String std300="";
+    int raceCounterNK1 = 0;
+    String OTH_COMP_TEXT = "";
+    String OTH_COMP_REPLACE ="";
+    int complicationCounter = 0;
+    String OTH_SANDS_TEXT = "";
+    String OTH_SANDS_REPLACE ="";
+    int signSymptomsCounter = 0;
+    boolean INV162RepeatIndicator = false;
+    private String fillerOrderNumberUniversalID2 = "";
+    private String fillerOrderNumberUniversalIDType2 = "";
+    private String obrEntityIdentifierGroup1 = "";
+    private String getObrEntityIdentifierGroup2 ="";
+    private String fillerOrderNumberNameSpaceIDGroup1 = "";
+    private String fillerOrderNumberNameSpaceIDGroup2 = "";
+    private String universalServiceIdentifierGroup1 = "";
+    private String universalServiceIdentifierGroup2 = "";
+    private String universalServiceIDTextGroup1 = "";
+    private String universalServiceIDTextGroup2 = "";
+    private String universalServiceIDNameOfCodingSystemGroup1 ="";
+    private String universalServiceIDNameOfCodingSystemGroup2 ="";
 
     private static final Logger logger = LoggerFactory.getLogger(HL7MessageBuilder.class);
 
@@ -79,8 +113,9 @@ public class HL7MessageBuilder{
                 processMSHFields(messageElement, msh);
             }else if (segmentField.startsWith("PID")){
                 processPIDFields(messageElement, pid);
+            }else if (segmentField.startsWith("OBR")){
+                processOBRFields(messageElement, obr);
             }
-
         }
         logger.info("Final message: {} ", oruMessage.getMessage());
     }
@@ -89,7 +124,6 @@ public class HL7MessageBuilder{
      * sets the value for all MSH fields found in the xml
      */
     private void processMSHFields(MessageElement messageElement, MSH msh) throws DataTypeException {
-        logger.info("Begining of the message {} ", messageElement.getHl7SegmentField());
         String mshField = messageElement.getHl7SegmentField().trim();
         String mshFieldValue = "";
         if (mshField.startsWith("MSH-3.1")){
@@ -201,7 +235,9 @@ public class HL7MessageBuilder{
             }
         }
     }
-
+    /**
+     * sets the value for all PID fields found in the xml
+     */
     private void processPIDFields(MessageElement messageElement, PID pid) throws DataTypeException {
         String pidField = messageElement.getHl7SegmentField().trim();
         String pidFieldValue = "";
@@ -304,6 +340,7 @@ public class HL7MessageBuilder{
             pid.getPid27_VeteransMilitaryStatus().getAlternateText().setValue(pidFieldValue);
             pid.getPid27_VeteransMilitaryStatus().getNameOfAlternateCodingSystem().setValue(pidFieldValue);
         }else if (pidField.startsWith("PID-29.0")) {
+            pidFieldValue = messageElement.getDataElement().getTsDataType().getTime().toString().trim();
             String dateFormat = getDateFormat(pidFieldValue, questionDataTypeNND, questionIdentifierNND,"PID-29.0");
             pid.getPid29_PatientDeathDateAndTime().getTime().setValue(dateFormat);
         }else if (pidField.startsWith("PID-30.0")) {
@@ -347,6 +384,95 @@ public class HL7MessageBuilder{
             pid.getPid38_ProductionClassCode().getNameOfAlternateCodingSystem().setValue(pidFieldValue);
         }
     }
+    /**
+     * sets the value for all OBR fields found in the xml
+     */
+    private void processOBRFields(MessageElement messageElement, OBR obr) throws DataTypeException {
+        String obrField = messageElement.getHl7SegmentField().trim();
+        String obrFieldValue = ""; //initialize to an empty string, depends on the OBR segment field
+        String orderGroupID = messageElement.getOrderGroupId();
+        String questionDataTypeNND = messageElement.getDataElement().getQuestionDataTypeNND().trim();
+        String questionIdentifierNND = messageElement.getQuestionIdentifierNND();
+
+        if (obrField.startsWith("OBR-3.1")){
+            obrFieldValue = messageElement.getDataElement().getStDataType().getStringData().trim();
+            obr.getObr3_FillerOrderNumber().getEntityIdentifier().setValue(obrFieldValue);
+            stateLocalID = obr.getObr3_FillerOrderNumber().getEntityIdentifier().getValue();
+        }else if (obrField.startsWith("OBR-3.2") && Objects.equals(orderGroupID, "1")) {
+
+            obr.getObr3_FillerOrderNumber().getNamespaceID().setValue(obrFieldValue);
+        }else if (obrField.startsWith("OBR-3.2") && Objects.equals(orderGroupID, "2")){
+            fillerOrderNumberNameSpaceIDGroup2 = obrFieldValue;
+        }else if (obrField.startsWith("OBR-3.3") && Objects.equals(orderGroupID, "1")){
+            obr.getObr3_FillerOrderNumber().getUniversalIDType().setValue(obrFieldValue);
+        }else if (obrField.startsWith("OBR-3.3") && Objects.equals(orderGroupID, "2")){
+            obr.getObr3_FillerOrderNumber().getUniversalIDType().setValue(obrFieldValue);
+            fillerOrderNumberUniversalID2 = obrFieldValue;
+        }else if (obrField.startsWith("OBR-3.4") && Objects.equals(orderGroupID, "1")){
+            obr.getObr3_FillerOrderNumber().getUniversalIDType().setValue(obrFieldValue);
+        }else if (obrField.startsWith("OBR-3.4") && Objects.equals(orderGroupID, "2")){
+            fillerOrderNumberUniversalIDType2 = obrFieldValue;
+        }else if (obrField.startsWith("OBR-4.1") && Objects.equals(orderGroupID, "1")) {
+            obr.getObr4_UniversalServiceIdentifier().getIdentifier().setValue("68991-9");
+            universalServiceIdentifierGroup1 = obrFieldValue;
+        }else if (obrField.startsWith("OBR-4.1") && Objects.equals(orderGroupID, "2")){
+            universalServiceIdentifierGroup2 = obrFieldValue;
+        }else if (obrField.startsWith("OBR-4.2") && Objects.equals(orderGroupID, "1")){
+            obr.getObr4_UniversalServiceIdentifier().getAlternateIdentifier().setValue("Epidemiologic Information");
+            universalServiceIDTextGroup1 = obrFieldValue;
+        }else if (obrField.startsWith("OBR-4.2") && Objects.equals(orderGroupID, "2")){
+            universalServiceIdentifierGroup2 = obrFieldValue;
+        }else if (obrField.startsWith("OBR-4.3") && Objects.equals(orderGroupID, "1")){
+            obr.getObr4_UniversalServiceIdentifier().getNameOfCodingSystem().setValue("LN");
+            universalServiceIDNameOfCodingSystemGroup1 = obrFieldValue;
+        }else if (obrField.startsWith("OBR-4.3") && Objects.equals(orderGroupID, "2")){
+            universalServiceIDNameOfCodingSystemGroup2 = obrFieldValue;
+        }else if (obrField.startsWith("OBR-7.0")){
+            obrFieldValue = messageElement.getDataElement().getTsDataType().getTime().toString().trim();
+            String dateFormat = getDateFormat(obrFieldValue, questionDataTypeNND, questionIdentifierNND,"OBR-7.0");
+            obr.getObr7_ObservationDateTime().getTime().setValue(dateFormat);
+        }else if (obrField.startsWith("OBR-22.0")){
+            obrFieldValue = messageElement.getDataElement().getTsDataType().getTime().toString().trim();
+            String dateFormat = getDateFormat(obrFieldValue, questionDataTypeNND, questionIdentifierNND,"OBR-22.0");
+            obr.getObr22_ResultsRptStatusChngDateTime().getTime().setValue(dateFormat);
+        }else if (obrField.startsWith("OBR-25.0")){
+            obr.getObr25_ResultStatus().setValue(obrFieldValue);
+        }else if (obrField.startsWith("OBR-31.0")){
+            String conditionCode = messageElement.getDataElement().getCeDataType().getCeCodedValue().trim();
+            String codedValueDescription = messageElement.getDataElement().getCeDataType().getCeCodedValueDescription().trim();
+            String codedValueCodingSystem = messageElement.getDataElement().getCeDataType().getCeLocalCodedValueCodingSystem().trim();
+            String localCodedValue = messageElement.getDataElement().getCeDataType().getCeLocalCodedValue().trim();
+            String localCodedValueDescription = messageElement.getDataElement().getCeDataType().getCeLocalCodedValueDescription().trim();
+            String localCodedValueCodingSystem = messageElement.getDataElement().getCeDataType().getCeLocalCodedValueCodingSystem().trim();
+            // build map with input parameters needed for matching
+            Map<String,String> fields = new HashMap<>();
+            fields.put("conditionCode", conditionCode);
+            fields.put("status_code", "ACTIVE");
+            fields.put("message_profile_id", messageType);
+            // instantiate class to process OBR-31 field
+            OBR31SegmentProcessing segment = new OBR31SegmentProcessing();
+            // result holds string to be deserialized
+            String result = segment.process(fields);
+            Gson gson = new Gson();
+            MappedFields mappedServiceActionCondition = gson.fromJson(result, MappedFields.class);
+
+            //process the results and update OBR-31 field
+            if (Objects.equals(mappedServiceActionCondition.mappedService, "") || Objects.equals(mappedServiceActionCondition.mappedAction, "")){
+                obr.getObr31_ReasonForStudy(0).getIdentifier().setValue(conditionCode);
+            }else if(Objects.equals(mappedServiceActionCondition.mappedConditionCode, "")){
+                obr.getObr31_ReasonForStudy(0).getIdentifier().setValue(mappedServiceActionCondition.mappedConditionCode);
+            }else{
+                obr.getObr31_ReasonForStudy(0).getIdentifier().setValue(conditionCode);
+            }
+
+            //update other fields
+            obr.getObr31_ReasonForStudy(0).getText().setValue(codedValueDescription);
+            obr.getObr31_ReasonForStudy(0).getNameOfCodingSystem().setValue(codedValueCodingSystem);
+            obr.getObr31_ReasonForStudy(0).getAlternateIdentifier().setValue(localCodedValue);
+            obr.getObr31_ReasonForStudy(0).getAlternateText().setValue(localCodedValueDescription);
+            obr.getObr31_ReasonForStudy(0).getCe6_NameOfAlternateCodingSystem().setValue(localCodedValueCodingSystem);
+        }
+    }
 
     private String getDateFormat(String pidFieldValue, String questionDataTypeNND, String questionIdentifierNND, String segmentField) {
         Map<String, String > fields = new HashMap<>();
@@ -358,5 +484,10 @@ public class HL7MessageBuilder{
         DateTypeProcessing dateTypeProcessingService = new DateTypeProcessing();
         return dateTypeProcessingService.process(fields);
 
+    }
+    public static class MappedFields {
+        public String mappedService;
+        public String mappedAction;
+        public String mappedConditionCode;
     }
 }

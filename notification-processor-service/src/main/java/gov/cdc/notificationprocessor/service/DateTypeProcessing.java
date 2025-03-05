@@ -24,6 +24,7 @@ import java.util.Optional;
 
     @Override
     public String process(Map<String, String> inputFields) {
+        logger.info ("inputFields: {}", inputFields);
         //String segmentField = inputFields.get("hl7Segment");
         String hl7SegmentDateField = inputFields.get("hl7SegmentField");
         String inputDataType = inputFields.get("inputDataType");
@@ -38,14 +39,19 @@ import java.util.Optional;
             outputDataType = matchedDataType.get().dataType();
         }
 
-        String dateFormatted = formatDateField(hl7SegmentDateField, inputDataType, outputDataType);
+        String dateFormatted = formatDateField(hl7SegmentDateField, outputDataType);
 
         logger.info("Final Formatted date string: {}", dateFormatted);
-
         return dateFormatted;
     }
 
-    private String formatDateField(String hl7SegmentDateField, String inputDataType, String outputDataType) {
+    /**
+     *
+     * @param hl7SegmentDateField date format from hl7 segment field in ISO 8601
+     * @param outputDataType date format based on the
+     * @return date format based on the match found in DateTypes.json in epoch format.
+     */
+    private String formatDateField(String hl7SegmentDateField,String outputDataType) {
         boolean matchFound = false;
         //extract year
         String year = extractDateComponent(hl7SegmentDateField,0, 4);
@@ -121,15 +127,24 @@ import java.util.Optional;
         return year + month + day + hours + minutes + seconds + milliseconds;
     }
 
+    /**
+     * Checks if inputDataType is of type DT or TS, if not  returns an empty string
+     * @param inputDataType input datatype
+     * @return dataType
+     */
     private String mapInputToOutputDataType(String inputDataType) {
         if ("DT".equals(inputDataType)) {
             return "DT8";
         } else if ("TS".equals(inputDataType)) {
             return "TS18";
         }
-        return "";
+        return inputDataType;
     }
 
+    /**
+     * Reads DataTypes.json from resources folder, uses ObjectMapper class to convert JSON into Java Objects.
+     * @return Java Objects of date format
+     */
     private List<DateTypeModel> loadDataTypesFromJson() {
         String jsonData = JsonReader.readJsonFromResources(Constants.DATA_TYPES_JSON);
         try {

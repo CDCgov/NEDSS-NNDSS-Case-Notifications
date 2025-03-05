@@ -11,6 +11,13 @@ public class Constants {
     public static final String CE_LOCAL_CODED_VALUE = "ceLocalCodedValue";
     public static final String CE_LOCAL_CODED_VALUE_DESCRIPTION = "ceLocalCodedValueDescription";
     public static final String CE_LOCAL_CODED_VALUE_CODING_SYSTEM = "ceLocalCodedValueCodingSystem";
+    public static final String CWE_LOCAL_CODED_VALUE = "cweLocalCodedValue";
+    public static final String CWE_CODED_VALUE = "cweCodedValue";
+    public static final String QUESTION_OID = "questionOID";
+    public static final String OBSERVATION_SUB_ID ="observationSubID";
+    public static final String QUESTION_LABEL_NND = "questionLabelNND";
+    public static final String QUESTION_LABEL = "questionLabel";
+    public static final String QUESTION_IDENTIFIER = "questionIdentifier";
     public static final String JSON_FILE_NAME ="jsonFileName";
     public static final String ORDER_GROUP_ID = "orderGroupId";
     public static final String MESSAGE_ELEMENT = "MessageElement";

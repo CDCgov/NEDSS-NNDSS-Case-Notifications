@@ -2,12 +2,11 @@ package gov.cdc.notificationprocessor.util;
 
 import ca.uhn.hl7v2.model.DataTypeException;
 
+import ca.uhn.hl7v2.model.v25.datatype.NM;
+import ca.uhn.hl7v2.model.v25.datatype.TX;
+import ca.uhn.hl7v2.model.v25.group.ORU_R01_ORDER_OBSERVATION;
 import ca.uhn.hl7v2.model.v25.message.ORU_R01;
-import ca.uhn.hl7v2.model.v25.segment.MSH;
-
-import ca.uhn.hl7v2.model.v25.segment.OBR;
-import ca.uhn.hl7v2.model.v25.segment.OBX;
-import ca.uhn.hl7v2.model.v25.segment.PID;
+import ca.uhn.hl7v2.model.v25.segment.*;
 
 import com.google.gson.Gson;
 import gov.cdc.notificationprocessor.constants.Constants;
@@ -52,6 +51,7 @@ public class HL7MessageBuilder{
     private Integer addressTypeIndex = 0;
     private Integer citizenshipTypeIndex = 0;
     private Integer identityReliabilityCodeIndex = 0;
+    private Integer nk1RaceInc = 0;
 
     //Repeating block for lab
     int drugCounter = 0;
@@ -62,8 +62,18 @@ public class HL7MessageBuilder{
     int std121ObxInc = -1;
     int std121obxOrderGroupId = 0;
     int std121ObsValue = -1;
-    String NBS246observationSubID ="";
-    String std300="";
+    String NBS246observationSubID = "";
+    String std300 = "";
+    //HCW Specific fields
+
+    boolean hcwTextBeforeCodedInd=false;
+    String hcw="";
+    int hcwTextcounter=-1;
+    int hcwObxInc=-1;
+    int obx2Inc = 0;
+    int obx1Inc = 0;
+    int hcwObxOrderGroupId=-1;
+    int hcwObx5ValueInc=-1;
     int raceCounterNK1 = 0;
     String OTH_COMP_TEXT = "";
     String OTH_COMP_REPLACE ="";
@@ -92,7 +102,9 @@ public class HL7MessageBuilder{
         MSH msh = oruMessage.getMSH();
         PID pid = oruMessage.getPATIENT_RESULT().getPATIENT().getPID();
         OBR obr = oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION().getOBR();
-        OBX obx = null; //TODO
+        NK1 nk1 = oruMessage.getPATIENT_RESULT().getPATIENT().getNK1();
+        oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(0);
+        ORU_R01_ORDER_OBSERVATION obx = oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION();
 
         //set static fields
         try {
@@ -111,18 +123,146 @@ public class HL7MessageBuilder{
             String segmentField = messageElement.getHl7SegmentField().trim();
             if (segmentField.startsWith("MSH")){
                 processMSHFields(messageElement, msh);
-            }else if (segmentField.startsWith("PID")){
+            }else if (segmentField.startsWith("PID")) {
                 processPIDFields(messageElement, pid);
+            }else if (segmentField.startsWith("NK1")){
+                processNK1Fields(messageElement, nk1);
             }else if (segmentField.startsWith("OBR")){
                 processOBRFields(messageElement, obr);
+            }
+            if (messageElement.getQuestionIdentifierNND().trim().equals("STD300")){
+                std300 = messageElement.getDataElement().getStDataType().getStringData().trim();
+                if (!std300.isEmpty()){
+                    std300 = std300.replace("\\","\\E\\");
+                    std300 = std300.replace("|","\\F\\");
+                    std300 = std300.replace("~","\\R\\");
+                    std300 = std300.replace("^","\\S\\");
+                    std300 = std300.replace("&","\\T\\");
+                }
+
+            }else if (messageElement.getQuestionIdentifierNND().trim().equals("NBS246")){
+                if (!messageElement.getDataElement().getCweDataType().getCweCodedValue().trim().equals("C")){
+                    NBS246observationSubID = messageElement.getObservationSubID().trim();
+                }
+            }else if (messageElement.getQuestionIdentifierNND().trim().equals("223366009") && genericMMG){
+                String cweCodedValue = messageElement.getDataElement().getCweDataType().getCweCodedValue().trim();
+                switch (cweCodedValue) {
+                    case "Y" -> hcw = "; HCWYes";
+                    case "N" -> hcw = "; HCWNo";
+                    case "UNK" -> hcw = "; HCWUnknown";
+                }
+
+                if (hcwTextBeforeCodedInd) {
+
+                    TX textDataType = (TX)obx.getOBSERVATION(hcwObxOrderGroupId).getOBX().getObservationValue(hcwObx5ValueInc).getData();
+                    textDataType.setValue(hcw);
+                    obx.getOBSERVATION(hcwObxOrderGroupId).getOBX().getObx5_ObservationValue(hcwObx5ValueInc).setData(textDataType);
+                }else{
+                    int obxOrderGroupId;
+                    if (messageElement.getOrderGroupId().trim().equals("1")){
+                        obxOrderGroupId = 0;
+                    }else{
+                        obxOrderGroupId = 1;
+                    }
+                    obx.getOBSERVATION(1).getOBX().getSetIDOBX().setValue(String.valueOf(obx2Inc+1));
+                    obx.getOBSERVATION(1).getOBX().getObservationResultStatus().setValue("F");
+                    obx.getOBSERVATION(obxOrderGroupId).getOBX().getValueType().setValue("TX");
+                    obx.getOBSERVATION(obxOrderGroupId).getOBX().getObservationIdentifier().getIdentifier().setValue("77999-1");
+                    obx.getOBSERVATION(obxOrderGroupId).getOBX().getObservationIdentifier().getNameOfCodingSystem().setValue("2.16.840.1.113883.6.1");
+                    obx.getOBSERVATION(obxOrderGroupId).getOBX().getObservationIdentifier().getText().setValue("Comment");
+                    obx.getOBSERVATION(obxOrderGroupId).getOBX().getObservationIdentifier().getAlternateIdentifier().setValue("INV886");
+                    obx.getOBSERVATION(obxOrderGroupId).getOBX().getObservationIdentifier().getAlternateText().setValue("Notification Comments to CDC");
+                    obx.getOBSERVATION(obxOrderGroupId).getOBX().getObservationIdentifier().getNameOfAlternateCodingSystem().setValue("L");
+
+                    TX textData = (TX) obx.getOBSERVATION(obxOrderGroupId).getOBX().getObservationValue(0).getData();
+                    textData.setValue(hcw);
+                    obx.getOBSERVATION(obxOrderGroupId).getOBX().getObservationValue(0).setData(textData);
+
+                    obx2Inc +=1;
+                }
+            }
+
+            //STD specific code for combining STD121
+            else if (messageElement.getQuestionIdentifierNND().trim().equals("STD121")){
+                if (std121ObxInc==-1){
+                    if (messageElement.getOrderGroupId().trim().equals("1")){
+                        std121ObxInc = obx1Inc;
+                        std121obxOrderGroupId = 0;
+                        obx1Inc += 1;
+                    }else{
+                        std121ObxInc = obx2Inc;
+                        std121obxOrderGroupId = 1;
+                        obx2Inc += 1;
+                    }
+                }
+                obx.getOBSERVATION(std121obxOrderGroupId).getOBX().getSetIDOBX().setValue(String.valueOf(std121ObxInc+1));
+                obx.getOBSERVATION(std121obxOrderGroupId).getOBX().getValueType().setValue("CWE");
+                obx.getOBSERVATION(std121obxOrderGroupId).getOBX().getObservationIdentifier().getIdentifier().setValue(messageElement.getQuestionIdentifierNND().trim());
+                obx.getOBSERVATION(std121obxOrderGroupId).getOBX().getObservationIdentifier().getNameOfCodingSystem().setValue(messageElement.getQuestionOID().trim());
+                obx.getOBSERVATION(std121obxOrderGroupId).getOBX().getObservationIdentifier().getText().setValue(messageElement.getQuestionLabelNND().trim());
+                obx.getOBSERVATION(std121obxOrderGroupId).getOBX().getObservationIdentifier().getAlternateIdentifier().setValue(messageElement.getQuestionIdentifier().trim());
+                obx.getOBSERVATION(std121obxOrderGroupId).getOBX().getObservationIdentifier().getAlternateText().setValue(messageElement.getQuestionLabelNND().trim());
+                obx.getOBSERVATION(std121obxOrderGroupId).getOBX().getObservationIdentifier().getNameOfAlternateCodingSystem().setValue("L");
+                if (!messageElement.getObservationSubID().trim().isEmpty()){
+                    obx.getOBSERVATION(std121obxOrderGroupId).getOBX().getObservationSubID().setValue(messageElement.getObservationSubID().trim());
+                }else if (!messageElement.getQuestionGroupSeqNbr().trim().isEmpty()){
+                    obx.getOBSERVATION(std121obxOrderGroupId).getOBX().getObservationSubID().setValue(messageElement.getQuestionGroupSeqNbr().trim());
+                }
+
+                std121ObsValue += 1;
+                String codedValue = "";
+                String codedValueDescription = "";
+                String codedValueCodingSystem = "";
+                String localCodedValue = "";
+                String localCodedValueDescription = "";
+                String localCodedValueCodingSystem = "";
+                String originalOtherText = "";
+                if (!messageElement.getDataElement().getCweDataType().getCweCodedValue().trim().isEmpty()){
+                    codedValue = messageElement.getDataElement().getCweDataType().getCweCodedValue().trim();
+                }
+                if (!messageElement.getDataElement().getCweDataType().getCweCodedValueDescription().trim().isEmpty()){
+                    codedValueDescription = messageElement.getDataElement().getCweDataType().getCweCodedValue().trim();
+                }
+                if (!messageElement.getDataElement().getCweDataType().getCweCodedValueCodingSystem().trim().isEmpty()){
+                    codedValueCodingSystem = messageElement.getDataElement().getCweDataType().getCweCodedValueCodingSystem().trim();
+                }
+                if (!messageElement.getDataElement().getCweDataType().getCweLocalCodedValue().trim().isEmpty()){
+                    localCodedValue = messageElement.getDataElement().getCweDataType().getCweLocalCodedValue().trim();
+                }
+                if (!messageElement.getDataElement().getCweDataType().getCweLocalCodedValueDescription().trim().isEmpty()){
+                    localCodedValueDescription = messageElement.getDataElement().getCweDataType().getCweLocalCodedValueDescription().trim();
+                }
+                if (!messageElement.getDataElement().getCweDataType().getCweLocalCodedValueCodingSystem().trim().isEmpty()){
+                    localCodedValueCodingSystem = messageElement.getDataElement().getCweDataType().getCweLocalCodedValueCodingSystem().trim();
+                }
+                if (!messageElement.getDataElement().getCweDataType().getCweOriginalText().trim().isEmpty()){
+                    originalOtherText = messageElement.getDataElement().getCweDataType().getCweOriginalText().trim();
+                }
+                TX textData = (TX)obx.getOBSERVATION(std121obxOrderGroupId).getOBX().getObservationValue(std121ObsValue).getData();
+                String value = codedValue + "^"+codedValueDescription+"^"+codedValueCodingSystem+"^"+localCodedValue+"^"+
+                        localCodedValueDescription+"^" +localCodedValueCodingSystem+"^"+originalOtherText;
+                textData.setValue(value);
+                obx.getOBSERVATION(std121obxOrderGroupId).getOBX().getObservationValue(std121ObsValue).setData(textData);
+                obx.getOBSERVATION(std121obxOrderGroupId).getOBX().getObservationResultStatus().setValue("F");
+
+
+
             }
         }
         logger.info("Final message: {} ", oruMessage.getMessage());
     }
 
     /**
-     * sets the value for all MSH fields found in the xml
+     * Processes each field of the MSH segment found in the  XML file.
+     * This method extracts the relevant data from the MessageElement and
+     * updates the MSH object.
+     *
+     * @param messageElement The XML element representing a specific MSH field,
+     *                       including its attributes and values.
+     * @param msh The MSH object that is being built, which will be updated with
+     *            data from the provided messageElement.
      */
+
     private void processMSHFields(MessageElement messageElement, MSH msh) throws DataTypeException {
         String mshField = messageElement.getHl7SegmentField().trim();
         String mshFieldValue = "";
@@ -236,7 +376,14 @@ public class HL7MessageBuilder{
         }
     }
     /**
-     * sets the value for all PID fields found in the xml
+     * Processes each field of the PID segment found in the  XML file.
+     * This method extracts the relevant data from the MessageElement and
+     * updates the PID object.
+     *
+     * @param messageElement The XML element representing a specific PID field,
+     *                       including its attributes and values.
+     * @param pid The PID object that is being built, which will be updated with
+     *            data from the provided messageElement.
      */
     private void processPIDFields(MessageElement messageElement, PID pid) throws DataTypeException {
         String pidField = messageElement.getHl7SegmentField().trim();
@@ -385,7 +532,52 @@ public class HL7MessageBuilder{
         }
     }
     /**
-     * sets the value for all OBR fields found in the xml
+     * Processes each field of the NK1 segment found in the  XML file.
+     * This method extracts the relevant data from the MessageElement and
+     * updates the NK1 object.
+     *
+     * @param messageElement The XML element representing a specific NK1 field,
+     *                       including its attributes and values.
+     * @param nk1 The NK1 object that is being built, which will be updated with
+     *            data from the provided messageElement.
+     */
+    private void processNK1Fields(MessageElement messageElement, NK1 nk1) throws DataTypeException {
+        String nk1Field = messageElement.getHl7SegmentField().trim();
+        String ceCodedValue = messageElement.getDataElement().getCeDataType().getCeCodedValue().trim();
+        String ceCodedValueDescription = messageElement.getDataElement().getCeDataType().getCeCodedValueDescription().trim();
+        String ceCodedValueCodingSystem = messageElement.getDataElement().getCeDataType().getCeCodedValueCodingSystem().trim();
+        String ceLocalCodedValue = messageElement.getDataElement().getCeDataType().getCeLocalCodedValue().trim();
+        String ceLocalCodedValueDescription = messageElement.getDataElement().getCeDataType().getCeLocalCodedValueDescription().trim();
+        String ceLocalCodedValueCodingSystem = messageElement.getDataElement().getCeDataType().getCeLocalCodedValueCodingSystem().trim();
+        nk1.getSetIDNK1().setValue("1");
+
+        if (nk1Field.equals("NK1-28.0")){
+            nk1.getNk128_EthnicGroup(0).getIdentifier().setValue(ceCodedValue);
+            nk1.getNk128_EthnicGroup(0).getText().setValue(ceCodedValueDescription);
+            nk1.getNk128_EthnicGroup(0).getNameOfCodingSystem().setValue(ceCodedValueCodingSystem);
+            nk1.getNk128_EthnicGroup(0).getAlternateIdentifier().setValue(ceLocalCodedValue);
+            nk1.getNk128_EthnicGroup(0).getAlternateText().setValue(ceLocalCodedValueDescription);
+            nk1.getNk128_EthnicGroup(0).getNameOfAlternateCodingSystem().setValue(ceLocalCodedValueCodingSystem);
+            nk1.getNk128_EthnicGroup(0).getNameOfAlternateCodingSystem().setValue(ceLocalCodedValueCodingSystem);
+        }else if (nk1Field.equals("NK1-35.0")){
+            nk1.getNk135_Race(nk1RaceInc).getIdentifier().setValue(ceCodedValue);
+            nk1.getNk135_Race(nk1RaceInc).getText().setValue(ceCodedValueDescription);
+            nk1.getNk135_Race(nk1RaceInc).getNameOfCodingSystem().setValue(ceCodedValueCodingSystem);
+            nk1.getNk135_Race(nk1RaceInc).getAlternateIdentifier().setValue(ceLocalCodedValue);
+            nk1.getNk135_Race(nk1RaceInc).getAlternateText().setValue(ceLocalCodedValueDescription);
+            nk1.getNk135_Race(nk1RaceInc).getNameOfAlternateCodingSystem().setValue(ceLocalCodedValueCodingSystem);
+            nk1RaceInc +=1;
+        }
+    }
+    /**
+     * Processes each field of the OBR segment found in the  XML file.
+     * This method extracts the relevant data from the MessageElement and
+     * updates the OBR object.
+     *
+     * @param messageElement The XML element representing a specific OBR field,
+     *                       including its attributes and values.
+     * @param obr The OBR object that is being built, which will be updated with
+     *            data from the provided messageElement.
      */
     private void processOBRFields(MessageElement messageElement, OBR obr) throws DataTypeException {
         String obrField = messageElement.getHl7SegmentField().trim();
@@ -473,6 +665,7 @@ public class HL7MessageBuilder{
             obr.getObr31_ReasonForStudy(0).getCe6_NameOfAlternateCodingSystem().setValue(localCodedValueCodingSystem);
         }
     }
+
 
     private String getDateFormat(String pidFieldValue, String questionDataTypeNND, String questionIdentifierNND, String segmentField) {
         Map<String, String > fields = new HashMap<>();

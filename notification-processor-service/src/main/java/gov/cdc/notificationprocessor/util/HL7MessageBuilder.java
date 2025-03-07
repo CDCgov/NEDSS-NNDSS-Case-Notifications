@@ -2,8 +2,10 @@ package gov.cdc.notificationprocessor.util;
 
 import ca.uhn.hl7v2.model.DataTypeException;
 
-import ca.uhn.hl7v2.model.v25.datatype.NM;
+import ca.uhn.hl7v2.model.v25.datatype.SN;
 import ca.uhn.hl7v2.model.v25.datatype.TX;
+import ca.uhn.hl7v2.model.v25.datatype.XPN;
+import ca.uhn.hl7v2.model.v25.datatype.XTN;
 import ca.uhn.hl7v2.model.v25.group.ORU_R01_ORDER_OBSERVATION;
 import ca.uhn.hl7v2.model.v25.message.ORU_R01;
 import ca.uhn.hl7v2.model.v25.segment.*;
@@ -19,9 +21,12 @@ import gov.cdc.notificationprocessor.service.OBR31SegmentProcessing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class HL7MessageBuilder{
     NBSNNDIntermediaryMessage nbsnndIntermediaryMessage;
@@ -41,7 +46,8 @@ public class HL7MessageBuilder{
     String nameSpaceIDGroup2 = "";
     String universalIDGroup2 = "";
     String universalIDTypeGroup2 = "";
-
+    String newDate = "";
+    String inv177Date = "";
     private String stateLocalID = "";
     private Integer raceIndex = 0;
     private Integer cityIndex = 0;
@@ -59,13 +65,16 @@ public class HL7MessageBuilder{
     int inv290Inv291Counter = 0;
     int inv290Inv291Counter1 = 0;
     int inv290Inv291Counter2 = 0;
+    boolean inv177Found = false;
     int std121ObxInc = -1;
     int std121obxOrderGroupId = 0;
     int std121ObsValue = -1;
     String NBS246observationSubID = "";
     String std300 = "";
-    //HCW Specific fields
 
+    int maxObr = 0;
+    int maxObx = 0;
+    //HCW Specific fields
     boolean hcwTextBeforeCodedInd=false;
     String hcw="";
     int hcwTextcounter=-1;
@@ -129,7 +138,10 @@ public class HL7MessageBuilder{
                 processNK1Fields(messageElement, nk1);
             }else if (segmentField.startsWith("OBR")){
                 processOBRFields(messageElement, obr);
+            }else if (segmentField.startsWith("OBX")) {
+                processOBXFields(messageElement,obx);
             }
+
             if (messageElement.getQuestionIdentifierNND().trim().equals("STD300")){
                 std300 = messageElement.getDataElement().getStDataType().getStringData().trim();
                 if (!std300.isEmpty()){
@@ -248,6 +260,18 @@ public class HL7MessageBuilder{
 
 
             }
+            /* TO BE DONE
+            }else if(StrFind(in.MessageElement[i].indicatorCd.#PCDATA, "ParentRepeatBlock")>-1){
+			MapToDynamincParentRptToRpt(in.MessageElement[i], obx2Inc,messageType, out.PATIENT_RESULT.ORDER_OBSERVATION[0]);
+	        }else if(StrFind(in.MessageElement[i].indicatorCd.#PCDATA, "DiscAsRepeat")>-1){
+			MapToDynamicRootlDiscToRepeat(in.MessageElement[i], obx2Inc, out.PATIENT_RESULT.ORDER_OBSERVATION[0]);
+	   }else if(StrFind(in.MessageElement[i].indicatorCd.#PCDATA, "DiscCdToMultiOBS")>-1){
+			MapToDisRepeat(in.MessageElement[i], obx2Inc, out.PATIENT_RESULT.ORDER_OBSERVATION[0]);
+	   }else if(StrFind(in.MessageElement[i].indicatorCd.#PCDATA, "RepeatToMultiNND")>-1){
+			MapToRepeatToMultiNND(in.MessageElement[i], obx2Inc, out.PATIENT_RESULT.ORDER_OBSERVATION[0]);
+	   }else if ((in.MessageElement[i].hl7SegmentField.#PCDATA == "OBX-3.0" || in.MessageElement[i].hl7SegmentField.#PCDATA == "OBX-5.9" )&&  StrFind(in.MessageElement[i].questionMap.#PCDATA, "|") > 0){
+				MapToQuestionMap(in.MessageElement[i], obx2Inc, out.PATIENT_RESULT.ORDER_OBSERVATION[0]);
+             */
         }
         logger.info("Final message: {} ", oruMessage.getMessage());
     }
@@ -666,6 +690,302 @@ public class HL7MessageBuilder{
         }
     }
 
+    /**
+     * Processes each field of the OBX segment found in the  XML file.
+     * This method extracts the relevant data from the MessageElement and
+     * updates the OBX object.
+     *
+     * @param messageElement The XML element representing a specific OBX field,
+     *                       including its attributes and values.
+     * @param obx The OBX object that is being built, which will be updated with
+     *            data from the provided messageElement.
+     */
+    private void processOBXFields(MessageElement messageElement, ORU_R01_ORDER_OBSERVATION obx) throws DataTypeException {
+        String obxField = messageElement.getHl7SegmentField().trim();
+        String obxFieldValue = "";
+        if ((obxField.equals("OBX-3.0") || obxField.equals("OBX-5.9"))&& messageElement.getQuestionMap()!=null&& messageElement.getQuestionMap().trim().equals("|")){
+            mapToQuestionMap(messageElement, obx2Inc);
+        }else if (obxField.equals("OBX-3.0")){
+            int obxOrderGroupID = 0;
+            int obxInc = 1;
+            int obx5ValueInc = 0;
+            String obx5ObservationSubID = null;
+            boolean obxFound = false;
+            String messageTypePattern = "CongenitalSyphilis_MMG_V1.0";
+
+            Pattern pattern = Pattern.compile(messageTypePattern);
+            String questionIdentifier = messageElement.getQuestionIdentifier().trim();
+            String questionIdentifierNND = messageElement.getQuestionIdentifierNND().trim();
+            // find Match
+            Matcher matcher = pattern.matcher(messageType);
+            if (matcher.find() && (questionIdentifier.equals("LAB588_MTH") || questionIdentifier.equals("INV290_MTH") || questionIdentifier.equals("INV291_MTH") ||
+                    questionIdentifier.equals("STD123_MTH") || questionIdentifier.equals("LAB167_MTH"))) {
+                //extract index of ObservationSubID
+                int count = Integer.parseInt(messageElement.getObservationSubID().trim());
+                if (count > dupRepeatCongenitalCounter) {
+                    dupRepeatCongenitalCounter = count;
+                }
+            }else if ( questionIdentifierNND.equals("INV290") || questionIdentifierNND.equals("INV291")){
+                inv290Inv291Counter = Integer.parseInt(messageElement.getObservationSubID().trim());
+            }
+
+            if (messageElement.getOrderGroupId().trim().equals("1")) {
+                obxInc = obx1Inc;
+                obxOrderGroupID = 0;
+            }else{
+                obxInc = obx2Inc;
+                obxOrderGroupID = 1;
+            }
+            maxObr = obxOrderGroupID;
+            maxObx = obxInc +1;
+
+            //for loop for multiple OBX processing
+
+            if (!obxFound) {
+                //Need to insert this NNDUID into array
+                //Add NND UID, set value incrementor to 0 and store current obxInc
+                //build map for obx element
+                HashMap<String,Object> obxElement = new HashMap<>();
+                obxElement.put("elementUID", messageElement.getQuestionIdentifierNND().trim());
+
+                if (messageElement.getQuestionGroupSeqNbr()!=null){
+                    obxElement.put("questionGroupSequenceNumber", messageElement.getQuestionGroupSeqNbr().trim());
+                }else{
+                    obxElement.put("questionGroupSequenceNumber", null);
+                }
+
+                if (messageElement.getObservationSubID()!=null){
+                    obxElement.put("observationSubID", messageElement.getObservationSubID().trim());
+                }else{
+                    obxElement.put("observationSubID", null);
+                }
+                obxElement.put("valueInc",0);
+                obxElement.put("obxInc",obxInc);
+            }
+            /* This code will cover the situation with TB investigation where value is based off of question_identifer='INV121' and
+			   question_identifier_nnd='INV177' and it is populated from frontend.*/
+            if (questionIdentifierNND.equals("INV177")){
+                inv177Found = true;
+            }
+            if (questionIdentifier.equals("INV111") || questionIdentifierNND.equals("INV120") || questionIdentifierNND.equals("INV121")){
+
+                if (questionIdentifier.equals("INV111") && questionIdentifierNND.equals("DT")) {
+                    String year = String.valueOf(messageElement.getDataElement().getDtDataType().getDate().getYear());
+                    String month = String.valueOf(messageElement.getDataElement().getDtDataType().getDate().getMonth());
+                    String day = String.valueOf(messageElement.getDataElement().getDtDataType().getDate().getDay());
+                    newDate = year+month+day;
+                }else{
+                    String year = "";
+                    try{
+                        if (messageElement.getDataElement().getTsDataType().getYear()!=null){
+                            year = messageElement.getDataElement().getTsDataType().getYear().trim();
+                        }
+                        String month = String.valueOf(messageElement.getDataElement().getTsDataType().getTime().getMonth());
+                        String day = String.valueOf(messageElement.getDataElement().getTsDataType().getTime().getDay());
+                        newDate = year+month+day;
+                    } catch (Exception e){
+                        logger.error("exception occurred {} ",e.getMessage());
+                    }
+
+                }
+
+                if (inv177Date.isEmpty()){
+                    inv177Date = newDate;
+                }
+                obx.getOBSERVATION().getOBX().getSetIDOBX().setValue(String.valueOf(obxInc+1));
+
+                if (messageElement.getObservationSubID()!=null){
+                    obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationSubID().setValue(messageElement.getObservationSubID().trim());
+                }
+
+                if (questionIdentifierNND.equals("SN_WITH_UNIT")){
+
+                    obx.getOBSERVATION().getOBX().getValueType().setValue("SN");
+                }else{
+                    obx.getOBSERVATION().getOBX().getValueType().setValue(messageElement.getDataElement().getQuestionDataTypeNND().trim());
+                }
+
+                if (!obxFound) {
+                    obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationIdentifier().getIdentifier().setValue(questionIdentifierNND);
+                    String questionLabelNND = messageElement.getQuestionLabelNND().trim();
+                    obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationIdentifier().getText().setValue(questionLabelNND);
+                    String questionOID = messageElement.getQuestionOID().trim();
+                    obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationIdentifier().getNameOfCodingSystem().setValue(questionOID);
+                    obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationIdentifier().getAlternateIdentifier().setValue(questionIdentifier);
+                    String questionLabel = messageElement.getQuestionLabel().trim();
+                    obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationIdentifier().getAlternateText().setValue(questionLabel);
+
+                    obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationIdentifier().getNameOfAlternateCodingSystem().setValue("L");
+
+                    if (messageType.contains("CongenitalSyphilis_MMG_V1.0") && questionIdentifier.equals("LAB588")
+                    || questionIdentifier.equals("INV290") || questionIdentifier.equals("INV291") || questionIdentifier.equals("STD123")|| questionIdentifier.equals("LAB167") || questionIdentifier.equals("STD123_1")){
+                        obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationSubID().setValue("-"+messageElement.getObservationSubID().trim());
+
+                    }else if (messageElement.getObservationSubID()!=null){
+                        obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationSubID().setValue(messageElement.getObservationSubID().trim());
+                    }else if (messageElement.getQuestionGroupSeqNbr()!=null){
+                        obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationSubID().setValue(messageElement.getQuestionGroupSeqNbr().trim());
+                    }
+
+                }
+                //XPN datatype
+                if (messageElement.getDataElement().getQuestionDataTypeNND().equals("XPN") || messageElement.getDataElement().getQuestionDataTypeNND().equals("SN")){
+                    String comparator = "";
+                    if (messageElement.getDataElement().getSnDataType().getComparator()!=null){
+                        comparator = messageElement.getDataElement().getSnDataType().getComparator().trim();
+                    }
+                    String num1 = "";
+                    if (messageElement.getDataElement().getSnDataType().getNum1()!=null){
+                        num1 = messageElement.getDataElement().getSnDataType().getNum1().trim();
+                    }
+                    String separatorSuffix = "";
+                    if (messageElement.getDataElement().getSnDataType().getSeparatorSuffix()!=null){
+                        separatorSuffix = messageElement.getDataElement().getSnDataType().getSeparatorSuffix().trim();
+                    }
+
+                    String num2 = "";
+                    if (messageElement.getDataElement().getSnDataType().getNum2()!=null){
+                        num2 = messageElement.getDataElement().getSnDataType().getNum2().trim();
+                    }
+                    SN snDT = (SN)obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationValue(obx5ValueInc).getData();
+                    snDT.getComparator().setValue(comparator);
+                    snDT.getNum1().setValue(num1);
+                    snDT.getSeparatorSuffix().setValue(separatorSuffix);
+                    snDT.getNum2().setValue(num2);
+                    obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationValue(obx5ValueInc).setData(snDT);
+
+                    if (messageElement.getDataElement().getQuestionDataTypeNND().trim().equals("SN") &&
+                            (questionIdentifier.equals("INV827b") || questionIdentifier.equals("11920_8"))
+                    ){
+                        obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationSubID().setValue("2");
+
+                    }
+
+
+                }
+
+                //XTN datatype
+                if (messageElement.getDataElement().getQuestionDataTypeNND().equals("XTN")){
+                    String telecommunicationUseCode = "";
+                    if (messageElement.getDataElement().getXtnDataType().getTelecommunicationUseCode()!=null){
+                        telecommunicationUseCode = messageElement.getDataElement().getXtnDataType().getTelecommunicationUseCode().trim();
+                    }
+                    String telecommunicationEquipmentType = "";
+                    if (messageElement.getDataElement().getXtnDataType().getTelecommunicationEquipmentType()!=null){
+                        telecommunicationEquipmentType = messageElement.getDataElement().getXtnDataType().getTelecommunicationEquipmentType().trim();
+                    }
+                    String emailAddress = "";
+                    if (messageElement.getDataElement().getXtnDataType().getEmailAddress()!=null){
+                        emailAddress = messageElement.getDataElement().getXtnDataType().getEmailAddress().trim();
+                    }
+                    String areaOrCityCode = "";
+                    if (messageElement.getDataElement().getXtnDataType().getAreaOrCityCode()!=null){
+                        areaOrCityCode = messageElement.getDataElement().getXtnDataType().getAreaOrCityCode().trim();
+                    }
+
+                    String phoneNumber = "";
+                    if (messageElement.getDataElement().getXtnDataType().getPhoneNumber()!=null){
+                        phoneNumber = messageElement.getDataElement().getXtnDataType().getPhoneNumber().trim();
+                    }
+
+                    //build XTN object
+                    XTN xtnDataType = (XTN)obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationValue(obx5ValueInc).getData();
+
+                    xtnDataType.getTelecommunicationUseCode().setValue(telecommunicationUseCode);
+                    xtnDataType.getTelecommunicationEquipmentType().setValue(telecommunicationEquipmentType);
+                    xtnDataType.getEmailAddress().setValue(emailAddress);
+                    xtnDataType.getAreaCityCode().setValue(areaOrCityCode);
+                    xtnDataType.getTelephoneNumber().setValue(phoneNumber);
+
+                    obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationValue(obx5ValueInc).setData(xtnDataType);
+                }
+
+                //XPN datatype
+                if (messageElement.getDataElement().getQuestionDataTypeNND().equals("XPN")){
+                    String familyName = "";
+                    if (messageElement.getDataElement().getXpnDataType().getFamilyName()!=null){
+                        familyName = messageElement.getDataElement().getXpnDataType().getFamilyName().trim();
+                    }
+                    String givenName = "";
+                    if (messageElement.getDataElement().getXpnDataType().getGivenName()!=null){
+                        givenName = messageElement.getDataElement().getXpnDataType().getGivenName().trim();
+                    }
+
+                    //Build XPN object
+                    XPN xpn  = (XPN) obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationValue(obx5ValueInc).getData();
+                    xpn.getXpn1_FamilyName().getFn1_Surname().setValue(familyName);
+                    xpn.getXpn2_GivenName().setValue(givenName);
+
+                    obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationValue(obx5ValueInc).setData(xpn);
+                }
+                //SN data type with unit
+                if (messageElement.getDataElement().getQuestionDataTypeNND().trim().equals("SN_WITH_UNIT")){
+                    String comparator = "";
+                    if (messageElement.getDataElement().getSnunitDataType().getComparator()!=null){
+                        comparator = messageElement.getDataElement().getSnunitDataType().getComparator().trim();
+                    }
+
+                    String num1 = "";
+                    if (messageElement.getDataElement().getSnunitDataType().getNum1()!=null){
+                        num1 = messageElement.getDataElement().getSnunitDataType().getNum1().trim();
+                    }
+
+                    String separatorSuffix = "";
+                    if (messageElement.getDataElement().getSnunitDataType().getSeparatorSuffix()!=null){
+                        separatorSuffix = messageElement.getDataElement().getSnunitDataType().getSeparatorSuffix().trim();
+                    }
+                    String num2 = "";
+                    if (messageElement.getDataElement().getSnunitDataType().getNum2()!=null){
+                        num2 = messageElement.getDataElement().getSnunitDataType().getNum2().trim();
+                    }
+                    SN snDataType = (SN)obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationValue(obx5ValueInc).getData();
+                    snDataType.getComparator().setValue(comparator);
+                    snDataType.getNum1().setValue(num1);
+                    snDataType.getSeparatorSuffix().setValue(separatorSuffix);
+                    snDataType.getNum2().setValue(num2);
+                    obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationValue(obx5ValueInc).setData(snDataType);
+
+                    String codedValue = "";
+                    if (messageElement.getDataElement().getSnunitDataType().getCeCodedValue()!=null){
+                        codedValue = messageElement.getDataElement().getSnunitDataType().getCeCodedValue().trim();
+                    }
+                    String codedValueDescription = "";
+                    if (messageElement.getDataElement().getSnunitDataType().getCeCodedValueDescription()!=null){
+                        codedValueDescription = messageElement.getDataElement().getSnunitDataType().getCeCodedValueDescription().trim();
+                    }
+
+                    String codedValueCodingSystem = "";
+                    if (messageElement.getDataElement().getSnunitDataType().getCeCodedValueCodingSystem()!=null){
+                        codedValueCodingSystem = messageElement.getDataElement().getSnunitDataType().getCeCodedValueCodingSystem().trim();
+                    }
+
+                    String localCodedValue = "";
+                    if (messageElement.getDataElement().getSnunitDataType().getCeLocalCodedValue()!=null){
+                        localCodedValue = messageElement.getDataElement().getSnunitDataType().getCeLocalCodedValue().trim();
+                    }
+                    String localCodedValueDescription = "";
+                    if (messageElement.getDataElement().getSnunitDataType().getCeLocalCodedValueDescription()!=null){
+                        localCodedValueDescription = messageElement.getDataElement().getSnunitDataType().getCeLocalCodedValueDescription().trim();
+                    }
+
+                    String localCodedValueCodingSystem = "";
+                    if (messageElement.getDataElement().getSnunitDataType().getCeLocalCodedValueCodingSystem()!=null){
+                        localCodedValueCodingSystem = messageElement.getDataElement().getSnunitDataType().getCeLocalCodedValueCodingSystem().trim();
+                    }
+
+                    obx.getOBSERVATION(obxOrderGroupID).getOBX().getUnits().getIdentifier().setValue(codedValue);
+                    obx.getOBSERVATION(obxOrderGroupID).getOBX().getUnits().getText().setValue(codedValueDescription);
+                    obx.getOBSERVATION(obxOrderGroupID).getOBX().getUnits().getNameOfCodingSystem().setValue(codedValueCodingSystem);
+                    obx.getOBSERVATION(obxOrderGroupID).getOBX().getUnits().getAlternateIdentifier().setValue(localCodedValue);
+                    obx.getOBSERVATION(obxOrderGroupID).getOBX().getUnits().getAlternateText().setValue(localCodedValueDescription);
+                    obx.getOBSERVATION(obxOrderGroupID).getOBX().getUnits().getNameOfAlternateCodingSystem().setValue(localCodedValueCodingSystem);
+                }
+
+            }
+        }
+
+    }
+
 
     private String getDateFormat(String pidFieldValue, String questionDataTypeNND, String questionIdentifierNND, String segmentField) {
         Map<String, String > fields = new HashMap<>();
@@ -682,5 +1002,131 @@ public class HL7MessageBuilder{
         public String mappedService;
         public String mappedAction;
         public String mappedConditionCode;
+    }
+
+    private void mapToQuestionMap(MessageElement messageElement, int obx2Inc){
+        //TODO
+        String indPartMain="";
+        String indPart1="";
+        String indPart2="";
+        String indPart3="";
+        String indPart4="";
+        String indPart5="";
+        String indPart6="";
+
+        String questPart1="";
+        String questPart2="";
+        String questPart3="";
+        String questPart4="";
+        String questPart5="";
+        String questPart6="";
+
+        String quest2Part1="";
+        String quest2Part2="";
+        String quest2Part3="";
+        String quest2Part4="";
+        String quest2Part5="";
+        String quest2Part6="";
+
+        String otherText="";
+        int obx4Counter=1;
+        int mappedAsOtherInt=0;
+        String unkcode="";
+        String unkObx5="";
+        String subStringRightInd  = "";
+        String mappedValue ="";
+        String indicatorCode = messageElement.getIndicatorCd().trim(); //in.indicatorCd.#PCDATA;
+        String mappedIndicatorCode = messageElement.getIndicatorCd().trim();
+        //we need to find index positions of the characters below
+
+        int startInd = indicatorCode.indexOf("|");//(indicatorCode, "|");
+        int checkPoint = indicatorCode.indexOf(":>");
+        int splitCounter= indicatorCode.indexOf("|");
+        int mapToQuestionId =indicatorCode.indexOf("|:");
+
+        if (splitCounter==3){
+            //extract substring after-> |:
+            mappedIndicatorCode = indicatorCode.substring(mapToQuestionId+2);
+            //extract after startIndex
+            indicatorCode = indicatorCode.substring(startInd+1);
+
+        }
+
+        if (checkPoint >0){
+            // extract string before >
+            mappedValue = indicatorCode.substring(0,indicatorCode.indexOf(">"));
+            //extract string after startIndex
+            indicatorCode = indicatorCode.substring(0,indicatorCode.indexOf("|"));
+            //extract part before the | character
+            unkObx5 = indicatorCode.substring(0,indicatorCode.indexOf("|"));
+
+            subStringRightInd = indicatorCode.substring(indicatorCode.indexOf("|")+1);
+        }else{
+            subStringRightInd  = indicatorCode.substring(startInd+1);
+        }
+
+        // For parts related to "^" symbol
+        indPartMain = "^" + indicatorCode.substring(0, startInd) + "^";
+
+        if (subStringRightInd.contains("^")) {
+            String remainingPart = subStringRightInd;
+            indPart1 = remainingPart.substring(0, remainingPart.indexOf("^"));
+            remainingPart = remainingPart.substring(remainingPart.indexOf("^") + 1);
+
+            indPart2 = remainingPart.substring(0, remainingPart.indexOf("^"));
+            remainingPart = remainingPart.substring(remainingPart.indexOf("^") + 1);
+
+            indPart3 = remainingPart.substring(0, remainingPart.indexOf("^"));
+            remainingPart = remainingPart.substring(remainingPart.indexOf("^") + 1);
+
+            indPart4 = remainingPart.substring(0, remainingPart.indexOf("^"));
+            remainingPart = remainingPart.substring(remainingPart.indexOf("^") + 1);
+
+            indPart5 = remainingPart.substring(0, remainingPart.indexOf("^"));
+            indPart6 = remainingPart.substring(remainingPart.indexOf("^") + 1);
+        }
+
+        String questionMap = messageElement.getQuestionMap().trim();
+        int start = questionMap.indexOf("|");
+        String subStringRight = questionMap.substring(start + 1);
+        int end = questionMap.indexOf("|");
+        String subStringLeft = questionMap.substring(0, start);
+
+        if (subStringLeft.contains("^")) {
+            String remainingPart = subStringLeft;
+            questPart1 = remainingPart.substring(0, remainingPart.indexOf("^"));
+            remainingPart = remainingPart.substring(remainingPart.indexOf("^") + 1);
+
+            questPart2 = remainingPart.substring(0, remainingPart.indexOf("^"));
+            remainingPart = remainingPart.substring(remainingPart.indexOf("^") + 1);
+
+            questPart3 = remainingPart.substring(0, remainingPart.indexOf("^"));
+            remainingPart = remainingPart.substring(remainingPart.indexOf("^") + 1);
+
+            questPart4 = remainingPart.substring(0, remainingPart.indexOf("^"));
+            remainingPart = remainingPart.substring(remainingPart.indexOf("^") + 1);
+
+            questPart5 = remainingPart.substring(0, remainingPart.indexOf("^"));
+            questPart6 = remainingPart.substring(remainingPart.indexOf("^") + 1);
+        }
+
+        if (subStringRight.contains("^")) {
+            String remainingPart = subStringRight;
+            quest2Part1 = remainingPart.substring(0, remainingPart.indexOf("^"));
+            remainingPart = remainingPart.substring(remainingPart.indexOf("^") + 1);
+
+            quest2Part2 = remainingPart.substring(0, remainingPart.indexOf("^"));
+            remainingPart = remainingPart.substring(remainingPart.indexOf("^") + 1);
+
+            quest2Part3 = remainingPart.substring(0, remainingPart.indexOf("^"));
+            remainingPart = remainingPart.substring(remainingPart.indexOf("^") + 1);
+
+            quest2Part4 = remainingPart.substring(0, remainingPart.indexOf("^"));
+            remainingPart = remainingPart.substring(remainingPart.indexOf("^") + 1);
+
+            quest2Part5 = remainingPart.substring(0, remainingPart.indexOf("^"));
+            quest2Part6 = remainingPart.substring(remainingPart.indexOf("^") + 1);
+        }
+
     }
 }

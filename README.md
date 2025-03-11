@@ -4,9 +4,11 @@ This service is built using the Spring Boot framework and is designed to listen 
 
 - **Kafka Integration**: It subscribes to a specific Kafka Topic where both STD and Non-STD notifications are published.
 
-- **XML Parsing**: uses the SAX library to efficiently parse the incoming data.
+- **Generating Java classes using XSD file**: Uses `xjc` tool to generate Java Classes from the `XSD` file.
 
-- **Dynamically building HL7 ORU_R01 Message**: while parsing the XML, the service dynamically constructs an HL7 message of type ORU_R01. This message format is commonly used for diagnostic reporting in healthcare, and the service generates it based on the parsed data.
+- **Parsing XML with JAXB**: Once Java Classes are generated, JAXB library is used to convert XML into Java Objects and iterate over them to build `ORU_R01` HL7 Message.
+
+- **Dynamically building HL7 ORU_R01 Message**: while parsing the XML, the service dynamically builds an HL7 message of type ORU_R01. This message format is commonly used for diagnostic reporting in healthcare, and the service generates it based on the parsed data.
 
 - **Base64 Encoding**: The HL7 message is then encoded using base64 encoding. 
 
@@ -18,7 +20,7 @@ This service is built using the Spring Boot framework and is designed to listen 
 - Java 21
 - Spring Boot Framework
 - Apache Kafka
-- SAX Parser(default Java Library)
+- JAXB Java Library
 - hapi-base:2.5.1
 - hapi-structures-v25:2.5.1
 - Gradle(For dependency management)

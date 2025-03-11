@@ -21,7 +21,6 @@ import gov.cdc.notificationprocessor.service.OBR31SegmentProcessing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -30,6 +29,7 @@ import java.util.regex.Pattern;
 
 public class HL7MessageBuilder{
     NBSNNDIntermediaryMessage nbsnndIntermediaryMessage;
+
     public HL7MessageBuilder(NBSNNDIntermediaryMessage nbsnndIntermediaryMessage) {
         this.nbsnndIntermediaryMessage = nbsnndIntermediaryMessage;
     }
@@ -59,6 +59,7 @@ public class HL7MessageBuilder{
     private Integer identityReliabilityCodeIndex = 0;
     private Integer nk1RaceInc = 0;
 
+    private final HashMap<String, String> obxRepeatingElementArray = new HashMap<>();
     //Repeating block for lab
     int drugCounter = 0;
     int dupRepeatCongenitalCounter = 0;
@@ -739,28 +740,70 @@ public class HL7MessageBuilder{
             maxObr = obxOrderGroupID;
             maxObx = obxInc +1;
 
-            //for loop for multiple OBX processing
+            //TODO for loop for multiple OBX processing
+            for (Map.Entry<String, String> obxElement: obxRepeatingElementArray.entrySet()) {
+                if (questionIdentifierNND.equals("INV290") || questionIdentifierNND.equals("INV291")) {
+                    obxFound = false;
+                }else if (Objects.equals(obxElement.getValue(), questionIdentifierNND)){
+                    if (messageElement.getQuestionGroupSeqNbr()!=null && messageElement.getQuestionGroupSeqNbr()!=null) {
+                        if (obxRepeatingElementArray.get(Constants.QUESTION_GROUP_SEQUENCE_NUMBER).equals(messageElement.getQuestionGroupSeqNbr().trim()) &&
+                        obxRepeatingElementArray.get(Constants.OBSERVATION_SUB_ID).equals(messageElement.getObservationSubID().trim())) {
+                            obxFound = true;
+                        }
+                    }else if ( messageElement.getQuestionGroupSeqNbr()==null && messageElement.getObservationSubID()!=null){
+                        if (obxRepeatingElementArray.get(Constants.QUESTION_GROUP_SEQUENCE_NUMBER).equals(messageElement.getQuestionGroupSeqNbr().trim()) &&
+                                obxRepeatingElementArray.get(Constants.OBSERVATION_SUB_ID).equals(messageElement.getObservationSubID().trim())) {
+                            obxFound = true;
+                        }
+                    }else if (messageElement.getQuestionGroupSeqNbr()!=null && messageElement.getQuestionGroupSeqNbr()==null){
+                        if (obxRepeatingElementArray.get(Constants.QUESTION_GROUP_SEQUENCE_NUMBER).equals(messageElement.getQuestionGroupSeqNbr().trim()) &&
+                                obxRepeatingElementArray.get(Constants.OBSERVATION_SUB_ID)==null) {
+                            obxFound = true;
+                        }
+                    }else if (messageElement.getQuestionGroupSeqNbr()==null && messageElement.getObservationSubID()==null){
+                        obxFound = true;
+                    }
 
+                    //HEP specific code for repeating INV826/INV827
+                    if (questionIdentifierNND.equals("INV826") || questionIdentifierNND.equals("INV827")) {
+                        obxFound = false;
+                    }
+
+                    if (questionIdentifier.equals("INV826b") || questionIdentifier.equals("INV827b")) {
+                        obxFound = false;
+                    }
+
+                    if (obxFound) {
+                        //found existing element
+                        int valueInc = Integer.parseInt(obxRepeatingElementArray.get("valueInc"));
+                        obxRepeatingElementArray.put("valueInc", String.valueOf(valueInc+1));
+                        obx5ValueInc = Integer.parseInt(obxRepeatingElementArray.get("valueInc"));
+                        obxInc = Integer.parseInt(obxRepeatingElementArray.get("obxInc"));
+                        obx5ObservationSubID = obxRepeatingElementArray.get(Constants.OBSERVATION_SUB_ID);
+                    }
+
+                }
+            }
             if (!obxFound) {
                 //Need to insert this NNDUID into array
                 //Add NND UID, set value incrementor to 0 and store current obxInc
                 //build map for obx element
-                HashMap<String,Object> obxElement = new HashMap<>();
-                obxElement.put("elementUID", messageElement.getQuestionIdentifierNND().trim());
+
+                obxRepeatingElementArray.put("elementUID", messageElement.getQuestionIdentifierNND().trim());
 
                 if (messageElement.getQuestionGroupSeqNbr()!=null){
-                    obxElement.put("questionGroupSequenceNumber", messageElement.getQuestionGroupSeqNbr().trim());
+                    obxRepeatingElementArray.put("questionGroupSequenceNumber", messageElement.getQuestionGroupSeqNbr().trim());
                 }else{
-                    obxElement.put("questionGroupSequenceNumber", null);
+                    obxRepeatingElementArray.put("questionGroupSequenceNumber", null);
                 }
 
                 if (messageElement.getObservationSubID()!=null){
-                    obxElement.put("observationSubID", messageElement.getObservationSubID().trim());
+                    obxRepeatingElementArray.put(Constants.OBSERVATION_SUB_ID, messageElement.getObservationSubID().trim());
                 }else{
-                    obxElement.put("observationSubID", null);
+                    obxRepeatingElementArray.put(Constants.OBSERVATION_SUB_ID, null);
                 }
-                obxElement.put("valueInc",0);
-                obxElement.put("obxInc",obxInc);
+                obxRepeatingElementArray.put("valueInc","0");
+                obxRepeatingElementArray.put("obxInc",String.valueOf(obxInc));
             }
             /* This code will cover the situation with TB investigation where value is based off of question_identifer='INV121' and
 			   question_identifier_nnd='INV177' and it is populated from frontend.*/
@@ -784,7 +827,7 @@ public class HL7MessageBuilder{
                         String day = String.valueOf(messageElement.getDataElement().getTsDataType().getTime().getDay());
                         newDate = year+month+day;
                     } catch (Exception e){
-                        logger.error("exception occurred {} ",e.getMessage());
+                        logger.error("processOBXFields exception occurred {} ",e.getMessage());
                     }
 
                 }
@@ -979,6 +1022,41 @@ public class HL7MessageBuilder{
                     obx.getOBSERVATION(obxOrderGroupID).getOBX().getUnits().getAlternateIdentifier().setValue(localCodedValue);
                     obx.getOBSERVATION(obxOrderGroupID).getOBX().getUnits().getAlternateText().setValue(localCodedValueDescription);
                     obx.getOBSERVATION(obxOrderGroupID).getOBX().getUnits().getNameOfAlternateCodingSystem().setValue(localCodedValueCodingSystem);
+                }
+
+                if ((messageType.contains("Measles_MMG_V1.0") || messageType.contains("Rubella_MMG_V1.0")
+                        || messageType.contains("CRS_MMG_V1.0") || messageType.contains("Varicella_MMG_V3.0") ||
+                        messageType.contains("Pertussis_MMG_V1.0")|| messageType.contains("Mumps_MMG_V1.0"))&& (questionIdentifierNND.equals("LAB143")))
+                {
+                    String combined = questionIdentifierNND.trim()+"~"+obx5ObservationSubID;
+                    String stData = messageElement.getDataElement().getStDataType().getStringData().trim();
+                    String cxData = messageElement.getDataElement().getCxDataType().getCxData().trim();
+                    String output = "";
+                    if (!cxData.isEmpty() && cxData.contains(combined)){
+                        int start = cxData.indexOf(combined);
+                        String substring = cxData.substring(start);
+                        int end = substring.indexOf("|"); //if not found, will return -1
+                        if (end == -1){
+                            end = substring.length() - (questionIdentifierNND.trim().length()+ messageElement.getObservationSubID().length()+1);
+                        }
+                        String cxString = substring.substring(0, end);
+
+                        if (cxString.contains(":")) {
+                            output = cxString.substring(cxString.indexOf(":") + 1);
+                        } else {
+                            output = cxString;
+                        }
+
+                        int part1 = output.indexOf("^");
+                        String identifier = output.substring(0, part1);
+                        String rest = output.substring(part1 + 1);
+
+                        int part2 = rest.indexOf("^");
+                        String description = rest.substring(0, part2);
+                        String descriptionValue = rest.substring(part2 + 1);
+                    }
+
+
                 }
 
             }

@@ -1209,16 +1209,41 @@ public class HL7MessageBuilder{
                     if (messageType.contains("Arbo_Case_Map_v1.0")|| messageType.contains("Gen_Case_Map_v1.0") || messageType.contains("TB_Case_Map_v2.0") || messageType.contains("Var_Case_Map_v2.0")){
                         CWE cweDatatype = (CWE) obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationValue(obx5ValueInc).getData();
                         if (codedValue.isEmpty()){
-
-                            cweDatatype.getAlternateText().setValue("^^^^"+localCodedValueDescription);
+                            cweDatatype.getCwe5_AlternateText().setValue(localCodedValueDescription);
                             obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationValue(obx5ValueInc).setData(cweDatatype);
                         }else{
                             cweDatatype.getAlternateText().setValue(codedValue+"^"+codedValueDescription+"^"+codedValueCodingSystem+"^"+originalText);
                             obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationValue(obx5ValueInc).setData(cweDatatype);
                         }
+                    }else {
+                        if (codedValue.isEmpty()){
+                            CWE cweDataTYpe = (CWE)obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationValue(obx5ValueInc).getData();
+                            if (messageElement.getDataElement().getCweDataType().getCweCodedValue()==null){
+                                codedValueDescription = messageElement.getDataElement().getCweDataType().getCweLocalCodedValueCodingSystem().trim();
+                                if (!codedValueDescription.isEmpty()){
+                                    codedValueDescription = codedValueDescription.replace("\\","\\E\\");
+                                    codedValueDescription = codedValueDescription.replace("|","\\F\\");
+                                    codedValueDescription = codedValueDescription.replace("~","\\R\\");
+                                    codedValueDescription = codedValueDescription.replace("^","\\S\\");
+                                    codedValueDescription = codedValueDescription.replace("&","\\T\\");
+                                }
+                                cweDataTYpe.getCwe9_OriginalText().setValue(codedValueDescription);
+                                obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationValue(obx5ValueInc).setData(cweDataTYpe);
+                            }else if (Objects.equals(messageElement.getDataElement().getCweDataType().getCweCodedValue(), "OTH")){
+                                cweDataTYpe.getCwe9_OriginalText().setValue(localCodedValue+"^"+localCodedValueDescription+"^"+localCodedValueCodingSystem+"^^^^^^"+originalText);
+                                obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationValue(obx5ValueInc).setData(cweDataTYpe);
+                            }else{
+                                cweDataTYpe.getCwe9_OriginalText().setValue(localCodedValue+"^"+localCodedValueDescription+"^L^^^^^^"+originalText);
+                                obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationValue(obx5ValueInc).setData(cweDataTYpe);
+                            }
+                        }else{
+                            CWE cweDataType = (CWE) obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationValue(obx5ValueInc).getData();
+                            cweDataType.getCwe9_OriginalText().setValue(codedValue+"^"+codedValueDescription+"^"+codedValueCodingSystem+"^"+localCodedValue+"^"+localCodedValueDescription+"^"+localCodedValueCodingSystem+"^^^"+originalText);
+                            obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationValue(obx5ValueInc).setData(cweDataType);
+                        }
                     }
-
                 }
+                //CE datatype
             }
         }
     }

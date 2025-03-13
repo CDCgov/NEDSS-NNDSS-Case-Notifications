@@ -1244,6 +1244,78 @@ public class HL7MessageBuilder{
                     }
                 }
                 //CE datatype
+                if (messageElement.getDataElement().getQuestionDataTypeNND().equals("CE")){
+                    String codedValue = "";
+                    if (messageElement.getDataElement().getCeDataType().getCeCodedValue()!=null){
+                        codedValue = messageElement.getDataElement().getCeDataType().getCeCodedValue().trim();
+                    }
+                    String codedValueDescription = "";
+                    if (messageElement.getDataElement().getCeDataType().getCeCodedValueDescription()!=null){
+                        codedValueDescription = messageElement.getDataElement().getCeDataType().getCeCodedValueDescription().trim();
+                    }
+                    String codedValueCodingSystem = "";
+                    if (messageElement.getDataElement().getCeDataType().getCeCodedValueCodingSystem()!=null){
+                        codedValueCodingSystem = messageElement.getDataElement().getCeDataType().getCeCodedValueCodingSystem().trim();
+                    }
+                    String localCodedValue = "";
+                    if (messageElement.getDataElement().getCeDataType().getCeLocalCodedValue()!=null){
+                        localCodedValue = messageElement.getDataElement().getCeDataType().getCeLocalCodedValue().trim();
+                    }
+                    String localCodedValueCodingSystem = "";
+                    if (messageElement.getDataElement().getCeDataType().getCeLocalCodedValueCodingSystem()!=null){
+                        localCodedValueCodingSystem = messageElement.getDataElement().getCeDataType().getCeLocalCodedValueCodingSystem();
+                    }
+
+                    CE ceDataType = (CE) obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationValue(obx5ValueInc).getData();
+                    ceDataType.getCe1_Identifier().setValue(codedValue);
+                    ceDataType.getCe2_Text().setValue(codedValueDescription);
+                    ceDataType.getCe3_NameOfCodingSystem().setValue(codedValueCodingSystem);
+                    ceDataType.getCe4_AlternateIdentifier().setValue(localCodedValue);
+                    ceDataType.getCe6_NameOfAlternateCodingSystem().setValue(localCodedValueCodingSystem);
+
+                    obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationValue(obx5ValueInc).setData(ceDataType);
+                }
+                //DT datatype
+                if (messageElement.getDataElement().getQuestionDataTypeNND().equals("DT") && INV162RepeatIndicator && questionIdentifier.equals("INV162")){
+                    // do nothing as this is a repeat date and we only keep the first date
+                }else if (messageElement.getDataElement().getQuestionDataTypeNND().equals("DT")){
+                    DT dtDataType = (DT) obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationValue(obx5ValueInc).getData();
+                    if (questionIdentifier.equals("INV162")){
+                        INV162RepeatIndicator = true;
+                    }
+                    if (messageElement.getDataElement().getDtDataType().getYear()!=null){
+                        dtDataType.setValue(messageElement.getDataElement().getDtDataType().getYear().trim());
+                        obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationValue(obx5ValueInc).setData(dtDataType);
+                    }else{
+                        int year = messageElement.getDataElement().getDtDataType().getDate().getYear();
+                        int month = messageElement.getDataElement().getDtDataType().getDate().getMonth();
+                        int day = messageElement.getDataElement().getDtDataType().getDate().getDay();
+                        dtDataType.setYearMonthDayPrecision(year, month, day);
+                        obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationValue(obx5ValueInc).setData(dtDataType);
+                    }
+                    //HEP specific code for repeating INV826/INV
+                    if (questionIdentifierNND.equals("INV826")){
+                        obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationSubID().setValue("1");
+                    }
+                    if (questionIdentifierNND.equals("INV826b")){
+                        obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationSubID().setValue("2");
+                    }
+                }
+                //TS data type
+                if (messageElement.getDataElement().getQuestionDataTypeNND().equals("TS")){
+                    String timeOutput = "";
+                    TS tsDataType = (TS) obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationValue(obx5ValueInc).getData();
+
+                    if (messageElement.getDataElement().getTsDataType().getYear()!=null){
+                        timeOutput = getDateFormat(messageElement.getDataElement().getTsDataType().getYear().trim(),questionIdentifierNND, messageType,messageElement.getDataElement().getQuestionDataTypeNND().trim());
+                        tsDataType.getTs2_DegreeOfPrecision().setValue(timeOutput);
+                        obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationValue(obx5ValueInc).setData(tsDataType);
+                    }else{
+                        timeOutput = getDateFormat(messageElement.getDataElement().getTsDataType().getTime().toString(),questionIdentifierNND, messageType,messageElement.getDataElement().getQuestionDataTypeNND().trim());
+                        tsDataType.getTs1_Time().setValue(timeOutput);
+                        obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationValue(obx5ValueInc).setData(tsDataType);
+                    }
+                }
             }
         }
     }

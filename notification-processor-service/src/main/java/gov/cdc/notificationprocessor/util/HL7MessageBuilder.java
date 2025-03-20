@@ -14,11 +14,13 @@ import gov.cdc.notificationprocessor.constants.Constants;
 import gov.cdc.notificationprocessor.model.MessageElement;
 import gov.cdc.notificationprocessor.model.NBSNNDIntermediaryMessage;
 
+import gov.cdc.notificationprocessor.service.DatabaseConnector;
 import gov.cdc.notificationprocessor.service.DateTypeProcessing;
 import gov.cdc.notificationprocessor.service.OBR31SegmentProcessing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -260,7 +262,7 @@ public class HL7MessageBuilder{
 
 
             }
-            /* TO BE DONE
+            /* TODO
             }else if(StrFind(in.MessageElement[i].indicatorCd.#PCDATA, "ParentRepeatBlock")>-1){
 			MapToDynamincParentRptToRpt(in.MessageElement[i], obx2Inc,messageType, out.PATIENT_RESULT.ORDER_OBSERVATION[0]);
 	        }else if(StrFind(in.MessageElement[i].indicatorCd.#PCDATA, "DiscAsRepeat")>-1){
@@ -274,6 +276,12 @@ public class HL7MessageBuilder{
              */
         }
         logger.info("Final message: {} ", oruMessage.getMessage());
+        // based on message type
+        DatabaseConnector connector = new DatabaseConnector();
+        String base64EncodedString = encodeToBase64(oruMessage.getMessage().toString());
+        //based on the message type and
+
+        connector.persistNotification(base64EncodedString,Constants.NETSS_TRANSPORT_Q_OUT_TABLE);
     }
 
     /**
@@ -1316,6 +1324,73 @@ public class HL7MessageBuilder{
                         obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationValue(obx5ValueInc).setData(tsDataType);
                     }
                 }
+                // NM datatype
+                if (messageElement.getDataElement().getQuestionDataTypeNND().equals("NM")){
+                    NM nmDataType = (NM) obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationValue(obx5ValueInc).getData();
+                    nmDataType.setValue(messageElement.getDataElement().getNmDataType().getNum().trim());
+                    obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationValue(obx5ValueInc).setData(nmDataType);
+                }
+                //Literal value "F" specified in messaging spec as ALWAYS being sent here
+                obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationSubID().setValue("F");
+
+                String existingObservationIdentifier = obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationIdentifier().getIdentifier().toString();
+                if (existingObservationIdentifier.equals("2653") ||
+                        existingObservationIdentifier.equals("3304") ||
+                        existingObservationIdentifier.equals("6816") ||
+                        existingObservationIdentifier.equals("N0000166993") ||
+                        existingObservationIdentifier.equals("PHC1160") ||
+                        existingObservationIdentifier.equals("PHC1166") ||
+                        existingObservationIdentifier.equals("PHC1167") ||
+                        existingObservationIdentifier.equals("PHC1308") ){
+                    drugCounter +=1;
+                    String codedText = "";
+                   // String observationValue = obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationValue(0).toString().trim();
+                    switch (existingObservationIdentifier) {
+                        case "2653" -> {
+                            codedText = obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationIdentifier().getIdentifier().getValue().trim() + "^Cocaine^2.16.840.1.113883.6.88";
+                            obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationIdentifier().getIdentifier().setValue(codedText);
+                        }
+                        case "3304" -> {
+                            codedText = obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationIdentifier().getIdentifier().getValue().trim() + "^Heroin^2.16.840.1.113883.6.88";
+                            obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationIdentifier().getIdentifier().setValue(codedText);
+                        }
+                        case "6816" -> {
+                            codedText = obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationIdentifier().getIdentifier().getValue().trim() + "^Methamphetamines^2.16.840.1.113883.6.88";
+                            obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationIdentifier().getIdentifier().setValue(codedText);
+                        }
+                        case "N0000166993" -> {
+                            codedText = obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationIdentifier().getIdentifier().getValue().trim() + "^Crack^2.16.840.1.113883.3.26.1.5";
+                            obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationIdentifier().getIdentifier().setValue(codedText);
+                        }
+                        case "PHC1160" -> {
+                            codedText = obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationIdentifier().getIdentifier().getValue().trim() + "^Erectile dysfunction medications (e.g., Viagra)^2.16.840.1.114222.4.5.274";
+                            obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationIdentifier().getIdentifier().setValue(codedText);
+                        }
+                        case "PHC1166" -> {
+                            codedText = obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationIdentifier().getIdentifier().getValue().trim() + "^Nitrates/Poppers^2.16.840.1.114222.4.5.274";
+                            obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationIdentifier().getIdentifier().setValue(codedText);
+                        }
+                        case "PHC1167" -> {
+                            codedText = obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationIdentifier().getIdentifier().getValue().trim() + "^No drug use reported^2.16.840.1.114222.4.5.274";
+                            obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationIdentifier().getIdentifier().setValue(codedText);
+                        }
+                        case "PHC1308" -> {
+                            codedText = obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationIdentifier().getIdentifier().getValue().trim() + "^Other Drugs Used^2.16.840.1.114222.4.5.274";
+                            obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationIdentifier().getIdentifier().setValue(codedText);
+                        }
+                    }
+
+                    obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationSubID().setValue("2");
+                    obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationIdentifier().getIdentifier().setValue("STD115");
+                    obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationIdentifier().getText().setValue("Drugs Used");
+                    obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationIdentifier().getNameOfCodingSystem().setValue("2.16.840.1.114222.4.5.232");
+                    obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationIdentifier().getAlternateIdentifier().setValue("STD115");
+                    obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationIdentifier().getAlternateText().setValue("Drugs Used");
+                    obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationIdentifier().getNameOfAlternateCodingSystem().setValue("L");
+                    obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationSubID().setValue(String.valueOf(drugCounter));
+                    obx2Inc +=1;
+
+                }
             }
         }
     }
@@ -1460,5 +1535,10 @@ public class HL7MessageBuilder{
             quest2Part6 = remainingPart.substring(remainingPart.indexOf("^") + 1);
         }
 
+    }
+
+    private static String encodeToBase64(String hl7Message){
+
+        return Base64.getEncoder().encodeToString(hl7Message.getBytes());
     }
 }

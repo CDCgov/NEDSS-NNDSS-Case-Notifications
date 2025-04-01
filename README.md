@@ -1,6 +1,34 @@
-# CDCgov GitHub Organization Open Source Project Template
+# Processing `STD` and `NON-STD` Case Notifications
+## Overview
+This service is built using the Spring Boot framework and is designed to listen for notifications on a Kafka Topic. These notifications are categorized as either STD or Non-STD and are in XML format. The service performs the following tasks:
 
-**Template for clearance: This project serves as a template to aid projects in starting up and moving through clearance procedures. To start, create a new repository and implement the required [open practices](open_practices.md), train on and agree to adhere to the organization's [rules of behavior](rules_of_behavior.md), and [send a request through the create repo form](https://forms.office.com/Pages/ResponsePage.aspx?id=aQjnnNtg_USr6NJ2cHf8j44WSiOI6uNOvdWse4I-C2NUNk43NzMwODJTRzA4NFpCUk1RRU83RTFNVi4u) using language from this template as a Guide.**
+- **Kafka Integration**: It subscribes to a specific Kafka Topic where both STD and Non-STD notifications are published.
+
+- **Generating Java classes using XSD file**: Uses `xjc` tool to generate Java Classes from the `XSD` file.
+
+- **Parsing XML with JAXB**: Once Java Classes are generated, JAXB library is used to convert XML into Java Objects and iterate over them to build `ORU_R01` HL7 Message.
+
+- **Dynamically building HL7 ORU_R01 Message**: while parsing the XML, the service dynamically builds an HL7 message of type ORU_R01. This message format is commonly used for diagnostic reporting in healthcare, and the service generates it based on the parsed data.
+
+- **Base64 Encoding**: The HL7 message is then encoded using base64 encoding. 
+
+- **Routing Logic**: Based on the type of notification (either STD or Non-STD), the service processes the message through two different routing paths:STD Route & Non-STD Route.
+
+## Configuration
+## Installation
+### Prerequisites
+- Java 21
+- Spring Boot Framework
+- Apache Kafka
+- JAXB Java Library
+- hapi-base:2.5.1
+- hapi-structures-v25:2.5.1
+- Gradle(For dependency management)
+## Build
+
+## How to Run Tests
+
+> **Note**: Under Development.
 
 **General disclaimer** This repository was created for use by CDC programs to collaborate on public health related projects in support of the [CDC mission](https://www.cdc.gov/about/organization/mission.htm).  GitHub is not hosted by the CDC, but is a third party website used by CDC and its partners to share information and collaborate on software. CDC use of GitHub does not imply an endorsement of any one particular service, product, or enterprise. 
 

@@ -2,6 +2,7 @@ package gov.cdc.stdprocessorservice.service;
 
 import gov.cdc.stdprocessorservice.model.generated.jaxb.NBSNNDIntermediaryMessage;
 import gov.cdc.stdprocessorservice.repository.odse.CNTraportqOutRepository;
+import gov.cdc.stdprocessorservice.service.interfaces.IStdMapperService;
 import gov.cdc.stdprocessorservice.service.interfaces.IXmlService;
 import jakarta.annotation.PostConstruct;
 import jakarta.xml.bind.JAXBContext;
@@ -15,9 +16,11 @@ import java.io.StringReader;
 public class XmlService implements IXmlService {
 
     private final CNTraportqOutRepository cnTraportqOutRepository;
+    private final IStdMapperService stdMapperService;
 
-    public XmlService(CNTraportqOutRepository cnTraportqOutRepository) {
+    public XmlService(CNTraportqOutRepository cnTraportqOutRepository, IStdMapperService stdMapperService) {
         this.cnTraportqOutRepository = cnTraportqOutRepository;
+        this.stdMapperService = stdMapperService;
     }
 
 //    @PostConstruct
@@ -31,7 +34,7 @@ public class XmlService implements IXmlService {
             Unmarshaller unmarshaller = context.createUnmarshaller();
             StringReader reader = new StringReader(xml);
             NBSNNDIntermediaryMessage msg = (NBSNNDIntermediaryMessage) unmarshaller.unmarshal(reader);
-            String test = "tesT";
+            stdMapperService.stdMapping(msg);
         } catch (JAXBException e) {
             e.printStackTrace();
         }

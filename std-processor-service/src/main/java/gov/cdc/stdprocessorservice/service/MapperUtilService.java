@@ -1,5 +1,6 @@
 package gov.cdc.stdprocessorservice.service;
 
+import gov.cdc.stdprocessorservice.model.generated.jaxb.MessageElement;
 import gov.cdc.stdprocessorservice.model.generated.jaxb.NBSNNDIntermediaryMessage;
 import gov.cdc.stdprocessorservice.repository.odse.LookupMmwrRepository;
 import gov.cdc.stdprocessorservice.repository.odse.LookupNNDLookupRepository;
@@ -22,7 +23,7 @@ public class MapperUtilService implements IMapperUtilService {
         return result;
     }
 
-    public String mapToData(NBSNNDIntermediaryMessage.MessageElement.DataElement input) {
+    public String mapToData(MessageElement.DataElement input) {
         String output = "";
         if(input.getQuestionDataTypeNND().equalsIgnoreCase("CWE"))
         {
@@ -54,15 +55,16 @@ public class MapperUtilService implements IMapperUtilService {
         }
         else if(input.getQuestionDataTypeNND().equalsIgnoreCase("DT"))
         {
+
             output= input.getDtDataType().getYear();
-            if(output.isEmpty())
+            if(output == null || output.isEmpty())
             {
-                output= input.getDtDataType().getDate();
+                output= input.getDtDataType().getDate().toString();
             }
         }
         else if(input.getQuestionDataTypeNND().equalsIgnoreCase("TS"))
         {
-            output= input.getStDataType().getStringData();
+            output= input.getTsDataType().getTime().toString();
         }
         
         return  output;
@@ -135,7 +137,7 @@ public class MapperUtilService implements IMapperUtilService {
         return output;
     }
 
-    public String mapToStringValue(NBSNNDIntermediaryMessage.MessageElement.DataElement input) {
+    public String mapToStringValue(MessageElement.DataElement input) {
         String output = "";
         if(input.getQuestionDataTypeNND().equalsIgnoreCase("CWE"))
         {

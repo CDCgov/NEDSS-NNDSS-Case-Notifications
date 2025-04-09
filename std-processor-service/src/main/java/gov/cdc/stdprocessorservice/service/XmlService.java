@@ -1,5 +1,7 @@
 package gov.cdc.stdprocessorservice.service;
 
+import gov.cdc.stdprocessorservice.model.Netss;
+import gov.cdc.stdprocessorservice.model.NetssPersistModel;
 import gov.cdc.stdprocessorservice.model.generated.jaxb.NBSNNDIntermediaryMessage;
 import gov.cdc.stdprocessorservice.repository.odse.CNTraportqOutRepository;
 import gov.cdc.stdprocessorservice.service.interfaces.IStdMapperService;
@@ -23,18 +25,25 @@ public class XmlService implements IXmlService {
         this.stdMapperService = stdMapperService;
     }
 
-//    @PostConstruct
+    @PostConstruct
     public void init() {
-        var test = cnTraportqOutRepository.findTopByRecordStatusCd("UNPROCESSED");
+        var test = cnTraportqOutRepository.findTopByRecordStatusCdAndUid("UNPROCESSED", 23187L);
         mappingXmlStringToObject(test.getMessagePayload());
     }
+
+    // pRecordStatus can be retrieved from DB
     public void mappingXmlStringToObject(String xml) {
+        NetssPersistModel netssPersistModel = new NetssPersistModel();
         try {
             JAXBContext context = JAXBContext.newInstance(NBSNNDIntermediaryMessage.class);
             Unmarshaller unmarshaller = context.createUnmarshaller();
             StringReader reader = new StringReader(xml);
             NBSNNDIntermediaryMessage msg = (NBSNNDIntermediaryMessage) unmarshaller.unmarshal(reader);
-            stdMapperService.stdMapping(msg);
+            Netss netss = stdMapperService.stdMapping(msg);
+            netssPersistModel.setNetss(netss);
+            netssPersistModel.setVMessageYr(netss.getYear());
+            netssPersistModel.setVCaseReptId(netss.getCaseReportId());
+            netssPersistModel.setVMessageWeek(netss.getWeek());
         } catch (JAXBException e) {
             e.printStackTrace();
         }

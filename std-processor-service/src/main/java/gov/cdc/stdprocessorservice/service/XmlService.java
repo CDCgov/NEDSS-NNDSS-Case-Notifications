@@ -1,5 +1,6 @@
 package gov.cdc.stdprocessorservice.service;
 
+import com.google.gson.Gson;
 import gov.cdc.stdprocessorservice.model.Netss;
 import gov.cdc.stdprocessorservice.model.NetssPersistModel;
 import gov.cdc.stdprocessorservice.model.generated.jaxb.NBSNNDIntermediaryMessage;
@@ -10,6 +11,7 @@ import jakarta.annotation.PostConstruct;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
+import org.springframework.boot.autoconfigure.gson.GsonBuilderCustomizer;
 import org.springframework.stereotype.Service;
 
 import java.io.StringReader;
@@ -40,6 +42,8 @@ public class XmlService implements IXmlService {
             StringReader reader = new StringReader(xml);
             NBSNNDIntermediaryMessage msg = (NBSNNDIntermediaryMessage) unmarshaller.unmarshal(reader);
             Netss netss = stdMapperService.stdMapping(msg);
+            Gson g = new Gson();
+            var strNetss = g.toJson(netss);
             netssPersistModel.setNetss(netss);
             netssPersistModel.setVMessageYr(netss.getYear());
             netssPersistModel.setVCaseReptId(netss.getCaseReportId());

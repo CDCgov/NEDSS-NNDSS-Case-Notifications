@@ -60,9 +60,7 @@ public class StdMapperService implements IStdMapperService {
                 else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("INV168"))
                 {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
-                    result = String.valueOf(strNumbers(result));
-                    result = strRight(result, 8);
-                    result = strLeft(result, 6);
+                    result = result.substring(5, 11);
                     netss.setCaseReportId(result);
                 }
                 else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("INV107"))
@@ -87,7 +85,7 @@ public class StdMapperService implements IStdMapperService {
                 else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("DEM165"))
                 {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
-                    if (result.trim() == "") {
+                    if (result.trim().isEmpty()) {
                         result = "999";
                     }
                     else {
@@ -99,10 +97,10 @@ public class StdMapperService implements IStdMapperService {
                 {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
                     String dateOutput = "";
-                    mapperUtilService.mapToTsType(result, dateOutput);
-                    if (dateOutput.trim() == "")
+                    dateOutput = mapperUtilService.mapToTsType(result, dateOutput);
+                    if (dateOutput.trim().isEmpty())
                     {
-                        result = "99999999";
+                        dateOutput = "99999999";
                     }
                     netss.setDateOfBirth(dateOutput);
                 }
@@ -112,15 +110,15 @@ public class StdMapperService implements IStdMapperService {
                     String output2 = "";
                     if (in.getMessageElement().get(i).getDataElement().getQuestionDataTypeNND().equalsIgnoreCase("SN_WITH_UNIT"))
                     {
-                        if (in.getMessageElement().get(i).getDataElement().getSnDataType() != null
-                                && in.getMessageElement().get(i).getDataElement().getSnDataType().getNum1() != null)
+                        if (in.getMessageElement().get(i).getDataElement().getSnunitDataType() != null
+                                && in.getMessageElement().get(i).getDataElement().getSnunitDataType().getNum1() != null)
                         {
-                            output1 = in.getMessageElement().get(i).getDataElement().getSnDataType().getNum1().toString();
+                            output1 = in.getMessageElement().get(i).getDataElement().getSnunitDataType().getNum1();
                         }
-                        if (in.getMessageElement().get(i).getDataElement().getCeDataType() != null
-                                && in.getMessageElement().get(i).getDataElement().getCeDataType().getCeCodedValue() != null)
+                        if (in.getMessageElement().get(i).getDataElement().getSnunitDataType() != null &&
+                                in.getMessageElement().get(i).getDataElement().getSnunitDataType().getCeCodedValue() != null)
                         {
-                            output2 = in.getMessageElement().get(i).getDataElement().getCeDataType().getCeCodedValue();
+                            output2 = in.getMessageElement().get(i).getDataElement().getSnunitDataType().getCeCodedValue();
                         }
 //                    if (in.getMessageElement().get(i).getDataElement().getCeDataType().LocalComplex#2#Grp1.snunitDataType.ceCodedValue.#PCDATA != null)
 //                    {
@@ -199,10 +197,12 @@ public class StdMapperService implements IStdMapperService {
                 else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("INV178")) {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
                     result = mapperUtilService.mapToCodedAnswer(in.getMessageElement().get(i).getQuestionIdentifier(), netss.getPregnantInitExam());
+                    netss.setPregnantInitExam(result == null ? "" : result);
                 }
                 else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("STD102")) {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
                     result = mapperUtilService.mapToCodedAnswer(in.getMessageElement().get(i).getQuestionIdentifier(), netss.getNeurologicalInvolvment());
+                    netss.setNeurologicalInvolvment(result == null? "" : result);
                 }
                 else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("DEM152"))
                 {
@@ -210,55 +210,55 @@ public class StdMapperService implements IStdMapperService {
                     String mapped = "";
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
                     String outputData = "CHECKER";
-                    mapperUtilService.mapToMultiCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier(), "CHECKER", outputData);
+                    outputData = mapperUtilService.mapToMultiCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier(), "CHECKER", outputData);
                     race = "Asian?";
-                    if (outputData == race) {
+                    if (outputData.equals(race)) {
                         mapperUtilService.mapToMultiCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier(), race, outputData);
-                        if (outputData == "Y")
+                        if (outputData.equals("Y"))
                         {
                             netss.setAsian(outputData);
                         }
                     }
                     race = "American Indian/ Alaska native?";
-                    if (outputData == race) {
+                    if (outputData.equals(race)) {
                         mapperUtilService.mapToMultiCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier(), race, outputData);
-                        if (outputData == "Y")
+                        if (outputData.equals("Y"))
                             netss.setAmericanIndianAlaskanNative(outputData);
                     }
                     race = "Black/African American?";
-                    if (outputData == race) {
+                    if (outputData.equals(race)) {
                         mapperUtilService.mapToMultiCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier(), race, outputData);
-                        if (outputData == "Y")
+                        if (outputData.equals("Y"))
                             netss.setBlackAfricanAmerican(outputData);
                     }
                     race = "Native Hawaiian/ Pacific Islander?";
-                    if (outputData == race) {
+                    if (outputData.equals(race)) {
                         mapperUtilService.mapToMultiCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier(), race, outputData);
-                        if (outputData == "Y")
+                        if (outputData.equals("Y"))
                             netss.setNativeHawaiianPacificIslander(outputData);
                     }
                     race = "Other race?";
-                    if (outputData == race) {
+                    if (outputData.equals(race)) {
                         mapperUtilService.mapToMultiCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier(), race, outputData);
-                        if (outputData == "Y")
+                        if (outputData.equals("Y"))
                             netss.setOtherRace(outputData);
                     }
                     race = "Refused to report race";
-                    if (outputData == race) {
+                    if (outputData.equals(race)) {
                         mapperUtilService.mapToMultiCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier(), race, outputData);
-                        if (outputData == "Y")
+                        if (outputData.equals("Y"))
                             netss.setRefusedReportRace(outputData);
                     }
                     race = "White?";
-                    if (outputData == race) {
+                    if (outputData.equals(race)) {
                         mapperUtilService.mapToMultiCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier(), race, outputData);
-                        if (outputData == "Y")
+                        if (outputData.equals("Y"))
                             netss.setWhite(outputData);
                     }
                     race = "Unknown race";
-                    if (outputData == race) {
+                    if (outputData.equals(race)) {
                         mapperUtilService.mapToMultiCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier(), race, outputData);
-                        if (outputData == "Y")
+                        if (outputData.equals("Y"))
                             netss.setUnknownRace(outputData);
                     }
                 }
@@ -287,7 +287,7 @@ public class StdMapperService implements IStdMapperService {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
                     String dateOutput = "";
                     mapperUtilService.mapToTsType(result, dateOutput);
-                    if (dateOutput.trim() == "")
+                    if (dateOutput.trim().isEmpty())
                         dateOutput = "99999999";
                     netss.setDateInitHealthExam(dateOutput);
                 }
@@ -295,7 +295,7 @@ public class StdMapperService implements IStdMapperService {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
                     String dateOutput = "";
                     mapperUtilService.mapToTsType(result, dateOutput);
-                    if (dateOutput.trim() == "")
+                    if (dateOutput.trim().isEmpty())
                     {
                         dateOutput = "99999999";
                     }
@@ -305,7 +305,7 @@ public class StdMapperService implements IStdMapperService {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
                     String dateOutput = "";
                     mapperUtilService.mapToTsType(result, dateOutput);
-                    if (dateOutput.trim() == "")
+                    if (dateOutput.trim().isEmpty())
                     {
                         dateOutput = "99999999";
                     }
@@ -322,92 +322,110 @@ public class StdMapperService implements IStdMapperService {
                     String outputData = "";
                     outputData = mapperUtilService.mapToCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier());
                     netss.setSexWithMale12m(outputData);
-                } else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("STD108")) {
+                }
+                else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("STD108")) {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
                     String outputData = "";
                     outputData = mapperUtilService.mapToCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier());
                     netss.setSexWithFemale12m(outputData);
-                } else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("STD109")) {
+                }
+                else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("STD109")) {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
                     String outputData = "";
                     outputData = mapperUtilService.mapToCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier());
                     netss.setSexWithAnnon12m(outputData);
-                } else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("STD110")) {
+                }
+                else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("STD110")) {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
                     String outputData = "";
                     outputData = mapperUtilService.mapToCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier());
                     netss.setSexWithPersonIdu12m(outputData);
-                } else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("STD111")) {
+                }
+                else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("STD111")) {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
                     String outputData = "";
                     outputData = mapperUtilService.mapToCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier());
                     netss.setSexWithPersonIntox12m(outputData);
-                } else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("STD112")) {
+                }
+                else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("STD112")) {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
                     String outputData = "";
                     outputData = mapperUtilService.mapToCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier());
                     netss.setSexExchDrugMoney(outputData);
-                } else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("STD113")) {
+                }
+                else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("STD113")) {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
                     String outputData = "";
                     outputData = mapperUtilService.mapToCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier());
                     netss.setSexPersonKnownToBeAnMsm(outputData);
-                } else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("STD114")) {
+                }
+                else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("STD114")) {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
                     String outputData = "";
                     outputData = mapperUtilService.mapToCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier());
                     netss.setInjectionDrugUse(outputData);
-                } else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("NBS235")) {
+                }
+                else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("NBS235")) {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
                     String outputData = "";
                     outputData = mapperUtilService.mapToCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier());
                     netss.setCrackUse(outputData);
-                } else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("NBS237")) {
+                }
+                else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("NBS237")) {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
                     String outputData = "";
                     outputData = mapperUtilService.mapToCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier());
                     netss.setCocianeUse(outputData);
-                } else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("NBS239")) {
+                }
+                else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("NBS239")) {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
                     String outputData = "";
                     outputData = mapperUtilService.mapToCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier());
                     netss.setHeroinUse(outputData);
-                } else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("NBS236")) {
+                }
+                else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("NBS236")) {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
                     String outputData = "";
                     outputData = mapperUtilService.mapToCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier());
                     netss.setNitratesPoppers(outputData);
-                } else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("NBS234")) {
+                }
+                else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("NBS234")) {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
                     String outputData = "";
                     outputData = mapperUtilService.mapToCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier());
                     netss.setMethamphetamineUse(outputData);
-                } else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("NBS238")) {
+                }
+                else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("NBS238")) {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
                     String outputData = "";
                     outputData = mapperUtilService.mapToCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier());
                     netss.setEdUse(outputData);
-                } else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("NBS240")) {
+                }
+                else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("NBS240")) {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
                     String outputData = "";
                     outputData = mapperUtilService.mapToCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier());
                     netss.setOtherDrugUse(outputData);
-                } else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("NBS233")) {
+                }
+                else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("NBS233")) {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
                     String outputData = "";
                     outputData = mapperUtilService.mapToCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier());
                     netss.setNoDrugUse(outputData);
-                } else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("STD117")) {
+                }
+                else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("STD117")) {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
                     String outputData = "";
                     outputData = mapperUtilService.mapToCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier());
                     netss.setPriorStd(outputData);
-                } else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("STD118")) {
+                }
+                else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("STD118")) {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
                     String outputData = "";
                     outputData = mapperUtilService.mapToCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier());
                     netss.setIncarcerated(outputData);
-                } else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("STD120")) {
+                }
+                else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("STD120")) {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
                     if (Integer.parseInt(result) < 10)
                     {
@@ -426,7 +444,8 @@ public class StdMapperService implements IStdMapperService {
                         result = "999";
                     }
                     netss.setTotalNbrSexPartner12Month(result);
-                } else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("STD119")) {
+                }
+                else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("STD119")) {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
                     String outputData = "";
                     outputData = mapperUtilService.mapToCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier());
@@ -491,7 +510,8 @@ public class StdMapperService implements IStdMapperService {
                     {
                         netss.setUUnknown("Y");
                     }
-                } else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("STD122")) {
+                }
+                else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("STD122")) {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
                     String outputData = "";
                     outputData = mapperUtilService.mapToCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier());
@@ -500,12 +520,14 @@ public class StdMapperService implements IStdMapperService {
                         outputData = " ";
                     }
                     netss.setNonTreponemalSerologicTestForSyphilis(outputData);
-                } else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("STD123")) {
+                }
+                else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("STD123")) {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
                     String outputData = "";
                     outputData = mapperUtilService.mapToCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier());
                     netss.setQuantitativeSyphilisTestResult(outputData);
-                } else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("STD126")) {
+                }
+                else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("STD126")) {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
                     String outputData = "";
                     outputData = mapperUtilService.mapToCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier());
@@ -513,30 +535,30 @@ public class StdMapperService implements IStdMapperService {
                     {
                         netss.setQuantitativeSyphilisTestResult(outputData);
                     }
-                } else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("NOT109")) {
-                    var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
-                    NOT109 = result;
-                } else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("DEM162")) {
-                    var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
-                    DEM162 = result;
-                } else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("INV137")) {
-                    var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
-                    INV137 = result;
-                } else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("INV136")) {
-                    var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
-                    INV136 = result;
-                } else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("LAB163")) {
-                    var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
-                    LAB163 = result;
-                } else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("INV111")) {
-                    var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
-                    INV111 = result;
-                } else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("INV120")) {
-                    var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
-                    INV120 = result;
-                } else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("INV121")) {
-                    var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
-                    INV121 = result;
+                }
+                else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("NOT109")) {
+                    NOT109 =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
+                }
+                else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("DEM162")) {
+                    DEM162=  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
+                }
+                else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("INV137")) {
+                    INV137=  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
+                }
+                else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("INV136")) {
+                    INV136 =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
+                }
+                else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("LAB163")) {
+                    LAB163 =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
+                }
+                else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("INV111")) {
+                    INV111 =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
+                }
+                else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("INV120")) {
+                    INV120 =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
+                }
+                else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("INV121")) {
+                    INV121 =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
                 }
             }
 
@@ -612,37 +634,37 @@ public class StdMapperService implements IStdMapperService {
         EVT_DT = INV137Int;
         netss.setDateType("1");
         CompEventDateInt = CompINV137Int;
-        if ((CompINV136Int > 0 && CompINV136Int < CompEventDateInt) || EVT_DT.trim() == ""){
+        if ((CompINV136Int > 0 && CompINV136Int < CompEventDateInt) || EVT_DT.trim().isEmpty()){
             CompEventDateInt = CompINV136Int;
             EVT_DT = INV136Int;
             netss.setDateType("2");
         }
-        if ((CompLAB163Int > 0 && CompLAB163Int < CompEventDateInt) || EVT_DT.trim() == ""){
+        if ((CompLAB163Int > 0 && CompLAB163Int < CompEventDateInt) || EVT_DT.trim().isEmpty()){
             CompEventDateInt = CompLAB163Int;
             EVT_DT = LAB163Int;
             netss.setDateType("3");
         }
-        if ((CompINV111Int > 0 && CompINV111Int < CompEventDateInt) || EVT_DT.trim() == ""){
+        if ((CompINV111Int > 0 && CompINV111Int < CompEventDateInt) || EVT_DT.trim().isEmpty()){
             CompEventDateInt = CompINV111Int;
             EVT_DT = INV111Int;
             netss.setDateType("4");
         }
-        if ((CompINV120Int > 0 && CompINV120Int < CompEventDateInt) || EVT_DT.trim() == ""){
+        if ((CompINV120Int > 0 && CompINV120Int < CompEventDateInt) || EVT_DT.trim().isEmpty()){
             CompEventDateInt = CompINV120Int;
             EVT_DT = INV120Int;
             netss.setDateType("4");
         }
-        if ((CompINV121Int > 0 && CompINV121Int < CompEventDateInt) || EVT_DT.trim() == ""){
+        if ((CompINV121Int > 0 && CompINV121Int < CompEventDateInt) || EVT_DT.trim().isEmpty()){
             CompEventDateInt = CompINV121Int;
             EVT_DT = INV121Int;
             netss.setDateType("4"); 
         }
-        if ((CompINVEventDateInt > 0 && CompINVEventDateInt < CompEventDateInt) || EVT_DT.trim() == ""){
+        if ((CompINVEventDateInt > 0 && CompINVEventDateInt < CompEventDateInt) || EVT_DT.trim().isEmpty()){
             CompEventDateInt = CompINVEventDateInt;
             EVT_DT = wkYr;
             netss.setDateType("5");
         }
-        if (EVT_DT.trim() != ""){
+        if (!EVT_DT.trim().isEmpty()){
             netss.setEventDate(EVT_DT); 
         }else{
             netss.setEventDate("999999");
@@ -702,7 +724,7 @@ public class StdMapperService implements IStdMapperService {
         netss.setOtherRace("U");
         netss.setRefusedReportRace("U");
         netss.setUnknownRace("U");
-        netss.setHispanic("U");
+        netss.setHispanicLatino("U");
         netss.setAsian("U");
         netss.setDateReportedToCdc("99999999");
         netss.setTotalNbrSexPartner12Month("999");

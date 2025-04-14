@@ -43,7 +43,6 @@ public class StdMapperService implements IStdMapperService {
         initiateNetssValue(netss);
 
         for (int i = 0; i < in.getMessageElement().size(); i++) {
-            var tempTest = in.getMessageElement().get(i);
             if (in.getMessageElement().get(i).getQuestionIdentifier() != null) {
                 if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("NOT109"))
                 {
@@ -194,12 +193,14 @@ public class StdMapperService implements IStdMapperService {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
                     netss.setZip(result);
                 }
-                else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("INV178")) {
+                else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("INV178"))
+                {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
                     result = mapperUtilService.mapToCodedAnswer(in.getMessageElement().get(i).getQuestionIdentifier(), netss.getPregnantInitExam());
                     netss.setPregnantInitExam(result == null ? "" : result);
                 }
-                else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("STD102")) {
+                else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("STD102"))
+                {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
                     result = mapperUtilService.mapToCodedAnswer(in.getMessageElement().get(i).getQuestionIdentifier(), netss.getNeurologicalInvolvment());
                     netss.setNeurologicalInvolvment(result == null? "" : result);
@@ -213,7 +214,7 @@ public class StdMapperService implements IStdMapperService {
                     outputData = mapperUtilService.mapToMultiCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier(), "CHECKER", outputData);
                     race = "Asian?";
                     if (outputData.equals(race)) {
-                        mapperUtilService.mapToMultiCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier(), race, outputData);
+                        outputData = mapperUtilService.mapToMultiCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier(), race, outputData);
                         if (outputData.equals("Y"))
                         {
                             netss.setAsian(outputData);
@@ -221,45 +222,59 @@ public class StdMapperService implements IStdMapperService {
                     }
                     race = "American Indian/ Alaska native?";
                     if (outputData.equals(race)) {
-                        mapperUtilService.mapToMultiCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier(), race, outputData);
+                        outputData = mapperUtilService.mapToMultiCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier(), race, outputData);
                         if (outputData.equals("Y"))
+                        {
                             netss.setAmericanIndianAlaskanNative(outputData);
+                        }
                     }
                     race = "Black/African American?";
                     if (outputData.equals(race)) {
-                        mapperUtilService.mapToMultiCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier(), race, outputData);
+                        outputData = mapperUtilService.mapToMultiCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier(), race, outputData);
                         if (outputData.equals("Y"))
+                        {
                             netss.setBlackAfricanAmerican(outputData);
+                        }
                     }
                     race = "Native Hawaiian/ Pacific Islander?";
                     if (outputData.equals(race)) {
-                        mapperUtilService.mapToMultiCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier(), race, outputData);
+                        outputData = mapperUtilService.mapToMultiCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier(), race, outputData);
                         if (outputData.equals("Y"))
+                        {
                             netss.setNativeHawaiianPacificIslander(outputData);
+                        }
                     }
                     race = "Other race?";
                     if (outputData.equals(race)) {
-                        mapperUtilService.mapToMultiCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier(), race, outputData);
+                        outputData = mapperUtilService.mapToMultiCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier(), race, outputData);
                         if (outputData.equals("Y"))
+                        {
                             netss.setOtherRace(outputData);
+                        }
                     }
                     race = "Refused to report race";
                     if (outputData.equals(race)) {
-                        mapperUtilService.mapToMultiCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier(), race, outputData);
+                        outputData = mapperUtilService.mapToMultiCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier(), race, outputData);
                         if (outputData.equals("Y"))
+                        {
                             netss.setRefusedReportRace(outputData);
+                        }
                     }
                     race = "White?";
                     if (outputData.equals(race)) {
-                        mapperUtilService.mapToMultiCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier(), race, outputData);
+                        outputData = mapperUtilService.mapToMultiCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier(), race, outputData);
                         if (outputData.equals("Y"))
+                        {
                             netss.setWhite(outputData);
+                        }
                     }
                     race = "Unknown race";
                     if (outputData.equals(race)) {
-                        mapperUtilService.mapToMultiCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier(), race, outputData);
+                        outputData = mapperUtilService.mapToMultiCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier(), race, outputData);
                         if (outputData.equals("Y"))
+                        {
                             netss.setUnknownRace(outputData);
+                        }
                     }
                 }
                 else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("DEM155")) {
@@ -286,15 +301,17 @@ public class StdMapperService implements IStdMapperService {
                 else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("STD099")) {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
                     String dateOutput = "";
-                    mapperUtilService.mapToTsType(result, dateOutput);
+                    dateOutput = mapperUtilService.mapToTsType(result, dateOutput);
                     if (dateOutput.trim().isEmpty())
+                    {
                         dateOutput = "99999999";
+                    }
                     netss.setDateInitHealthExam(dateOutput);
                 }
                 else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("INV177")) {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
                     String dateOutput = "";
-                    mapperUtilService.mapToTsType(result, dateOutput);
+                    dateOutput = mapperUtilService.mapToTsType(result, dateOutput);
                     if (dateOutput.trim().isEmpty())
                     {
                         dateOutput = "99999999";
@@ -304,7 +321,7 @@ public class StdMapperService implements IStdMapperService {
                 else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase("STD105")) {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
                     String dateOutput = "";
-                    mapperUtilService.mapToTsType(result, dateOutput);
+                    dateOutput = mapperUtilService.mapToTsType(result, dateOutput);
                     if (dateOutput.trim().isEmpty())
                     {
                         dateOutput = "99999999";
@@ -606,7 +623,7 @@ public class StdMapperService implements IStdMapperService {
         }
         if (!INV111.isEmpty()) {
             String dtOutput = "";
-            mapperUtilService.mapToTsType(INV111, dtOutput);
+            dtOutput = mapperUtilService.mapToTsType(INV111, dtOutput);
             INV111Int = strRight(dtOutput, 6);
             CompINV111Int = strNumbers(dtOutput);
         }
@@ -715,7 +732,7 @@ public class StdMapperService implements IStdMapperService {
         netss.setLabSpecimenCollDate("99999999");
         netss.setInterview("9");
         netss.setPartner("9");
-        netss.setNeurologicalInvolvment(" ");
+        netss.setNeurologicalInvolvment(" "); // This become ""
         netss.setAmericanIndianAlaskanNative("U");
         netss.setAsian("U");
         netss.setBlackAfricanAmerican("U");

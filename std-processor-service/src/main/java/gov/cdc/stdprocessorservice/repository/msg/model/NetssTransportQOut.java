@@ -1,5 +1,7 @@
 package gov.cdc.stdprocessorservice.repository.msg.model;
 
+import gov.cdc.stdprocessorservice.model.NetssPersistModel;
+import gov.cdc.stdprocessorservice.repository.odse.model.CNTransportqOut;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -45,4 +47,15 @@ public class NetssTransportQOut {
 
     @Column(name = "record_status_cd", length = 20)
     private String recordStatusCd;
+
+    public NetssTransportQOut(NetssPersistModel netssPersistModel, CNTransportqOut cnTransportqOut) {
+         recordTypeCd = "Individual Case";
+         mmwrYear = Short.valueOf(netssPersistModel.getVMessageYr());
+         mmwrWeek = Short.valueOf(netssPersistModel.getVMessageWeek());
+         netssCaseId = netssPersistModel.getVCaseReptId();
+         phcLocalId = cnTransportqOut.getPublicHealthCaseLocalId();
+         notificationLocalId = cnTransportqOut.getNotificationLocalId();
+         payload = netssPersistModel.getNetss();
+         recordStatusCd = netssPersistModel.getRecordStatusCd();
+    }
 }

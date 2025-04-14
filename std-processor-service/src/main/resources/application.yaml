@@ -34,3 +34,6 @@ spring:
 kafka:
   topic:
     std-topic: std-topic
+
+service:
+  timezone: ${SERVICE_TZ:UTC}

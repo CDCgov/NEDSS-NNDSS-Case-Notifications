@@ -4,3 +4,26 @@ server:
 spring:
   application:
     name: data-extraction-service
+  datasource:
+    username: ${NBS_DBUSER}
+    password: ${NBS_DBPASSWORD}
+    driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    hikari:
+      connection-timeout: 60000
+      maximum-pool-size: 10
+    odse:
+      url: jdbc:sqlserver://${NBS_DBSERVER};databaseName=NBS_ODSE;encrypt=true;trustServerCertificate=true;
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVER:localhost:9092}
+    thread: ${KAFKA_THREAD:1}
+    group-id-cn-transport-out: cn-transportq-out
+    consumer:
+      maxPollIntervalMs: 30000
+
+kafka:
+  topic:
+    cn-tranport-out-topic: nbs_CN_transportq_out

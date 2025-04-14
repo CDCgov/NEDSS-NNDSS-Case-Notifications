@@ -47,7 +47,7 @@ public class HL7MessageBuilder{
     String universalIDTypeGroup1 = "";
     String messageType = "";
     boolean isDefaultNull= true;
-    Boolean genericMMG = false;
+    Boolean genericMMGv20 = false;
     String nameSpaceIDGroup2 = "";
     String universalIDGroup2 = "";
     String universalIDTypeGroup2 = "";
@@ -162,7 +162,7 @@ public class HL7MessageBuilder{
                 if (!messageElement.getDataElement().getCweDataType().getCweCodedValue().trim().equals("C")){
                     NBS246observationSubID = messageElement.getObservationSubID().trim();
                 }
-            }else if (messageElement.getQuestionIdentifierNND().trim().equals("223366009") && genericMMG){
+            }else if (messageElement.getQuestionIdentifierNND().trim().equals("223366009") && genericMMGv20){
                 String cweCodedValue = messageElement.getDataElement().getCweDataType().getCweCodedValue().trim();
                 switch (cweCodedValue) {
                     case "Y" -> hcw = "; HCWYes";
@@ -279,6 +279,8 @@ public class HL7MessageBuilder{
 				MapToQuestionMap(in.MessageElement[i], obx2Inc, out.PATIENT_RESULT.ORDER_OBSERVATION[0]);
              */
         }
+        // TODO - Remaining implementation for situation outside TB investigation
+
         logger.info("Final message: {} ", oruMessage.getMessage());
         // based on message type
         String base64EncodedString = encodeToBase64(oruMessage.getMessage().toString());
@@ -383,7 +385,7 @@ public class HL7MessageBuilder{
                         messageType = messageElement.getDataElement().getStDataType().getStringData().trim();
                         entityIdentifierGroup2 = messageElement.getDataElement().getStDataType().getStringData().trim();
                         if (entityIdentifierGroup2.equals(Constants.GENERIC_MMG_VERSION)){
-                            genericMMG = true;
+                            genericMMGv20 = true;
                         }
                     }
                     case "MSH-21.2" -> nameSpaceIDGroup2 = messageElement.getDataElement().getIsDataType().getIsCodedValue().trim();
@@ -1155,7 +1157,7 @@ public class HL7MessageBuilder{
                     TX textData = (TX) obx.getOBSERVATION(obxOrderGroupID).getOBX().getObservationValue(obx5ValueInc).getData();
                     String td = messageElement.getDataElement().getTxDataType().getTextData().trim();
                     textData.setValue(td);
-                    if (questionIdentifierNND.equals("77999-1") && genericMMG) {
+                    if (questionIdentifierNND.equals("77999-1") && genericMMGv20) {
                         textData.setValue(td+hcw);
                         hcwObxInc = obxInc;
                         hcwObxOrderGroupId = obxOrderGroupID;

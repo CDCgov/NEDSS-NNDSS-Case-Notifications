@@ -1,0 +1,53 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.4.4'
+    id 'io.spring.dependency-management' version '1.1.7'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'ca.uhn.hapi:hapi-base:2.5.1'
+    implementation 'ca.uhn.hapi:hapi-structures-v25:2.5.1'
+    implementation 'org.springframework.kafka:spring-kafka'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.18.2'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-logging'
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.0'  // JAXB API for Jakarta to bind xml to Java Objects
+    implementation 'org.glassfish.jaxb:jaxb-runtime:2.3.1'  // JAXB Runtime for Jakarta, for xml data conversion
+    implementation 'org.glassfish.jaxb:jaxb-xjc:2.3.1'  // JAXB xjc tool used to generate Java Classes from NBSNNDIntermediaryMessage.xsd schema
+    implementation 'com.google.code.gson:gson:2.12.1'
+    implementation 'jakarta.persistence:jakarta.persistence-api:3.1.0'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+
+tasks.register('generateJAXBClasses', JavaExec) {
+    // Java main class for running xjc
+    mainClass = 'com.sun.tools.xjc.XJCFacade'
+
+    //classpath for xjc tool
+    classpath = configurations.compileClasspath
+
+    // Arguments for generating classes from XSD schema file
+    // run command: ./gradlew generateJAXBClasses and
+    // classes will be generated under: src\main\java\gov\cdc\xmlhl7parserservice\model)
+    args = ['-d', 'src/main/java', '-p', 'gov.cdc.xmlhl7parserservice.model', 'src/main/resources/NBSNNDIntermediaryMessage.xsd']
+}
+
+compileJava.dependsOn(generateJAXBClasses)
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}

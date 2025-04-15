@@ -1,4 +1,4 @@
-package gov.cdc.nonstdprocessorservice.config;
+package gov.cdc.nonstdprocessorservice.non_std.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerConfig;

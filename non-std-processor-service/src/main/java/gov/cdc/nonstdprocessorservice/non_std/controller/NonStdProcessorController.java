@@ -1,4 +1,4 @@
-package gov.cdc.nonstdprocessorservice.controller;
+package gov.cdc.nonstdprocessorservice.non_std.controller;
 
 import org.springframework.web.bind.annotation.RestController;
 

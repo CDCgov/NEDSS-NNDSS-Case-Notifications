@@ -10,7 +10,5 @@ include 'data-extraction-service'
 
 include 'case-notification-service'
 
-include 'non-std-processor-service'
-
 include 'xml-hl7-parser-service'
 

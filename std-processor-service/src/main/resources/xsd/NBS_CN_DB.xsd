@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSPY v5 rel. 3 U (http://www.xmlspy.com) by Aurelia Ford (Computer Sciences Corp) -->
+<!-- NBS_CN_DB NBS Version TB Phase 3 - June 3, 2008  -->
+<schema targetNamespace="http://www.cdc.gov/NEDSS" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:nedss="http://www.cdc.gov/NEDSS" elementFormDefault="qualified" attributeFormDefault="unqualified" version="NBS x.x">
+<element name="message">
+    <complexType>
+      <sequence>
+        <element minOccurs="0" name="main">
+          <complexType>
+            <sequence>
+              <element minOccurs="0" name="report_status_cd" type="string" />
+              <element minOccurs="0" name="notification_uid" type="string" />
+              <element minOccurs="0" name="record_status_time" type="string" />
+              <element minOccurs="0" name="cn_transportq_out_uid" type="string" />
+              <element minOccurs="0" name="message_payload" type="string" />
+              <element minOccurs="0" name="public_health_case_local_id">
+	        <complexType>
+	         <attribute name="null" type="string" use="optional" />
+	        </complexType>
+              </element>
+              <element minOccurs="0" name="notification_local_id">
+	        <complexType>
+	         <attribute name="null" type="string" use="optional" />
+	        </complexType>
+              </element>
+              <element minOccurs="0" name="last_chg_user_id">
+                <complexType>
+                  <attribute name="null" type="string" use="optional" />
+                </complexType>
+              </element>
+              <element minOccurs="0" name="last_change_time">
+                <complexType>
+                  <attribute name="null" type="string" use="optional" />
+                </complexType>
+              </element>
+              <element minOccurs="0" name="record_status_cd" type="string" />
+              <element minOccurs="0" name="last_change_reason_cd">
+                <complexType>
+                  <attribute name="null" type="string" use="optional" />
+                </complexType>
+              </element>
+              <element minOccurs="0" name="add_user_id">
+                <complexType>
+                  <attribute name="null" type="string" use="optional" />
+                </complexType>
+              </element>
+              <element minOccurs="0" name="add_time" type="string" />
+              <element minOccurs="0" name="add_reason_cd">
+                <complexType>
+                  <attribute name="null" type="string" use="optional" />
+                </complexType>
+              </element>
+            </sequence>
+          </complexType>
+        </element>
+      </sequence>
+    </complexType>
+  </element>
+</schema>

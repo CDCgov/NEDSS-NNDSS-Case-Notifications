@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns="http://www.cdc.gov/NEDSS"
+           targetNamespace="http://www.cdc.gov/NEDSS"
+           elementFormDefault="qualified">
+
+    <!-- Root Element -->
+    <xs:element name="NBS_NND_Intermediary_Message">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="MessageElement" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <!-- General Question Fields -->
+                            <xs:element name="questionIdentifierNND" type="xs:string" nillable="true"/>
+                            <xs:element name="questionLabelNND" type="xs:string" nillable="true"/>
+                            <xs:element name="questionOID" type="xs:string" nillable="true"/>
+                            <xs:element name="questionIdentifier" type="xs:string" nillable="true"/>
+                            <xs:element name="questionLabel" type="xs:string" nillable="true"/>
+                            <xs:element name="hl7SegmentField" type="xs:string"/>
+                            <xs:element name="orderGroupId" type="xs:string" nillable="true"/>
+                            <xs:element name="repeatGroupSeqNbr" type="xs:integer" minOccurs="0"/>
+
+                            <!-- Data Element -->
+                            <xs:element name="dataElement">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="questionDataTypeNND" type="xs:string"/>
+                                        <!-- Data Type Choice -->
+                                        <xs:choice>
+                                            <xs:element name="stDataType">
+                                                <xs:complexType>
+                                                    <xs:sequence>
+                                                        <xs:element name="stringData" type="xs:string"/>
+                                                    </xs:sequence>
+                                                </xs:complexType>
+                                            </xs:element>
+                                            <xs:element name="idDataType">
+                                                <xs:complexType>
+                                                    <xs:sequence>
+                                                        <xs:element name="idCodedValue" type="xs:string"/>
+                                                    </xs:sequence>
+                                                </xs:complexType>
+                                            </xs:element>
+                                            <xs:element name="tsDataType">
+                                                <xs:complexType>
+                                                    <xs:sequence>
+                                                        <xs:element name="time" type="xs:dateTime"/>
+                                                    </xs:sequence>
+                                                </xs:complexType>
+                                            </xs:element>
+                                            <xs:element name="snDataType">
+                                                <xs:complexType>
+                                                    <xs:sequence>
+                                                        <xs:element name="comparator" type="xs:string" minOccurs="0"/>
+                                                        <xs:element name="num1" type="xs:decimal"/>
+                                                        <xs:element name="separatorSuffix" type="xs:string" minOccurs="0"/>
+                                                        <xs:element name="num2" type="xs:decimal" minOccurs="0"/>
+                                                    </xs:sequence>
+                                                </xs:complexType>
+                                            </xs:element>
+                                            <xs:element name="cweDataType">
+                                                <xs:complexType>
+                                                    <xs:sequence>
+                                                        <xs:element name="cweCodedValue" type="xs:string"/>
+                                                        <xs:element name="cweCodedValueDescription" type="xs:string"/>
+                                                        <xs:element name="cweCodedValueCodingSystem" type="xs:string"/>
+                                                        <xs:element name="cweLocalCodedValue" type="xs:string" nillable="true"/>
+                                                        <xs:element name="cweLocalCodedValueDescription" type="xs:string" nillable="true"/>
+                                                        <xs:element name="cweLocalCodedValueCodingSystem" type="xs:string" nillable="true"/>
+                                                    </xs:sequence>
+                                                </xs:complexType>
+                                            </xs:element>
+                                            <xs:element name="ceDataType">
+                                                <xs:complexType>
+                                                    <xs:sequence>
+                                                        <xs:element name="ceCodedValue" type="xs:string"/>
+                                                        <xs:element name="ceCodedValueDescription" type="xs:string"/>
+                                                        <xs:element name="ceCodedValueCodingSystem" type="xs:string"/>
+                                                        <xs:element name="ceLocalCodedValue" type="xs:string" nillable="true"/>
+                                                        <xs:element name="ceLocalCodedValueDescription" type="xs:string" nillable="true"/>
+                                                        <xs:element name="ceLocalCodedValueCodingSystem" type="xs:string" nillable="true"/>
+                                                    </xs:sequence>
+                                                </xs:complexType>
+                                            </xs:element>
+                                            <xs:element name="cxDataType">
+                                                <xs:complexType>
+                                                    <xs:sequence>
+                                                        <xs:element name="cxData" type="xs:string"/>
+                                                    </xs:sequence>
+                                                </xs:complexType>
+                                            </xs:element>
+                                            <xs:element name="isDataType">
+                                                <xs:complexType>
+                                                    <xs:sequence>
+                                                        <xs:element name="isCodedValue" type="xs:string"/>
+                                                    </xs:sequence>
+                                                </xs:complexType>
+                                            </xs:element>
+                                            <xs:element name="txDataType">
+                                                <xs:complexType>
+                                                    <xs:sequence>
+                                                        <xs:element name="textData" type="xs:string"/>
+                                                    </xs:sequence>
+                                                </xs:complexType>
+                                            </xs:element>
+                                            <xs:element name="dtDataType">
+                                                <xs:complexType>
+                                                    <xs:sequence>
+                                                        <xs:element name="date" type="xs:string"/>
+                                                        <xs:element name="year" type="xs:string"/>
+                                                    </xs:sequence>
+                                                </xs:complexType>
+                                            </xs:element>
+                                        </xs:choice>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>

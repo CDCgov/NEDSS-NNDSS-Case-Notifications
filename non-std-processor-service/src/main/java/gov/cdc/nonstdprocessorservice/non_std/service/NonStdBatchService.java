@@ -1,139 +1,80 @@
 package gov.cdc.nonstdprocessorservice.non_std.service;
 
-import gov.cdc.dataingestion.hl7.helper.HL7Helper;
-import gov.cdc.dataingestion.hl7.helper.model.HL7ParsedMessage;
-import gov.cdc.dataingestion.hl7.helper.model.hl7.message_data_type.Hd;
-import gov.cdc.dataingestion.hl7.helper.model.hl7.message_type.OruR1;
+import gov.cdc.nonstdprocessorservice.non_std.cache.NonStdQueue;
 import gov.cdc.nonstdprocessorservice.non_std.model.PHINMSProperties;
-import gov.cdc.nonstdprocessorservice.non_std.repository.msg.ServiceActionPairRepository;
+import gov.cdc.nonstdprocessorservice.non_std.service.interfaces.IBatchService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-
-import static gov.cdc.nonstdprocessorservice.non_std.util.TimeStampHelper.getCurrentTimeStamp;
+import java.util.List;
 
 @Service
-public class NonStdBatchService {
-    @Value("${service.timezone}")
-    private String tz = "UTC";
+public class NonStdBatchService implements IBatchService {
+    @Value("${service.batch-message-profile-id")
+    private String BATCH_MESSAGE_PROFILE_ID = "MESSAGE_PROFILE_ID";
 
-    @Value("${service.nbs-certificate-url")
-    private String NBS_CERTIFICATE_URL = "CERTIFICATE_URL";
-
-    private final ServiceActionPairRepository serviceActionPairRepository;
-
-    public NonStdBatchService(ServiceActionPairRepository serviceActionPairRepository) {
-        this.serviceActionPairRepository = serviceActionPairRepository;
+    public boolean isBatchConditionApplied(PHINMSProperties phinmsProperties) {
+        if (phinmsProperties.getMessageControlID1().equals(BATCH_MESSAGE_PROFILE_ID)) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
-    public PHINMSProperties gettingPHIMNSProperties(
-                String payload,
-                PHINMSProperties PHINMSProperties) throws Exception {
-        Hd sendingFacility = null;
-        Hd sendingApplication = null;
-        var counterInt =0;
+    public PHINMSProperties ReleaseQueuePopulateBatchFooterProperties() {
+        PHINMSProperties phinmsProperties = new PHINMSProperties();
+        List<PHINMSProperties> queue = NonStdQueue.getInstance().getPhinmsPropertiesList();
+        var batchHL7Msg = batch(queue);
+        phinmsProperties = NonStdQueue.getInstance().getPhinmsPropertiesList().getFirst();
+        NonStdQueue.getInstance().clearPHINMSProperties();
 
-        var serviceActionPairs = this.serviceActionPairRepository.findTotal();
-        Integer counterString = serviceActionPairs.getTotalServiceActionPairs();
-        if (counterString == null) {
-            counterString = 1;
+        var currentTime = phinmsProperties.getPCurrentTimestamp();
+        var sendingApplication = phinmsProperties.getSENDING_APPLICATION();
+        var sendingFacility = phinmsProperties.getSENDING_FACILITY();
+        var SENDING_FACILITY_AND_NAME = sendingApplication+'|'+ sendingFacility;
+        var header = "FHS|^~\\&|"
+                + SENDING_FACILITY_AND_NAME
+                + "|PHINCDS^2.16.840.1.114222.4.3.2.10^ISO|PHIN^2.16.840.1.114222^ISO|"
+                + currentTime
+                + "|||||\rBHS|^~\\&|"
+                + SENDING_FACILITY_AND_NAME
+                + "|PHINCDS^2.16.840.1.114222.4.3.2.10^ISO|PHIN^2.16.840.1.114222^ISO|"
+                + currentTime
+                + "|||||\r";
+
+//        var body = phinmsProperties.getPPHINMessageContent2();
+        var body = header + batchHL7Msg;
+        phinmsProperties.setPPHINMessageContent2(body);
+        return phinmsProperties;
+    }
+
+    /*
+    * */
+    public void holdQueue(PHINMSProperties phinmsProperties) {
+        // message need to be hold in the queue whenever HOLD QUEUE is activated
+        NonStdQueue.getInstance().addPHINMSProperties(phinmsProperties);
+
+    }
+
+    // this to batch the message after hold queue is release
+    protected String batch(List<PHINMSProperties> queue) {
+        StringBuilder stringBuilder = new StringBuilder();
+        if (!queue.isEmpty()) {
+            int counter = 0;
+            // Trailer - \rBTS|%c|\rFTS|1|
+            for(PHINMSProperties phinmsProperties : queue) {
+                stringBuilder.append(phinmsProperties.getPPHINMessageContent2());
+                ++counter;
+            }
+            stringBuilder.append("\rBTS|");
+            stringBuilder.append(counter);
+            stringBuilder.append("|\rFTS|1|");
         }
 
-        var statusCode="ACTIVE";
-        var messageControlID1 ="";
-        var conditionCode= new ArrayList<String>();
-        var mappedOnce= false;
-        var SAPConcatenated="";
 
 
-        HL7Helper hl7Helper = new HL7Helper();
-        HL7ParsedMessage<OruR1> parsedMessage = hl7Helper.hl7StringParser(payload);
 
-        var vMessageID = PHINMSProperties.getPNotificationId();
-        var vPublicHealthCaseLocalId = PHINMSProperties.getPPublicHealthCaseLocalId();
-
-        for(var patResult : parsedMessage.getParsedMessage().getPatientResult()) {
-            conditionCode.add(patResult.getOrderObservation().getFirst().getObservationRequest().getReasonForStudy().getFirst().getIdentifier());
-        }
-
-        messageControlID1 = parsedMessage.getParsedMessage().getMessageHeader().getMessageProfileIdentifier().get(2).getEntityIdentifier();
-        sendingApplication = parsedMessage.getParsedMessage().getMessageHeader().getSendingApplication();
-        sendingFacility = parsedMessage.getParsedMessage().getMessageHeader().getSendingFacility();
-
-        if(messageControlID1==null) {
-            messageControlID1 = parsedMessage.getParsedMessage().getMessageHeader().getMessageProfileIdentifier().get(1).getEntityIdentifier();
-        }
-
-        var mappingERROR= PHINMSProperties.getPNotificationId();
-
-        if(conditionCode.isEmpty() && (mappingERROR != null && !mappingERROR.isEmpty())){
-            // mappingERROR Exception
-            throw new Exception();
-        }
-
-//        next.getField("PATIENT_RESULT.ORDER_OBSERVATION[*].OBR[0].FillerOrderNumber.EntityIdentifier");
-
-        var pNotificationID = PHINMSProperties.getPNotificationId();
-        var reportStatusCd = PHINMSProperties.getPReportStatusCd();
-        if(reportStatusCd.equalsIgnoreCase("F"))
-        {
-            PHINMSProperties.setReportStatusCd("CDCNND1" + pNotificationID);
-        }
-        else if(reportStatusCd.equalsIgnoreCase("C"))
-        {
-            PHINMSProperties.setReportStatusCd("CDCNND2" + pNotificationID);
-        }
-
-        var vProcessingStatus = PHINMSProperties.getNETSS_MESSAGE_ONLY();
-        var currentTime = getCurrentTimeStamp(tz);
-
-        LocalDateTime localDateTime = currentTime.toLocalDateTime();
-
-        int currentYear = localDateTime.getYear();
-        int currentMonth = localDateTime.getMonthValue();
-        int currentDate = localDateTime.getDayOfMonth();
-        int currentHour = localDateTime.getHour();
-        int currentMinute = localDateTime.getMinute();
-        int currentSecond = localDateTime.getSecond();
-
-        // Zero-padded formatting
-        String monthStr = String.format("%02d", currentMonth);
-        String dateStr = String.format("%02d", currentDate);
-        String hourStr = String.format("%02d", currentHour);
-        String minuteStr = String.format("%02d", currentMinute);
-        String secondStr = String.format("%02d", currentSecond);
-
-        String vFormattedTimestamp = currentYear + "-" + monthStr + "-" + dateStr + "T" +
-                hourStr + ":" + minuteStr + ":" + secondStr;
-
-        String vCurrentTimestamp = currentYear + monthStr + dateStr + hourStr + minuteStr + secondStr;
-
-        PHINMSProperties.setPPHINMessageContent2(payload);
-
-
-        PHINMSProperties.setPPHINEncryption("yes");
-        PHINMSProperties.setPPHINRoute("CDC"); // CDC Production
-        PHINMSProperties.setPPHINSignature("no"); // CDC Production
-        PHINMSProperties.setPPHINProcessingStatus(vProcessingStatus);
-        PHINMSProperties.setPPHINPublicKeyLdapAddress("directory.pki.digicert.com:389");
-        PHINMSProperties.setPPHINPublicKeyLdapBaseDN("o=Centers for Disease Control and Prevention");
-        PHINMSProperties.setPPHINPublicKeyLdapDN("cn=cdc phinms");
-        PHINMSProperties.setPPHINMessageRecipient("CDC");
-        PHINMSProperties.setPPHINMessageID(vMessageID);
-        PHINMSProperties.setPPHINPriority("1");
-        PHINMSProperties.setPCurrentTimestamp(vCurrentTimestamp);
-        PHINMSProperties.setPPHINCurrentTimestamp(vFormattedTimestamp);
-        var batchProfileId = PHINMSProperties.getBATCH_MESSAGE_PROFILE_ID();
-        PHINMSProperties.setMessageControlID1(messageControlID1);
-
-        // TODO: DOUBLE CHECK VALUE FOR THESE 2 HD OBJECT
-        PHINMSProperties.setSENDING_APPLICATION(sendingApplication.toString());
-        PHINMSProperties.setSENDING_FACILITY(sendingFacility.toString());
-
-        PHINMSProperties.setPCertificateURL(NBS_CERTIFICATE_URL);
-
-        return PHINMSProperties;
+        return stringBuilder.toString();
     }
 }

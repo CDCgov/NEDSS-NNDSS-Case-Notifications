@@ -16,8 +16,9 @@ public class NonStdService implements INonStdService {
         this.batchService = batchService;
     }
 
-    public void nonStdProcessor(String payload, PHINMSProperties PHINMSProperties) throws Exception {
-        var updatedPhinmsProperties = phinmsService.gettingPHIMNSProperties(payload, PHINMSProperties);
+    public void nonStdProcessor(String payload) throws Exception {
+        PHINMSProperties phinmsProperties = new PHINMSProperties();
+        var updatedPhinmsProperties = phinmsService.gettingPHIMNSProperties(payload, phinmsProperties);
         if (batchService.isBatchConditionApplied(updatedPhinmsProperties)) {
             batchNonStdProcessor(updatedPhinmsProperties);
         }

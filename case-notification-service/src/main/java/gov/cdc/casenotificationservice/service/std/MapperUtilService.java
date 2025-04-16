@@ -1,9 +1,9 @@
-package gov.cdc.casenotificationservice.service;
+package gov.cdc.casenotificationservice.service.std;
 
 import gov.cdc.casenotificationservice.model.generated.jaxb.MessageElement;
 import gov.cdc.casenotificationservice.repository.odse.LookupMmwrRepository;
 import gov.cdc.casenotificationservice.repository.odse.LookupNNDLookupRepository;
-import gov.cdc.casenotificationservice.service.interfaces.IMapperUtilService;
+import gov.cdc.casenotificationservice.service.std.interfaces.IMapperUtilService;
 import org.springframework.stereotype.Service;
 
 @Service

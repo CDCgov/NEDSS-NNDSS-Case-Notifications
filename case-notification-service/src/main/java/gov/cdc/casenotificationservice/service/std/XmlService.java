@@ -1,4 +1,4 @@
-package gov.cdc.casenotificationservice.service;
+package gov.cdc.casenotificationservice.service.std;
 
 import com.google.gson.Gson;
 import gov.cdc.casenotificationservice.model.Netss;
@@ -8,8 +8,8 @@ import gov.cdc.casenotificationservice.repository.msg.NetssTransportQOutReposito
 import gov.cdc.casenotificationservice.repository.msg.model.NetssTransportQOut;
 import gov.cdc.casenotificationservice.repository.odse.CNTraportqOutRepository;
 import gov.cdc.casenotificationservice.repository.odse.model.CNTransportqOut;
-import gov.cdc.casenotificationservice.service.interfaces.IStdMapperService;
-import gov.cdc.casenotificationservice.service.interfaces.IXmlService;
+import gov.cdc.casenotificationservice.service.std.interfaces.IStdMapperService;
+import gov.cdc.casenotificationservice.service.std.interfaces.IXmlService;
 import jakarta.annotation.PostConstruct;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;

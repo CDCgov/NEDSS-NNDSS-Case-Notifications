@@ -1,6 +1,6 @@
 package gov.cdc.casenotificationservice.kafka.consumer;
 
-import gov.cdc.casenotificationservice.service.interfaces.IXmlService;
+import gov.cdc.casenotificationservice.service.std.interfaces.IXmlService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;

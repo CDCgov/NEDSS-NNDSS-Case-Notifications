@@ -27,8 +27,6 @@ spring:
       ddl-auto: none
   kafka:
     bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVER:localhost:9092}
-    consumer:
-      maxPollIntervalMs: 30000
     thread: ${KAFKA_THREAD:1}
     group-id:
       std-group-id: std-processor-group

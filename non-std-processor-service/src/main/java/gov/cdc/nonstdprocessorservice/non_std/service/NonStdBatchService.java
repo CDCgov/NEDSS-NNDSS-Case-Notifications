@@ -64,7 +64,13 @@ public class NonStdBatchService implements IBatchService {
             int counter = 0;
             // Trailer - \rBTS|%c|\rFTS|1|
             for(PHINMSProperties phinmsProperties : queue) {
-                stringBuilder.append(phinmsProperties.getPPHINMessageContent2());
+                if (counter == 0) {
+                    stringBuilder.append(phinmsProperties.getPPHINMessageContent2());
+                }
+                else
+                {
+                    stringBuilder.append("\r").append(phinmsProperties.getPPHINMessageContent2());
+                }
                 ++counter;
             }
             stringBuilder.append("\rBTS|");

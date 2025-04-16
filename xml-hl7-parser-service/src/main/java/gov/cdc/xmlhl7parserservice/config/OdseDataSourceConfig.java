@@ -64,7 +64,7 @@ public class OdseDataSourceConfig {
             @Qualifier("odseDataSource") DataSource odseDataSource) {
         return odseEntityManagerFactoryBuilder
                 .dataSource(odseDataSource)
-                .packages("gov.cdc.dataingestion.odse.repository")
+                .packages("gov.cdc.xmlhl7parserservice.model")
                 .persistenceUnit("odse")
                 .build();
     }

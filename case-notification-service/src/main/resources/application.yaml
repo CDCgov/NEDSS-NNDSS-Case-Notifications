@@ -34,5 +34,11 @@ spring:
     topic:
       std-topic: std-topic
       non-std-topic: non-std-topic
+    dlt:
+      suffix: -dlt
+    retry:
+      max-retry: 2
+      suffix: -retry
+
 service:
   timezone: ${SERVICE_TZ:UTC}

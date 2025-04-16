@@ -27,13 +27,14 @@ spring:
       ddl-auto: none
   kafka:
     bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVER:localhost:9092}
-    group-id: std-processor-group
     consumer:
       maxPollIntervalMs: 30000
-
-kafka:
-  topic:
-    std-topic: std-topic
-
+    thread: ${KAFKA_THREAD:1}
+    group-id:
+      std-group-id: std-processor-group
+      non-std-group-id: non-std-processor-group
+    topic:
+      std-topic: std-topic
+      non-std-topic: non-std-topic
 service:
   timezone: ${SERVICE_TZ:UTC}

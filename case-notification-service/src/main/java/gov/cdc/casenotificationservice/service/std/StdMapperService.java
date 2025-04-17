@@ -1,8 +1,8 @@
-package gov.cdc.casenotificationservice.service;
+package gov.cdc.casenotificationservice.service.std;
 
 import gov.cdc.casenotificationservice.model.Netss;
 import gov.cdc.casenotificationservice.model.generated.jaxb.NBSNNDIntermediaryMessage;
-import gov.cdc.casenotificationservice.service.interfaces.IStdMapperService;
+import gov.cdc.casenotificationservice.service.std.interfaces.IStdMapperService;
 import org.springframework.stereotype.Service;
 
 import static gov.cdc.casenotificationservice.util.StringHelper.*;

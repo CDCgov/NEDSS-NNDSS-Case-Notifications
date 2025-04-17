@@ -1,4 +1,4 @@
-package gov.cdc.casenotificationservice.repository.odse.model;
+package gov.cdc.casenotificationservice.repository.msg.model;
 
 import jakarta.persistence.*;
 import lombok.Data;

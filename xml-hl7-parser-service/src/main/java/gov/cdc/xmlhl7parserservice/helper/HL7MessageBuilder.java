@@ -5,6 +5,7 @@ import ca.uhn.hl7v2.model.DataTypeException;
 
 import ca.uhn.hl7v2.model.Varies;
 import ca.uhn.hl7v2.model.v25.datatype.*;
+import ca.uhn.hl7v2.model.v25.datatype.DTM;
 import ca.uhn.hl7v2.model.v25.group.ORU_R01_ORDER_OBSERVATION;
 import ca.uhn.hl7v2.model.v25.message.ORU_R01;
 import ca.uhn.hl7v2.model.v25.segment.*;
@@ -17,6 +18,7 @@ import gov.cdc.xmlhl7parserservice.repository.IServiceActionPairRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.xml.datatype.XMLGregorianCalendar;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -383,10 +385,88 @@ public class HL7MessageBuilder{
             );
         }
 
+//        for(int i = 0; i < oruMessage.getPATIENT_RESULT().getORDER_OBSERVATIONReps(); i++) {
+//            for(int j = 0; j < oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(i).getOBSERVATIONReps(); j++) {
+//                for(OBX obx : oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX()) {
+//
+//                }
+//            }
+//
+//        }
 
+        for(int i = 0; i < oruMessage.getPATIENT_RESULT().getORDER_OBSERVATIONReps(); i++) {
+            for(int j = 0; j < oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(i).getOBSERVATIONReps(); j++) {
+                String alternateIdentifier = oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObservationIdentifier().getAlternateIdentifier().getValue();
 
+                if(messageType.contains("CongenitalSyphilis_MMG_V1.0")) {
+                    Set<String> validAlternateIds = Set.of("LAB588", "INV290", "INV291", "STD123", "LAB167", "STD123_1");
 
-            logger.info("Final message: {} ", oruMessage.getMessage());
+                    if (validAlternateIds.contains(alternateIdentifier)) {
+                        int subIdCounter;
+                        try {
+                            subIdCounter = Integer.parseInt(oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObservationSubID().getValue());
+                        } catch (NumberFormatException e) {
+                            // TODO check this value
+                            subIdCounter = -1;
+                        }
+                        if (subIdCounter < 0) {
+                            int newSubidCounter = -subIdCounter;
+                            oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObservationSubID().setValue(Integer.toString(dupRepeatCongenitalCounter + newSubidCounter));
+                        }
+                    }
+                    else {
+                        if("STD122".equals(alternateIdentifier) || "STD123".equals(alternateIdentifier) || "STD126".equals(alternateIdentifier)) {
+                            if (inv290Inv291Counter1 == 0) {
+                                inv290Inv291Counter++;
+                                inv290Inv291Counter1 = inv290Inv291Counter;
+                            }
+                            oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObservationSubID().setValue(Integer.toString(inv290Inv291Counter1));
+                        } else if ("STD124".equals(alternateIdentifier) || "STD125".equals(alternateIdentifier)) {
+                            if (inv290Inv291Counter2 == 0) {
+                                inv290Inv291Counter++;
+                                inv290Inv291Counter2 = inv290Inv291Counter;
+                            }
+                            oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObservationSubID().setValue(Integer.toString(inv290Inv291Counter2));
+                        } else if ("STD121".equals(alternateIdentifier)) {
+                            oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObservationSubID().setValue("");
+                        }
+                    }
+                    
+                    String obxValue = oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObservationValue(0).toString();
+                    String obxIdIdentifier = oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObservationIdentifier().getIdentifier().getValue();
+                    ST stType = (ST) oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObservationValue(0).getData();
+                    ST stType1 = (ST) oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObservationValue(1).getData();
+
+                    int observationValue1Size  = ((ST) oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObservationValue(1).getData()).getValue().length();
+
+                    if(obxValue != null && obxValue.contains("Other Drugs Used^2.16.840.1.114222.4.5.274") && std300 != null && !std300.isEmpty()) {
+                        stType.setValue(obxValue + "^^^^^^" + std300);
+                        oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObservationValue(0).setData(stType);
+                    } else if ("67187-5".equals(obxIdIdentifier) && obxValue != null && obxValue.contains(OTH_COMP_REPLACE)) {
+                        if (OTH_COMP_TEXT != null && !OTH_COMP_TEXT.isEmpty()) {
+                            stType.setValue(OTH_COMP_REPLACE + "^^^^^^" + OTH_COMP_TEXT);
+                            oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObservationValue(0).setData(stType);
+                        } else {
+                            stType.setValue("OTH^other^2.16.840.1.113883.5.1008");
+                            oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObservationValue(0).setData(stType);
+                        }
+                        stType1.setValue("");
+                        oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObservationValue(1).setData(stType1);
+                    } else if ("56831-1".equals(obxIdIdentifier) && obxValue != null && obxValue.contains(OTH_SANDS_REPLACE)) {
+                        stType.setValue(OTH_SANDS_REPLACE + "^^^^^^" + OTH_SANDS_TEXT);
+                        oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObservationValue(0).setData(stType);
+
+                        stType1.setValue("");
+                        oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObservationValue(1).setData(stType1);
+                    } else if ("56831-1".equals(obxIdIdentifier) && observationValue1Size > 0) {
+                        stType1.setValue("");
+                        oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObservationValue(1).setData(stType1);
+                    }
+                }
+            }
+        }
+
+        logger.info("Final message: {} ", oruMessage.getMessage());
         // based on message type
         String base64EncodedString = encodeToBase64(oruMessage.getMessage().toString());
         //based on the message type and
@@ -429,11 +509,11 @@ public class HL7MessageBuilder{
                 } else if (dataElement.startsWith("5.")) {
                 } else if (dataElement.startsWith("6.")) {
                 } else if (dataElement.startsWith("7.")) {
-                    mapToTS18DataType(messageElement.getDataElement().getTsDataType().getTime(), oruMessage);
+                    mapToTS18DataType(messageElement.getDataElement().getTsDataType().getTime().toString(), oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(obrCounter).getOBR().getObservationDateTime());
                 } else if (dataElement.startsWith("14.")) {
                 } else if (dataElement.startsWith("16.")) {
                 } else if (dataElement.startsWith("22.")) {
-                    mapToTS18DataType(messageElement.getDataElement().getTsDataType().getTime(), oruMessage);
+                    mapToTS18DataType(messageElement.getDataElement().getTsDataType().getTime().toString(), oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(obrCounter).getOBR().getResultsRptStatusChngDateTime());
                 } else if (dataElement.startsWith("25.")) {
                     oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(obrCounter).getOBR().getResultStatus().setValue(messageElement.getDataElement().getIdDataType().getIdCodedValue());
                 } else if (dataElement.startsWith("31.")) {
@@ -467,7 +547,7 @@ public class HL7MessageBuilder{
                     String desc = messageElement.getDataElement().getStDataType().getStringData();
                     oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(obrCounter).getSPECIMEN(specimenCounter).getSPM().getSpecimenDescription(0).setValue(desc);
                 } else if (dataElement.startsWith("17")) {
-                    mapToTS18DataType(messageElement.getDataElement().getTsDataType().getTime(), oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(obrCounter).getSPECIMEN(specimenCounter).getSPM().getSpecimenCollectionDateTime().getRangeStartDateTime());
+                    mapToTS18DataType(messageElement.getDataElement().getTsDataType().getTime().toString(), oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(obrCounter).getSPECIMEN(specimenCounter).getSPM().getSpecimenCollectionDateTime().getRangeStartDateTime());
                 } else if (dataElement.startsWith("18")) {
                 }
             }
@@ -651,7 +731,7 @@ public class HL7MessageBuilder{
                         parentLinkOBX.setObservationSubID(oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(obrCounter).getOBSERVATION(labSubCounter).getOBX().getObservationSubID().getValue());
                         // TODO - Check the toString() method
                         parentLinkOBX.setObservationValue(oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(obrCounter).getOBSERVATION(labSubCounter).getOBX().getObservationValue(0).toString());
-                        mapToSusceptibilityOBX(
+                        mapToSusceptabilityOBX(
                                 resultedTestList.get(j),
                                 obrCounter,
                                 labSubCounter,
@@ -666,6 +746,648 @@ public class HL7MessageBuilder{
                 }
                 previousCounter = oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(obrCounter).getOBSERVATION(labSubCounter).getOBX().numFields();
             }
+    }
+
+    private void mapToTS18DataType(String input, TS output) throws DataTypeException {
+        // TODO - This method needs to be verified as the milli seconds in not available in ORU R01
+        int stringSize = input.length();
+        int year = Integer.parseInt(input.substring(0, 4));
+        int month;
+        int day;
+        int hours;
+        int minutes;
+        float seconds;
+
+        if (stringSize < 7) {
+            month = 0;
+        } else {
+            month = Integer.parseInt(input.substring(4, 6));
+        }
+
+        if (stringSize < 10) {
+            day = 0;
+        } else {
+            day = Integer.parseInt(input.substring(7, 9));
+        }
+
+        if (stringSize < 13) {
+            hours = 0;
+        } else {
+            hours = Integer.parseInt(input.substring(10, 12));
+        }
+
+        if (stringSize < 16) {
+            minutes = 0;
+        } else {
+            minutes = Integer.parseInt(input.substring(13, 15));
+        }
+
+        if (stringSize < 19) {
+            seconds = 0;
+        } else {
+            seconds = Integer.parseInt(input.substring(16, 18));
+        }
+
+//        if(stringSize<23){
+//            out.Time.Millis =000;
+//            out.Time.seperator=".";
+//        }else{
+//            out.Time.seperator=".";
+//            out.Time.Millis  = StrToInt(StrMid(in,20,3));
+//        }
+
+        output.getTime().setDateSecondPrecision(year, month, day, hours, minutes, seconds);
+    }
+
+    private void mapToSusceptabilityOBX(LabReportEvent.ResultedTest resultedTest, int obrCounter, int labSubCounter, int resultedTestCounter, int i, String messageType, ParentLink parentLink, EIElement eiElement, ORU_R01 oruMessage) throws HL7Exception {
+        int labObrCounter;
+        for(LabReportEvent labReportEvent : resultedTest.getLabReportEvent()) {
+            obrCounter = oruMessage.getPATIENT_RESULT().getORDER_OBSERVATIONReps();
+            int obxSUSSubidCounter = 1;
+            String cachedSUSOBX3data = "";
+            if(!labReportEvent.getMessageElement().isEmpty()) {
+                labObrCounter = obrCounter + 1;
+                mapLabReportEventToOBR(labReportEvent,
+                        obrCounter,
+                        // TODO - Check this line
+                        labObrCounter,
+                        messageType,
+                        1,
+                        eiElement,
+                        parentLink,
+                        obxSUSSubidCounter,
+                        cachedSUSOBX3data,
+                        oruMessage);
+            }
+        }
+    }
+
+    private void mapToDTM18(String specimenCollectionDate, DTM time) {
+        time.getYear();
+    }
+
+    private void mapResultedTestToOBX(LabReportEvent.ResultedTest resultedTest, int obrSubCounter, int observationCounter, String OBXResult, int resultedTestCounter, int notesCounter,
+                                      String referenceRangeFrom, String referenceRangeTo, String resultStatus, String messageType, String specimenCollectionDate,
+                                      int obrCounter, EIElement eiElement, String dateTimeOfAnalysis, String interpretationFlag, int obxSubidCounter, String cachedOBX3data,
+                                      ResultMethod resultMethod, ParentLink parentLink, ORU_R01 oruMessage) throws HL7Exception {
+    // TODO - Implement this method
+        int valueTypeChecker = 0;
+
+        for(MessageElement messageElement : resultedTest.getMessageElement()) {
+            String hl7Field = messageElement.getHl7SegmentField().trim();
+
+            if(hl7Field.startsWith("OBX-")) {
+                String dataElement = hl7Field.replace("OBX-", "");
+
+                if (dataElement.contains("5.")) {
+                    int counter = oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(obrSubCounter).getOBSERVATION(observationCounter).getOBX().getObservationValue().length;
+                    if(counter > 0){
+                        resultedTestCounter = resultedTestCounter + 1;
+                    }
+                    oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(obrSubCounter).getOBSERVATION(observationCounter).getOBX().getSetIDOBX().setValue(String.valueOf(resultedTestCounter + 1));
+                }
+
+                if (dataElement.contains("1.")) {
+                }
+                else if (dataElement.contains("2.")) {
+                }
+                else if (dataElement.contains("3.")) {
+                    String codedValue = mapCodedToStringValue(messageElement, OBXResult, parentLink);
+                }
+                else if (dataElement.contains("5.")) {
+                    if (messageElement.getDataElement().getQuestionDataTypeNND().equals("SN_WITH_UNIT")) {
+                        oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(obrSubCounter).getOBSERVATION(observationCounter).getOBX().getValueType().setValue("SN");
+                        valueTypeChecker = 1;
+
+                        String codedValue = "";
+                        String codedValueDescription = "";
+                        String codedValueCodingSystem = "";
+                        String localCodedValue = "";
+                        String localCodedValueDescription = "";
+                        String localCodedValueCodingSystem = "";
+
+                        if (messageElement.getDataElement().getSnunitDataType().getCeCodedValue() != null) {
+                            codedValue = messageElement.getDataElement().getSnunitDataType().getCeCodedValue();
+                        }
+
+                        if (messageElement.getDataElement().getSnunitDataType().getCeCodedValueDescription() != null) {
+                            codedValueDescription = messageElement.getDataElement().getSnunitDataType().getCeCodedValueDescription();
+                        }
+
+                        if (messageElement.getDataElement().getSnunitDataType().getCeCodedValueCodingSystem() != null) {
+                            codedValueCodingSystem = messageElement.getDataElement().getSnunitDataType().getCeCodedValueCodingSystem();
+                        }
+
+                        if (messageElement.getDataElement().getSnunitDataType().getCeLocalCodedValue() != null) {
+                            localCodedValue = messageElement.getDataElement().getSnunitDataType().getCeLocalCodedValue();
+                        }
+
+                        if (messageElement.getDataElement().getSnunitDataType().getCeLocalCodedValueDescription() != null) {
+                            localCodedValueDescription = messageElement.getDataElement().getSnunitDataType().getCeLocalCodedValueDescription();
+                        }
+
+                        if (messageElement.getDataElement().getSnunitDataType().getCeLocalCodedValueCodingSystem() != null) {
+                            localCodedValueCodingSystem = messageElement.getDataElement().getSnunitDataType().getCeLocalCodedValueCodingSystem();
+                        }
+
+                        CE currentObxUnits = oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(obrSubCounter).getOBSERVATION(observationCounter).getOBX().getUnits();
+
+                        currentObxUnits.getIdentifier().setValue(codedValue);
+                        currentObxUnits.getNameOfCodingSystem().setValue(codedValueCodingSystem);
+                        currentObxUnits.getText().setValue(codedValueDescription);
+                        currentObxUnits.getAlternateIdentifier().setValue(localCodedValue);
+                        currentObxUnits.getNameOfAlternateCodingSystem().setValue(localCodedValueCodingSystem);
+                        currentObxUnits.getAlternateText().setValue(localCodedValueDescription);
+                    }
+                    else {
+                        oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(obrSubCounter).getOBSERVATION(observationCounter).getOBX().getValueType().setValue(messageElement.getDataElement().getQuestionDataTypeNND());
+                        valueTypeChecker = 1;
+                        }
+
+                    String observationValue = mapToObservationValue(messageElement, oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(obrSubCounter).getOBSERVATION(observationCounter).getOBX().getObservationValue(0).toString());
+                    // TODO - Validate this loop to make sure this observationValue is right
+                    ST stDataType = (ST) oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(obrSubCounter).getOBSERVATION(observationCounter).getOBX().getObservationValue(0).getData();
+                    stDataType.setValue(observationValue);
+                    // mapToObservationValue(messageElement,out.PATIENT_RESULT.ORDER_OBSERVATION[obrSubCounter].OBSERVATION[observationCounter].OBX[resultedTestCounter].ObservationValue[0]);
+                }
+                else if (dataElement.contains("6.")) {
+                    mapToCEType(messageElement, oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(obrSubCounter).getOBSERVATION(observationCounter).getOBX().getUnits());
+                }
+                else if (dataElement.contains("7.")) {
+                    String dataLocator = dataElement.replace("7.", "");
+
+                    if(messageElement.getQuestionIdentifier().equals("LAB119") || messageElement.getQuestionIdentifier().equals("NBS373")) {
+                        referenceRangeFrom = messageElement.getDataElement().getStDataType().getStringData();
+                    }
+                    if(messageElement.getQuestionIdentifier().equals("LAB120") || messageElement.getQuestionIdentifier().equals("NBS374")) {
+                        referenceRangeTo = messageElement.getDataElement().getStDataType().getStringData();
+                    }
+                }
+                else if (dataElement.contains("8.")) {
+                    interpretationFlag = messageElement.getDataElement().getIsDataType().getIsCodedValue();
+
+                }
+                else if (dataElement.contains("11.")) {
+                    resultStatus =messageElement.getDataElement().getIdDataType().getIdCodedValue();
+
+                }
+                else if (dataElement.contains("14.")) {
+                    specimenCollectionDate = messageElement.getDataElement().getTsDataType().getTime().toString();
+
+                }
+                else if (dataElement.contains("17.")) {
+                    resultMethod.setCode(messageElement.getDataElement().getCeDataType().getCeCodedValue());
+                    resultMethod.setNameOfCodingSystem(messageElement.getDataElement().getCeDataType().getCeCodedValueCodingSystem());
+                    resultMethod.setText(messageElement.getDataElement().getCeDataType().getCeCodedValueDescription());
+                }
+                else if (dataElement.contains("19.")) {
+                    dateTimeOfAnalysis = messageElement.getDataElement().getTsDataType().getTime().toString();
+                }
+                else if (dataElement.contains("23.1.")) {
+                }
+            }
+        }
+
+        String obxValueType = oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(obrSubCounter).getOBSERVATION(observationCounter).getOBX().getValueType().getValue();
+
+        if(obxValueType == null || obxValueType.equals("")) {
+//            setEmpty(oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(obrSubCounter).getSPECIMEN(observationCounter));
+            int length = oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(obrSubCounter).getSPECIMEN(observationCounter).getOBXReps();
+            for (int counter = 0; counter < length; counter++) {
+                oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(obrSubCounter).getSPECIMEN(observationCounter).removeOBX(counter);
+            }
+        }
+        if(valueTypeChecker == 0){
+            int counter = oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(obrSubCounter).getOBSERVATION(observationCounter).getOBX().getObservationValue().length;
+            if(counter > 0){
+                resultedTestCounter =resultedTestCounter + 1;
+            }
+            ST stDataType = (ST) oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(obrSubCounter).getOBSERVATION(observationCounter).getOBX().getObservationValue(0).getData();
+            stDataType.setValue("\"\"");
+            oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(obrSubCounter).getOBSERVATION(observationCounter).getOBX().getObservationValue(0).setData(stDataType);
+            oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(obrSubCounter).getOBSERVATION(observationCounter).getOBX().getSetIDOBX().setValue(String.valueOf(resultedTestCounter + 1));
+            oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(obrSubCounter).getOBSERVATION(observationCounter).getOBX().getValueType().setValue("TX");
+        }
+    }
+
+    // TODO - Check where this return value is being used
+    private String mapCodedToStringValue(MessageElement messageElement, String obxResult, ParentLink parentLink) {
+        if (messageElement.getDataElement().getCeDataType() != null) {
+
+            if (messageElement.getDataElement().getCeDataType().getCeCodedValue() != null
+                    && !messageElement.getDataElement().getCeDataType().getCeCodedValue().isEmpty()) {
+                String ceCodedValue = messageElement.getDataElement().getCeDataType().getCeCodedValue();
+                obxResult = ceCodedValue;
+                parentLink.setIdentifier(ceCodedValue);
+            } else {
+                obxResult = "MISSING";
+            }
+
+            if (messageElement.getDataElement().getCeDataType().getCeCodedValueCodingSystem() != null
+                    && !messageElement.getDataElement().getCeDataType().getCeCodedValueCodingSystem().isEmpty()) {
+                String ceCodedValueCodingSystem = messageElement.getDataElement().getCeDataType().getCeCodedValueCodingSystem();
+                parentLink.setNameOfCodingSystem(ceCodedValueCodingSystem);
+                obxResult = obxResult + "^" + ceCodedValueCodingSystem;
+            } else {
+                obxResult = "MISSING";
+            }
+
+            if (messageElement.getDataElement().getCeDataType().getCeCodedValueDescription() != null
+                    && !messageElement.getDataElement().getCeDataType().getCeCodedValueDescription().isEmpty()) {
+                String ceCodedValueDescription = messageElement.getDataElement().getCeDataType().getCeCodedValueDescription();
+                parentLink.setText(ceCodedValueDescription);
+                obxResult = obxResult + "^" + ceCodedValueDescription;
+            } else {
+                obxResult = "MISSING";
+            }
+        }
+
+        if (messageElement.getDataElement().getCweDataType() != null) {
+            if (messageElement.getDataElement().getCweDataType().getCweCodedValue() != null
+                    && !messageElement.getDataElement().getCweDataType().getCweCodedValue().isEmpty()) {
+                String cweCodedValue = messageElement.getDataElement().getCweDataType().getCweCodedValue();
+                obxResult = cweCodedValue;
+                parentLink.setIdentifier(cweCodedValue);
+            } else {
+                obxResult = "MISSING";
+            }
+
+            if (messageElement.getDataElement().getCweDataType().getCweCodedValueCodingSystem() != null
+                    && !messageElement.getDataElement().getCweDataType().getCweCodedValueCodingSystem().isEmpty()) {
+                String cweCodedValueCodingSystem = messageElement.getDataElement().getCweDataType().getCweCodedValueCodingSystem();
+                parentLink.setNameOfCodingSystem(cweCodedValueCodingSystem);
+                obxResult = obxResult + "^" + cweCodedValueCodingSystem;
+            } else {
+                obxResult = obxResult + "^" + "MISSING";
+            }
+
+            if (messageElement.getDataElement().getCweDataType().getCweCodedValueDescription() != null
+                    && !messageElement.getDataElement().getCweDataType().getCweCodedValueDescription().isEmpty()) {
+                String cweCodedValueDescription = messageElement.getDataElement().getCweDataType().getCweCodedValueDescription();
+                parentLink.setText(cweCodedValueDescription);
+                obxResult = obxResult + "^" + cweCodedValueDescription;
+            } else {
+                obxResult = obxResult + "^" + "MISSING";
+            }
+        }
+        return obxResult;
+    }
+
+    private String mapToObservationValue(MessageElement messageElement, String observationValue) {
+        String dataType = messageElement.getDataElement().getQuestionDataTypeNND();
+
+        if ("XPN".equals(dataType) || "SN".equals(dataType)) {
+            if (messageElement.getDataElement().getSnDataType() != null) {
+                String comparator = "";
+                if (messageElement.getDataElement().getSnDataType().getComparator() != null && !messageElement.getDataElement().getSnDataType().getComparator().isEmpty()) {
+                    comparator = messageElement.getDataElement().getSnDataType().getComparator();
+                }
+
+                String num1 = "";
+                if (messageElement.getDataElement().getSnDataType().getNum1() != null && !messageElement.getDataElement().getSnDataType().getNum1().isEmpty()) {
+                    num1 = messageElement.getDataElement().getSnDataType().getNum1();
+                }
+
+                String separatorSuffix = "";
+                if (messageElement.getDataElement().getSnDataType().getSeparatorSuffix() != null && !messageElement.getDataElement().getSnDataType().getSeparatorSuffix().isEmpty()) {
+                    separatorSuffix = messageElement.getDataElement().getSnDataType().getSeparatorSuffix();
+                }
+
+                String num2 = "";
+                if (messageElement.getDataElement().getSnDataType().getNum2() != null && !messageElement.getDataElement().getSnDataType().getNum2().isEmpty()) {
+                    num2 = messageElement.getDataElement().getSnDataType().getNum2();
+                }
+                observationValue = comparator + "^" +	num1 + "^" + separatorSuffix + "^" + num2;
+            } else if (messageElement.getDataElement().getXpnDataType() != null) {
+                String familyName = "";
+                if(messageElement.getDataElement().getXpnDataType().getFamilyName() != null && messageElement.getDataElement().getXpnDataType().getFamilyName().isEmpty()) {
+                    familyName = messageElement.getDataElement().getXpnDataType().getFamilyName();
+                }
+
+                String givenName = "";
+                if(messageElement.getDataElement().getXpnDataType().getGivenName() != null && messageElement.getDataElement().getXpnDataType().getGivenName().isEmpty()) {
+                    familyName = messageElement.getDataElement().getXpnDataType().getGivenName();
+                }
+
+                observationValue = familyName + "^" + givenName;
+            }
+        }
+
+        if ("XTN".equals(dataType)) {
+            String telecommunicationUseCode = "";
+            if (messageElement.getDataElement().getXtnDataType().getTelecommunicationUseCode() != null &&
+                    !messageElement.getDataElement().getXtnDataType().getTelecommunicationUseCode().isEmpty()) {
+                telecommunicationUseCode = messageElement.getDataElement().getXtnDataType().getTelecommunicationUseCode();
+            }
+
+            String telecommunicationEquipmentType = "";
+            if (messageElement.getDataElement().getXtnDataType().getTelecommunicationEquipmentType() != null &&
+                    !messageElement.getDataElement().getXtnDataType().getTelecommunicationEquipmentType().isEmpty()) {
+                telecommunicationEquipmentType = messageElement.getDataElement().getXtnDataType().getTelecommunicationEquipmentType();
+            }
+
+            String emailAddress = "";
+            if (messageElement.getDataElement().getXtnDataType().getEmailAddress() != null &&
+                    !messageElement.getDataElement().getXtnDataType().getEmailAddress().isEmpty()) {
+                emailAddress = messageElement.getDataElement().getXtnDataType().getEmailAddress();
+            }
+
+            String areaOrCityCode = "";
+            if (messageElement.getDataElement().getXtnDataType().getAreaOrCityCode() != null &&
+                    !messageElement.getDataElement().getXtnDataType().getAreaOrCityCode().isEmpty()) {
+                areaOrCityCode = messageElement.getDataElement().getXtnDataType().getAreaOrCityCode();
+            }
+
+            String phoneNumber = "";
+            if (messageElement.getDataElement().getXtnDataType().getPhoneNumber() != null &&
+                    !messageElement.getDataElement().getXtnDataType().getPhoneNumber().isEmpty()) {
+                phoneNumber = messageElement.getDataElement().getXtnDataType().getPhoneNumber();
+            }
+
+            observationValue = "^" + telecommunicationUseCode + "^" + telecommunicationEquipmentType + "^" +
+                    emailAddress + "^^" + areaOrCityCode + "^" + phoneNumber;
+        }
+
+
+        if ("SN_WITH_UNIT".equals(dataType)) {
+            String comparator = "";
+            if (messageElement.getDataElement().getSnunitDataType().getComparator() != null && !messageElement.getDataElement().getSnunitDataType().getComparator().isEmpty()) {
+                comparator = messageElement.getDataElement().getSnunitDataType().getComparator();
+            }
+
+            String num1 = "";
+            if (messageElement.getDataElement().getSnunitDataType().getNum1() != null && !messageElement.getDataElement().getSnunitDataType().getNum1().isEmpty()) {
+                num1 = messageElement.getDataElement().getSnunitDataType().getNum1();
+            }
+
+            String separatorSuffix = "";
+            if (messageElement.getDataElement().getSnunitDataType().getSeparatorSuffix() != null && !messageElement.getDataElement().getSnunitDataType().getSeparatorSuffix().isEmpty()) {
+                separatorSuffix = messageElement.getDataElement().getSnunitDataType().getSeparatorSuffix();
+            }
+
+            String num2 = "";
+            if (messageElement.getDataElement().getSnunitDataType().getNum2() != null && !messageElement.getDataElement().getSnunitDataType().getNum2().isEmpty()) {
+                num2 = messageElement.getDataElement().getSnunitDataType().getNum2();
+            }
+            observationValue = comparator + "^" +	num1 + "^" + separatorSuffix + "^" + num2;
+        }
+
+        if ("ST".equals(dataType)) {
+            String stringData = messageElement.getDataElement().getStDataType().getStringData();
+            observationValue = stringData;
+        }
+
+        if ("TX".equals(dataType)) {
+            String textData = messageElement.getDataElement().getTxDataType().getTextData();
+            observationValue = textData.replace("\n", " ");
+        }
+
+        if ("ID".equals(dataType)) {
+            String idCodedValue = messageElement.getDataElement().getIdDataType().getIdCodedValue();
+            observationValue = idCodedValue;
+        }
+
+        if ("IS".equals(dataType)) {
+            String isCodedValue = messageElement.getDataElement().getIsDataType().getIsCodedValue();
+            observationValue = isCodedValue;
+        }
+
+        if ("CWE".equals(dataType)) {
+            String codedValue = "";
+            if (messageElement.getDataElement().getCweDataType().getCweCodedValue() != null
+                    && !messageElement.getDataElement().getCweDataType().getCweCodedValue().isEmpty()) {
+                codedValue = messageElement.getDataElement().getCweDataType().getCweCodedValue();
+            }
+
+            String codedValueDescription = "";
+            if (messageElement.getDataElement().getCweDataType().getCweCodedValueDescription() != null
+                    && !messageElement.getDataElement().getCweDataType().getCweCodedValueDescription().isEmpty()) {
+                codedValueDescription = messageElement.getDataElement().getCweDataType().getCweCodedValueDescription();
+            }
+
+            String codedValueCodingSystem = "";
+            if (messageElement.getDataElement().getCweDataType().getCweCodedValueCodingSystem() != null
+                    && !messageElement.getDataElement().getCweDataType().getCweCodedValueCodingSystem().isEmpty()) {
+                codedValueCodingSystem = messageElement.getDataElement().getCweDataType().getCweCodedValueCodingSystem();
+            }
+
+            String localCodedValue = "";
+            if (messageElement.getDataElement().getCweDataType().getCweLocalCodedValue() != null
+                    && !messageElement.getDataElement().getCweDataType().getCweLocalCodedValue().isEmpty()) {
+                localCodedValue = messageElement.getDataElement().getCweDataType().getCweLocalCodedValue();
+            }
+
+            String localCodedValueDescription = "";
+            if (messageElement.getDataElement().getCweDataType().getCweLocalCodedValueDescription() != null
+                    && !messageElement.getDataElement().getCweDataType().getCweLocalCodedValueDescription().isEmpty()) {
+                localCodedValueDescription = messageElement.getDataElement().getCweDataType().getCweLocalCodedValueDescription();
+            }
+
+            String localCodedValueCodingSystem = "";
+            if (messageElement.getDataElement().getCweDataType().getCweLocalCodedValueCodingSystem() != null
+                    && !messageElement.getDataElement().getCweDataType().getCweLocalCodedValueCodingSystem().isEmpty()) {
+                localCodedValueCodingSystem = messageElement.getDataElement().getCweDataType().getCweLocalCodedValueCodingSystem();
+            }
+
+            String originalText = "";
+            if (messageElement.getDataElement().getCweDataType().getCweOriginalText() != null
+                    && !messageElement.getDataElement().getCweDataType().getCweOriginalText().isEmpty()) {
+                originalText = "^^^" + messageElement.getDataElement().getCweDataType().getCweOriginalText();
+            }
+
+            observationValue = codedValue + "^" +
+                    codedValueDescription + "^" +
+                    codedValueCodingSystem + "^" +
+                    localCodedValue + "^" +
+                    localCodedValueDescription + "^" +
+                    localCodedValueCodingSystem +
+                    originalText;
+        }
+
+        if ("CE".equals(dataType)) {
+            String codedValue = "";
+            if (messageElement.getDataElement().getCeDataType().getCeCodedValue() != null
+                    && !messageElement.getDataElement().getCeDataType().getCeCodedValue().isEmpty()) {
+                codedValue = messageElement.getDataElement().getCeDataType().getCeCodedValue();
+            }
+
+            String codedValueDescription = "";
+            if (messageElement.getDataElement().getCeDataType().getCeCodedValueDescription() != null
+                    && !messageElement.getDataElement().getCeDataType().getCeCodedValueDescription().isEmpty()) {
+                codedValueDescription = messageElement.getDataElement().getCeDataType().getCeCodedValueDescription();
+            }
+
+            String codedValueCodingSystem = "";
+            if (messageElement.getDataElement().getCeDataType().getCeCodedValueCodingSystem() != null
+                    && !messageElement.getDataElement().getCeDataType().getCeCodedValueCodingSystem().isEmpty()) {
+                codedValueCodingSystem = messageElement.getDataElement().getCeDataType().getCeCodedValueCodingSystem();
+            }
+
+            String localCodedValue = "";
+            if (messageElement.getDataElement().getCeDataType().getCeLocalCodedValue() != null
+                    && !messageElement.getDataElement().getCeDataType().getCeLocalCodedValue().isEmpty()) {
+                localCodedValue = messageElement.getDataElement().getCeDataType().getCeLocalCodedValue();
+            }
+
+            String localCodedValueDescription = "";
+            if (messageElement.getDataElement().getCeDataType().getCeLocalCodedValueDescription() != null
+                    && !messageElement.getDataElement().getCeDataType().getCeLocalCodedValueDescription().isEmpty()) {
+                localCodedValueDescription = messageElement.getDataElement().getCeDataType().getCeLocalCodedValueDescription();
+            }
+
+            String localCodedValueCodingSystem = "";
+            if (messageElement.getDataElement().getCeDataType().getCeLocalCodedValueCodingSystem() != null
+                    && !messageElement.getDataElement().getCeDataType().getCeLocalCodedValueCodingSystem().isEmpty()) {
+                localCodedValueCodingSystem = messageElement.getDataElement().getCeDataType().getCeLocalCodedValueCodingSystem();
+            }
+
+            observationValue = codedValue + "^" +
+                    codedValueDescription + "^" +
+                    codedValueCodingSystem + "^" +
+                    localCodedValue + "^" +
+                    localCodedValueDescription + "^" +
+                    localCodedValueCodingSystem;
+        }
+        return observationValue;
+    }
+
+
+
+//    public void mapToDTM18(String in, DTM out) {
+//        int length = in.length();
+//        // TODO - Check this method
+//        out.setYear(parseIntSafe(in, 0, 4));
+//        out.setMonth(length >= 7 ? parseIntSafe(in, 4, 6) : null);
+//        out.setDay(length >= 10 ? parseIntSafe(in, 6, 8) : null);
+//        out.setHours(length >= 13 ? parseIntSafe(in, 8, 10) : null);
+//        out.setMinutes(length >= 16 ? parseIntSafe(in, 10, 12) : null);
+//        out.setSeconds(length >= 19 ? parseIntSafe(in, 12, 14) : null);
+//
+//        if (length >= 23) {
+//            out.setSeparator(".");
+//            out.setMillis(parseIntSafe(in, 14, 17));
+//        } else {
+//            out.setSeparator(".");
+//            out.setMillis(null);
+//        }
+//
+//        if (length > 23) {
+//            out.setGmtOffset(in.substring(17));
+//        }
+//    }
+
+//    private Integer parseIntSafe(String str, int start, int end) {
+//        try {
+//            if (start >= str.length()) return null;
+//            end = Math.min(end, str.length());
+//            return Integer.parseInt(str.substring(start, end));
+//        } catch (NumberFormatException e) {
+//            return null;
+//        }
+//    }
+
+
+    public void mapToCEType(MessageElement input, CE output) throws DataTypeException {
+        if (input.getDataElement().getCeDataType() != null) {
+            MessageElement.DataElement.CeDataType ce = input.getDataElement().getCeDataType();
+
+            if (ce.getCeCodedValue() != null) {
+                output.getIdentifier().setValue(ce.getCeCodedValue());
+            } else {
+                output.getIdentifier().setValue("MISSING");
+            }
+
+            if (ce.getCeCodedValueCodingSystem() != null) {
+                output.getNameOfCodingSystem().setValue(ce.getCeCodedValueCodingSystem());
+            } else {
+                output.getNameOfCodingSystem().setValue("MISSING");
+            }
+
+            if (ce.getCeCodedValueDescription() != null) {
+                output.getText().setValue(ce.getCeCodedValueDescription());
+            } else {
+                output.getText().setValue("MISSING");
+            }
+        }
+
+        if (input.getDataElement().getCweDataType() != null) {
+            MessageElement.DataElement.CweDataType cwe = input.getDataElement().getCweDataType();
+
+            if (cwe.getCweCodedValue() != null) {
+                output.getIdentifier().setValue(cwe.getCweCodedValue());
+            } else {
+                output.getIdentifier().setValue("MISSING");
+            }
+
+            if (cwe.getCweCodedValueCodingSystem() != null) {
+                output.getNameOfCodingSystem().setValue(cwe.getCweCodedValueCodingSystem());
+            } else {
+                output.getNameOfCodingSystem().setValue("MISSING");
+            }
+
+            if (cwe.getCweCodedValueDescription() != null) {
+                output.getText().setValue(cwe.getCweCodedValueDescription());
+            } else {
+                output.getText().setValue("MISSING");
+            }
+
+            if (cwe.getCweLocalCodedValue() != null) {
+                output.getAlternateIdentifier().setValue(cwe.getCweLocalCodedValue());
+            } else {
+                output.getAlternateIdentifier().setValue("MISSING");
+            }
+
+            if (cwe.getCweLocalCodedValueCodingSystem() != null) {
+                output.getNameOfAlternateCodingSystem().setValue(cwe.getCweLocalCodedValueCodingSystem());
+            } else {
+                output.getNameOfAlternateCodingSystem().setValue("MISSING");
+            }
+
+            if (cwe.getCweLocalCodedValueDescription() != null) {
+                output.getAlternateText().setValue(cwe.getCweLocalCodedValueDescription());
+            } else {
+                output.getAlternateText().setValue("MISSING");
+            }
+        }
+    }
+
+    private void mapToCWEType(MessageElement input, CWE output) throws DataTypeException {
+        MessageElement.DataElement.CweDataType cweDataType = input.getDataElement().getCweDataType();
+        if(cweDataType.getCweCodedValue() != null)
+        {
+            output.getIdentifier().setValue(cweDataType.getCweCodedValue());
+        } else {
+            output.getIdentifier().setValue("MISSING");
+        }
+        if(cweDataType.getCweCodedValueCodingSystem() != null)
+        {
+            output.getNameOfCodingSystem().setValue(cweDataType.getCweCodedValueCodingSystem());
+        } else {
+            output.getNameOfCodingSystem().setValue("MISSING");
+        }
+        if(cweDataType.getCweCodedValueDescription() != null)
+        {
+            output.getText().setValue(cweDataType.getCweCodedValueDescription());
+        } else {
+            output.getText().setValue("MISSING");
+        }
+
+    }
+
+    private void mapToEIType(MessageElement input, EI output) throws DataTypeException {
+        EiDataType eiDataType = input.getDataElement().getEiDataType();
+        if(eiDataType.getEntityIdentifier() != null) {
+            output.getEntityIdentifier().setValue(eiDataType.getEntityIdentifier());
+        }
+        if(eiDataType.getNamespaceId() != null) {
+            output.getNamespaceID().setValue(eiDataType.getNamespaceId());
+        }
+        if(eiDataType.getUniversalId() != null) {
+            output.getUniversalID().setValue(eiDataType.getUniversalId());
+        }
+        if(eiDataType.getUniversalIdType() != null) {
+            output.getUniversalIDType().setValue(eiDataType.getUniversalIdType());
+        }
     }
 
     /**

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+import static gov.cdc.casenotificationservice.constant.NonStdConstantValue.*;
 import static gov.cdc.casenotificationservice.util.TimeStampHelper.getCurrentTimeStamp;
 
 
@@ -84,13 +85,13 @@ public class PHINMSService implements IPHINMSService {
 
         var pNotificationID = PHINMSProperties.getPNotificationId();
         var reportStatusCd = PHINMSProperties.getPReportStatusCd();
-        if(reportStatusCd.equalsIgnoreCase("F"))
+        if(reportStatusCd.equalsIgnoreCase(REPORT_CD_F))
         {
-            PHINMSProperties.setReportStatusCd("CDCNND1" + pNotificationID);
+            PHINMSProperties.setReportStatusCd(REPORT_STATUS_CD_1 + pNotificationID);
         }
-        else if(reportStatusCd.equalsIgnoreCase("C"))
+        else if(reportStatusCd.equalsIgnoreCase(REPORT_CD_C))
         {
-            PHINMSProperties.setReportStatusCd("CDCNND2" + pNotificationID);
+            PHINMSProperties.setReportStatusCd(REPORT_STATUS_CD_2 + pNotificationID);
         }
 
         var vProcessingStatus = PHINMSProperties.getNETSS_MESSAGE_ONLY();
@@ -106,14 +107,15 @@ public class PHINMSService implements IPHINMSService {
         int currentSecond = localDateTime.getSecond();
 
         // Zero-padded formatting
-        String monthStr = String.format("%02d", currentMonth);
-        String dateStr = String.format("%02d", currentDate);
-        String hourStr = String.format("%02d", currentHour);
-        String minuteStr = String.format("%02d", currentMinute);
-        String secondStr = String.format("%02d", currentSecond);
+        String monthStr = String.format(TS_FORMAT_CHARACTER, currentMonth);
+        String dateStr = String.format(TS_FORMAT_CHARACTER, currentDate);
+        String hourStr = String.format(TS_FORMAT_CHARACTER, currentHour);
+        String minuteStr = String.format(TS_FORMAT_CHARACTER, currentMinute);
+        String secondStr = String.format(TS_FORMAT_CHARACTER, currentSecond);
 
-        String vFormattedTimestamp = currentYear + "-" + monthStr + "-" + dateStr + "T" +
-                hourStr + ":" + minuteStr + ":" + secondStr;
+        String vFormattedTimestamp = currentYear + TS_DASH + monthStr + TS_DASH +
+                dateStr + TS_T + hourStr + TS_COLON +
+                minuteStr + TS_COLON + secondStr;
 
         String vCurrentTimestamp = currentYear + monthStr + dateStr + hourStr + minuteStr + secondStr;
 
@@ -136,8 +138,10 @@ public class PHINMSService implements IPHINMSService {
         PHINMSProperties.setMessageControlID1(messageControlID1);
 
         // TODO: DOUBLE CHECK VALUE FOR THESE 2 HD OBJECT
-        var sendApplicationStr = sendingApplication.getNameSpaceId() + "^" + sendingApplication.getUniversalId() + "^" + sendingApplication.getUniversalIdType();
-        var sendFacilityStr = sendingFacility.getNameSpaceId() + "^" + sendingFacility.getUniversalId() + "^" + sendingFacility.getUniversalIdType();
+        var sendApplicationStr = sendingApplication.getNameSpaceId() + CARET +
+                sendingApplication.getUniversalId() + CARET + sendingApplication.getUniversalIdType();
+        var sendFacilityStr = sendingFacility.getNameSpaceId() + CARET +
+                sendingFacility.getUniversalId() + CARET + sendingFacility.getUniversalIdType();
 
         PHINMSProperties.setSENDING_APPLICATION(sendApplicationStr);
         PHINMSProperties.setSENDING_FACILITY(sendFacilityStr);

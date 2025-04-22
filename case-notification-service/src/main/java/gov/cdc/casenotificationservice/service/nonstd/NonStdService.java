@@ -3,6 +3,7 @@ package gov.cdc.casenotificationservice.service.nonstd;
 import gov.cdc.casenotificationservice.model.PHINMSProperties;
 import gov.cdc.casenotificationservice.repository.msg.CaseNotificationConfigRepository;
 import gov.cdc.casenotificationservice.repository.msg.TransportQOutRepository;
+import gov.cdc.casenotificationservice.repository.msg.model.CaseNotificationConfig;
 import gov.cdc.casenotificationservice.repository.msg.model.TransportQOut;
 import gov.cdc.casenotificationservice.repository.odse.CNTraportqOutRepository;
 import gov.cdc.casenotificationservice.service.nonstd.interfaces.INonStdBatchService;
@@ -36,7 +37,7 @@ public class NonStdService implements INonStdService {
 
     public void nonStdProcessor(String payload) throws Exception {
         PHINMSProperties phinmsProperties = new PHINMSProperties();
-        var stdConfig = caseNotificationConfigRepository.findNonStdConfig();
+        CaseNotificationConfig stdConfig = caseNotificationConfigRepository.findNonStdConfig();
 
         // TODO: replace this with REAL value
         var cnTranport = cnTraportqOutRepository.findTopByRecordUid(23265L);
@@ -49,7 +50,7 @@ public class NonStdService implements INonStdService {
         phinmsProperties.setBATCH_MESSAGE_PROFILE_ID(stdConfig.getBatchMesageProfileId());
 
         var updatedPhinmsProperties = phinmsService.gettingPHIMNSProperties(payload, phinmsProperties, stdConfig);
-        if (batchService.isBatchConditionApplied(updatedPhinmsProperties)) {
+        if (batchService.isBatchConditionApplied(updatedPhinmsProperties, stdConfig)) {
             batchNonStdProcessor(updatedPhinmsProperties);
         }
         else

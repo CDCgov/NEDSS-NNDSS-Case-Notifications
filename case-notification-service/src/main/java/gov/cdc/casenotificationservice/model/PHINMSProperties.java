@@ -28,7 +28,7 @@ public class PHINMSProperties {
     String pCurrentTimestamp;
     String pPHINCurrentTimestamp;
     String messageControlID1;
-    String SENDING_APPLICATION;
-    String SENDING_FACILITY;
+    String SENDING_APPLICATION = "";
+    String SENDING_FACILITY = "";
     String pCertificateURL;
 }

@@ -1,8 +1,11 @@
 package gov.cdc.xmlhl7parserservice.model;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Entity;
 
+@Entity
 @Table(name = "NNDSS_SERVICE_ACTION_PAIR_LOOKUP")
 public class ServiceActionPairModel {
     @Column(name = "service")
@@ -11,6 +14,7 @@ public class ServiceActionPairModel {
     private String action;
     @Column(name = "total_service_action_pairs")
     private int totalServiceActionPairs;
+    @Id
     @Column(name = "serial_number")
     private int serialNumber;
     @Column(name = "message_profile_id")

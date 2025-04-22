@@ -9,9 +9,9 @@ import jakarta.persistence.Table;
 @Table(name = "NNDSS_DATA_TYPE_LOOKUP")
 public class DataTypeModel {
     @Id
-    @Column(name = "serial_num" , columnDefinition="uniqueidentifier")
+    @Column(name = "serial_number" , columnDefinition="uniqueidentifier")
     private int serialNum;
-    @Column(name = "question_id")
+    @Column(name = "question_identifier")
     private String questionId;
     @Column(name = "hl7_segment_field")
     private String hl7SegmentField;

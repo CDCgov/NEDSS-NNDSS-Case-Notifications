@@ -1,28 +1,33 @@
 package gov.cdc.xmlhl7parserservice.helper;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import gov.cdc.xmlhl7parserservice.constants.Constants;
 
-import gov.cdc.xmlhl7parserservice.helper.interfaces.Hl7FieldProcessor;
+import gov.cdc.xmlhl7parserservice.helper.interfaces.HL7FieldProcessor;
 import gov.cdc.xmlhl7parserservice.model.DataTypeModel;
 import gov.cdc.xmlhl7parserservice.repository.IDataTypeLookupRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 /**
  * Implementation of HL7FieldProcessor that reads DataTypes.json from Resources
  * creates list of Java Objects.
- */public class DataTypeProcessor implements Hl7FieldProcessor {
+ */
+@Component
+public class DataTypeProcessor implements HL7FieldProcessor {
 
     private final ObjectMapper mapper = new ObjectMapper();
     private static final Logger logger = LoggerFactory.getLogger(DataTypeProcessor.class);
-    IDataTypeLookupRepository iDataTypeLookupRepository;
+    private final IDataTypeLookupRepository iDataTypeLookupRepository;
+
+    @Autowired
+    public DataTypeProcessor(IDataTypeLookupRepository iDataTypeLookupRepository) {
+        this.iDataTypeLookupRepository = iDataTypeLookupRepository;
+    }
 
     @Override
     public String processFields(Map<String, String> inputFields) {

@@ -1,6 +1,7 @@
 package gov.cdc.casenotificationservice.service.nonstd;
 import gov.cdc.casenotificationservice.model.PHINMSProperties;
 import gov.cdc.casenotificationservice.repository.msg.ServiceActionPairRepository;
+import gov.cdc.casenotificationservice.repository.msg.model.CaseNotificationConfig;
 import gov.cdc.casenotificationservice.service.nonstd.interfaces.IPHINMSService;
 import gov.cdc.dataingestion.hl7.helper.HL7Helper;
 import gov.cdc.dataingestion.hl7.helper.model.HL7ParsedMessage;
@@ -20,8 +21,8 @@ public class PHINMSService implements IPHINMSService {
     @Value("${service.timezone}")
     private String tz = "UTC";
 
-    @Value("${service.nbs-certificate-url")
-    private String NBS_CERTIFICATE_URL = "CERTIFICATE_URL";
+//    @Value("${service.nbs-certificate-url")
+//    private String NBS_CERTIFICATE_URL = "CERTIFICATE_URL";
 
     private final ServiceActionPairRepository serviceActionPairRepository;
 
@@ -31,7 +32,8 @@ public class PHINMSService implements IPHINMSService {
 
     public PHINMSProperties gettingPHIMNSProperties(
             String payload,
-            PHINMSProperties PHINMSProperties) throws Exception {
+            PHINMSProperties PHINMSProperties,
+            CaseNotificationConfig caseNotificationConfig) throws Exception {
         Hd sendingFacility = null;
         Hd sendingApplication = null;
         var counterInt =0;
@@ -118,16 +120,16 @@ public class PHINMSService implements IPHINMSService {
         PHINMSProperties.setPPHINMessageContent2(payload);
 
 
-        PHINMSProperties.setPPHINEncryption("yes");
-        PHINMSProperties.setPPHINRoute("CDC"); // CDC Production
-        PHINMSProperties.setPPHINSignature("no"); // CDC Production
+        PHINMSProperties.setPPHINEncryption(caseNotificationConfig.getPhinEncryption());
+        PHINMSProperties.setPPHINRoute(caseNotificationConfig.getPhinRoute()); // CDC Production
+        PHINMSProperties.setPPHINSignature(caseNotificationConfig.getPhinSignature()); // CDC Production
         PHINMSProperties.setPPHINProcessingStatus(vProcessingStatus);
-        PHINMSProperties.setPPHINPublicKeyLdapAddress("directory.pki.digicert.com:389");
-        PHINMSProperties.setPPHINPublicKeyLdapBaseDN("o=Centers for Disease Control and Prevention");
-        PHINMSProperties.setPPHINPublicKeyLdapDN("cn=cdc phinms");
-        PHINMSProperties.setPPHINMessageRecipient("CDC");
+        PHINMSProperties.setPPHINPublicKeyLdapAddress(caseNotificationConfig.getPhinPublicKeyAddress());
+        PHINMSProperties.setPPHINPublicKeyLdapBaseDN(caseNotificationConfig.getPhinPublicKeyBaseDn());
+        PHINMSProperties.setPPHINPublicKeyLdapDN(caseNotificationConfig.getPhinPublicKeyDn());
+        PHINMSProperties.setPPHINMessageRecipient(caseNotificationConfig.getPhinRecipient());
         PHINMSProperties.setPPHINMessageID(vMessageID);
-        PHINMSProperties.setPPHINPriority("1");
+        PHINMSProperties.setPPHINPriority(caseNotificationConfig.getPhinPriority());
         PHINMSProperties.setPCurrentTimestamp(vCurrentTimestamp);
         PHINMSProperties.setPPHINCurrentTimestamp(vFormattedTimestamp);
         var batchProfileId = PHINMSProperties.getBATCH_MESSAGE_PROFILE_ID();
@@ -140,7 +142,7 @@ public class PHINMSService implements IPHINMSService {
         PHINMSProperties.setSENDING_APPLICATION(sendApplicationStr);
         PHINMSProperties.setSENDING_FACILITY(sendFacilityStr);
 
-        PHINMSProperties.setPCertificateURL(NBS_CERTIFICATE_URL);
+        PHINMSProperties.setPCertificateURL(caseNotificationConfig.getNbsCertificateUrl());
 
         return PHINMSProperties;
     }

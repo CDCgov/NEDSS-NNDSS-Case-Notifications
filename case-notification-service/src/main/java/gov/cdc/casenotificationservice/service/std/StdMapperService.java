@@ -37,7 +37,7 @@ public class StdMapperService implements IStdMapperService {
 
         String INV173 = NETSS_EMPTY;
         String INV136 = NETSS_EMPTY;
-        String EVT_DT = NETSS_EMPTY;
+        String EVT_DT;
         int INV177Date = 0;
 
 
@@ -120,10 +120,6 @@ public class StdMapperService implements IStdMapperService {
                         {
                             output2 = in.getMessageElement().get(i).getDataElement().getSnunitDataType().getCeCodedValue();
                         }
-//                    if (in.getMessageElement().get(i).getDataElement().getCeDataType().LocalComplex#2#Grp1.snunitDataType.ceCodedValue.#PCDATA != null)
-//                    {
-//                        output2 = in.getMessageElement().get(i).dataElement.LocalComplex#2#Grp1.snunitDataType.ceCodedValue.#PCDATA;
-//                    }
                     }
                     if (output1.isEmpty()) {
                         output1 = NETSS_999;
@@ -142,7 +138,7 @@ public class StdMapperService implements IStdMapperService {
 
                     netss.setAge(output1);
                     String ageType = mapperUtilService.mapToCodedAnswer(output2, NETSS_INV2002);
-                    if (ageType != null && ageType.equalsIgnoreCase("NOT_MAPPED")){
+                    if (ageType != null && ageType.equalsIgnoreCase(NOT_MAPPED)){
                         netss.setAgeType(NETSS_9);
                     }
                     else{
@@ -154,7 +150,7 @@ public class StdMapperService implements IStdMapperService {
                 {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
                     String sex = mapperUtilService.mapToCodedAnswer(result, NETSS_DEM113);
-                    if (sex.equalsIgnoreCase("NOT_MAPPED")){
+                    if (sex.equalsIgnoreCase(NOT_MAPPED)){
                         netss.setSex(NETSS_9);
                     }
                     else{
@@ -167,7 +163,7 @@ public class StdMapperService implements IStdMapperService {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
                     if (result.contains(NETSS_PHC178))
                     {
-                        netss.setCaseStatus("X");
+                        netss.setCaseStatus(STATUS_X);
                     }
                     else
                     {
@@ -208,71 +204,71 @@ public class StdMapperService implements IStdMapperService {
                 }
                 else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase(NETSS_DEM152))
                 {
-                    String race = NETSS_EMPTY;
+                    String race;
                     String mapped = NETSS_EMPTY;
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
-                    String outputData = "CHECKER";
-                    outputData = mapperUtilService.mapToMultiCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier(), "CHECKER", outputData);
-                    race = "Asian?";
+                    String outputData = CHECKER;
+                    outputData = mapperUtilService.mapToMultiCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier(), CHECKER, outputData);
+                    race = ASIAN;
                     if (outputData.equals(race)) {
                         outputData = mapperUtilService.mapToMultiCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier(), race, outputData);
-                        if (outputData.equals("Y"))
+                        if (outputData.equals(STATUS_Y))
                         {
                             netss.setAsian(outputData);
                         }
                     }
-                    race = "American Indian/ Alaska native?";
+                    race = AMERICAN;
                     if (outputData.equals(race)) {
                         outputData = mapperUtilService.mapToMultiCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier(), race, outputData);
-                        if (outputData.equals("Y"))
+                        if (outputData.equals(STATUS_Y))
                         {
                             netss.setAmericanIndianAlaskanNative(outputData);
                         }
                     }
-                    race = "Black/African American?";
+                    race = BLACK;
                     if (outputData.equals(race)) {
                         outputData = mapperUtilService.mapToMultiCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier(), race, outputData);
-                        if (outputData.equals("Y"))
+                        if (outputData.equals(STATUS_Y))
                         {
                             netss.setBlackAfricanAmerican(outputData);
                         }
                     }
-                    race = "Native Hawaiian/ Pacific Islander?";
+                    race = HAWAII;
                     if (outputData.equals(race)) {
                         outputData = mapperUtilService.mapToMultiCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier(), race, outputData);
-                        if (outputData.equals("Y"))
+                        if (outputData.equals(STATUS_Y))
                         {
                             netss.setNativeHawaiianPacificIslander(outputData);
                         }
                     }
-                    race = "Other race?";
+                    race = OTHER;
                     if (outputData.equals(race)) {
                         outputData = mapperUtilService.mapToMultiCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier(), race, outputData);
-                        if (outputData.equals("Y"))
+                        if (outputData.equals(STATUS_Y))
                         {
                             netss.setOtherRace(outputData);
                         }
                     }
-                    race = "Refused to report race";
+                    race = REFUSED;
                     if (outputData.equals(race)) {
                         outputData = mapperUtilService.mapToMultiCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier(), race, outputData);
-                        if (outputData.equals("Y"))
+                        if (outputData.equals(STATUS_Y))
                         {
                             netss.setRefusedReportRace(outputData);
                         }
                     }
-                    race = "White?";
+                    race = WHITE;
                     if (outputData.equals(race)) {
                         outputData = mapperUtilService.mapToMultiCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier(), race, outputData);
-                        if (outputData.equals("Y"))
+                        if (outputData.equals(STATUS_Y))
                         {
                             netss.setWhite(outputData);
                         }
                     }
-                    race = "Unknown race";
+                    race = UNKNOWN;
                     if (outputData.equals(race)) {
                         outputData = mapperUtilService.mapToMultiCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier(), race, outputData);
-                        if (outputData.equals("Y"))
+                        if (outputData.equals(STATUS_Y))
                         {
                             netss.setUnknownRace(outputData);
                         }
@@ -280,7 +276,7 @@ public class StdMapperService implements IStdMapperService {
                 }
                 else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase(NETSS_DEM155)) {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
-                    String outputData = NETSS_EMPTY;
+                    String outputData;
                     outputData = mapperUtilService.mapToCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier());
                     netss.setHispanicLatino(outputData);
                 }
@@ -288,14 +284,14 @@ public class StdMapperService implements IStdMapperService {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
                     if (result.length() == 4)
                     {
-                        result = result + "  ";
+                        result = result + NETSS_SPACE_DOUBLE;
                     }
                     result = result.replaceAll(".", NETSS_EMPTY);
                     netss.setCensusTract(result);
                 }
                 else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase(NETSS_INV152)) {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
-                    String outputData = NETSS_EMPTY;
+                    String outputData;
                     outputData = mapperUtilService.mapToCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier());
                     netss.setStdImport(outputData);
                 }
@@ -331,115 +327,115 @@ public class StdMapperService implements IStdMapperService {
                 }
                 else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase(NETSS_STD106)) {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
-                    String outputData = NETSS_EMPTY;
+                    String outputData;
                     outputData = mapperUtilService.mapToCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier());
                     netss.setHivStatus(outputData);
                 }
                 else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase(NETSS_STD107)) {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
-                    String outputData = NETSS_EMPTY;
+                    String outputData;
                     outputData = mapperUtilService.mapToCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier());
                     netss.setSexWithMale12m(outputData);
                 }
                 else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase(NETSS_STD108)) {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
-                    String outputData = NETSS_EMPTY;
+                    String outputData;
                     outputData = mapperUtilService.mapToCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier());
                     netss.setSexWithFemale12m(outputData);
                 }
                 else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase(NETSS_STD109)) {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
-                    String outputData = NETSS_EMPTY;
+                    String outputData;
                     outputData = mapperUtilService.mapToCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier());
                     netss.setSexWithAnnon12m(outputData);
                 }
                 else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase(NETSS_STD110)) {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
-                    String outputData = NETSS_EMPTY;
+                    String outputData;
                     outputData = mapperUtilService.mapToCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier());
                     netss.setSexWithPersonIdu12m(outputData);
                 }
                 else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase(NETSS_STD111)) {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
-                    String outputData = NETSS_EMPTY;
+                    String outputData;
                     outputData = mapperUtilService.mapToCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier());
                     netss.setSexWithPersonIntox12m(outputData);
                 }
                 else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase(NETSS_STD112)) {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
-                    String outputData = NETSS_EMPTY;
+                    String outputData;
                     outputData = mapperUtilService.mapToCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier());
                     netss.setSexExchDrugMoney(outputData);
                 }
                 else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase(NETSS_STD113)) {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
-                    String outputData = NETSS_EMPTY;
+                    String outputData;
                     outputData = mapperUtilService.mapToCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier());
                     netss.setSexPersonKnownToBeAnMsm(outputData);
                 }
                 else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase(NETSS_STD114)) {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
-                    String outputData = NETSS_EMPTY;
+                    String outputData;
                     outputData = mapperUtilService.mapToCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier());
                     netss.setInjectionDrugUse(outputData);
                 }
                 else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase(NETSS_NBS235)) {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
-                    String outputData = NETSS_EMPTY;
+                    String outputData;
                     outputData = mapperUtilService.mapToCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier());
                     netss.setCrackUse(outputData);
                 }
                 else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase(NETSS_NBS237)) {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
-                    String outputData = NETSS_EMPTY;
+                    String outputData;
                     outputData = mapperUtilService.mapToCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier());
                     netss.setCocianeUse(outputData);
                 }
                 else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase(NETSS_NBS239)) {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
-                    String outputData = NETSS_EMPTY;
+                    String outputData;
                     outputData = mapperUtilService.mapToCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier());
                     netss.setHeroinUse(outputData);
                 }
                 else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase(NETSS_NBS236)) {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
-                    String outputData = NETSS_EMPTY;
+                    String outputData;
                     outputData = mapperUtilService.mapToCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier());
                     netss.setNitratesPoppers(outputData);
                 }
                 else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase(NETSS_NBS234)) {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
-                    String outputData = NETSS_EMPTY;
+                    String outputData;
                     outputData = mapperUtilService.mapToCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier());
                     netss.setMethamphetamineUse(outputData);
                 }
                 else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase(NETSS_NBS238)) {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
-                    String outputData = NETSS_EMPTY;
+                    String outputData;
                     outputData = mapperUtilService.mapToCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier());
                     netss.setEdUse(outputData);
                 }
                 else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase(NETSS_NBS240)) {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
-                    String outputData = NETSS_EMPTY;
+                    String outputData;
                     outputData = mapperUtilService.mapToCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier());
                     netss.setOtherDrugUse(outputData);
                 }
                 else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase(NETSS_NBS233)) {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
-                    String outputData = NETSS_EMPTY;
+                    String outputData;
                     outputData = mapperUtilService.mapToCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier());
                     netss.setNoDrugUse(outputData);
                 }
                 else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase(NETSS_STD117)) {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
-                    String outputData = NETSS_EMPTY;
+                    String outputData;
                     outputData = mapperUtilService.mapToCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier());
                     netss.setPriorStd(outputData);
                 }
                 else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase(NETSS_STD118)) {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
-                    String outputData = NETSS_EMPTY;
+                    String outputData;
                     outputData = mapperUtilService.mapToCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier());
                     netss.setIncarcerated(outputData);
                 }
@@ -465,7 +461,7 @@ public class StdMapperService implements IStdMapperService {
                 }
                 else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase(NETSS_STD119)) {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
-                    String outputData = NETSS_EMPTY;
+                    String outputData;
                     outputData = mapperUtilService.mapToCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier());
                     netss.setSexPartnerThroughInternet(outputData);
                 }
@@ -473,65 +469,65 @@ public class StdMapperService implements IStdMapperService {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
                     if (result.contains("281088000"))
                     {
-                        netss.setAAnusRectum("Y");
+                        netss.setAAnusRectum(STATUS_Y);
                     }
                     if (result.contains("18911002"))
                     {
-                        netss.setBPenis("Y");
+                        netss.setBPenis(STATUS_Y);
                     }
                     if (result.contains("20233005"))
                     {
-                        netss.setCScrotum("Y");
+                        netss.setCScrotum(STATUS_Y);
                     }
                     if (result.contains("76784001"))
                     {
-                        netss.setDVagina("Y");
+                        netss.setDVagina(STATUS_Y);
                     }
 
                     if (result.contains("71252005"))
                     {
-                        netss.setECervix("Y");
+                        netss.setECervix(STATUS_Y);
                     }
                     if (result.contains("71836000"))
                     {
-                        netss.setFNasopharynx("Y");
+                        netss.setFNasopharynx(STATUS_Y);
                     }
                     if (result.contains("123851003"))
                     {
-                        netss.setGMouthOral("Y");
+                        netss.setGMouthOral(STATUS_Y);
                     }
                     if (result.contains("PHC1161"))
                     {
-                        netss.setHEyeConjunctiva("Y");
+                        netss.setHEyeConjunctiva(STATUS_Y);
                     }
                     if (result.contains("69536005"))
                     {
-                        netss.setIHead("Y");
+                        netss.setIHead(STATUS_Y);
                     }
                     if (result.contains("22943007"))
                     {
-                        netss.setJTorso("Y");
+                        netss.setJTorso(STATUS_Y);
                     }
                     if (result.contains("66019005"))
                     {
-                        netss.setKExtremities("Y");
+                        netss.setKExtremities(STATUS_Y);
                     }
                     if (result.contains("PHC1168"))
                     {
-                        netss.setNNoLesionNoted("Y");
+                        netss.setNNoLesionNoted(STATUS_Y);
                     }
                     if (result.contains("PHC1170"))
                     {
-                        netss.setOOther("Y");
+                        netss.setOOther(STATUS_Y);
                     }
                     if (result.contains("UNK"))
                     {
-                        netss.setUUnknown("Y");
+                        netss.setUUnknown(STATUS_Y);
                     }
                 }
                 else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase(NETSS_STD122)) {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
-                    String outputData = NETSS_EMPTY;
+                    String outputData;
                     outputData = mapperUtilService.mapToCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier());
                     if (outputData.isEmpty())
                     {
@@ -541,13 +537,13 @@ public class StdMapperService implements IStdMapperService {
                 }
                 else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase(NETSS_STD123)) {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
-                    String outputData = NETSS_EMPTY;
+                    String outputData;
                     outputData = mapperUtilService.mapToCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier());
                     netss.setQuantitativeSyphilisTestResult(outputData);
                 }
                 else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase(NETSS_STD126)) {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
-                    String outputData = NETSS_EMPTY;
+                    String outputData;
                     outputData = mapperUtilService.mapToCodedAnswer(result, in.getMessageElement().get(i).getQuestionIdentifier());
                     if (netss.getQuantitativeSyphilisTestResult().isEmpty())
                     {
@@ -585,7 +581,7 @@ public class StdMapperService implements IStdMapperService {
         }
 
         if (!NOT109State.contains(DEM162)) {
-            netss.setCaseStatus("X");
+            netss.setCaseStatus(STATUS_X);
         }
         String INV120Int = NETSS_EMPTY;
         String INV136Int = NETSS_EMPTY;
@@ -601,7 +597,7 @@ public class StdMapperService implements IStdMapperService {
         int CompINV121Int = 0;
         int CompINV136Int = 0;
         int CompINV137Int = 0;
-        int CompEventDateInt = 0;
+        int CompEventDateInt;
         int CompINV111Int = 0;
 
         if (!INV137.isEmpty()) {

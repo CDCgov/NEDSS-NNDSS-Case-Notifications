@@ -25,16 +25,13 @@ import static gov.cdc.casenotificationservice.util.TimeStampHelper.getCurrentTim
 @Service
 public class XmlService implements IXmlService {
 
-    private final CNTraportqOutRepository cnTraportqOutRepository;
     private final IStdMapperService stdMapperService;
     private final NetssTransportQOutRepository netssTransportQOutRepository;
     @Value("${service.timezone}")
     private String tz = "UTC";
 
-    public XmlService(CNTraportqOutRepository cnTraportqOutRepository,
-                      IStdMapperService stdMapperService,
+    public XmlService(IStdMapperService stdMapperService,
                       NetssTransportQOutRepository netssTransportQOutRepository) {
-        this.cnTraportqOutRepository = cnTraportqOutRepository;
         this.stdMapperService = stdMapperService;
         this.netssTransportQOutRepository = netssTransportQOutRepository;
     }

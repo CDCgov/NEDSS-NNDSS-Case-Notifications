@@ -77,11 +77,9 @@ public class PHINMSService implements IPHINMSService {
         var mappingERROR= PHINMSProperties.getMappingERROR();
 
         if(conditionCode.isEmpty() && (mappingERROR != null && !mappingERROR.isEmpty())){
-            // mappingERROR Exception
             throw new Exception();
         }
 
-//        next.getField("PATIENT_RESULT.ORDER_OBSERVATION[*].OBR[0].FillerOrderNumber.EntityIdentifier");
 
         var pNotificationID = PHINMSProperties.getPNotificationId();
         var reportStatusCd = PHINMSProperties.getPReportStatusCd();

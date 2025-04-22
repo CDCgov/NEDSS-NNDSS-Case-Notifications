@@ -1,6 +1,21 @@
 package gov.cdc.casenotificationservice.constant;
 
 public class StdConstantValue {
+    public static final String STATUS_X = "X";
+    public static final String STATUS_Y = "Y";
+    public static final String CHECKER = "CHECKER";
+    public static final String ASIAN = "Asian?";
+    public static final String AMERICAN = "American Indian/ Alaska native?";
+    public static final String BLACK = "Black/African American?";
+    public static final String HAWAII = "Native Hawaiian/ Pacific Islander?";
+    public static final String OTHER = "Other race?";
+    public static final String REFUSED = "Refused to report race";
+    public static final String WHITE = "White?";
+    public static final String UNKNOWN = "Unknown race";
+
+
+
+    public static final String NOT_MAPPED = "NOT_MAPPED";
     public static final String NETSS_RECORD_TYPE = "M";
     public static final String NETSS_RECORD_UPDATE = "9";
     public static final String NETSS_COUNT = "00001";
@@ -14,6 +29,7 @@ public class StdConstantValue {
     public static final String NETSS_88 = "88";
     public static final String NETSS_EMPTY = "";
     public static final String NETSS_SPACE_SINGLE = " ";
+    public static final String NETSS_SPACE_DOUBLE = "  ";
     public static final String NETSS_NBS = "NBS";
     public static final String NETSS_U = "U";
     public static final String NETSS_SN_UNIT = "SN_WITH_UNIT";

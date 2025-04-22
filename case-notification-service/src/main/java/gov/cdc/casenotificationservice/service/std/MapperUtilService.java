@@ -18,8 +18,7 @@ public class MapperUtilService implements IMapperUtilService {
 
     public String mapToCodedAnswer(String intput, String questionCode) {
         // RHAPSODY LOOK UP: output, tablename, result col name, default value, query col X, query value X
-        String result = lookupNNDLookupRepository.findToCodeByFromUniqueIdAndConceptCd(questionCode, intput);
-        return result;
+        return lookupNNDLookupRepository.findToCodeByFromUniqueIdAndConceptCd(questionCode, intput);
     }
 
     public String mapToData(MessageElement.DataElement input) {
@@ -50,7 +49,7 @@ public class MapperUtilService implements IMapperUtilService {
         }
         else if(input.getQuestionDataTypeNND().equalsIgnoreCase("SN"))
         {
-            output= input.getSnDataType().getNum1().toString();
+            output= input.getSnDataType().getNum1();
         }
         else if(input.getQuestionDataTypeNND().equalsIgnoreCase("DT"))
         {

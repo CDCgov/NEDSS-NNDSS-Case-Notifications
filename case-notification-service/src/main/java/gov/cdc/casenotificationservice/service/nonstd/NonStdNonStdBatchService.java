@@ -14,12 +14,13 @@ public class NonStdNonStdBatchService implements INonStdBatchService {
     private String BATCH_MESSAGE_PROFILE_ID = "MESSAGE_PROFILE_ID";
 
     public boolean isBatchConditionApplied(PHINMSProperties phinmsProperties) {
-        if (phinmsProperties.getMessageControlID1().equals(BATCH_MESSAGE_PROFILE_ID)) {
-            return true;
-        }
-        else {
-            return false;
-        }
+//        if (phinmsProperties.getMessageControlID1().equals(BATCH_MESSAGE_PROFILE_ID)) {
+//            return true;
+//        }
+//        else {
+//            return false;
+//        }
+        return true;
     }
 
     public PHINMSProperties ReleaseQueuePopulateBatchFooterProperties() {

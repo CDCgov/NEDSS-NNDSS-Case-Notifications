@@ -30,6 +30,17 @@ public class NonStdService implements INonStdService {
 
     public void nonStdProcessor(String payload) throws Exception {
         PHINMSProperties phinmsProperties = new PHINMSProperties();
+
+        // TODO: replace this with REAL value
+        var cnTranport = cnTraportqOutRepository.findTopByRecordUid(23265L);
+
+        // TODO: replace this with REAL value
+        phinmsProperties.setPNotificationId(String.valueOf(cnTranport.getNotificationUid()));
+        phinmsProperties.setPPublicHealthCaseLocalId(cnTranport.getPublicHealthCaseLocalId());
+        phinmsProperties.setPReportStatusCd(cnTranport.getReportStatusCd());
+        phinmsProperties.setNETSS_MESSAGE_ONLY("queued");
+        phinmsProperties.setBATCH_MESSAGE_PROFILE_ID("NONE");
+
         var updatedPhinmsProperties = phinmsService.gettingPHIMNSProperties(payload, phinmsProperties);
         if (batchService.isBatchConditionApplied(updatedPhinmsProperties)) {
             batchNonStdProcessor(updatedPhinmsProperties);

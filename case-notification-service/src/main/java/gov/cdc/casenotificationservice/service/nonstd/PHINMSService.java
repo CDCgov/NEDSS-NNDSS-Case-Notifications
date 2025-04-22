@@ -37,7 +37,7 @@ public class PHINMSService implements IPHINMSService {
         var counterInt =0;
 
         var serviceActionPairs = this.serviceActionPairRepository.findTotal();
-        Integer counterString = serviceActionPairs.getTotalServiceActionPairs();
+        Integer counterString = serviceActionPairs.getFirst().getTotalServiceActionPairs();
         if (counterString == null) {
             counterString = 1;
         }
@@ -59,15 +59,19 @@ public class PHINMSService implements IPHINMSService {
             conditionCode.add(patResult.getOrderObservation().getFirst().getObservationRequest().getReasonForStudy().getFirst().getIdentifier());
         }
 
-        messageControlID1 = parsedMessage.getParsedMessage().getMessageHeader().getMessageProfileIdentifier().get(2).getEntityIdentifier();
+        if (parsedMessage.getParsedMessage().getMessageHeader().getMessageProfileIdentifier().size() > 1) {
+            // In original code, this was get value at INDEX 2
+            messageControlID1 = parsedMessage.getParsedMessage().getMessageHeader().getMessageProfileIdentifier().get(1).getEntityIdentifier();
+        }
         sendingApplication = parsedMessage.getParsedMessage().getMessageHeader().getSendingApplication();
         sendingFacility = parsedMessage.getParsedMessage().getMessageHeader().getSendingFacility();
 
-        if(messageControlID1==null) {
-            messageControlID1 = parsedMessage.getParsedMessage().getMessageHeader().getMessageProfileIdentifier().get(1).getEntityIdentifier();
+        if(messageControlID1==null || messageControlID1.isEmpty()) {
+            // In original code, this was get value at INDEX 1
+            messageControlID1 = parsedMessage.getParsedMessage().getMessageHeader().getMessageProfileIdentifier().getFirst().getEntityIdentifier();
         }
 
-        var mappingERROR= PHINMSProperties.getPNotificationId();
+        var mappingERROR= PHINMSProperties.getMappingERROR();
 
         if(conditionCode.isEmpty() && (mappingERROR != null && !mappingERROR.isEmpty())){
             // mappingERROR Exception
@@ -130,8 +134,11 @@ public class PHINMSService implements IPHINMSService {
         PHINMSProperties.setMessageControlID1(messageControlID1);
 
         // TODO: DOUBLE CHECK VALUE FOR THESE 2 HD OBJECT
-        PHINMSProperties.setSENDING_APPLICATION(sendingApplication.toString());
-        PHINMSProperties.setSENDING_FACILITY(sendingFacility.toString());
+        var sendApplicationStr = sendingApplication.getNameSpaceId() + "^" + sendingApplication.getUniversalId() + "^" + sendingApplication.getUniversalIdType();
+        var sendFacilityStr = sendingFacility.getNameSpaceId() + "^" + sendingFacility.getUniversalId() + "^" + sendingFacility.getUniversalIdType();
+
+        PHINMSProperties.setSENDING_APPLICATION(sendApplicationStr);
+        PHINMSProperties.setSENDING_FACILITY(sendFacilityStr);
 
         PHINMSProperties.setPCertificateURL(NBS_CERTIFICATE_URL);
 

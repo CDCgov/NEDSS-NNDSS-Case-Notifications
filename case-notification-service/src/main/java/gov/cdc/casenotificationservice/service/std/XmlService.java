@@ -39,14 +39,6 @@ public class XmlService implements IXmlService {
         this.netssTransportQOutRepository = netssTransportQOutRepository;
     }
 
-    @PostConstruct
-    public void init() {
-        var test = cnTraportqOutRepository.findTopByRecordStatusCdAndUid("UNPROCESSED", 23187L);
-        Gson gson = new Gson();
-
-        mappingXmlStringToObject(gson.toJson(test));
-    }
-
     // pRecordStatus can be retrieved from DB
     public void mappingXmlStringToObject(String cnTransportQ) {
         Gson gson = new Gson();

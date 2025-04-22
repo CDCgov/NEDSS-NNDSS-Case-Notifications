@@ -17,6 +17,9 @@ public interface CNTraportqOutRepository extends JpaRepository<CNTransportqOut, 
     CNTransportqOut findTopByRecordStatusCdAndUid(@Param("recordStatusCd") String recordStatusCd, @Param("cnUid") Long cnUid);
 
 
+    @Query(value = "SELECT TOP 1 * FROM dbo.CN_transportq_out WHERE cn_transportq_out_uid = :cnUid", nativeQuery = true)
+    CNTransportqOut findTopByRecordUid(@Param("cnUid") Long cnUid);
+
     /***
      *
      * Update CN_transportq_out_TEST set record_status_cd = 'PHINMS_QUEUED', record_status_time = getdate()

@@ -54,6 +54,8 @@ dependencies {
     testImplementation 'org.springframework.kafka:spring-kafka-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
+    runtimeOnly 'com.nimbusds:oauth2-oidc-sdk:11.8'
+
     jaxb 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.2'
     jaxb 'org.glassfish.jaxb:jaxb-xjc:4.0.5'
 }

@@ -1,10 +1,12 @@
 package gov.cdc.dataextractionservice.kafka;
 
 import com.google.gson.Gson;
+import gov.cdc.dataextractionservice.kafka.ProducerService;
 import gov.cdc.dataextractionservice.model.CnTransportqOutMessage;
 import gov.cdc.dataextractionservice.model.CnTransportqOutValue;
 import gov.cdc.dataextractionservice.model.MessageAfterStdChecker;
 import gov.cdc.dataextractionservice.service.StdCheckerTransformerService;
+import gov.cdc.dataextractionservice.service.CnTransportQOutUpdateService;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +27,12 @@ public class ConsumerService {
     @Autowired
     private StdCheckerTransformerService transformerService;
 
+    @Autowired
+    private ProducerService producerService;
+
+    @Autowired
+    private CnTransportQOutUpdateService updateService;
+
     @KafkaListener(
             topics = "${kafka.topic.cn-tranport-out-topic}",
             containerFactory = "kafkaListenerContainerFactoryDebeziumConsumer"
@@ -40,13 +48,30 @@ public class ConsumerService {
                 MessageAfterStdChecker transformed = transformerService.transform(after);
 
                 if (transformed != null) {
-                    // TODO: Send transformed to Kafka Producer
                     logger.info("Transformed message ready: {}", transformed);
-                } else {
-                    logger.info("Message skipped - did not meet transformation criteria");
+
+                    // Send to downstream Kafka
+                    producerService.sendMessage(transformed);
+
+                    // Update database record_status_cd
+                    if ("NETSS_MESSAGE_ONLY".equalsIgnoreCase(transformed.getNetssMessageOnly())
+                            || "BOTH".equalsIgnoreCase(transformed.getNetssMessageOnly())) {
+                        updateService.updateRecordStatus(
+                                transformed.getCnTransportqOutUid(),
+                                "CLOUD_STD_PROCESSING"
+                        );
+                    } else {
+                        updateService.updateRecordStatus(
+                                transformed.getCnTransportqOutUid(),
+                                "CLOUD_NON_STD_PROCESSING"
+                        );
+                    }
+                }
+                else {
+                    logger.info("Message skipped - did not meet the criteria");
                 }
             } else {
-                logger.info("CDC event ignored (no 'after' state)");
+                logger.info("Change Data Capture event ignored (no 'after' state)");
             }
 
         } catch (Exception e) {

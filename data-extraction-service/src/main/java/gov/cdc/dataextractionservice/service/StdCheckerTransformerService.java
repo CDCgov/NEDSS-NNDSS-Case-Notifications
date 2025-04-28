@@ -20,8 +20,9 @@ public class StdCheckerTransformerService {
             return null;
         }
 
-        if (!"UNPROCESSED".equalsIgnoreCase(value.getRecord_status_cd())) {
-            log.info("Skipping message: record_status_cd is not UNPROCESSED.");
+        String recordStatusCd = value.getRecord_status_cd();
+        if (recordStatusCd == null || !"UNPROCESSED".equalsIgnoreCase(recordStatusCd)) {
+            log.info("Skipping message: record_status_cd is not UNPROCESSED or missing.");
             return null;
         }
 

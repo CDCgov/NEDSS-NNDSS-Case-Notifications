@@ -1,6 +1,6 @@
-package gov.cdc.casenotificationservice.repository.odse;
+package gov.cdc.casenotificationservice.repository.msg;
 
-import gov.cdc.casenotificationservice.repository.odse.model.LookupMmwr;
+import gov.cdc.casenotificationservice.repository.msg.model.LookupMmwr;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

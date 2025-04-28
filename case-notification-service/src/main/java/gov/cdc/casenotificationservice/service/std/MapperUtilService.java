@@ -1,9 +1,9 @@
-package gov.cdc.casenotificationservice.service;
+package gov.cdc.casenotificationservice.service.std;
 
 import gov.cdc.casenotificationservice.model.generated.jaxb.MessageElement;
-import gov.cdc.casenotificationservice.repository.odse.LookupMmwrRepository;
-import gov.cdc.casenotificationservice.repository.odse.LookupNNDLookupRepository;
-import gov.cdc.casenotificationservice.service.interfaces.IMapperUtilService;
+import gov.cdc.casenotificationservice.repository.msg.LookupMmwrRepository;
+import gov.cdc.casenotificationservice.repository.msg.LookupNNDLookupRepository;
+import gov.cdc.casenotificationservice.service.std.interfaces.IMapperUtilService;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,8 +18,7 @@ public class MapperUtilService implements IMapperUtilService {
 
     public String mapToCodedAnswer(String intput, String questionCode) {
         // RHAPSODY LOOK UP: output, tablename, result col name, default value, query col X, query value X
-        String result = lookupNNDLookupRepository.findToCodeByFromUniqueIdAndConceptCd(questionCode, intput);
-        return result;
+        return lookupNNDLookupRepository.findToCodeByFromUniqueIdAndConceptCd(questionCode, intput);
     }
 
     public String mapToData(MessageElement.DataElement input) {
@@ -50,7 +49,7 @@ public class MapperUtilService implements IMapperUtilService {
         }
         else if(input.getQuestionDataTypeNND().equalsIgnoreCase("SN"))
         {
-            output= input.getSnDataType().getNum1().toString();
+            output= input.getSnDataType().getNum1();
         }
         else if(input.getQuestionDataTypeNND().equalsIgnoreCase("DT"))
         {

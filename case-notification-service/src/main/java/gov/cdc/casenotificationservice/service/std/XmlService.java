@@ -41,33 +41,30 @@ public class XmlService implements IXmlService {
     }
 
     // pRecordStatus can be retrieved from DB
-    public void mappingXmlStringToObject(MessageAfterStdChecker messageAfterStdChecker) {
+    public void mappingXmlStringToObject(MessageAfterStdChecker messageAfterStdChecker) throws JAXBException {
         var cnTransportqOut = cnTraportqOutRepository.findTopByRecordUid(messageAfterStdChecker.getCnTransportqOutUid());
         NetssPersistModel netssPersistModel = new NetssPersistModel();
-        try {
-            JAXBContext context = JAXBContext.newInstance(NBSNNDIntermediaryMessage.class);
-            Unmarshaller unmarshaller = context.createUnmarshaller();
-            StringReader reader = new StringReader(cnTransportqOut.getMessagePayload());
-            NBSNNDIntermediaryMessage msg = (NBSNNDIntermediaryMessage) unmarshaller.unmarshal(reader);
-            Netss netss = stdMapperService.stdMapping(msg);
-            var netssSummary = buildNetssSummary(netss);netssPersistModel.setNetss(netssSummary);
-            netssPersistModel.setVMessageYr(netss.getYear());
-            netssPersistModel.setVCaseReptId(netss.getCaseReportId());
-            netssPersistModel.setVMessageWeek(netss.getWeek());
+        JAXBContext context = JAXBContext.newInstance(NBSNNDIntermediaryMessage.class);
+        Unmarshaller unmarshaller = context.createUnmarshaller();
+        StringReader reader = new StringReader(cnTransportqOut.getMessagePayload());
+        NBSNNDIntermediaryMessage msg = (NBSNNDIntermediaryMessage) unmarshaller.unmarshal(reader);
+        Netss netss = stdMapperService.stdMapping(msg);
+        var netssSummary = buildNetssSummary(netss);netssPersistModel.setNetss(netssSummary);
+        netssPersistModel.setVMessageYr(netss.getYear());
+        netssPersistModel.setVCaseReptId(netss.getCaseReportId());
+        netssPersistModel.setVMessageWeek(netss.getWeek());
 
 
-            if (cnTransportqOut.getRecordStatusCd().equalsIgnoreCase("X")) {
-                netssPersistModel.setRecordStatusCd("LOG_DEL");
-            }
-            else {
-                netssPersistModel.setRecordStatusCd("ACTIVE");
-            }
-            NetssTransportQOut netssTransportQOut = new NetssTransportQOut(netssPersistModel, cnTransportqOut);
-            netssTransportQOut.setAddTime(getCurrentTimeStamp(tz));
-
-            netssTransportQOutRepository.save(netssTransportQOut);
-        } catch (JAXBException e) {
-            e.printStackTrace();
+        if (cnTransportqOut.getRecordStatusCd().equalsIgnoreCase("X")) {
+            netssPersistModel.setRecordStatusCd("LOG_DEL");
         }
+        else {
+            netssPersistModel.setRecordStatusCd("ACTIVE");
+        }
+        NetssTransportQOut netssTransportQOut = new NetssTransportQOut(netssPersistModel, cnTransportqOut);
+        netssTransportQOut.setAddTime(getCurrentTimeStamp(tz));
+
+        netssTransportQOutRepository.save(netssTransportQOut);
+
     }
 }

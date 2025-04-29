@@ -1,5 +1,7 @@
 package gov.cdc.casenotificationservice.service.std.interfaces;
 
+import gov.cdc.casenotificationservice.model.MessageAfterStdChecker;
+
 public interface IXmlService {
-    void mappingXmlStringToObject(String xml);
+    void mappingXmlStringToObject(MessageAfterStdChecker messageAfterStdChecker);
 }

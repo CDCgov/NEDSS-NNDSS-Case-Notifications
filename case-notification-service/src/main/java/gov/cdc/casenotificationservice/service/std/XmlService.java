@@ -1,6 +1,7 @@
 package gov.cdc.casenotificationservice.service.std;
 
 import com.google.gson.Gson;
+import gov.cdc.casenotificationservice.model.MessageAfterStdChecker;
 import gov.cdc.casenotificationservice.model.Netss;
 import gov.cdc.casenotificationservice.model.NetssPersistModel;
 import gov.cdc.casenotificationservice.model.generated.jaxb.NBSNNDIntermediaryMessage;
@@ -25,21 +26,23 @@ import static gov.cdc.casenotificationservice.util.TimeStampHelper.getCurrentTim
 @Service
 public class XmlService implements IXmlService {
 
+    private final CNTraportqOutRepository cnTraportqOutRepository;
     private final IStdMapperService stdMapperService;
     private final NetssTransportQOutRepository netssTransportQOutRepository;
     @Value("${service.timezone}")
     private String tz = "UTC";
 
-    public XmlService(IStdMapperService stdMapperService,
+    public XmlService(CNTraportqOutRepository cnTraportqOutRepository,
+                      IStdMapperService stdMapperService,
                       NetssTransportQOutRepository netssTransportQOutRepository) {
+        this.cnTraportqOutRepository = cnTraportqOutRepository;
         this.stdMapperService = stdMapperService;
         this.netssTransportQOutRepository = netssTransportQOutRepository;
     }
 
     // pRecordStatus can be retrieved from DB
-    public void mappingXmlStringToObject(String cnTransportQ) {
-        Gson gson = new Gson();
-        CNTransportqOut cnTransportqOut = gson.fromJson(cnTransportQ, CNTransportqOut.class);
+    public void mappingXmlStringToObject(MessageAfterStdChecker messageAfterStdChecker) {
+        var cnTransportqOut = cnTraportqOutRepository.findTopByRecordUid(messageAfterStdChecker.getCnTransportqOutUid());
         NetssPersistModel netssPersistModel = new NetssPersistModel();
         try {
             JAXBContext context = JAXBContext.newInstance(NBSNNDIntermediaryMessage.class);

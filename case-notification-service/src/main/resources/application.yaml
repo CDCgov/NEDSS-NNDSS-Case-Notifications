@@ -72,8 +72,8 @@ spring:
       std-group-id: std-processor-group
       non-std-group-id: non-std-processor-group
     topic:
-      std-topic: std-topic
-      non-std-topic: non-std-topic
+      std-topic: cn_transport_std_message
+      non-std-topic: cn_transport_non_std_message
     dlt:
       suffix: -dlt
     retry:

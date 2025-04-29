@@ -1,5 +1,8 @@
 package gov.cdc.casenotificationservice.kafka.consumer;
 
+import com.google.gson.Gson;
+import gov.cdc.casenotificationservice.model.MessageAfterStdChecker;
+import gov.cdc.casenotificationservice.service.nonstd.NonStdService;
 import gov.cdc.dataingestion.hl7.helper.integration.exception.DiHL7Exception;
 import jakarta.xml.bind.JAXBException;
 import org.apache.kafka.common.errors.SerializationException;
@@ -19,7 +22,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class NonStdEventConsumer {
     private static final Logger logger = LoggerFactory.getLogger(StdEventConsumer.class); //NOSONAR
+    private final NonStdService nonStdService;
 
+    public NonStdEventConsumer(NonStdService nonStdService) {
+        this.nonStdService = nonStdService;
+    }
 
     @RetryableTopic(
             attempts = "${spring.kafka.retry.max-retry}",
@@ -41,8 +48,10 @@ public class NonStdEventConsumer {
             topics = "${spring.kafka.topic.non-std-topic}",
             containerFactory = "kafkaListenerContainerFactoryConsumerForNonStd"
     )
-    public void handleMessage(String message){
-
+    public void handleMessage(String message) throws Exception {
+        var gson = new Gson();
+        var data = gson.fromJson(message, MessageAfterStdChecker.class);
+        nonStdService.nonStdProcessor(data);
     }
 
     @DltHandler()

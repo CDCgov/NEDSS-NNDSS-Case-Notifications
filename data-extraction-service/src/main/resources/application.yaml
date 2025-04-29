@@ -27,7 +27,8 @@ spring:
 kafka:
   topic:
     cn-tranport-out-topic: nbs_CN_transportq_out
-    cn-transport-transformed-topic: nbs_transformed_output
+    cn-transport-std-message-topic: cn_transport_std_message
+    cn-transport-non-std-message-topic: cn_transport_non_std_message
 
 app:
   transformer:

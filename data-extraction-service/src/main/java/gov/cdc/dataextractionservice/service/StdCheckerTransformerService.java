@@ -62,6 +62,7 @@ public class StdCheckerTransformerService {
                 .reportStatusCd(value.getReport_status_cd())
                 .recordStatusCd(value.getRecord_status_cd())
                 .netssMessageOnly(netssStatus)
+                .stdMessageDetected(containsTrigger) // setting STD, Non-STD flag here
                 .build();
     }
 }

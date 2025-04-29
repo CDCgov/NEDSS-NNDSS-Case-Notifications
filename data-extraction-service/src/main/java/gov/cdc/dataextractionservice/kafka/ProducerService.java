@@ -14,19 +14,31 @@ public class ProducerService {
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final Gson gson;
 
-    @Value("${kafka.topic.cn-transport-transformed-topic}")
-    private String targetTopic;
+    @Value("${kafka.topic.cn-transport-std-message-topic}")
+    private String stdTopic;
 
-    public ProducerService(KafkaTemplate<String, String> kafkaTemplate) {
+    @Value("${kafka.topic.cn-transport-non-std-message-topic}")
+    private String nonStdTopic;
+
+    public ProducerService(KafkaTemplate<String, String> kafkaTemplate, Gson gson) {
         this.kafkaTemplate = kafkaTemplate;
-        this.gson = new Gson();
+        this.gson = gson;
     }
 
     public void sendMessage(MessageAfterStdChecker transformedMessage) {
         try {
             String payload = gson.toJson(transformedMessage);
+            String targetTopic;
+
+            if (transformedMessage.isStdMessageDetected()) {
+                targetTopic = stdTopic;
+            } else {
+                targetTopic = nonStdTopic;
+            }
+
             kafkaTemplate.send(targetTopic, payload);
             log.info("Sent transformed message to topic {}: {}", targetTopic, payload);
+
         } catch (Exception e) {
             log.error("Failed to send message to Kafka: {}", e.getMessage(), e);
         }

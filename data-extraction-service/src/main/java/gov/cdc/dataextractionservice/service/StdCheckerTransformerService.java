@@ -21,7 +21,7 @@ public class StdCheckerTransformerService {
         }
 
         String recordStatusCd = value.getRecord_status_cd();
-        if (recordStatusCd == null || !"UNPROCESSED".equalsIgnoreCase(recordStatusCd)) {
+        if (!"UNPROCESSED".equalsIgnoreCase(recordStatusCd)) {
             log.info("Skipping message: record_status_cd is not UNPROCESSED or missing.");
             return null;
         }

@@ -1,10 +1,12 @@
 //package gov.cdc.casenotificationservice.service;
 //
 //import com.google.gson.Gson;
+//import gov.cdc.casenotificationservice.model.MessageAfterStdChecker;
 //import gov.cdc.casenotificationservice.repository.odse.CNTraportqOutRepository;
 //import gov.cdc.casenotificationservice.service.nonstd.interfaces.INonStdService;
 //import gov.cdc.casenotificationservice.service.std.interfaces.IXmlService;
 //import jakarta.annotation.PostConstruct;
+//import jakarta.xml.bind.JAXBException;
 //import org.springframework.stereotype.Service;
 //
 //import java.io.InputStream;
@@ -28,27 +30,31 @@
 //
 //    @PostConstruct
 //    public void init() throws Exception {
-//        String fileName = "payload-test/payload_1.txt";
-//
-//        String payload = "";
-//        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(fileName);
-//             Scanner scanner = new Scanner(inputStream, StandardCharsets.UTF_8.name())) {
-//            scanner.useDelimiter("\\A"); // Read entire file
-//            payload = scanner.hasNext() ? scanner.next() : "";
-//        }
-//
-//
-//        initNonStd(payload);
+//        initNonStd();
 //    }
 //
-//    private void initStd() {
+//    private void initStd() throws JAXBException {
+//        MessageAfterStdChecker messageAfterStdChecker
+//                = new MessageAfterStdChecker();
+//        messageAfterStdChecker.setCnTransportqOutUid(23187L);
 //        var test = cnTraportqOutRepository.findTopByRecordStatusCdAndUid("UNPROCESSED", 23187L);
 //        Gson gson = new Gson();
 //
-//        xmlService.mappingXmlStringToObject(gson.toJson(test));
+//        xmlService.mappingXmlStringToObject(messageAfterStdChecker);
 //    }
 //
-//    private void initNonStd(String payload) throws Exception {
-//        inonStdService.nonStdProcessor(payload);
+//    private void initNonStd() throws Exception {
+//        String fileName = "payload-test/payload_1.txt";
+//        String pl = "";
+//        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(fileName);
+//             Scanner scanner = new Scanner(inputStream, StandardCharsets.UTF_8.name())) {
+//            scanner.useDelimiter("\\A"); // Read entire file
+//            pl = scanner.hasNext() ? scanner.next() : "";
+//        }
+//
+//        MessageAfterStdChecker messageAfterStdChecker
+//                = new MessageAfterStdChecker();
+//        messageAfterStdChecker.setCnTransportqOutUid(23187L);
+//        inonStdService.nonStdProcessor(messageAfterStdChecker);
 //    }
 //}

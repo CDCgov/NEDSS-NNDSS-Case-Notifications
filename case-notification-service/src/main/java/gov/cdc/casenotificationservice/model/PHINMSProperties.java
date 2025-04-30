@@ -6,6 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PHINMSProperties {
+    Long cnTransportQOutId;
     String pNotificationId;
     String pPublicHealthCaseLocalId;
     String NETSS_MESSAGE_ONLY;

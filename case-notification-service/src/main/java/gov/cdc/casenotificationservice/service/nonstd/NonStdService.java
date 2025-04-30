@@ -13,6 +13,10 @@ import gov.cdc.casenotificationservice.service.nonstd.interfaces.IPHINMSService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.Scanner;
+
 
 @Service
 public class NonStdService implements INonStdService {
@@ -42,10 +46,19 @@ public class NonStdService implements INonStdService {
 
         var cnTranport = cnTraportqOutRepository.findTopByRecordUid(messageAfterStdChecker.getCnTransportqOutUid());
 
+        String fileName = "payload-test/payload_1.txt";
+        String pl = "";
+        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(fileName);
+             Scanner scanner = new Scanner(inputStream, StandardCharsets.UTF_8.name())) {
+            scanner.useDelimiter("\\A"); // Read entire file
+            pl = scanner.hasNext() ? scanner.next() : "";
+        }
+
         // TODO: Logic to tranform xml to HL7
-        String payload = "HL7 MESSAGE HERE";
+        String payload = pl;
 
 
+        phinmsProperties.setCnTransportQOutId(messageAfterStdChecker.getCnTransportqOutUid());
         phinmsProperties.setPNotificationId(String.valueOf(cnTranport.getNotificationUid()));
         phinmsProperties.setPPublicHealthCaseLocalId(cnTranport.getPublicHealthCaseLocalId());
         phinmsProperties.setPReportStatusCd(cnTranport.getReportStatusCd());
@@ -71,7 +84,7 @@ public class NonStdService implements INonStdService {
         // TODO: Logic to update TransportQOut table and Logic to update PHINMSQUEUED
         TransportQOut transportQOut = new TransportQOut(PHINMSProperties, tz);
         transportQOutRepository.save(transportQOut);
-        cnTraportqOutRepository.updateStatusToQueued(69696969L); // "WHERE IS THIS ID COME FROM"
+        cnTraportqOutRepository.updateStatusToQueued(PHINMSProperties.getCnTransportQOutId()); // "WHERE IS THIS ID COME FROM"
     }
 
     protected void batchNonStdProcessor(PHINMSProperties PHINMSProperties) throws Exception {

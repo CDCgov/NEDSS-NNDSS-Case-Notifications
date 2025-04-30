@@ -53,6 +53,7 @@ public class PHINMSService implements IPHINMSService {
 
 
         HL7Helper hl7Helper = new HL7Helper();
+        payload = payload.replaceAll("\n", "\r");
         HL7ParsedMessage<OruR1> parsedMessage = hl7Helper.hl7StringParser(payload);
 
         var vMessageID = PHINMSProperties.getPNotificationId();

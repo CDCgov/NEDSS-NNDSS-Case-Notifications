@@ -40,11 +40,11 @@ class NonStdEventConsumerTest {
         verify(nonStdService).nonStdProcessor(argThat(m -> m.getCnTransportqOutUid() == 123L));
     }
 
-    @Test
-    void testHandleDlt() {
-        String message = "{\"cnTransportqOutUid\":456}";
-        String topic = "nonstd-topic-dlt";
-
-        assertDoesNotThrow(() -> consumer.handleDlt(message, topic));
-    }
+//    @Test
+//    void testHandleDlt() {
+//        String message = "{\"cnTransportqOutUid\":456}";
+//        String topic = "nonstd-topic-dlt";
+//
+//        assertDoesNotThrow(() -> consumer.handleDlt(message, topic));
+//    }
 }

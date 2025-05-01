@@ -1,5 +1,6 @@
 package gov.cdc.casenotificationservice.service.std;
 
+import gov.cdc.casenotificationservice.exception.StdProcessorServiceException;
 import gov.cdc.casenotificationservice.model.MessageAfterStdChecker;
 import gov.cdc.casenotificationservice.model.Netss;
 import gov.cdc.casenotificationservice.model.NetssPersistModel;
@@ -39,16 +40,19 @@ public class XmlService implements IXmlService {
     }
 
     // pRecordStatus can be retrieved from DB
-    public void mappingXmlStringToObject(MessageAfterStdChecker messageAfterStdChecker) {
+    public void mappingXmlStringToObject(MessageAfterStdChecker messageAfterStdChecker) throws StdProcessorServiceException {
         var cnTransportqOut = cnTraportqOutRepository.findTopByRecordUid(messageAfterStdChecker.getCnTransportqOutUid());
+        String netssSummary;
+        NetssPersistModel netssPersistModel = new NetssPersistModel();
+
         try {
-            NetssPersistModel netssPersistModel = new NetssPersistModel();
+
             JAXBContext context = JAXBContext.newInstance(NBSNNDIntermediaryMessage.class);
             Unmarshaller unmarshaller = context.createUnmarshaller();
             StringReader reader = new StringReader(cnTransportqOut.getMessagePayload());
             NBSNNDIntermediaryMessage msg = (NBSNNDIntermediaryMessage) unmarshaller.unmarshal(reader);
             Netss netss = stdMapperService.stdMapping(msg);
-            var netssSummary = buildNetssSummary(netss);
+            netssSummary = buildNetssSummary(netss);
             netssPersistModel.setNetss(netssSummary);
             netssPersistModel.setVMessageYr(netss.getYear());
             netssPersistModel.setVCaseReptId(netss.getCaseReportId());
@@ -61,16 +65,12 @@ public class XmlService implements IXmlService {
             else {
                 netssPersistModel.setRecordStatusCd("ACTIVE");
             }
-            NetssTransportQOut netssTransportQOut = new NetssTransportQOut(netssPersistModel, cnTransportqOut);
-            netssTransportQOut.setAddTime(getCurrentTimeStamp(tz));
 
-            netssTransportQOutRepository.save(netssTransportQOut);
-
-
-            cnTraportqOutRepository.updateStatus(cnTransportqOut.getCnTransportqOutUid(), "STD_COMPLETED");
         } catch (Exception e) {
             cnTraportqOutRepository.updateStatus(cnTransportqOut.getCnTransportqOutUid(), "STD_ERROR");
+            throw new StdProcessorServiceException("Error While Processing NETSS", e);
         }
+
 
     }
 }

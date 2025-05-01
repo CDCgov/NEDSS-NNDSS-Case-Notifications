@@ -1,7 +1,11 @@
 package gov.cdc.casenotificationservice.kafka.consumer;
 
 import com.google.gson.Gson;
+import gov.cdc.casenotificationservice.exception.IgnorableException;
+import gov.cdc.casenotificationservice.exception.NonStdBatchProcessorServiceException;
+import gov.cdc.casenotificationservice.exception.NonStdProcessorServiceException;
 import gov.cdc.casenotificationservice.model.MessageAfterStdChecker;
+import gov.cdc.casenotificationservice.service.deadletter.interfaces.IDltService;
 import gov.cdc.casenotificationservice.service.nonstd.NonStdService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,9 +23,11 @@ import org.springframework.stereotype.Service;
 public class NonStdEventConsumer {
     private static final Logger logger = LoggerFactory.getLogger(StdEventConsumer.class); //NOSONAR
     private final NonStdService nonStdService;
+    private final IDltService dltService;
 
-    public NonStdEventConsumer(NonStdService nonStdService) {
+    public NonStdEventConsumer(NonStdService nonStdService, IDltService dltService) {
         this.nonStdService = nonStdService;
+        this.dltService = dltService;
     }
 
     @RetryableTopic(
@@ -33,27 +39,29 @@ public class NonStdEventConsumer {
             // retry topic name, such as topic-retry-1, topic-retry-2, etc
             topicSuffixingStrategy = TopicSuffixingStrategy.SUFFIX_WITH_INDEX_VALUE,
             // time to wait before attempting to retry
-            backoff = @Backoff(delay = 1000, multiplier = 2.0)
-
+            backoff = @Backoff(delay = 1000, multiplier = 2.0),
+            include = {NonStdProcessorServiceException.class, NonStdBatchProcessorServiceException.class, IgnorableException.class}
     )
     @KafkaListener(
             topics = "${spring.kafka.topic.non-std-topic}",
             containerFactory = "kafkaListenerContainerFactoryConsumerForNonStd"
     )
-    public void handleMessage(String message) {
-        try {
-            var gson = new Gson();
-            var data = gson.fromJson(message, MessageAfterStdChecker.class);
-            nonStdService.nonStdProcessor(data);
-        } catch (Exception e) {
-            logger.error("KafkaEdxLogConsumer.handleMessage: {}", e.getMessage());
-        }
+    public void handleMessage(String message) throws IgnorableException, NonStdProcessorServiceException, NonStdBatchProcessorServiceException {
+        var gson = new Gson();
+        var data = gson.fromJson(message, MessageAfterStdChecker.class);
+        nonStdService.nonStdProcessor(data);
     }
 
     @DltHandler()
     public void handleDlt(
             String message,
-            @Header(KafkaHeaders.RECEIVED_TOPIC) String topic
+            @Header(KafkaHeaders.RECEIVED_TOPIC) String topic,
+            @Header(KafkaHeaders.EXCEPTION_STACKTRACE) String stacktrace,
+            @Header(KafkaHeaders.EXCEPTION_MESSAGE) String errorMessage,
+            @Header(KafkaHeaders.EXCEPTION_CAUSE_FQCN) String exceptionRoot
     ) {
+        logger.info("Received DLT message: {}", message);
+        dltService.creatingDlt(message, topic, stacktrace, errorMessage, exceptionRoot);
+
     }
 }

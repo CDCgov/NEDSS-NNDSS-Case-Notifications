@@ -15,3 +15,19 @@ databaseChangeLog:
         - sqlFile:
             path: db/msgoute/routines/001-generate-default-config-001.sql
             splitStatements: false
+  - changeSet:
+      id: 2
+      author: liquibase
+      runOnChange: true
+      changes:
+        - sqlFile:
+            path: db/msgoute/tables/002-alter-notification-config-add-netss-col.sql
+            splitStatements: false
+  - changeSet:
+      id: 3
+      author: liquibase
+      runOnChange: true
+      changes:
+        - sqlFile:
+            path: db/msgoute/tables/003-create-dlt-case-notification.sql
+            splitStatements: false

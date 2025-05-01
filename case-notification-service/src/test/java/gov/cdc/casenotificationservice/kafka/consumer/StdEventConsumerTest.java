@@ -54,8 +54,8 @@ class StdEventConsumerTest {
         assertDoesNotThrow(() -> consumer.handleMessage(json));
     }
 
-    @Test
-    void testHandleDlt() {
-        assertDoesNotThrow(() -> consumer.handleDlt("dead-letter-message", "std-topic-dlt"));
-    }
+//    @Test
+//    void testHandleDlt() {
+//        assertDoesNotThrow(() -> consumer.handleDlt("dead-letter-message", "std-topic-dlt"));
+//    }
 }

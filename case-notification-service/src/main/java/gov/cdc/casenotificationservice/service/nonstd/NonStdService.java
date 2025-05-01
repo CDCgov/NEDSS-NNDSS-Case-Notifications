@@ -1,5 +1,7 @@
 package gov.cdc.casenotificationservice.service.nonstd;
 
+import gov.cdc.casenotificationservice.exception.IgnorableException;
+import gov.cdc.casenotificationservice.exception.NonStdBatchProcessorServiceException;
 import gov.cdc.casenotificationservice.exception.NonStdProcessorServiceException;
 import gov.cdc.casenotificationservice.model.MessageAfterStdChecker;
 import gov.cdc.casenotificationservice.model.PHINMSProperties;
@@ -37,8 +39,7 @@ public class NonStdService implements INonStdService {
         this.caseNotificationConfigRepository = caseNotificationConfigRepository;
     }
 
-    public void nonStdProcessor(MessageAfterStdChecker messageAfterStdChecker) {
-        try {
+    public void nonStdProcessor(MessageAfterStdChecker messageAfterStdChecker) throws IgnorableException, NonStdProcessorServiceException, NonStdBatchProcessorServiceException {
             PHINMSProperties phinmsProperties = new PHINMSProperties();
             CaseNotificationConfig stdConfig = caseNotificationConfigRepository.findNonStdConfig();
             var cnTranport = cnTraportqOutRepository.findTopByRecordUid(messageAfterStdChecker.getCnTransportqOutUid());
@@ -46,7 +47,7 @@ public class NonStdService implements INonStdService {
             // TODO: Logic to tranform xml to HL7
             String payload = "";
             if (payload.isEmpty()) {
-                throw new NonStdProcessorServiceException("Payload is empty");
+                throw new IgnorableException("Payload is empty");
             }
 
             phinmsProperties.setPMessageUid(messageAfterStdChecker.getCnTransportqOutUid());
@@ -56,17 +57,33 @@ public class NonStdService implements INonStdService {
             phinmsProperties.setNETSS_MESSAGE_ONLY("queued");
             phinmsProperties.setBATCH_MESSAGE_PROFILE_ID(stdConfig.getBatchMesageProfileId());
 
-            var updatedPhinmsProperties = phinmsService.gettingPHIMNSProperties(payload, phinmsProperties, stdConfig);
+            PHINMSProperties updatedPhinmsProperties;
+
+            try {
+                updatedPhinmsProperties = phinmsService.gettingPHIMNSProperties(payload, phinmsProperties, stdConfig);
+            } catch (Exception e) {
+                cnTraportqOutRepository.updateStatus(messageAfterStdChecker.getCnTransportqOutUid(), "NON_STD_ERROR");
+                throw new NonStdProcessorServiceException("Failure at PHINMS processor", e);
+            }
+
             if (batchService.isBatchConditionApplied(updatedPhinmsProperties, stdConfig)) {
-                batchNonStdProcessor(updatedPhinmsProperties);
+                try {
+                    batchNonStdProcessor(updatedPhinmsProperties);
+                } catch (Exception e) {
+                    throw new NonStdBatchProcessorServiceException("Failure at batch processor", e);
+                }
             }
             else
             {
-                nonStdProcessor(updatedPhinmsProperties);
+                try {
+                    nonStdProcessor(updatedPhinmsProperties);
+                } catch (Exception e) {
+                    cnTraportqOutRepository.updateStatus(messageAfterStdChecker.getCnTransportqOutUid(), "NON_STD_ERROR");
+                    throw new NonStdProcessorServiceException("Failure at Non Std DB Logic", e);
+
+                }
+
             }
-        } catch (Exception e) {
-            cnTraportqOutRepository.updateStatus(messageAfterStdChecker.getCnTransportqOutUid(), "NON_STD_ERROR");
-        }
 
     }
 

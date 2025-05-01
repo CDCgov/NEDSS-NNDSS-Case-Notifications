@@ -1,5 +1,5 @@
 package gov.cdc.casenotificationservice.util;
-import gov.cdc.casenotificationservice.util.TimeStampHelper;
+
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Constructor;

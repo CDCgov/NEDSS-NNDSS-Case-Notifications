@@ -3,7 +3,6 @@ package gov.cdc.casenotificationservice.service.std;
 
 import gov.cdc.casenotificationservice.model.MessageAfterStdChecker;
 import gov.cdc.casenotificationservice.model.Netss;
-import gov.cdc.casenotificationservice.model.generated.jaxb.NBSNNDIntermediaryMessage;
 import gov.cdc.casenotificationservice.repository.msg.NetssTransportQOutRepository;
 import gov.cdc.casenotificationservice.repository.msg.model.NetssTransportQOut;
 import gov.cdc.casenotificationservice.repository.odse.CNTraportqOutRepository;

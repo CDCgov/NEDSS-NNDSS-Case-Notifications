@@ -3,14 +3,15 @@ package gov.cdc.casenotificationservice.kafka.consumer;
 import com.google.gson.Gson;
 import gov.cdc.casenotificationservice.model.MessageAfterStdChecker;
 import gov.cdc.casenotificationservice.service.nonstd.NonStdService;
-import org.apache.kafka.common.header.Headers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.*;
-import org.springframework.kafka.support.KafkaHeaders;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.mockito.Mockito.argThat;
+import static org.mockito.Mockito.verify;
 
 class NonStdEventConsumerTest {
 

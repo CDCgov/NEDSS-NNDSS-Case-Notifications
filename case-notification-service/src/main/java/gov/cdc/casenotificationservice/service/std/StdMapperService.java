@@ -6,7 +6,8 @@ import gov.cdc.casenotificationservice.service.std.interfaces.IStdMapperService;
 import org.springframework.stereotype.Service;
 
 import static gov.cdc.casenotificationservice.constant.StdConstantValue.*;
-import static gov.cdc.casenotificationservice.util.StringHelper.*;
+import static gov.cdc.casenotificationservice.util.StringHelper.strNumbers;
+import static gov.cdc.casenotificationservice.util.StringHelper.strRight;
 
 @Service
 public class StdMapperService implements IStdMapperService {

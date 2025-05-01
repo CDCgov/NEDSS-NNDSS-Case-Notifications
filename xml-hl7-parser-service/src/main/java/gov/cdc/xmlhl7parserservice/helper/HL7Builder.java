@@ -2,21 +2,19 @@ package gov.cdc.xmlhl7parserservice.helper;
 
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.DataTypeException;
-
 import ca.uhn.hl7v2.model.v25.datatype.*;
 import ca.uhn.hl7v2.model.v25.group.ORU_R01_ORDER_OBSERVATION;
 import ca.uhn.hl7v2.model.v25.message.ORU_R01;
-import ca.uhn.hl7v2.model.v25.segment.*;
-
+import ca.uhn.hl7v2.model.v25.segment.MSH;
+import ca.uhn.hl7v2.model.v25.segment.NK1;
+import ca.uhn.hl7v2.model.v25.segment.OBR;
+import ca.uhn.hl7v2.model.v25.segment.PID;
 import com.google.gson.Gson;
 import gov.cdc.xmlhl7parserservice.constants.Constants;
-
 import gov.cdc.xmlhl7parserservice.model.MessageElement;
 import gov.cdc.xmlhl7parserservice.model.NBSNNDIntermediaryMessage;
-
 import gov.cdc.xmlhl7parserservice.repository.INbsMsgouteRepository;
 import gov.cdc.xmlhl7parserservice.repository.INbsOdseRepository;
-import gov.cdc.xmlhl7parserservice.service.DatabaseConnector;
 import gov.cdc.xmlhl7parserservice.service.DateTypeProcessing;
 import gov.cdc.xmlhl7parserservice.service.OBR31SegmentProcessing;
 import org.slf4j.Logger;

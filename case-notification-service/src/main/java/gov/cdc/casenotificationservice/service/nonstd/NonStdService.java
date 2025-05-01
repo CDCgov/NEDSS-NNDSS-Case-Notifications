@@ -1,5 +1,6 @@
 package gov.cdc.casenotificationservice.service.nonstd;
 
+import gov.cdc.casenotificationservice.exception.NonStdProcessorServiceException;
 import gov.cdc.casenotificationservice.model.MessageAfterStdChecker;
 import gov.cdc.casenotificationservice.model.PHINMSProperties;
 import gov.cdc.casenotificationservice.repository.msg.CaseNotificationConfigRepository;
@@ -12,10 +13,6 @@ import gov.cdc.casenotificationservice.service.nonstd.interfaces.INonStdService;
 import gov.cdc.casenotificationservice.service.nonstd.interfaces.IPHINMSService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.util.Scanner;
 
 
 @Service
@@ -40,54 +37,51 @@ public class NonStdService implements INonStdService {
         this.caseNotificationConfigRepository = caseNotificationConfigRepository;
     }
 
-    public void nonStdProcessor(MessageAfterStdChecker messageAfterStdChecker) throws Exception {
-        PHINMSProperties phinmsProperties = new PHINMSProperties();
-        CaseNotificationConfig stdConfig = caseNotificationConfigRepository.findNonStdConfig();
+    public void nonStdProcessor(MessageAfterStdChecker messageAfterStdChecker) {
+        try {
+            PHINMSProperties phinmsProperties = new PHINMSProperties();
+            CaseNotificationConfig stdConfig = caseNotificationConfigRepository.findNonStdConfig();
+            var cnTranport = cnTraportqOutRepository.findTopByRecordUid(messageAfterStdChecker.getCnTransportqOutUid());
 
-        var cnTranport = cnTraportqOutRepository.findTopByRecordUid(messageAfterStdChecker.getCnTransportqOutUid());
+            // TODO: Logic to tranform xml to HL7
+            String payload = "";
+            if (payload.isEmpty()) {
+                throw new NonStdProcessorServiceException("Payload is empty");
+            }
 
-        String fileName = "payload-test/payload_1.txt";
-        String pl = "";
-        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(fileName);
-             Scanner scanner = new Scanner(inputStream, StandardCharsets.UTF_8.name())) {
-            scanner.useDelimiter("\\A"); // Read entire file
-            pl = scanner.hasNext() ? scanner.next() : "";
+            phinmsProperties.setPMessageUid(messageAfterStdChecker.getCnTransportqOutUid());
+            phinmsProperties.setPNotificationId(String.valueOf(cnTranport.getNotificationUid()));
+            phinmsProperties.setPPublicHealthCaseLocalId(cnTranport.getPublicHealthCaseLocalId());
+            phinmsProperties.setPReportStatusCd(cnTranport.getReportStatusCd());
+            phinmsProperties.setNETSS_MESSAGE_ONLY("queued");
+            phinmsProperties.setBATCH_MESSAGE_PROFILE_ID(stdConfig.getBatchMesageProfileId());
+
+            var updatedPhinmsProperties = phinmsService.gettingPHIMNSProperties(payload, phinmsProperties, stdConfig);
+            if (batchService.isBatchConditionApplied(updatedPhinmsProperties, stdConfig)) {
+                batchNonStdProcessor(updatedPhinmsProperties);
+            }
+            else
+            {
+                nonStdProcessor(updatedPhinmsProperties);
+            }
+        } catch (Exception e) {
+            cnTraportqOutRepository.updateStatus(messageAfterStdChecker.getCnTransportqOutUid(), "NON_STD_ERROR");
         }
 
-        // TODO: Logic to tranform xml to HL7
-        String payload = pl;
-
-
-        phinmsProperties.setCnTransportQOutId(messageAfterStdChecker.getCnTransportqOutUid());
-        phinmsProperties.setPNotificationId(String.valueOf(cnTranport.getNotificationUid()));
-        phinmsProperties.setPPublicHealthCaseLocalId(cnTranport.getPublicHealthCaseLocalId());
-        phinmsProperties.setPReportStatusCd(cnTranport.getReportStatusCd());
-        phinmsProperties.setNETSS_MESSAGE_ONLY(stdConfig.getNetssMessageOnly());
-        phinmsProperties.setBATCH_MESSAGE_PROFILE_ID(stdConfig.getBatchMesageProfileId());
-
-        var updatedPhinmsProperties = phinmsService.gettingPHIMNSProperties(payload, phinmsProperties, stdConfig);
-        if (batchService.isBatchConditionApplied(updatedPhinmsProperties, stdConfig)) {
-            batchNonStdProcessor(updatedPhinmsProperties);
-        }
-        else
-        {
-            nonStdProcessor(updatedPhinmsProperties);
-        }
     }
 
-    public void releaseHoldQueueAndProcessBatchNonStd() throws Exception {
+    public void releaseHoldQueueAndProcessBatchNonStd() {
         var updatedPhinmsPropertiesForBatch = batchService.ReleaseQueuePopulateBatchFooterProperties();
         nonStdProcessor(updatedPhinmsPropertiesForBatch);
     }
 
-    protected void nonStdProcessor(PHINMSProperties PHINMSProperties) throws Exception {
-        // TODO: Logic to update TransportQOut table and Logic to update PHINMSQUEUED
+    protected void nonStdProcessor(PHINMSProperties PHINMSProperties) {
         TransportQOut transportQOut = new TransportQOut(PHINMSProperties, tz);
         transportQOutRepository.save(transportQOut);
-        cnTraportqOutRepository.updateStatusToQueued(PHINMSProperties.getCnTransportQOutId()); // "WHERE IS THIS ID COME FROM"
+        cnTraportqOutRepository.updateStatusToQueued(PHINMSProperties.getPMessageUid()); // "WHERE IS THIS ID COME FROM"
     }
 
-    protected void batchNonStdProcessor(PHINMSProperties PHINMSProperties) throws Exception {
+    protected void batchNonStdProcessor(PHINMSProperties PHINMSProperties) {
         batchService.holdQueue(PHINMSProperties);
     }
 }

@@ -1,9 +1,10 @@
-package gov.cdc.casenotificationservice.repository.msg.model;
+package gov.cdc.dataextractionservice.repository.msg.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -51,5 +52,4 @@ public class CaseNotificationConfig {
 
     @Column(name = "phin_priority", length = 255)
     private String phinPriority;
-
 }

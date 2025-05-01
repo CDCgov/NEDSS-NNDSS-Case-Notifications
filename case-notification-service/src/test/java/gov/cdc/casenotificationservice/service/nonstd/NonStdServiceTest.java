@@ -12,9 +12,9 @@ import gov.cdc.casenotificationservice.service.nonstd.interfaces.INonStdBatchSer
 import gov.cdc.casenotificationservice.service.nonstd.interfaces.IPHINMSService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.*;
-
-import java.io.InputStream;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import static org.mockito.Mockito.*;
 
@@ -53,7 +53,7 @@ class NonStdServiceTest {
         config.setBatchMesageProfileId("TEST_PROFILE");
 
         PHINMSProperties props = new PHINMSProperties();
-        props.setCnTransportQOutId(123L);
+        props.setPMessageUid(123L);
         props.setPNotificationId("456");
         props.setPPublicHealthCaseLocalId("PHC123");
         props.setPReportStatusCd("COMPLETE");
@@ -81,7 +81,7 @@ class NonStdServiceTest {
         config.setBatchMesageProfileId("OTHER_PROFILE");
 
         PHINMSProperties props = new PHINMSProperties();
-        props.setCnTransportQOutId(124L);
+        props.setPMessageUid(124L);
         props.setPNotificationId("789");
         props.setPPublicHealthCaseLocalId("PHC999");
         props.setPReportStatusCd("NEW");
@@ -103,7 +103,7 @@ class NonStdServiceTest {
     @Test
     void testReleaseHoldQueueAndProcessBatchNonStd() throws Exception {
         PHINMSProperties mockProps = new PHINMSProperties();
-        mockProps.setCnTransportQOutId(333L);
+        mockProps.setPMessageUid(333L);
 
         when(batchService.ReleaseQueuePopulateBatchFooterProperties()).thenReturn(mockProps);
 

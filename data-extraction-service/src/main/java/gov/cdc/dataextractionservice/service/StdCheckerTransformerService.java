@@ -56,7 +56,7 @@ public class StdCheckerTransformerService {
 
         return MessageAfterStdChecker.builder()
                 .cnTransportqOutUid(value.getCn_transportq_out_uid())
-                .messagePayload(cleanedPayload)
+//                .messagePayload(cleanedPayload)
                 .notificationLocalId(value.getNotification_local_id())
                 .publicHealthCaseLocalId(value.getPublic_health_case_local_id())
                 .reportStatusCd(value.getReport_status_cd())

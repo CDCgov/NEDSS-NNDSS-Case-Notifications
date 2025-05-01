@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0
+      author: liquibase
+      runOnChange: true
+      changes:
+        - sqlFile:
+            path: db/msgoute/tables/001-create-notification-config.sql
+            splitStatements: false
+  - changeSet:
+      id: 1
+      author: liquibase
+      runOnChange: true
+      changes:
+        - sqlFile:
+            path: db/msgoute/routines/001-generate-default-config-001.sql
+            splitStatements: false

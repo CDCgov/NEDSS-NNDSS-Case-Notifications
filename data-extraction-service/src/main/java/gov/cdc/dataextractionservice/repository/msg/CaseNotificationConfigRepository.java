@@ -1,6 +1,6 @@
-package gov.cdc.casenotificationservice.repository.msg;
+package gov.cdc.dataextractionservice.repository.msg;
 
-import gov.cdc.casenotificationservice.repository.msg.model.CaseNotificationConfig;
+import gov.cdc.dataextractionservice.repository.msg.model.CaseNotificationConfig;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

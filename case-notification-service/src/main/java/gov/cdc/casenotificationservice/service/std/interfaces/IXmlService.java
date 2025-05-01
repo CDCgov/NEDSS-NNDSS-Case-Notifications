@@ -4,5 +4,5 @@ import gov.cdc.casenotificationservice.model.MessageAfterStdChecker;
 import jakarta.xml.bind.JAXBException;
 
 public interface IXmlService {
-    void mappingXmlStringToObject(MessageAfterStdChecker messageAfterStdChecker) throws JAXBException;
+    void mappingXmlStringToObject(MessageAfterStdChecker messageAfterStdChecker) ;
 }

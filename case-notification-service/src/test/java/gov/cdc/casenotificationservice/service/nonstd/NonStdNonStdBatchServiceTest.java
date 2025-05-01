@@ -3,7 +3,8 @@ package gov.cdc.casenotificationservice.service.nonstd;
 import gov.cdc.casenotificationservice.cache.NonStdQueue;
 import gov.cdc.casenotificationservice.model.PHINMSProperties;
 import gov.cdc.casenotificationservice.repository.msg.model.CaseNotificationConfig;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 

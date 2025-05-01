@@ -3,9 +3,6 @@ package gov.cdc.casenotificationservice.kafka.consumer;
 import com.google.gson.Gson;
 import gov.cdc.casenotificationservice.model.MessageAfterStdChecker;
 import gov.cdc.casenotificationservice.service.nonstd.NonStdService;
-import gov.cdc.dataingestion.hl7.helper.integration.exception.DiHL7Exception;
-import jakarta.xml.bind.JAXBException;
-import org.apache.kafka.common.errors.SerializationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.DltHandler;
@@ -14,7 +11,6 @@ import org.springframework.kafka.annotation.RetryableTopic;
 import org.springframework.kafka.retrytopic.DltStrategy;
 import org.springframework.kafka.retrytopic.TopicSuffixingStrategy;
 import org.springframework.kafka.support.KafkaHeaders;
-import org.springframework.kafka.support.serializer.DeserializationException;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.stereotype.Service;
@@ -37,21 +33,21 @@ public class NonStdEventConsumer {
             // retry topic name, such as topic-retry-1, topic-retry-2, etc
             topicSuffixingStrategy = TopicSuffixingStrategy.SUFFIX_WITH_INDEX_VALUE,
             // time to wait before attempting to retry
-            backoff = @Backoff(delay = 1000, multiplier = 2.0),
-            // if these exceptions occur, skip retry then push message to DLQ
-            exclude = {
-
-            }
+            backoff = @Backoff(delay = 1000, multiplier = 2.0)
 
     )
     @KafkaListener(
             topics = "${spring.kafka.topic.non-std-topic}",
             containerFactory = "kafkaListenerContainerFactoryConsumerForNonStd"
     )
-    public void handleMessage(String message) throws Exception {
-        var gson = new Gson();
-        var data = gson.fromJson(message, MessageAfterStdChecker.class);
-        nonStdService.nonStdProcessor(data);
+    public void handleMessage(String message) {
+        try {
+            var gson = new Gson();
+            var data = gson.fromJson(message, MessageAfterStdChecker.class);
+            nonStdService.nonStdProcessor(data);
+        } catch (Exception e) {
+            logger.error("KafkaEdxLogConsumer.handleMessage: {}", e.getMessage());
+        }
     }
 
     @DltHandler()

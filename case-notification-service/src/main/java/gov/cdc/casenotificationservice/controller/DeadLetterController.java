@@ -1,18 +1,21 @@
 package gov.cdc.casenotificationservice.controller;
 
+import gov.cdc.casenotificationservice.exception.DltServiceException;
+import gov.cdc.casenotificationservice.model.ApiDltResponseModel;
+import gov.cdc.casenotificationservice.model.MessageAfterStdChecker;
 import gov.cdc.casenotificationservice.repository.msg.model.CaseNotificationDlt;
 import gov.cdc.casenotificationservice.service.deadletter.interfaces.IDltService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
 
@@ -28,6 +31,16 @@ public class DeadLetterController {
             summary = "Get Case Notification DLT entries by timestamp range",
             description = "Returns a paginated list of CaseNotificationDlt records filtered by a timestamp range. Timestamps must be provided as strings in 'yyyy-MM-dd HH:mm:ss' format.",
             parameters = {
+                    @Parameter(in = ParameterIn.HEADER,
+                            name = "clientid",
+                            description = "The Client Id for authentication",
+                            required = true,
+                            schema = @Schema(type = "string")),
+                    @Parameter(in = ParameterIn.HEADER,
+                            name = "clientsecret",
+                            description = "The Client Secret for authentication",
+                            required = true,
+                            schema = @Schema(type = "string")),
                     @Parameter(
                             in = ParameterIn.QUERY,
                             name = "from",
@@ -74,6 +87,94 @@ public class DeadLetterController {
             return ResponseEntity.ok(results);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @Operation(
+            summary = "Reprocess a dead letter case notification",
+            description = "Reprocesses a previously dead-lettered message using the given payload and UUID.",
+            parameters = {
+                    @Parameter(in = ParameterIn.HEADER,
+                            name = "clientid",
+                            description = "The Client Id for authentication",
+                            required = true,
+                            schema = @Schema(type = "string")),
+                    @Parameter(in = ParameterIn.HEADER,
+                            name = "clientsecret",
+                            description = "The Client Secret for authentication",
+                            required = true,
+                            schema = @Schema(type = "string")),
+                    @Parameter(
+                            in = ParameterIn.PATH,
+                            name = "uuid",
+                            description = "UUID of the DLT entry",
+                            required = true,
+                            schema = @Schema(type = "string")
+                    )
+            },
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "Payload for the case notification message",
+                    required = true,
+                    content = @Content(schema = @Schema(type = "string"))
+            )
+    )
+    @PostMapping("/reprocess/{uuid}")
+    public ResponseEntity<Void> reprocessCaseNotification(
+            @RequestBody String payload,
+            @PathVariable("uuid") String uuid
+    ) {
+        try {
+            dltService.reprocessingCaseNotification(payload, uuid);
+            return ResponseEntity.ok().build();
+        } catch (DltServiceException e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @Operation(
+            summary = "Get a DLT entry by UUID",
+            description = "Returns a DLT message with the given UUID.",
+            parameters = {
+                    @Parameter(in = ParameterIn.HEADER,
+                            name = "clientid",
+                            description = "The Client Id for authentication",
+                            required = true,
+                            schema = @Schema(type = "string")),
+                    @Parameter(in = ParameterIn.HEADER,
+                            name = "clientsecret",
+                            description = "The Client Secret for authentication",
+                            required = true,
+                            schema = @Schema(type = "string")),
+                    @Parameter(
+                            in = ParameterIn.PATH,
+                            name = "uuid",
+                            description = "UUID of the DLT entry",
+                            required = true,
+                            schema = @Schema(type = "string")
+                    )
+            },
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "DLT entry found",
+                            content = @Content(schema = @Schema(implementation = ApiDltResponseModel.class))
+                    ),
+                    @ApiResponse(responseCode = "404", description = "DLT entry not found"),
+                    @ApiResponse(responseCode = "500", description = "Internal server error")
+            }
+    )
+    @GetMapping("/{uuid}")
+    public ResponseEntity<ApiDltResponseModel<MessageAfterStdChecker>> getDltByUuid(
+            @PathVariable("uuid") String uuid
+    ) {
+        try {
+            ApiDltResponseModel<MessageAfterStdChecker> response = dltService.getDltByUid(uuid);
+            if (response == null) {
+                return ResponseEntity.notFound().build();
+            }
+            return ResponseEntity.ok(response);
+        } catch (DltServiceException e) {
+            return ResponseEntity.internalServerError().build();
         }
     }
 

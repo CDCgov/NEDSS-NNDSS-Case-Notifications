@@ -14,4 +14,5 @@ public class MessageAfterStdChecker {
     private String recordStatusCd;
     private String netssMessageOnly; // "queued", "NETSS_MESSAGE_ONLY", etc.
     private boolean stdMessageDetected;  // flag for STD detection
+    private String deadLetterUid = "";
 }

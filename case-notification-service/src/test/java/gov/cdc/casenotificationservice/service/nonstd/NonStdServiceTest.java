@@ -49,7 +49,6 @@ class NonStdServiceTest {
         checker.setCnTransportqOutUid(123L);
 
         CaseNotificationConfig config = new CaseNotificationConfig();
-        config.setNetssMessageOnly("Y");
         config.setBatchMesageProfileId("TEST_PROFILE");
 
         PHINMSProperties props = new PHINMSProperties();
@@ -77,7 +76,6 @@ class NonStdServiceTest {
         checker.setCnTransportqOutUid(124L);
 
         CaseNotificationConfig config = new CaseNotificationConfig();
-        config.setNetssMessageOnly("N");
         config.setBatchMesageProfileId("OTHER_PROFILE");
 
         PHINMSProperties props = new PHINMSProperties();

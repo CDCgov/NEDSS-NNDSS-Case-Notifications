@@ -54,7 +54,7 @@ public class XmlHL7ConversionController {
 
             NBSNNDIntermediaryMessage nbsnndIntermediaryMessage = (NBSNNDIntermediaryMessage) unmarshaller.unmarshal(is);
 
-            hl7MessageBuilder.parseXml(nbsnndIntermediaryMessage); // Use autowired instance here
+            hl7MessageBuilder.parseXml(nbsnndIntermediaryMessage);
 
         } catch (Exception e) {
             log.error("Exception occurred while parsing/processing NBSNNDMessage xml file", e);

@@ -165,9 +165,10 @@ public class HL7MessageBuilder {
                 processNK1Fields(messageElement, nk1);
             }else if (segmentField.startsWith("OBR")){
                 processOBRFields(messageElement, obr);
-            }else if (segmentField.startsWith("OBX")) {
-                processOBXFields(messageElement,obx);
             }
+//            else if (segmentField.startsWith("OBX")) {
+//                processOBXFields(messageElement,obx);
+//            }
 
             if (messageElement.getQuestionIdentifierNND().trim().equals("STD300")){
                 std300 = messageElement.getDataElement().getStDataType().getStringData().trim();
@@ -296,9 +297,16 @@ public class HL7MessageBuilder {
                     mapToRepeatToMultiNND(messageElement, obx2Inc, oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(0));
                 }
             }
-             if ((messageElement.getHl7SegmentField().equals("OBX-3.0") || messageElement.getHl7SegmentField().equals("OBX-5.9")) && messageElement.getQuestionMap() != null && messageElement.getQuestionMap().contains("|")) {
+             if ((messageElement.getHl7SegmentField().equals("OBX-3.0")
+                     || messageElement.getHl7SegmentField().equals("OBX-5.9"))
+                     && messageElement.getQuestionMap() != null && messageElement.getQuestionMap().contains("|")) {
                 mapToQuestionMap(messageElement, obx2Inc, oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(0));
             }
+
+             if (messageElement.getHl7SegmentField().equals("OBX-3.0") ) {
+                 processOBXFields(messageElement,obx);
+             }
+
 
             if(messageType.contains("Arbo_Case_Map_v1.0") && isDefaultNull && !stateLocalID.isEmpty()) {
                 OBX obxForArboCaseMapV1 = oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(0).getOBSERVATION(maxObr).getOBX();
@@ -3505,6 +3513,7 @@ public class HL7MessageBuilder {
             }
         }
     }
+
     private String getDateFormat(String pidFieldValue, String questionDataTypeNND, String questionIdentifierNND, String segmentField) {
         Map<String, String > fields = new HashMap<>();
         fields.put(Constants.HL_SEVEN_SEGMENT_FIELD, pidFieldValue);

@@ -42,6 +42,7 @@ public class XmlHL7ConversionController {
     @PostMapping(value = "/xml-to-hl7", produces = MediaType.TEXT_PLAIN_VALUE)
     public ResponseEntity<String> convertXmlToHl7() {
         log.info("Received request to convert XML file to HL7");
+        String message = "";
 
         try (InputStream is = getClass().getClassLoader().getResourceAsStream("sample_xml_dts1.xml")) {
 
@@ -54,7 +55,7 @@ public class XmlHL7ConversionController {
 
             NBSNNDIntermediaryMessage nbsnndIntermediaryMessage = (NBSNNDIntermediaryMessage) unmarshaller.unmarshal(is);
 
-            hl7MessageBuilder.parseXml(nbsnndIntermediaryMessage);
+            message = hl7MessageBuilder.parseXml(nbsnndIntermediaryMessage);
 
         } catch (Exception e) {
             log.error("Exception occurred while parsing/processing NBSNNDMessage xml file", e);
@@ -62,6 +63,6 @@ public class XmlHL7ConversionController {
                     .body("Failed to convert XML to HL7: " + e.getMessage());
         }
 
-        return ResponseEntity.ok("HL7 message generated");
+        return ResponseEntity.ok(message);
     }
 }

@@ -66,6 +66,16 @@ public class XmlService implements IXmlService {
                 netssPersistModel.setRecordStatusCd("ACTIVE");
             }
 
+            NetssTransportQOut netssTransportQOut = new NetssTransportQOut();
+            netssTransportQOut.setRecordStatusCd("Individual Case");
+            netssTransportQOut.setMmwrYear(Short.valueOf(netssPersistModel.getVMessageYr()));
+            netssTransportQOut.setMmwrWeek(Short.valueOf(netssPersistModel.getVMessageWeek()));
+            netssTransportQOut.setNetssCaseId(netssPersistModel.getVCaseReptId());
+            netssTransportQOut.setPhcLocalId(netssTransportQOut.getPhcLocalId());
+            netssTransportQOut.setNotificationLocalId(netssTransportQOut.getNotificationLocalId());
+            netssTransportQOut.setPayload(netssSummary);
+            netssTransportQOut.setRecordStatusCd(netssPersistModel.getRecordStatusCd());
+            netssTransportQOutRepository.save(netssTransportQOut);
         } catch (Exception e) {
             cnTraportqOutRepository.updateStatus(cnTransportqOut.getCnTransportqOutUid(), "STD_ERROR");
             throw new StdProcessorServiceException("Error While Processing NETSS", e);

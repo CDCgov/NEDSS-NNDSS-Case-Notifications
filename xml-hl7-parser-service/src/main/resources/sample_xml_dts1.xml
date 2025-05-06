@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<NBS_NND_Intermediary_Message xmlns="http://www.cdc.gov/NEDSS" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" encoding="UTF-8"?><NBS_NND_Intermediary_Message xmlns="http://www.cdc.gov/NEDSS" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <MessageElement>
         <questionIdentifierNND xsi:nil="true"/>
         <questionLabelNND xsi:nil="true"/>
@@ -11,7 +10,7 @@
         <dataElement>
             <questionDataTypeNND>ST</questionDataTypeNND>
             <stDataType>
-                <stringData>NOT10110497GA01</stringData>
+                <stringData>NOT10105190GA01</stringData>
             </stDataType>
         </dataElement>
     </MessageElement>
@@ -41,7 +40,7 @@
         <dataElement>
             <questionDataTypeNND>ST</questionDataTypeNND>
             <stDataType>
-                <stringData>Hepatitis_MMG_V1.0</stringData>
+                <stringData>STD_MMG_V1.0</stringData>
             </stDataType>
         </dataElement>
     </MessageElement>
@@ -56,7 +55,7 @@
         <dataElement>
             <questionDataTypeNND>ID</questionDataTypeNND>
             <idDataType>
-                <idCodedValue>X</idCodedValue>
+                <idCodedValue>C</idCodedValue>
             </idDataType>
         </dataElement>
     </MessageElement>
@@ -71,7 +70,7 @@
         <dataElement>
             <questionDataTypeNND>TS</questionDataTypeNND>
             <tsDataType>
-                <time>2024-09-18T15:21:56.667Z</time>
+                <time>2024-08-28T23:28:28.333Z</time>
             </tsDataType>
         </dataElement>
     </MessageElement>
@@ -86,23 +85,48 @@
         <dataElement>
             <questionDataTypeNND>TS</questionDataTypeNND>
             <tsDataType>
-                <time>2025-05-03T00:00:13.027Z</time>
+                <time>2025-01-25T00:01:00.897Z</time>
             </tsDataType>
         </dataElement>
     </MessageElement>
     <MessageElement>
-        <questionIdentifierNND>DEM113</questionIdentifierNND>
-        <questionLabelNND>Subjects Sex</questionLabelNND>
-        <questionOID>2.16.840.1.114222.4.5.232</questionOID>
-        <questionIdentifier>DEM113</questionIdentifier>
-        <questionLabel>Current Sex</questionLabel>
-        <hl7SegmentField>PID-8.0</hl7SegmentField>
-        <orderGroupId>1</orderGroupId>
+        <questionIdentifierNND>410478005</questionIdentifierNND>
+        <questionLabelNND>Ocular Manifestations</questionLabelNND>
+        <questionOID>2.16.840.1.113883.6.96</questionOID>
+        <questionIdentifier>410478005</questionIdentifier>
+        <questionLabel>Ocular Manifestations</questionLabel>
+        <hl7SegmentField>OBX-3.0</hl7SegmentField>
+        <orderGroupId>2</orderGroupId>
         <dataElement>
-            <questionDataTypeNND>IS</questionDataTypeNND>
-            <isDataType>
-                <isCodedValue>M</isCodedValue>
-            </isDataType>
+            <questionDataTypeNND>CWE</questionDataTypeNND>
+            <cweDataType>
+                <cweCodedValue>PHC1476</cweCodedValue>
+                <cweCodedValueDescription>Yes, Likely</cweCodedValueDescription>
+                <cweCodedValueCodingSystem>2.16.840.1.114222.4.5.274</cweCodedValueCodingSystem>
+                <cweLocalCodedValue xsi:nil="true"/>
+                <cweLocalCodedValueDescription xsi:nil="true"/>
+                <cweLocalCodedValueCodingSystem xsi:nil="true"/>
+            </cweDataType>
+        </dataElement>
+    </MessageElement>
+    <MessageElement>
+        <questionIdentifierNND>72083004</questionIdentifierNND>
+        <questionLabelNND>Late Clinical Manifestations</questionLabelNND>
+        <questionOID>2.16.840.1.113883.6.96</questionOID>
+        <questionIdentifier>72083004</questionIdentifier>
+        <questionLabel>Late Clinical Manifestations</questionLabel>
+        <hl7SegmentField>OBX-3.0</hl7SegmentField>
+        <orderGroupId>2</orderGroupId>
+        <dataElement>
+            <questionDataTypeNND>CWE</questionDataTypeNND>
+            <cweDataType>
+                <cweCodedValue>PHC1476</cweCodedValue>
+                <cweCodedValueDescription>Yes, Likely</cweCodedValueDescription>
+                <cweCodedValueCodingSystem>2.16.840.1.114222.4.5.274</cweCodedValueCodingSystem>
+                <cweLocalCodedValue xsi:nil="true"/>
+                <cweLocalCodedValueDescription xsi:nil="true"/>
+                <cweLocalCodedValueCodingSystem xsi:nil="true"/>
+            </cweDataType>
         </dataElement>
     </MessageElement>
     <MessageElement>
@@ -116,68 +140,8 @@
         <dataElement>
             <questionDataTypeNND>TS</questionDataTypeNND>
             <tsDataType>
-                <time>1939-09-07T00:00:00.000Z</time>
+                <time>1942-12-14T00:00:00.000Z</time>
             </tsDataType>
-        </dataElement>
-    </MessageElement>
-    <MessageElement>
-        <questionIdentifierNND>78746-5</questionIdentifierNND>
-        <questionLabelNND>Country of Birth</questionLabelNND>
-        <questionOID>2.16.840.1.113883.6.1</questionOID>
-        <questionIdentifier>DEM126</questionIdentifier>
-        <questionLabel>Country of Birth</questionLabel>
-        <hl7SegmentField>OBX-3.0</hl7SegmentField>
-        <orderGroupId>2</orderGroupId>
-        <dataElement>
-            <questionDataTypeNND>CWE</questionDataTypeNND>
-            <cweDataType>
-                <cweCodedValue>North Destinyhaven</cweCodedValue>
-                <cweCodedValueDescription>North Destinyhaven</cweCodedValueDescription>
-                <cweCodedValueCodingSystem>2.16.840.1.114222.4.5.1</cweCodedValueCodingSystem>
-                <cweLocalCodedValue xsi:nil="true"/>
-                <cweLocalCodedValueDescription xsi:nil="true"/>
-                <cweLocalCodedValueCodingSystem xsi:nil="true"/>
-            </cweDataType>
-        </dataElement>
-    </MessageElement>
-    <MessageElement>
-        <questionIdentifierNND>DEM152</questionIdentifierNND>
-        <questionLabelNND>Race Category</questionLabelNND>
-        <questionOID>2.16.840.1.114222.4.5.232</questionOID>
-        <questionIdentifier>DEM152</questionIdentifier>
-        <questionLabel>Race</questionLabel>
-        <hl7SegmentField>PID-10.0</hl7SegmentField>
-        <orderGroupId>1</orderGroupId>
-        <dataElement>
-            <questionDataTypeNND>CE</questionDataTypeNND>
-            <ceDataType>
-                <ceCodedValue>2028-9</ceCodedValue>
-                <ceCodedValueDescription>Asian</ceCodedValueDescription>
-                <ceCodedValueCodingSystem>2.16.840.1.113883.6.238</ceCodedValueCodingSystem>
-                <ceLocalCodedValue xsi:nil="true"/>
-                <ceLocalCodedValueDescription xsi:nil="true"/>
-                <ceLocalCodedValueCodingSystem xsi:nil="true"/>
-            </ceDataType>
-        </dataElement>
-    </MessageElement>
-    <MessageElement>
-        <questionIdentifierNND>DEM155</questionIdentifierNND>
-        <questionLabelNND>Ethnic Group</questionLabelNND>
-        <questionOID>2.16.840.1.114222.4.5.232</questionOID>
-        <questionIdentifier>DEM155</questionIdentifier>
-        <questionLabel>Ethnicity</questionLabel>
-        <hl7SegmentField>PID-22.0</hl7SegmentField>
-        <orderGroupId>1</orderGroupId>
-        <dataElement>
-            <questionDataTypeNND>CE</questionDataTypeNND>
-            <ceDataType>
-                <ceCodedValue>UNK</ceCodedValue>
-                <ceCodedValueDescription>unknown</ceCodedValueDescription>
-                <ceCodedValueCodingSystem>2.16.840.1.113883.5.1008</ceCodedValueCodingSystem>
-                <ceLocalCodedValue xsi:nil="true"/>
-                <ceLocalCodedValueDescription xsi:nil="true"/>
-                <ceLocalCodedValueCodingSystem xsi:nil="true"/>
-            </ceDataType>
         </dataElement>
     </MessageElement>
     <MessageElement>
@@ -191,8 +155,8 @@
         <dataElement>
             <questionDataTypeNND>CWE</questionDataTypeNND>
             <cweDataType>
-                <cweCodedValue>18</cweCodedValue>
-                <cweCodedValueDescription>Indiana</cweCodedValueDescription>
+                <cweCodedValue>26</cweCodedValue>
+                <cweCodedValueDescription>Michigan</cweCodedValueDescription>
                 <cweCodedValueCodingSystem>2.16.840.1.113883.6.92</cweCodedValueCodingSystem>
                 <cweLocalCodedValue xsi:nil="true"/>
                 <cweLocalCodedValueDescription xsi:nil="true"/>
@@ -226,7 +190,7 @@
         <dataElement>
             <questionDataTypeNND>CX</questionDataTypeNND>
             <cxDataType>
-                <cxData>PSN10159998GA01</cxData>
+                <cxData>PSN10147235GA01</cxData>
             </cxDataType>
         </dataElement>
     </MessageElement>
@@ -256,13 +220,33 @@
         <dataElement>
             <questionDataTypeNND>DT</questionDataTypeNND>
             <dtDataType>
-                <date>2024-09-18Z</date>
+                <date>2024-08-28Z</date>
             </dtDataType>
         </dataElement>
     </MessageElement>
     <MessageElement>
+        <questionIdentifierNND>48766-0</questionIdentifierNND>
+        <questionLabelNND>Reporting Source Type Code</questionLabelNND>
+        <questionOID>2.16.840.1.113883.6.1</questionOID>
+        <questionIdentifier>INV112</questionIdentifier>
+        <questionLabel>Reporting Source Type</questionLabel>
+        <hl7SegmentField>OBX-3.0</hl7SegmentField>
+        <orderGroupId>2</orderGroupId>
+        <dataElement>
+            <questionDataTypeNND>CWE</questionDataTypeNND>
+            <cweDataType>
+                <cweCodedValue>PHC1226</cweCodedValue>
+                <cweCodedValueDescription>Mental Health Provider</cweCodedValueDescription>
+                <cweCodedValueCodingSystem>2.16.840.1.114222.4.5.274</cweCodedValueCodingSystem>
+                <cweLocalCodedValue xsi:nil="true"/>
+                <cweLocalCodedValueDescription xsi:nil="true"/>
+                <cweLocalCodedValueCodingSystem xsi:nil="true"/>
+            </cweDataType>
+        </dataElement>
+    </MessageElement>
+    <MessageElement>
         <questionIdentifierNND>77979-3</questionIdentifierNND>
-        <questionLabelNND>Case Investigation Start Date</questionLabelNND>
+        <questionLabelNND>Investigation Start Date</questionLabelNND>
         <questionOID>2.16.840.1.113883.6.1</questionOID>
         <questionIdentifier>INV147</questionIdentifier>
         <questionLabel>Investigation Start Date</questionLabel>
@@ -271,8 +255,68 @@
         <dataElement>
             <questionDataTypeNND>DT</questionDataTypeNND>
             <dtDataType>
-                <date>2024-09-18Z</date>
+                <date>2024-08-28Z</date>
             </dtDataType>
+        </dataElement>
+    </MessageElement>
+    <MessageElement>
+        <questionIdentifierNND>77980-1</questionIdentifierNND>
+        <questionLabelNND>Case Outbreak Indicator</questionLabelNND>
+        <questionOID>2.16.840.1.113883.6.1</questionOID>
+        <questionIdentifier>INV150</questionIdentifier>
+        <questionLabel>Is this case part of an outbreak?</questionLabel>
+        <hl7SegmentField>OBX-3.0</hl7SegmentField>
+        <orderGroupId>2</orderGroupId>
+        <dataElement>
+            <questionDataTypeNND>CWE</questionDataTypeNND>
+            <cweDataType>
+                <cweCodedValue>N</cweCodedValue>
+                <cweCodedValueDescription>No</cweCodedValueDescription>
+                <cweCodedValueCodingSystem>2.16.840.1.113883.12.136</cweCodedValueCodingSystem>
+                <cweLocalCodedValue xsi:nil="true"/>
+                <cweLocalCodedValueDescription xsi:nil="true"/>
+                <cweLocalCodedValueCodingSystem xsi:nil="true"/>
+            </cweDataType>
+        </dataElement>
+    </MessageElement>
+    <MessageElement>
+        <questionIdentifierNND>77989-2</questionIdentifierNND>
+        <questionLabelNND>Transmission Mode</questionLabelNND>
+        <questionOID>2.16.840.1.113883.6.1</questionOID>
+        <questionIdentifier>INV157</questionIdentifier>
+        <questionLabel>Transmission Mode</questionLabel>
+        <hl7SegmentField>OBX-3.0</hl7SegmentField>
+        <orderGroupId>2</orderGroupId>
+        <dataElement>
+            <questionDataTypeNND>CWE</questionDataTypeNND>
+            <cweDataType>
+                <cweCodedValue>416086007</cweCodedValue>
+                <cweCodedValueDescription>Food-borne transmission</cweCodedValueDescription>
+                <cweCodedValueCodingSystem>2.16.840.1.113883.6.96</cweCodedValueCodingSystem>
+                <cweLocalCodedValue xsi:nil="true"/>
+                <cweLocalCodedValueDescription xsi:nil="true"/>
+                <cweLocalCodedValueCodingSystem xsi:nil="true"/>
+            </cweDataType>
+        </dataElement>
+    </MessageElement>
+    <MessageElement>
+        <questionIdentifierNND>INV159</questionIdentifierNND>
+        <questionLabelNND>Detection Method</questionLabelNND>
+        <questionOID>2.16.840.1.114222.4.5.232</questionOID>
+        <questionIdentifier>INV159</questionIdentifier>
+        <questionLabel>Detection Method</questionLabel>
+        <hl7SegmentField>OBX-3.0</hl7SegmentField>
+        <orderGroupId>2</orderGroupId>
+        <dataElement>
+            <questionDataTypeNND>CWE</questionDataTypeNND>
+            <cweDataType>
+                <cweCodedValue>20135006</cweCodedValue>
+                <cweCodedValueDescription>Screening</cweCodedValueDescription>
+                <cweCodedValueCodingSystem>2.16.840.1.113883.6.96</cweCodedValueCodingSystem>
+                <cweLocalCodedValue xsi:nil="true"/>
+                <cweLocalCodedValueDescription xsi:nil="true"/>
+                <cweLocalCodedValueCodingSystem xsi:nil="true"/>
+            </cweDataType>
         </dataElement>
     </MessageElement>
     <MessageElement>
@@ -286,9 +330,9 @@
         <dataElement>
             <questionDataTypeNND>CWE</questionDataTypeNND>
             <cweDataType>
-                <cweCodedValue>PHC178</cweCodedValue>
-                <cweCodedValueDescription>Not a Case</cweCodedValueDescription>
-                <cweCodedValueCodingSystem>2.16.840.1.114222.4.5.274</cweCodedValueCodingSystem>
+                <cweCodedValue>410605003</cweCodedValue>
+                <cweCodedValueDescription>Confirmed</cweCodedValueDescription>
+                <cweCodedValueCodingSystem>2.16.840.1.113883.6.96</cweCodedValueCodingSystem>
                 <cweLocalCodedValue xsi:nil="true"/>
                 <cweLocalCodedValueDescription xsi:nil="true"/>
                 <cweLocalCodedValueCodingSystem xsi:nil="true"/>
@@ -307,7 +351,7 @@
             <questionDataTypeNND>SN</questionDataTypeNND>
             <snDataType>
                 <comparator/>
-                <num1>38</num1>
+                <num1>35</num1>
                 <separatorSuffix/>
                 <num2/>
             </snDataType>
@@ -339,7 +383,7 @@
         <dataElement>
             <questionDataTypeNND>ST</questionDataTypeNND>
             <stDataType>
-                <stringData>CAS10112497GA01</stringData>
+                <stringData>CAS10107210GA01</stringData>
             </stDataType>
         </dataElement>
     </MessageElement>
@@ -348,14 +392,14 @@
         <questionLabelNND>Condition Code</questionLabelNND>
         <questionOID>2.16.840.1.114222.4.5.232</questionOID>
         <questionIdentifier>INV169</questionIdentifier>
-        <questionLabel>Hidden Condition</questionLabel>
+        <questionLabel>Condition</questionLabel>
         <hl7SegmentField>OBR-31.0</hl7SegmentField>
         <orderGroupId>2</orderGroupId>
         <dataElement>
             <questionDataTypeNND>CE</questionDataTypeNND>
             <ceDataType>
-                <ceCodedValue>10105</ceCodedValue>
-                <ceCodedValueDescription>Hepatitis B virus infection, Chronic</ceCodedValueDescription>
+                <ceCodedValue>10312</ceCodedValue>
+                <ceCodedValueDescription>Syphilis, secondary</ceCodedValueDescription>
                 <ceCodedValueCodingSystem>2.16.840.1.114222.4.5.277</ceCodedValueCodingSystem>
                 <ceLocalCodedValue xsi:nil="true"/>
                 <ceLocalCodedValueDescription xsi:nil="true"/>
@@ -404,7 +448,7 @@
         <dataElement>
             <questionDataTypeNND>SN_WITH_UNIT</questionDataTypeNND>
             <snunitDataType>
-                <num1>85</num1>
+                <num1>81</num1>
                 <ceCodedValue>a</ceCodedValue>
                 <ceCodedValueDescription>year [time]</ceCodedValueDescription>
                 <ceCodedValueCodingSystem>2.16.840.1.113883.6.8</ceCodedValueCodingSystem>
@@ -415,33 +459,78 @@
         </dataElement>
     </MessageElement>
     <MessageElement>
-        <questionIdentifierNND xsi:nil="true"/>
-        <questionLabelNND>Universal ID Type</questionLabelNND>
-        <questionOID xsi:nil="true"/>
-        <questionIdentifier>MSG100</questionIdentifier>
-        <questionLabel>Universal ID Type</questionLabel>
-        <hl7SegmentField>MSH-6.3</hl7SegmentField>
-        <orderGroupId xsi:nil="true"/>
+        <questionIdentifierNND>77988-4</questionIdentifierNND>
+        <questionLabelNND>Binational Reporting Criteria</questionLabelNND>
+        <questionOID>2.16.840.1.113883.6.1</questionOID>
+        <questionIdentifier>INV515</questionIdentifier>
+        <questionLabel>Binational Reporting Criteria</questionLabel>
+        <hl7SegmentField>OBX-3.0</hl7SegmentField>
+        <orderGroupId>2</orderGroupId>
         <dataElement>
-            <questionDataTypeNND>ID</questionDataTypeNND>
-            <idDataType>
-                <idCodedValue>ISO</idCodedValue>
-            </idDataType>
+            <questionDataTypeNND>CWE</questionDataTypeNND>
+            <cweDataType>
+                <cweCodedValue>PHC1139</cweCodedValue>
+                <cweCodedValueDescription>Has case contacts in or from Mexico or Canada</cweCodedValueDescription>
+                <cweCodedValueCodingSystem>2.16.840.1.114222.4.5.274</cweCodedValueCodingSystem>
+                <cweLocalCodedValue xsi:nil="true"/>
+                <cweLocalCodedValueDescription xsi:nil="true"/>
+                <cweLocalCodedValueCodingSystem xsi:nil="true"/>
+            </cweDataType>
         </dataElement>
     </MessageElement>
     <MessageElement>
-        <questionIdentifierNND xsi:nil="true"/>
-        <questionLabelNND>Universal ID Type</questionLabelNND>
-        <questionOID xsi:nil="true"/>
-        <questionIdentifier>MSG100</questionIdentifier>
-        <questionLabel>Universal ID Type</questionLabel>
-        <hl7SegmentField>MSH-3.3</hl7SegmentField>
-        <orderGroupId xsi:nil="true"/>
+        <questionIdentifierNND>77988-4</questionIdentifierNND>
+        <questionLabelNND>Binational Reporting Criteria</questionLabelNND>
+        <questionOID>2.16.840.1.113883.6.1</questionOID>
+        <questionIdentifier>INV515</questionIdentifier>
+        <questionLabel>Binational Reporting Criteria</questionLabel>
+        <hl7SegmentField>OBX-3.0</hl7SegmentField>
+        <orderGroupId>2</orderGroupId>
         <dataElement>
-            <questionDataTypeNND>ID</questionDataTypeNND>
-            <idDataType>
-                <idCodedValue>ISO</idCodedValue>
-            </idDataType>
+            <questionDataTypeNND>CWE</questionDataTypeNND>
+            <cweDataType>
+                <cweCodedValue>PHC1141</cweCodedValue>
+                <cweCodedValueDescription>Other situations that may require binational notification or coordination of response</cweCodedValueDescription>
+                <cweCodedValueCodingSystem>2.16.840.1.114222.4.5.274</cweCodedValueCodingSystem>
+                <cweLocalCodedValue xsi:nil="true"/>
+                <cweLocalCodedValueDescription xsi:nil="true"/>
+                <cweLocalCodedValueCodingSystem xsi:nil="true"/>
+            </cweDataType>
+        </dataElement>
+    </MessageElement>
+    <MessageElement>
+        <questionIdentifierNND>77988-4</questionIdentifierNND>
+        <questionLabelNND>Binational Reporting Criteria</questionLabelNND>
+        <questionOID>2.16.840.1.113883.6.1</questionOID>
+        <questionIdentifier>INV515</questionIdentifier>
+        <questionLabel>Binational Reporting Criteria</questionLabel>
+        <hl7SegmentField>OBX-3.0</hl7SegmentField>
+        <orderGroupId>2</orderGroupId>
+        <dataElement>
+            <questionDataTypeNND>CWE</questionDataTypeNND>
+            <cweDataType>
+                <cweCodedValue>PHC1137</cweCodedValue>
+                <cweCodedValueDescription>Potentially exposed while in Mexico or Canada</cweCodedValueDescription>
+                <cweCodedValueCodingSystem>2.16.840.1.114222.4.5.274</cweCodedValueCodingSystem>
+                <cweLocalCodedValue xsi:nil="true"/>
+                <cweLocalCodedValueDescription xsi:nil="true"/>
+                <cweLocalCodedValueCodingSystem xsi:nil="true"/>
+            </cweDataType>
+        </dataElement>
+    </MessageElement>
+    <MessageElement>
+        <questionIdentifierNND>77999-1</questionIdentifierNND>
+        <questionLabelNND>Comment</questionLabelNND>
+        <questionOID>2.16.840.1.113883.6.1</questionOID>
+        <questionIdentifier>INV886</questionIdentifier>
+        <questionLabel>Notification Comments to CDC</questionLabel>
+        <hl7SegmentField>OBX-3.0</hl7SegmentField>
+        <orderGroupId>2</orderGroupId>
+        <dataElement>
+            <questionDataTypeNND>TX</questionDataTypeNND>
+            <txDataType>
+                <textData>werewr</textData>
+            </txDataType>
         </dataElement>
     </MessageElement>
     <MessageElement>
@@ -451,22 +540,7 @@
         <questionIdentifier>MSG100</questionIdentifier>
         <questionLabel>Universal ID Type</questionLabel>
         <hl7SegmentField>OBR-3.4</hl7SegmentField>
-        <orderGroupId>2</orderGroupId>
-        <dataElement>
-            <questionDataTypeNND>ID</questionDataTypeNND>
-            <idDataType>
-                <idCodedValue>ISO</idCodedValue>
-            </idDataType>
-        </dataElement>
-    </MessageElement>
-    <MessageElement>
-        <questionIdentifierNND xsi:nil="true"/>
-        <questionLabelNND>Universal ID Type</questionLabelNND>
-        <questionOID xsi:nil="true"/>
-        <questionIdentifier>MSG100</questionIdentifier>
-        <questionLabel>Universal ID Type</questionLabel>
-        <hl7SegmentField>MSH-5.3</hl7SegmentField>
-        <orderGroupId xsi:nil="true"/>
+        <orderGroupId>1</orderGroupId>
         <dataElement>
             <questionDataTypeNND>ID</questionDataTypeNND>
             <idDataType>
@@ -496,22 +570,7 @@
         <questionIdentifier>MSG100</questionIdentifier>
         <questionLabel>Universal ID Type</questionLabel>
         <hl7SegmentField>MSH-21.4</hl7SegmentField>
-        <orderGroupId>1</orderGroupId>
-        <dataElement>
-            <questionDataTypeNND>ID</questionDataTypeNND>
-            <idDataType>
-                <idCodedValue>ISO</idCodedValue>
-            </idDataType>
-        </dataElement>
-    </MessageElement>
-    <MessageElement>
-        <questionIdentifierNND xsi:nil="true"/>
-        <questionLabelNND>Universal ID Type</questionLabelNND>
-        <questionOID xsi:nil="true"/>
-        <questionIdentifier>MSG100</questionIdentifier>
-        <questionLabel>Universal ID Type</questionLabel>
-        <hl7SegmentField>OBR-3.4</hl7SegmentField>
-        <orderGroupId>1</orderGroupId>
+        <orderGroupId>2</orderGroupId>
         <dataElement>
             <questionDataTypeNND>ID</questionDataTypeNND>
             <idDataType>
@@ -540,8 +599,68 @@
         <questionOID xsi:nil="true"/>
         <questionIdentifier>MSG100</questionIdentifier>
         <questionLabel>Universal ID Type</questionLabel>
-        <hl7SegmentField>MSH-21.4</hl7SegmentField>
+        <hl7SegmentField>MSH-6.3</hl7SegmentField>
+        <orderGroupId xsi:nil="true"/>
+        <dataElement>
+            <questionDataTypeNND>ID</questionDataTypeNND>
+            <idDataType>
+                <idCodedValue>ISO</idCodedValue>
+            </idDataType>
+        </dataElement>
+    </MessageElement>
+    <MessageElement>
+        <questionIdentifierNND xsi:nil="true"/>
+        <questionLabelNND>Universal ID Type</questionLabelNND>
+        <questionOID xsi:nil="true"/>
+        <questionIdentifier>MSG100</questionIdentifier>
+        <questionLabel>Universal ID Type</questionLabel>
+        <hl7SegmentField>OBR-3.4</hl7SegmentField>
         <orderGroupId>2</orderGroupId>
+        <dataElement>
+            <questionDataTypeNND>ID</questionDataTypeNND>
+            <idDataType>
+                <idCodedValue>ISO</idCodedValue>
+            </idDataType>
+        </dataElement>
+    </MessageElement>
+    <MessageElement>
+        <questionIdentifierNND xsi:nil="true"/>
+        <questionLabelNND>Universal ID Type</questionLabelNND>
+        <questionOID xsi:nil="true"/>
+        <questionIdentifier>MSG100</questionIdentifier>
+        <questionLabel>Universal ID Type</questionLabel>
+        <hl7SegmentField>MSH-3.3</hl7SegmentField>
+        <orderGroupId xsi:nil="true"/>
+        <dataElement>
+            <questionDataTypeNND>ID</questionDataTypeNND>
+            <idDataType>
+                <idCodedValue>ISO</idCodedValue>
+            </idDataType>
+        </dataElement>
+    </MessageElement>
+    <MessageElement>
+        <questionIdentifierNND xsi:nil="true"/>
+        <questionLabelNND>Universal ID Type</questionLabelNND>
+        <questionOID xsi:nil="true"/>
+        <questionIdentifier>MSG100</questionIdentifier>
+        <questionLabel>Universal ID Type</questionLabel>
+        <hl7SegmentField>MSH-5.3</hl7SegmentField>
+        <orderGroupId xsi:nil="true"/>
+        <dataElement>
+            <questionDataTypeNND>ID</questionDataTypeNND>
+            <idDataType>
+                <idCodedValue>ISO</idCodedValue>
+            </idDataType>
+        </dataElement>
+    </MessageElement>
+    <MessageElement>
+        <questionIdentifierNND xsi:nil="true"/>
+        <questionLabelNND>Universal ID Type</questionLabelNND>
+        <questionOID xsi:nil="true"/>
+        <questionIdentifier>MSG100</questionIdentifier>
+        <questionLabel>Universal ID Type</questionLabel>
+        <hl7SegmentField>MSH-21.4</hl7SegmentField>
+        <orderGroupId>1</orderGroupId>
         <dataElement>
             <questionDataTypeNND>ID</questionDataTypeNND>
             <idDataType>
@@ -1018,6 +1137,66 @@
                 <cweCodedValue>13</cweCodedValue>
                 <cweCodedValueDescription>Georgia</cweCodedValueDescription>
                 <cweCodedValueCodingSystem>2.16.840.1.113883.6.92</cweCodedValueCodingSystem>
+                <cweLocalCodedValue xsi:nil="true"/>
+                <cweLocalCodedValueDescription xsi:nil="true"/>
+                <cweLocalCodedValueCodingSystem xsi:nil="true"/>
+            </cweDataType>
+        </dataElement>
+    </MessageElement>
+    <MessageElement>
+        <questionIdentifierNND>77965-2</questionIdentifierNND>
+        <questionLabelNND>Immediate National Notifiable Condition</questionLabelNND>
+        <questionOID>2.16.840.1.113883.6.1</questionOID>
+        <questionIdentifier>NOT120</questionIdentifier>
+        <questionLabel>Immediate National Notifiable Condition</questionLabel>
+        <hl7SegmentField>OBX-3.0</hl7SegmentField>
+        <orderGroupId>2</orderGroupId>
+        <dataElement>
+            <questionDataTypeNND>CWE</questionDataTypeNND>
+            <cweDataType>
+                <cweCodedValue>Y</cweCodedValue>
+                <cweCodedValueDescription>Yes</cweCodedValueDescription>
+                <cweCodedValueCodingSystem>2.16.840.1.113883.12.136</cweCodedValueCodingSystem>
+                <cweLocalCodedValue xsi:nil="true"/>
+                <cweLocalCodedValueDescription xsi:nil="true"/>
+                <cweLocalCodedValueCodingSystem xsi:nil="true"/>
+            </cweDataType>
+        </dataElement>
+    </MessageElement>
+    <MessageElement>
+        <questionIdentifierNND>PHC1472</questionIdentifierNND>
+        <questionLabelNND>Otic Manifestations</questionLabelNND>
+        <questionOID>2.16.840.1.114222.4.5.274</questionOID>
+        <questionIdentifier>PHC1472</questionIdentifier>
+        <questionLabel>Otic Manifestations</questionLabel>
+        <hl7SegmentField>OBX-3.0</hl7SegmentField>
+        <orderGroupId>2</orderGroupId>
+        <dataElement>
+            <questionDataTypeNND>CWE</questionDataTypeNND>
+            <cweDataType>
+                <cweCodedValue>N</cweCodedValue>
+                <cweCodedValueDescription>No</cweCodedValueDescription>
+                <cweCodedValueCodingSystem>2.16.840.1.113883.12.136</cweCodedValueCodingSystem>
+                <cweLocalCodedValue xsi:nil="true"/>
+                <cweLocalCodedValueDescription xsi:nil="true"/>
+                <cweLocalCodedValueCodingSystem xsi:nil="true"/>
+            </cweDataType>
+        </dataElement>
+    </MessageElement>
+    <MessageElement>
+        <questionIdentifierNND>STD102</questionIdentifierNND>
+        <questionLabelNND>Neurologic Manifestations</questionLabelNND>
+        <questionOID>2.16.840.1.114222.4.5.232</questionOID>
+        <questionIdentifier>STD102</questionIdentifier>
+        <questionLabel>Neurological Manifestations</questionLabel>
+        <hl7SegmentField>OBX-3.0</hl7SegmentField>
+        <orderGroupId>2</orderGroupId>
+        <dataElement>
+            <questionDataTypeNND>CWE</questionDataTypeNND>
+            <cweDataType>
+                <cweCodedValue>N</cweCodedValue>
+                <cweCodedValueDescription>No</cweCodedValueDescription>
+                <cweCodedValueCodingSystem>2.16.840.1.113883.12.136</cweCodedValueCodingSystem>
                 <cweLocalCodedValue xsi:nil="true"/>
                 <cweLocalCodedValueDescription xsi:nil="true"/>
                 <cweLocalCodedValueCodingSystem xsi:nil="true"/>

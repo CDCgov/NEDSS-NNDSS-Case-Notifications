@@ -22,6 +22,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -130,7 +132,7 @@ public class HL7MessageBuilder {
     private static final Logger logger = LoggerFactory.getLogger(HL7MessageBuilder.class);
 
     // TODO - Extract methods to helper classes
-    public void parseXml(NBSNNDIntermediaryMessage nbsnndIntermediaryMessage) throws HL7Exception {
+    public String parseXml(NBSNNDIntermediaryMessage nbsnndIntermediaryMessage) throws HL7Exception {
 //        nbsnndIntermediaryMessage = nbsnndIntermediaryMessage;
         ORU_R01 oruMessage = new ORU_R01();
         MSH msh = oruMessage.getMSH();
@@ -294,7 +296,7 @@ public class HL7MessageBuilder {
                     mapToRepeatToMultiNND(messageElement, obx2Inc, oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(0));
                 }
             }
-             if ((messageElement.getHl7SegmentField()).equals("OBX-3.0") || (messageElement.getHl7SegmentField()).equals("OBX-5.9") && (messageElement.getQuestionMap()).contains("|")) {
+             if ((messageElement.getHl7SegmentField().equals("OBX-3.0") || messageElement.getHl7SegmentField().equals("OBX-5.9")) && messageElement.getQuestionMap() != null && messageElement.getQuestionMap().contains("|")) {
                 mapToQuestionMap(messageElement, obx2Inc, oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(0));
             }
 
@@ -493,13 +495,14 @@ public class HL7MessageBuilder {
         }
 
         logger.info("Final message: {} ", oruMessage.getMessage());
-        System.err.println("Final message...: " + oruMessage.getMessage());
+        System.err.println("Final message...: " + oruMessage);
         // based on message type
         String base64EncodedString = encodeToBase64(oruMessage.getMessage().toString());
         //based on the message type and
 //        System.err.println("Final message is..." + base64EncodedString);
 
         //TODO - connector.persistNotification(base64EncodedString,Constants.NETSS_TRANSPORT_Q_OUT_TABLE);
+        return oruMessage.toString();
     }
 
     private void mapToRepeatToMultiNND(MessageElement messageElement, int obx2Inc, ORU_R01_ORDER_OBSERVATION orderObservation) throws DataTypeException {
@@ -646,6 +649,10 @@ public class HL7MessageBuilder {
         stType.setValue(output);
         orderObservation.getOBSERVATION(1).getOBX().getObservationValue(obsCounter).setData(stType);
 
+
+//        out.OBSERVATION[1].OBX[counter].ObservationValue[obsCounter] = output;
+
+
         if (checkerNum == 0) {
             obx2Inc++;
         }
@@ -723,6 +730,7 @@ public class HL7MessageBuilder {
             ST stType = (ST) orderObservation.getOBSERVATION(1).getOBX().getObservationValue(discreteMulti.getObsValueCounter()).getData();
             stType.setValue(subStringRight);
             orderObservation.getOBSERVATION(1).getOBX().getObservationValue(discreteMulti.getObsValueCounter()).setData(stType);
+
 
 //            OBX obx = out.getOBSERVATION(1).getOBX(DiscreteMulti.counter);
 //            obx.getObservationValue(DiscreteMulti.ObsValueCounter).setValue(subStringRight);
@@ -2418,13 +2426,16 @@ public class HL7MessageBuilder {
             msh.getReceivingFacility().getUniversalID().setValue(mshFieldValue);
         }else if (mshField.startsWith("MSH-6.3")){
             mshFieldValue = messageElement.getDataElement().getIdDataType().getIdCodedValue().trim();
-            msh.getReceivingApplication().getUniversalIDType().setValue(mshFieldValue);
+            msh.getReceivingFacility().getUniversalIDType().setValue(mshFieldValue);
         }else if (mshField.startsWith("MSH-9.3")){
             mshFieldValue = messageElement.getDataElement().getIdDataType().getIdCodedValue().trim();
             msh.getMessageType().getMessageStructure().setValue(mshFieldValue);
         }else if (mshField.startsWith("MSH-10.0")){
             mshFieldValue = messageElement.getDataElement().getStDataType().getStringData().trim();
-            msh.getMessageControlID().setValue(mshFieldValue);
+            LocalDateTime now = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
+            String currentTime = now.format(formatter);
+            msh.getMessageControlID().setValue(mshFieldValue + currentTime);
         }else if (mshField.startsWith("MSH-11.1")){
             mshFieldValue = messageElement.getDataElement().getIdDataType().getIdCodedValue().trim();
             msh.getProcessingID().getProcessingID().setValue(mshFieldValue);
@@ -2433,7 +2444,6 @@ public class HL7MessageBuilder {
             msh.getVersionID().getVersionID().setValue(mshFieldValue);
         }else if (mshField.startsWith("MSH-21")){
             if (Objects.equals(messageElement.getOrderGroupId(), "1")){
-
                 switch (mshField) {
                     case "MSH-21.0" -> {
                         isSingleProfile = false;
@@ -2451,11 +2461,11 @@ public class HL7MessageBuilder {
                     }
                     case "MSH-21.3" -> {
                         String universalID = messageElement.getDataElement().getStDataType().getStringData().trim();
-                        msh.getMessageProfileIdentifier(0).getNamespaceID().setValue(universalID);
+                        msh.getMessageProfileIdentifier(0).getUniversalID().setValue(universalID);
                     }
                     case "MSH-21.4" -> {
                         String universalIDType = messageElement.getDataElement().getIdDataType().getIdCodedValue().trim();
-                        msh.getMessageProfileIdentifier(0).getNamespaceID().setValue(universalIDType);
+                        msh.getMessageProfileIdentifier(0).getUniversalIDType().setValue(universalIDType);
                     }
                 }
             }else if (Objects.equals(messageElement.getOrderGroupId(), "2")){
@@ -2491,6 +2501,10 @@ public class HL7MessageBuilder {
                 msh.getMessageProfileIdentifier(1).getUniversalIDType().setValue(universalIDTypeGroup2);
             }
         }
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss.SSS");
+        String currentTime = now.format(formatter);
+        msh.getDateTimeOfMessage().getTime().setValue(currentTime);
     }
     /**
      * Processes each field of the PID segment found in the  XML file.
@@ -2800,9 +2814,10 @@ public class HL7MessageBuilder {
     private void processOBXFields(MessageElement messageElement, ORU_R01_ORDER_OBSERVATION obx) throws HL7Exception {
         String obxField = messageElement.getHl7SegmentField().trim();
         String obxFieldValue = "";
-        if ((obxField.equals("OBX-3.0") || obxField.equals("OBX-5.9"))&& messageElement.getQuestionMap()!=null&& messageElement.getQuestionMap().trim().equals("|")){
-            mapToQuestionMap(messageElement, obx2Inc, obx);
-        }else if (obxField.equals("OBX-3.0")){
+//        if ((obxField.equals("OBX-3.0") || obxField.equals("OBX-5.9"))&& messageElement.getQuestionMap()!=null&& messageElement.getQuestionMap().trim().equals("|")){
+//            mapToQuestionMap(messageElement, obx2Inc, obx);
+//        }else
+        if (obxField.equals("OBX-3.0")){
             int obxOrderGroupID = 0;
             int obxInc = 1;
             int obx5ValueInc = 0;

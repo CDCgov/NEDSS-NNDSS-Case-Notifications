@@ -3,6 +3,7 @@ package gov.cdc.xmlhl7parserservice.helper;
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.DataTypeException;
 
+import ca.uhn.hl7v2.model.GenericPrimitive;
 import ca.uhn.hl7v2.model.Varies;
 import ca.uhn.hl7v2.model.v25.datatype.*;
 import ca.uhn.hl7v2.model.v25.datatype.DTM;
@@ -3102,7 +3103,8 @@ public class HL7MessageBuilder {
                 obx.getObservationSubID().setValue(messageElement.getObservationSubID().trim());
             }
 
-            if (questionIdentifierNND.equals("SN_WITH_UNIT"))
+            // 77998-3 is the SN_WITH_UNIT
+            if (questionIdentifierNND.equals("SN_WITH_UNIT") || questionIdentifierNND.equals("77998-3"))
             {
                 obx.getValueType().setValue("SN");
             }
@@ -3170,9 +3172,16 @@ public class HL7MessageBuilder {
                     num2 = messageElement.getDataElement().getSnDataType().getNum2().trim();
                 }
 
-                ST st = new ST(obx.getMessage());
-                st.setValue(comparator + "^" +	num1 + "^" + separatorSuffix + "^" + num2);
-                obx.getObservationValue(obx5ValueInc).setData(st);
+//                ST st = new ST(obx.getMessage());
+//                st.setValue(comparator + "^" +	num1 + "^" + separatorSuffix + "^" + num2);
+
+                SN sn = new SN(obx.getMessage());
+                sn.getComparator().setValue(comparator);           // SN-1 (e.g., ">")
+                sn.getNum1().setValue(String.valueOf(num1));       // SN-2
+                sn.getSeparatorSuffix().setValue(separatorSuffix); // SN-3 (optional, may be null or blank)
+                sn.getNum2().setValue(String.valueOf(num2));       // SN-4 (optional)
+
+                obx.getObservationValue(obx5ValueInc).setData(sn);
 
 
                 if (messageElement.getDataElement().getQuestionDataTypeNND().trim().equals("SN")
@@ -3346,6 +3355,8 @@ public class HL7MessageBuilder {
                 obx.getUnits().getAlternateIdentifier().setValue(localCodedValue);
                 obx.getUnits().getAlternateText().setValue(localCodedValueDescription);
                 obx.getUnits().getNameOfAlternateCodingSystem().setValue(localCodedValueCodingSystem);
+
+                logger.info("TEST {}", obx.getMessage());
             }
 
             // MapToSpCXType
@@ -3580,17 +3591,19 @@ public class HL7MessageBuilder {
                     }
                     else
                     {
+                        CWE cwe = new CWE(obx.getMessage());
+                        cwe.getIdentifier().setValue(codedValue);                     // OBX-5.1
+                        cwe.getText().setValue(codedValueDescription);               // OBX-5.2
+                        cwe.getNameOfCodingSystem().setValue(codedValueCodingSystem); // OBX-5.3
 
-                        String result = codedValue + "^" +
-                                codedValueDescription + "^" +
-                                codedValueCodingSystem + "^" +
-                                localCodedValue + "^" +
-                                localCodedValueDescription + "^" +
-                                localCodedValueCodingSystem + "^^^" +
-                                originalText;
-                        ST st = new ST(obx.getMessage());
-                        st.setValue(result);
-                        obx.getObservationValue(obx5ValueInc).setData(st);
+                        cwe.getAlternateIdentifier().setValue(localCodedValue);       // OBX-5.4
+                        cwe.getAlternateText().setValue(localCodedValueDescription); // OBX-5.5
+                        cwe.getNameOfAlternateCodingSystem().setValue(localCodedValueCodingSystem); // OBX-5.6
+
+                        cwe.getOriginalText().setValue(originalText);                 // OBX-5.9
+
+                        obx.getObservationValue(obx5ValueInc).setData(cwe);
+
                     }
                 }
             }
@@ -3690,8 +3703,9 @@ public class HL7MessageBuilder {
                 nmDataType.setValue(messageElement.getDataElement().getNmDataType().getNum().trim());
                 obx.getObservationValue(obx5ValueInc).setData(nmDataType);
             }
+
             //Literal value "F" specified in messaging spec as ALWAYS being sent here
-            obx.getObservationSubID().setValue("F");
+            obx.getObservationResultStatus().setValue("F");
 
             String existingObservationIdentifier = obx.getObservationIdentifier().getIdentifier().toString();
             if (existingObservationIdentifier.equals("2653") ||

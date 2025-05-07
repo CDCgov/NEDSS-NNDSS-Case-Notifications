@@ -76,6 +76,18 @@ public class HL7MessageBuilder {
     private Integer identityReliabilityCodeIndex = 0;
     private Integer nk1RaceInc = 0;
 
+    String entityIdentifier2 = "";
+    String obr7 = "";
+    String OBR7DataType = "";
+    String OBR7QuestionDataTypeNND = "";
+    String reasonForStudyIdentifier2="";
+    String reasonForStudyText2="";
+    String reasonForStudyNameOfCodingSystem2="";
+    String reasonForStudyAlternateIdentifier2="";
+    String reasonForStudyAlternateText2="";
+    String reasonForStudyNameOfAlternateCodingSystem2="";
+    String nndmessageVersion="";
+
     private final HashMap<String, String> obxRepeatingElementArray = new HashMap<>();
     //Repeating block for lab
     int drugCounter = 0;
@@ -282,7 +294,7 @@ public class HL7MessageBuilder {
                 textData.setValue(value);
                 obx.getOBSERVATION(std121obxOrderGroupId).getOBX().getObservationValue(std121ObsValue).setData(textData);
                 obx.getOBSERVATION(std121obxOrderGroupId).getOBX().getObservationResultStatus().setValue("F");
-                
+
             }
 
             if(messageElement.getIndicatorCd() != null) {
@@ -397,7 +409,7 @@ public class HL7MessageBuilder {
             int obrCounter = oruMessage.getPATIENT_RESULT().getORDER_OBSERVATIONReps();
             labObrCounter = obrCounter + 1;
             int obxSubIdCounter = 1;
-            
+
             mapLabReportEventToOBR(
                     nbsnndIntermediaryMessage,
                     labReportEvent,
@@ -459,7 +471,7 @@ public class HL7MessageBuilder {
                             oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObservationSubID().setValue("");
                         }
                     }
-                    
+
                     String obxValue = oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObservationValue(0).toString();
                     String obxIdIdentifier = oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObservationIdentifier().getIdentifier().getValue();
                     ST stType = (ST) oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObservationValue(0).getData();
@@ -2728,89 +2740,112 @@ public class HL7MessageBuilder {
      */
     private void processOBRFields(MessageElement messageElement, OBR obr) throws DataTypeException {
         String obrField = messageElement.getHl7SegmentField().trim();
-        String obrFieldValue = ""; //initialize to an empty string, depends on the OBR segment field
         String orderGroupID = messageElement.getOrderGroupId();
         String questionDataTypeNND = messageElement.getDataElement().getQuestionDataTypeNND().trim();
         String questionIdentifierNND = messageElement.getQuestionIdentifierNND();
 
+
         if (obrField.startsWith("OBR-3.1")){
-            obrFieldValue = messageElement.getDataElement().getStDataType().getStringData().trim();
-            obr.getObr3_FillerOrderNumber().getEntityIdentifier().setValue(obrFieldValue);
+            entityIdentifier2 = messageElement.getDataElement().getStDataType().getStringData().trim();
+            obr.getObr3_FillerOrderNumber().getEntityIdentifier().setValue(entityIdentifier2);
             stateLocalID = obr.getObr3_FillerOrderNumber().getEntityIdentifier().getValue();
         }else if (obrField.startsWith("OBR-3.2") && Objects.equals(orderGroupID, "1")) {
-
-            obr.getObr3_FillerOrderNumber().getNamespaceID().setValue(obrFieldValue);
+            obr.getObr3_FillerOrderNumber().getNamespaceID().setValue(messageElement.getDataElement().getIsDataType().getIsCodedValue());
         }else if (obrField.startsWith("OBR-3.2") && Objects.equals(orderGroupID, "2")){
-            fillerOrderNumberNameSpaceIDGroup2 = obrFieldValue;
-        }else if (obrField.startsWith("OBR-3.3") && Objects.equals(orderGroupID, "1")){
-            obr.getObr3_FillerOrderNumber().getUniversalIDType().setValue(obrFieldValue);
-        }else if (obrField.startsWith("OBR-3.3") && Objects.equals(orderGroupID, "2")){
-            obr.getObr3_FillerOrderNumber().getUniversalIDType().setValue(obrFieldValue);
-            fillerOrderNumberUniversalID2 = obrFieldValue;
-        }else if (obrField.startsWith("OBR-3.4") && Objects.equals(orderGroupID, "1")){
-            obr.getObr3_FillerOrderNumber().getUniversalIDType().setValue(obrFieldValue);
-        }else if (obrField.startsWith("OBR-3.4") && Objects.equals(orderGroupID, "2")){
-            fillerOrderNumberUniversalIDType2 = obrFieldValue;
+            fillerOrderNumberNameSpaceIDGroup2 = messageElement.getDataElement().getIsDataType().getIsCodedValue();
+        }
+        // else if (obrField.startsWith("OBR-3.3") && Objects.equals(orderGroupID, "1")){
+        //     obr.getObr3_FillerOrderNumber().getUniversalID().setValue(messageElement.getDataElement().getStDataType().getStringData());
+        // }
+        else if (obrField.startsWith("OBR-3.3") && Objects.equals(orderGroupID, "2")){
+            obr.getObr3_FillerOrderNumber().getUniversalID().setValue(messageElement.getDataElement().getStDataType().getStringData());
+            fillerOrderNumberUniversalID2 = messageElement.getDataElement().getStDataType().getStringData();
+        }
+        // else if (obrField.startsWith("OBR-3.4") && Objects.equals(orderGroupID, "1")){
+        //     obr.getObr3_FillerOrderNumber().getUniversalIDType().setValue(messageElement.getDataElement().getIdDataType().getIdCodedValue());
+        // }
+        else if (obrField.startsWith("OBR-3.4") && Objects.equals(orderGroupID, "2")){
+            obr.getObr3_FillerOrderNumber().getUniversalIDType().setValue(messageElement.getDataElement().getIdDataType().getIdCodedValue());
+            fillerOrderNumberUniversalIDType2 = messageElement.getDataElement().getIdDataType().getIdCodedValue();
         }else if (obrField.startsWith("OBR-4.1") && Objects.equals(orderGroupID, "1")) {
             obr.getObr4_UniversalServiceIdentifier().getIdentifier().setValue("68991-9");
-            universalServiceIdentifierGroup1 = obrFieldValue;
+            universalServiceIdentifierGroup1 = entityIdentifier2;
         }else if (obrField.startsWith("OBR-4.1") && Objects.equals(orderGroupID, "2")){
-            universalServiceIdentifierGroup2 = obrFieldValue;
+            universalServiceIdentifierGroup2 = entityIdentifier2;
         }else if (obrField.startsWith("OBR-4.2") && Objects.equals(orderGroupID, "1")){
-            obr.getObr4_UniversalServiceIdentifier().getAlternateIdentifier().setValue("Epidemiologic Information");
-            universalServiceIDTextGroup1 = obrFieldValue;
+            obr.getObr4_UniversalServiceIdentifier().getText().setValue("Epidemiologic Information");
+            universalServiceIDTextGroup1 = entityIdentifier2;
         }else if (obrField.startsWith("OBR-4.2") && Objects.equals(orderGroupID, "2")){
-            universalServiceIdentifierGroup2 = obrFieldValue;
+            universalServiceIdentifierGroup2 = entityIdentifier2;
         }else if (obrField.startsWith("OBR-4.3") && Objects.equals(orderGroupID, "1")){
             obr.getObr4_UniversalServiceIdentifier().getNameOfCodingSystem().setValue("LN");
-            universalServiceIDNameOfCodingSystemGroup1 = obrFieldValue;
+            universalServiceIDNameOfCodingSystemGroup1 = messageElement.getDataElement().getIdDataType().getIdCodedValue();
         }else if (obrField.startsWith("OBR-4.3") && Objects.equals(orderGroupID, "2")){
-            universalServiceIDNameOfCodingSystemGroup2 = obrFieldValue;
+            universalServiceIDNameOfCodingSystemGroup2 = messageElement.getDataElement().getIdDataType().getIdCodedValue();
         }else if (obrField.startsWith("OBR-7.0")){
-            obrFieldValue = messageElement.getDataElement().getTsDataType().getTime().toString().trim();
-            String dateFormat = getDateFormat(obrFieldValue, questionDataTypeNND, questionIdentifierNND,"OBR-7.0");
+            String observationDateTime = messageElement.getDataElement().getTsDataType().getTime().toString().trim();
+            obr7 = messageElement.getHl7SegmentField().trim();
+            OBR7DataType = messageElement.getDataElement().getQuestionDataTypeNND().trim();
+            OBR7QuestionDataTypeNND = messageElement.getQuestionIdentifierNND();
+            String dateFormat = getDateFormat(observationDateTime, questionDataTypeNND, questionIdentifierNND, "OBR-7.0");
             obr.getObr7_ObservationDateTime().getTime().setValue(dateFormat);
         }else if (obrField.startsWith("OBR-22.0")){
-            obrFieldValue = messageElement.getDataElement().getTsDataType().getTime().toString().trim();
-            String dateFormat = getDateFormat(obrFieldValue, questionDataTypeNND, questionIdentifierNND,"OBR-22.0");
+            String resultStatusChgTime = messageElement.getDataElement().getTsDataType().getTime().toString().trim();
+            String dateFormat = getDateFormat(resultStatusChgTime, questionDataTypeNND, questionIdentifierNND, "OBR-22.0");
             obr.getObr22_ResultsRptStatusChngDateTime().getTime().setValue(dateFormat);
         }else if (obrField.startsWith("OBR-25.0")){
-            obr.getObr25_ResultStatus().setValue(obrFieldValue);
+            obr.getObr25_ResultStatus().setValue(messageElement.getDataElement().getIdDataType().getIdCodedValue());
         }else if (obrField.startsWith("OBR-31.0")){
             String conditionCode = messageElement.getDataElement().getCeDataType().getCeCodedValue().trim();
-            String codedValueDescription = messageElement.getDataElement().getCeDataType().getCeCodedValueDescription().trim();
-            String codedValueCodingSystem = messageElement.getDataElement().getCeDataType().getCeLocalCodedValueCodingSystem().trim();
-            String localCodedValue = messageElement.getDataElement().getCeDataType().getCeLocalCodedValue().trim();
-            String localCodedValueDescription = messageElement.getDataElement().getCeDataType().getCeLocalCodedValueDescription().trim();
-            String localCodedValueCodingSystem = messageElement.getDataElement().getCeDataType().getCeLocalCodedValueCodingSystem().trim();
 
-            // instantiate class to process OBR-31 field
+            String mappedConditionCode="";
+            String conceptCode="";
+
             String service = "";
             String action = "";
             String serviceActionConditionCode = "";
+            String serviceActionConceptCode = "";
 
             Optional<ServiceActionPairModel> serviceActionPair = iServiceActionPairRepository.findByMessageProfileId(messageType);
             if(serviceActionPair.isPresent()) {
                 service = serviceActionPair.get().getService();
                 action = serviceActionPair.get().getAction();
                 serviceActionConditionCode = serviceActionPair.get().getConditionCode();
+                serviceActionConceptCode = serviceActionPair.get().getConceptCode();
             }
 
-            //process the results and update OBR-31 field
-            if (Objects.equals(service, "") || Objects.equals(action, "")){
+            if (service == null || service.isEmpty() || action == null || action.isEmpty()) {
+                logger.error("ERROR: There is no default SERVICE/ACTION pair defined in the SERVICE_ACTION_PAIR lookup for {} {}, which has a message profile ID of {} and condition Code of {}",
+                        entityIdentifier2, nndMessageVersion, messageType, conditionCode);
                 obr.getObr31_ReasonForStudy(0).getIdentifier().setValue(conditionCode);
-            }else if(Objects.equals(serviceActionConditionCode, "")){
-                obr.getObr31_ReasonForStudy(0).getIdentifier().setValue(serviceActionConditionCode);
-            }else{
+
+            } else if (serviceActionConditionCode != null && !serviceActionConditionCode.isEmpty()
+                    && (serviceActionConceptCode == null || serviceActionConceptCode.isEmpty())) {
+                logger.error("ERROR: There is no default CONCEPT_CODE defined in the SERVICE_ACTION_PAIR lookup for {} {}, which has a message profile ID {}. Please populate CONCEPT_CODE column for the condition code",
+                        entityIdentifier2, nndMessageVersion, messageType);
+                obr.getObr31_ReasonForStudy(0).getIdentifier().setValue(conditionCode);
+
+            } else if (serviceActionConceptCode != null && !serviceActionConceptCode.isEmpty()) {
+                obr.getObr31_ReasonForStudy(0).getIdentifier().setValue(serviceActionConceptCode);
+
+            } else {
                 obr.getObr31_ReasonForStudy(0).getIdentifier().setValue(conditionCode);
             }
+
 
             //update other fields
-            obr.getObr31_ReasonForStudy(0).getText().setValue(codedValueDescription);
-            obr.getObr31_ReasonForStudy(0).getNameOfCodingSystem().setValue(codedValueCodingSystem);
-            obr.getObr31_ReasonForStudy(0).getAlternateIdentifier().setValue(localCodedValue);
-            obr.getObr31_ReasonForStudy(0).getAlternateText().setValue(localCodedValueDescription);
-            obr.getObr31_ReasonForStudy(0).getCe6_NameOfAlternateCodingSystem().setValue(localCodedValueCodingSystem);
+            obr.getObr31_ReasonForStudy(0).getText().setValue(messageElement.getDataElement().getCeDataType().getCeCodedValueDescription());
+            obr.getObr31_ReasonForStudy(0).getNameOfCodingSystem().setValue(messageElement.getDataElement().getCeDataType().getCeCodedValueCodingSystem());
+            obr.getObr31_ReasonForStudy(0).getAlternateIdentifier().setValue(messageElement.getDataElement().getCeDataType().getCeLocalCodedValue());
+            obr.getObr31_ReasonForStudy(0).getAlternateText().setValue(messageElement.getDataElement().getCeDataType().getCeLocalCodedValueDescription());
+            obr.getObr31_ReasonForStudy(0).getNameOfAlternateCodingSystem().setValue(messageElement.getDataElement().getCeDataType().getCeLocalCodedValueCodingSystem());
+
+            reasonForStudyIdentifier2= messageElement.getDataElement().getCeDataType().getCeCodedValue();
+			reasonForStudyText2 = messageElement.getDataElement().getCeDataType().getCeCodedValueDescription();
+			reasonForStudyNameOfCodingSystem2 = messageElement.getDataElement().getCeDataType().getCeLocalCodedValueCodingSystem();
+			reasonForStudyAlternateIdentifier2= messageElement.getDataElement().getCeDataType().getCeLocalCodedValue();
+			reasonForStudyAlternateText2 = messageElement.getDataElement().getCeDataType().getCeLocalCodedValueDescription();
+			reasonForStudyNameOfAlternateCodingSystem2 = messageElement.getDataElement().getCeDataType().getCeLocalCodedValueCodingSystem();
         }
     }
 

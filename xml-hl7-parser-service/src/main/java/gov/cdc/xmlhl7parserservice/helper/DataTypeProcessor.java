@@ -39,7 +39,7 @@ public class DataTypeProcessor implements HL7FieldProcessor {
 
         String outputDataType = mapInputToOutputDataType(inputDataType);
 
-        Optional<DataTypeModel> matchedDataType = iDataTypeLookupRepository.findByMmgVersionAndCoreDataType(mmgVersion, inputDataType);
+        Optional<DataTypeModel> matchedDataType = iDataTypeLookupRepository.findByMmgVersionAndDataType(mmgVersion, outputDataType);
 
         if (matchedDataType.isPresent()) {
             outputDataType = matchedDataType.get().getDataType();
@@ -130,7 +130,10 @@ public class DataTypeProcessor implements HL7FieldProcessor {
             }
         }
 
-        return year + month + day + hours + minutes + seconds + milliseconds;
+        if(milliseconds.isEmpty()) {
+            return year + month + day + hours + minutes + seconds + milliseconds;
+        }
+        return year + month + day + hours + minutes + seconds + "." + milliseconds;
     }
 
     /**

@@ -13,6 +13,7 @@
 	</element>
 	<complexType name="MessageElement">
 		<sequence>
+
 			<element name="questionIdentifierNND" type="string"/>
 			<element name="questionLabelNND" type="string"/>
 			<element name="questionOID" type="string"/>
@@ -25,6 +26,7 @@
 			<element name="repeatGroupSeqNbr" type="string" minOccurs="0"/>
 			<element name="questionMap" type="string" minOccurs="0"/>
 			<element name="indicatorCd" type="string" minOccurs="0"/>
+
 			<element name="dataElement">
 				<complexType>
 					<sequence>

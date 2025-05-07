@@ -414,15 +414,28 @@ public class HL7MessageBuilder {
 
             else if (segmentField.startsWith("OBX"))
             {
+                ObxRepeatingElement element = null;
+                int finalZ = z;
+                Optional<ObxRepeatingElement> match = obxRepeatingElementArrayList.stream()
+                        .filter(e -> nbsnndIntermediaryMessage.getMessageElement().get(finalZ).getQuestionIdentifierNND().equals(e.getElementUid()))
+                        .findFirst();
+                if (match.isPresent()) {
+                    element = match.get();
+                }
 
-                OBX obxUpdate = obx.getOBSERVATION(obx.getOBSERVATIONAll().size()).getOBX();
-                var result = processOBXFields(nbsnndIntermediaryMessage.getMessageElement().get(z),obxUpdate);
-                logger.info("{}", result.getMessage());
+                if (element  != null) {
+                    int idx = element.getObxInc();
+                    OBX existObx = obx.getOBSERVATION(idx).getOBX();
+                    var result = processOBXFields(nbsnndIntermediaryMessage.getMessageElement().get(z), existObx);
 
-//                    var result = processOBXFields(messageElement,obx);
-//                    logger.info("{}", result.getMessage());
-//                    completedObxString.append(result.getMessage());
 
+                }
+                else {
+                    OBX obxUpdate = obx.getOBSERVATION(obx.getOBSERVATIONAll().size()).getOBX();
+                    var result = processOBXFields(nbsnndIntermediaryMessage.getMessageElement().get(z),obxUpdate);
+                    logger.info("{}", result.getMessage());
+
+                }
             }
 
             if(messageType.contains("Arbo_Case_Map_v1.0") && isDefaultNull && !stateLocalID.isEmpty())
@@ -2988,6 +3001,12 @@ public class HL7MessageBuilder {
     private OBX processOBXFields(MessageElement messageElement, OBX obx) throws HL7Exception {
         String obxField = messageElement.getHl7SegmentField().trim();
         if (obxField.equals("OBX-3.0")){
+
+            if (messageElement.getDataElement().getCweDataType()!= null && (messageElement.getDataElement().getCweDataType().getCweCodedValue().equalsIgnoreCase("PHC1137") || messageElement.getDataElement().getCweDataType().getCweCodedValue().equalsIgnoreCase("PHC1141"))) {
+                var code = messageElement.getQuestionIdentifierNND();
+                var test = "";
+            }
+
             int obxOrderGroupID = 0;
             int obxInc = 1;
             int obx5ValueInc = 0;
@@ -3650,7 +3669,7 @@ public class HL7MessageBuilder {
 
                         cwe.getOriginalText().setValue(originalText);                 // OBX-5.9
 
-                        obx.getObservationValue(obx5ValueInc).setData(cwe);
+                        obx.getObservationValue(obx.getObservationValue().length).setData(cwe);
 
                     }
                 }
@@ -3756,14 +3775,14 @@ public class HL7MessageBuilder {
             obx.getObservationResultStatus().setValue("F");
 
             String existingObservationIdentifier = obx.getObservationIdentifier().getIdentifier().toString();
-            if (existingObservationIdentifier.equals("2653") ||
+            if (existingObservationIdentifier != null && (existingObservationIdentifier.equals("2653") ||
                     existingObservationIdentifier.equals("3304") ||
                     existingObservationIdentifier.equals("6816") ||
                     existingObservationIdentifier.equals("N0000166993") ||
                     existingObservationIdentifier.equals("PHC1160") ||
                     existingObservationIdentifier.equals("PHC1166") ||
                     existingObservationIdentifier.equals("PHC1167") ||
-                    existingObservationIdentifier.equals("PHC1308") )
+                    existingObservationIdentifier.equals("PHC1308") ))
             {
                 drugCounter +=1;
                 String codedText = "";

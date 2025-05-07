@@ -1,0 +1,82 @@
+server:
+  port: 8092
+  servlet:
+    context-path: /case-notification
+
+info:
+  app:
+    name: Case Notification
+    version: 1.0.0
+    description: Case Notification
+
+management:
+  info:
+    build:
+      enabled: true
+    java:
+      enabled: true
+  endpoint:
+    health:
+      show-details: always
+      roles: ADMIN
+  endpoints:
+    web:
+      base-path: /actuator
+      exposure:
+        include: "health,info"
+
+spring:
+  application:
+    name: case-notification-service
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${CN_AUTH_URI:http://localhost:8100/realms/NBS}
+          jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
+
+auth:
+  token-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/token
+  introspect-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/token/introspect
+
+service:
+  timezone: ${SERVICE_TZ:UTC}
+
+cnserver:
+  host: ${CN_SERVER_HOST:localhost:8081}
+
+---
+spring:
+  config:
+    activate:
+      on-profile: default
+  datasource:
+    username: ${NBS_DBUSER}
+    password: ${NBS_DBPASSWORD}
+    driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    hikari:
+      connection-timeout: 60000
+      maximum-pool-size: 10
+    odse:
+      url: jdbc:sqlserver://${NBS_DBSERVER};databaseName=NBS_ODSE;encrypt=true;trustServerCertificate=true;
+    msg:
+      url: jdbc:sqlserver://${NBS_DBSERVER};databaseName=NBS_MSGOUTE;encrypt=true;trustServerCertificate=true;
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVER:localhost:9092}
+    thread: ${KAFKA_THREAD:1}
+    group-id:
+      std-group-id: std-processor-group
+      non-std-group-id: non-std-processor-group
+    topic:
+      std-topic: std-topic
+      non-std-topic: non-std-topic
+    dlt:
+      suffix: -dlt
+    retry:
+      max-retry: 2
+      suffix: -retry
+

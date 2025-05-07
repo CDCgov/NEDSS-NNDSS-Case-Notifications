@@ -1,0 +1,96 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.4.3'
+    id 'io.spring.dependency-management' version '1.1.6'
+}
+
+group = 'gov.cdc'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+configurations {
+    jaxb
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Swagger / openapi documentation
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.1'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+    implementation 'org.springframework.boot:spring-boot-starter-logging'
+    implementation files('libs/hl7-parser-0.0.1-SNAPSHOT.jar')
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.apache.kafka:kafka-streams'
+    implementation 'org.springframework.kafka:spring-kafka'
+    implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.2'
+    implementation 'com.microsoft.sqlserver:mssql-jdbc:12.6.1.jre11'
+    implementation 'com.zaxxer:HikariCP:5.1.0'
+    implementation("com.google.code.gson:gson:2.12.1")
+
+//    implementation 'org.liquibase:liquibase-core:4.31.1'
+
+    // Hapi HL7 lib
+    implementation 'ca.uhn.hapi:hapi-base:2.3'
+    implementation 'ca.uhn.hapi:hapi-structures-v251:2.3'
+    implementation 'ca.uhn.hapi:hapi-structures-v231:2.3'
+
+    runtimeOnly 'org.glassfish.jaxb:jaxb-runtime:4.0.5'
+    compileOnly 'org.projectlombok:lombok:1.18.32'
+    annotationProcessor 'org.projectlombok:lombok:1.18.32'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.kafka:spring-kafka-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    runtimeOnly 'com.nimbusds:oauth2-oidc-sdk:11.8'
+
+    jaxb 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.2'
+    jaxb 'org.glassfish.jaxb:jaxb-xjc:4.0.5'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+
+tasks.register('jaxb') {
+    def jaxbTargetDir = file("src/main/java")
+    def xsdFile = file('src/main/resources/xsd/NBSNNDIntermediaryMessage.xsd')
+    def packageName = 'gov.cdc.casenotificationservice.model.generated.jaxb'
+
+    inputs.file(xsdFile)
+    outputs.dir(jaxbTargetDir)
+
+    doLast {
+        System.setProperty('javax.xml.accessExternalSchema', 'all')
+        jaxbTargetDir.mkdirs()
+
+        ant.taskdef(
+                name: 'xjc',
+                classname: 'com.sun.tools.xjc.XJCTask',
+                classpath: configurations.jaxb.asPath
+        )
+
+        ant.xjc(
+                destdir: jaxbTargetDir.absolutePath,
+                package: packageName,
+                schema: xsdFile.absolutePath
+        )
+    }
+}
+
+tasks.named('compileJava') {
+    dependsOn jaxb
+}

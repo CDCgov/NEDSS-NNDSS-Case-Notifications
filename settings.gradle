@@ -8,9 +8,7 @@
 rootProject.name = 'NEDSS-NNDSS-Case-Notifications'
 include 'data-extraction-service'
 
-include 'std-processor-service'
-
-include 'non-std-processor-service'
+include 'case-notification-service'
 
 include 'xml-hl7-parser-service'
 

@@ -31,4 +31,4 @@ SELECT
     record_status_time,
     version_ctrl_nbr
 FROM CN_transportq_out
-WHERE cn_transportq_out_uid = 23178;
+WHERE cn_transportq_out_uid = 23196;

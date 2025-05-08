@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSPY v5 rel. 3 U (http://www.xmlspy.com) by Aurelia Ford (Computer Sciences Corp) -->
 <!-- NBS_CN_DB NBS Version TB Phase 3 - June 3, 2008  -->
-<schema targetNamespace="http://www.cdc.gov/NEDSS" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:nedss="http://www.cdc.gov/NEDSS" elementFormDefault="qualified" attributeFormDefault="unqualified" version="NBS x.x">
+<schema targetNamespace="http://www.cdc.gov/NEDSS" xmlns="http://www.w3.org/2001/XMLSchema"
+        elementFormDefault="qualified" attributeFormDefault="unqualified" version="NBS x.x">
 <element name="message">
     <complexType>
       <sequence>

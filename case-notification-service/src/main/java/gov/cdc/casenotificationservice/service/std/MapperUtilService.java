@@ -69,9 +69,8 @@ public class MapperUtilService implements IMapperUtilService {
     }
 
     public String mapToDate(String week, String year, String output) {
-      //  boolean result1 =true; //= RhapsodyTableLookup(output,"MMWR","WEEK_ENDING","NOT_MAPPED","MMWR_WEEK",week, "MMWR_YEAR", StrToUpper(year) );
-
-        output = String.valueOf(lookupMmwrRepository.findTopWeekEndingByMmwrWeekAndMmwrYear(Integer.valueOf(week), Integer.valueOf(year)));
+        //  boolean result1 =true; //= RhapsodyTableLookup(output,"MMWR","WEEK_ENDING","NOT_MAPPED","MMWR_WEEK",week, "MMWR_YEAR", StrToUpper(year) );
+        output = String.valueOf(lookupMmwrRepository.findTopWeekEndingByMmwrWeekAndMmwrYear(Integer.parseInt(week), Integer.parseInt(year)));
         if (output.trim().isEmpty() || (week.equalsIgnoreCase("NULL") && year.equalsIgnoreCase("NULL"))) {
             output = "";
         }

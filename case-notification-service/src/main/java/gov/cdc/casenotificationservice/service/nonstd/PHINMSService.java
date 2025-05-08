@@ -22,9 +22,6 @@ public class PHINMSService implements IPHINMSService {
     @Value("${service.timezone}")
     private String tz = "UTC";
 
-//    @Value("${service.nbs-certificate-url")
-//    private String NBS_CERTIFICATE_URL = "CERTIFICATE_URL";
-
     private final ServiceActionPairRepository serviceActionPairRepository;
 
     public PHINMSService(ServiceActionPairRepository serviceActionPairRepository) {
@@ -35,8 +32,8 @@ public class PHINMSService implements IPHINMSService {
             String payload,
             PHINMSProperties PHINMSProperties,
             CaseNotificationConfig caseNotificationConfig) throws Exception {
-        Hd sendingFacility = null;
-        Hd sendingApplication = null;
+        Hd sendingFacility;
+        Hd sendingApplication;
         var counterInt =0;
 
         var serviceActionPairs = this.serviceActionPairRepository.findTotal();
@@ -53,6 +50,7 @@ public class PHINMSService implements IPHINMSService {
 
 
         HL7Helper hl7Helper = new HL7Helper();
+        payload = payload.replaceAll("\n", "\r");
         HL7ParsedMessage<OruR1> parsedMessage = hl7Helper.hl7StringParser(payload);
 
         var vMessageID = PHINMSProperties.getPNotificationId();

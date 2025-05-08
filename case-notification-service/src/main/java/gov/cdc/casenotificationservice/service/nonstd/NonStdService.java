@@ -1,5 +1,9 @@
 package gov.cdc.casenotificationservice.service.nonstd;
 
+import gov.cdc.casenotificationservice.exception.IgnorableException;
+import gov.cdc.casenotificationservice.exception.NonStdBatchProcessorServiceException;
+import gov.cdc.casenotificationservice.exception.NonStdProcessorServiceException;
+import gov.cdc.casenotificationservice.model.MessageAfterStdChecker;
 import gov.cdc.casenotificationservice.model.PHINMSProperties;
 import gov.cdc.casenotificationservice.repository.msg.CaseNotificationConfigRepository;
 import gov.cdc.casenotificationservice.repository.msg.TransportQOutRepository;
@@ -35,43 +39,66 @@ public class NonStdService implements INonStdService {
         this.caseNotificationConfigRepository = caseNotificationConfigRepository;
     }
 
-    public void nonStdProcessor(String payload) throws Exception {
-        PHINMSProperties phinmsProperties = new PHINMSProperties();
-        CaseNotificationConfig stdConfig = caseNotificationConfigRepository.findNonStdConfig();
+    public void nonStdProcessor(MessageAfterStdChecker messageAfterStdChecker) throws IgnorableException, NonStdProcessorServiceException, NonStdBatchProcessorServiceException {
+            PHINMSProperties phinmsProperties = new PHINMSProperties();
+            CaseNotificationConfig stdConfig = caseNotificationConfigRepository.findNonStdConfig();
+            var cnTranport = cnTraportqOutRepository.findTopByRecordUid(messageAfterStdChecker.getCnTransportqOutUid());
 
-        // TODO: replace this with REAL value
-        var cnTranport = cnTraportqOutRepository.findTopByRecordUid(23265L);
+            // TODO: Logic to tranform xml to HL7
+            String payload = "";
+            if (payload.isEmpty()) {
+                throw new IgnorableException("Payload is empty");
+            }
 
-        // TODO: replace this with REAL value
-        phinmsProperties.setPNotificationId(String.valueOf(cnTranport.getNotificationUid()));
-        phinmsProperties.setPPublicHealthCaseLocalId(cnTranport.getPublicHealthCaseLocalId());
-        phinmsProperties.setPReportStatusCd(cnTranport.getReportStatusCd());
-        phinmsProperties.setNETSS_MESSAGE_ONLY(stdConfig.getNetssMessageOnly());
-        phinmsProperties.setBATCH_MESSAGE_PROFILE_ID(stdConfig.getBatchMesageProfileId());
+            phinmsProperties.setPMessageUid(messageAfterStdChecker.getCnTransportqOutUid());
+            phinmsProperties.setPNotificationId(String.valueOf(cnTranport.getNotificationUid()));
+            phinmsProperties.setPPublicHealthCaseLocalId(cnTranport.getPublicHealthCaseLocalId());
+            phinmsProperties.setPReportStatusCd(cnTranport.getReportStatusCd());
+            phinmsProperties.setNETSS_MESSAGE_ONLY("queued");
+            phinmsProperties.setBATCH_MESSAGE_PROFILE_ID(stdConfig.getBatchMesageProfileId());
 
-        var updatedPhinmsProperties = phinmsService.gettingPHIMNSProperties(payload, phinmsProperties, stdConfig);
-        if (batchService.isBatchConditionApplied(updatedPhinmsProperties, stdConfig)) {
-            batchNonStdProcessor(updatedPhinmsProperties);
-        }
-        else
-        {
-            nonStdProcessor(updatedPhinmsProperties);
-        }
+            PHINMSProperties updatedPhinmsProperties;
+
+            try {
+                updatedPhinmsProperties = phinmsService.gettingPHIMNSProperties(payload, phinmsProperties, stdConfig);
+            } catch (Exception e) {
+                cnTraportqOutRepository.updateStatus(messageAfterStdChecker.getCnTransportqOutUid(), "NON_STD_ERROR");
+                throw new NonStdProcessorServiceException("Failure at PHINMS processor", e);
+            }
+
+            if (batchService.isBatchConditionApplied(updatedPhinmsProperties, stdConfig)) {
+                try {
+                    batchNonStdProcessor(updatedPhinmsProperties);
+                } catch (Exception e) {
+                    throw new NonStdBatchProcessorServiceException("Failure at batch processor", e);
+                }
+            }
+            else
+            {
+                try {
+                    nonStdProcessor(updatedPhinmsProperties);
+                } catch (Exception e) {
+                    cnTraportqOutRepository.updateStatus(messageAfterStdChecker.getCnTransportqOutUid(), "NON_STD_ERROR");
+                    throw new NonStdProcessorServiceException("Failure at Non Std DB Logic", e);
+
+                }
+
+            }
+
     }
 
-    public void releaseHoldQueueAndProcessBatchNonStd() throws Exception {
+    public void releaseHoldQueueAndProcessBatchNonStd() {
         var updatedPhinmsPropertiesForBatch = batchService.ReleaseQueuePopulateBatchFooterProperties();
         nonStdProcessor(updatedPhinmsPropertiesForBatch);
     }
 
-    protected void nonStdProcessor(PHINMSProperties PHINMSProperties) throws Exception {
-        // TODO: Logic to update TransportQOut table and Logic to update PHINMSQUEUED
+    protected void nonStdProcessor(PHINMSProperties PHINMSProperties) {
         TransportQOut transportQOut = new TransportQOut(PHINMSProperties, tz);
         transportQOutRepository.save(transportQOut);
-        cnTraportqOutRepository.updateStatusToQueued(69696969L); // "WHERE IS THIS ID COME FROM"
+        cnTraportqOutRepository.updateStatusToQueued(PHINMSProperties.getPMessageUid()); // "WHERE IS THIS ID COME FROM"
     }
 
-    protected void batchNonStdProcessor(PHINMSProperties PHINMSProperties) throws Exception {
+    protected void batchNonStdProcessor(PHINMSProperties PHINMSProperties) {
         batchService.holdQueue(PHINMSProperties);
     }
 }

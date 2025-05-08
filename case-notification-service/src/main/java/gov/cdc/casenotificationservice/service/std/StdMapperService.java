@@ -6,7 +6,8 @@ import gov.cdc.casenotificationservice.service.std.interfaces.IStdMapperService;
 import org.springframework.stereotype.Service;
 
 import static gov.cdc.casenotificationservice.constant.StdConstantValue.*;
-import static gov.cdc.casenotificationservice.util.StringHelper.*;
+import static gov.cdc.casenotificationservice.util.StringHelper.strNumbers;
+import static gov.cdc.casenotificationservice.util.StringHelper.strRight;
 
 @Service
 public class StdMapperService implements IStdMapperService {
@@ -60,7 +61,9 @@ public class StdMapperService implements IStdMapperService {
                 else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase(NETSS_INV168))
                 {
                     var result =  mapperUtilService.mapToData(in.getMessageElement().get(i).getDataElement());
-                    result = result.substring(5, 11);
+                    if (result.length() >= 11) {
+                        result = result.substring(5, 11);
+                    }
                     netss.setCaseReportId(result);
                 }
                 else if (in.getMessageElement().get(i).getQuestionIdentifier().equalsIgnoreCase(NETSS_INV107))

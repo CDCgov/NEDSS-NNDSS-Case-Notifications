@@ -1,8 +1,12 @@
 package gov.cdc.casenotificationservice.kafka.consumer;
 
-import gov.cdc.dataingestion.hl7.helper.integration.exception.DiHL7Exception;
-import jakarta.xml.bind.JAXBException;
-import org.apache.kafka.common.errors.SerializationException;
+import com.google.gson.Gson;
+import gov.cdc.casenotificationservice.exception.IgnorableException;
+import gov.cdc.casenotificationservice.exception.NonStdBatchProcessorServiceException;
+import gov.cdc.casenotificationservice.exception.NonStdProcessorServiceException;
+import gov.cdc.casenotificationservice.model.MessageAfterStdChecker;
+import gov.cdc.casenotificationservice.service.deadletter.interfaces.IDltService;
+import gov.cdc.casenotificationservice.service.nonstd.NonStdService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.DltHandler;
@@ -11,7 +15,6 @@ import org.springframework.kafka.annotation.RetryableTopic;
 import org.springframework.kafka.retrytopic.DltStrategy;
 import org.springframework.kafka.retrytopic.TopicSuffixingStrategy;
 import org.springframework.kafka.support.KafkaHeaders;
-import org.springframework.kafka.support.serializer.DeserializationException;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.stereotype.Service;
@@ -19,7 +22,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class NonStdEventConsumer {
     private static final Logger logger = LoggerFactory.getLogger(StdEventConsumer.class); //NOSONAR
+    private final NonStdService nonStdService;
+    private final IDltService dltService;
 
+    public NonStdEventConsumer(NonStdService nonStdService, IDltService dltService) {
+        this.nonStdService = nonStdService;
+        this.dltService = dltService;
+    }
 
     @RetryableTopic(
             attempts = "${spring.kafka.retry.max-retry}",
@@ -31,24 +40,28 @@ public class NonStdEventConsumer {
             topicSuffixingStrategy = TopicSuffixingStrategy.SUFFIX_WITH_INDEX_VALUE,
             // time to wait before attempting to retry
             backoff = @Backoff(delay = 1000, multiplier = 2.0),
-            // if these exceptions occur, skip retry then push message to DLQ
-            exclude = {
-
-            }
-
+            include = {NonStdProcessorServiceException.class, NonStdBatchProcessorServiceException.class, IgnorableException.class}
     )
     @KafkaListener(
             topics = "${spring.kafka.topic.non-std-topic}",
             containerFactory = "kafkaListenerContainerFactoryConsumerForNonStd"
     )
-    public void handleMessage(String message){
-
+    public void handleMessage(String message) throws IgnorableException, NonStdProcessorServiceException, NonStdBatchProcessorServiceException {
+        var gson = new Gson();
+        var data = gson.fromJson(message, MessageAfterStdChecker.class);
+        nonStdService.nonStdProcessor(data);
     }
 
     @DltHandler()
     public void handleDlt(
             String message,
-            @Header(KafkaHeaders.RECEIVED_TOPIC) String topic
+            @Header(KafkaHeaders.RECEIVED_TOPIC) String topic,
+            @Header(KafkaHeaders.EXCEPTION_STACKTRACE) String stacktrace,
+            @Header(KafkaHeaders.EXCEPTION_MESSAGE) String errorMessage,
+            @Header(KafkaHeaders.EXCEPTION_CAUSE_FQCN) String exceptionRoot
     ) {
+        logger.info("Received DLT message: {}", message);
+        dltService.creatingDlt(message, topic, stacktrace, errorMessage, exceptionRoot);
+
     }
 }

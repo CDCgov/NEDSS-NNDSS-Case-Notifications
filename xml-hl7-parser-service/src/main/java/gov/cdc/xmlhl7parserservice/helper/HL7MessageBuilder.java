@@ -4,6 +4,7 @@ import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.DataTypeException;
 
 import ca.uhn.hl7v2.model.GenericPrimitive;
+import ca.uhn.hl7v2.model.Message;
 import ca.uhn.hl7v2.model.Varies;
 import ca.uhn.hl7v2.model.v25.datatype.*;
 import ca.uhn.hl7v2.model.v25.datatype.DTM;
@@ -2573,7 +2574,9 @@ public class HL7MessageBuilder {
             msh.getReceivingFacility().getUniversalIDType().setValue(mshFieldValue);
         }else if (mshField.startsWith("MSH-9.3")){
             mshFieldValue = messageElement.getDataElement().getIdDataType().getIdCodedValue().trim();
-            msh.getMessageType().getMessageStructure().setValue(mshFieldValue);
+            msh.getMessageType().getMsg1_MessageCode().setValue(mshFieldValue.split("_")[0]);
+            msh.getMessageType().getMsg2_TriggerEvent().setValue(mshFieldValue.split("_")[1]);
+            msh.getMessageType().getMsg3_MessageStructure().setValue(mshFieldValue);
         }else if (mshField.startsWith("MSH-10.0")){
             mshFieldValue = messageElement.getDataElement().getStDataType().getStringData().trim();
             LocalDateTime now = LocalDateTime.now();
@@ -3416,9 +3419,10 @@ public class HL7MessageBuilder {
                     || messageType.contains("CRS_MMG_V1.0") || messageType.contains("Varicella_MMG_V3.0")
                     || messageType.contains("Pertussis_MMG_V1.0") || messageType.contains("Mumps_MMG_V1.0")))
             {
-                String stData = messageElement.getDataElement().getStDataType().getStringData().trim();
-                String questionMap = messageElement.getQuestionMap().trim();
-                String cxData = messageElement.getDataElement().getCxDataType().getCxData().trim();
+                //TODO - 23149
+                String stData = messageElement.getDataElement().getStDataType() != null ? messageElement.getDataElement().getStDataType().getStringData().trim() : "";
+                String questionMap = messageElement.getQuestionMap() != null ? messageElement.getQuestionMap().trim() : "";
+                String cxData = messageElement.getDataElement().getCxDataType() != null ? messageElement.getDataElement().getCxDataType().getCxData().trim() : "";
                 if (questionIdentifierNND.equals("LAB143")) {
                     String combined = questionIdentifierNND.trim()+"~"+obx5ObservationSubID;
 
@@ -3604,6 +3608,7 @@ public class HL7MessageBuilder {
                 if (messageType.contains("Arbo_Case_Map_v1.0")|| messageType.contains("Gen_Case_Map_v1.0")
                         || messageType.contains("TB_Case_Map_v2.0") || messageType.contains("Var_Case_Map_v2.0"))
                 {
+                    //TODO - 23329
                     CWE cweDatatype = (CWE) obx.getObservationValue(obx5ValueInc).getData();
                     if (codedValue.isEmpty()){
                         cweDatatype.getCwe5_AlternateText().setValue(localCodedValueDescription);
@@ -3616,7 +3621,8 @@ public class HL7MessageBuilder {
                 else
                 {
                     if (codedValue.isEmpty()){
-                        CWE cweDataTYpe = (CWE)obx.getObservationValue(obx5ValueInc).getData();
+                        //TODO - 23329
+                        CWE cweDataTYpe = (CWE) obx.getObservationValue(obx5ValueInc).getData();
                         if (messageElement.getDataElement().getCweDataType().getCweCodedValue()==null)
                         {
                             codedValueDescription = messageElement.getDataElement().getCweDataType().getCweLocalCodedValueCodingSystem().trim();

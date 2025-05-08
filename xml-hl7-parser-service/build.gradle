@@ -50,7 +50,7 @@ tasks.register('generateJAXBClasses', JavaExec) {
     // Arguments for generating classes from XSD schema file
     // run command: ./gradlew generateJAXBClasses and
     // classes will be generated under: src\main\java\gov\cdc\xmlhl7parserservice\model)
-    args = ['-d', 'src/main/java', '-p', 'gov.cdc.xmlhl7parserservice.model', 'src/main/resources/NBSNNDIntermediaryMessage.xsd']
+    args = ['-d', 'src/main/java', '-p', 'gov.cdc.xmlhl7parserservice.model.generated.jaxb', 'src/main/resources/NBSNNDIntermediaryMessage.xsd']
 }
 
 compileJava.dependsOn(generateJAXBClasses)

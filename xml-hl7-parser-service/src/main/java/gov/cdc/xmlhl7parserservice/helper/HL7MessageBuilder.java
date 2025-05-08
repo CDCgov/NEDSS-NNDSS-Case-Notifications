@@ -16,6 +16,7 @@ import gov.cdc.xmlhl7parserservice.constants.Constants;
 
 import gov.cdc.xmlhl7parserservice.model.*;
 import gov.cdc.xmlhl7parserservice.model.Obx.ObxRepeatingElement;
+import gov.cdc.xmlhl7parserservice.model.generated.jaxb.*;
 import gov.cdc.xmlhl7parserservice.repository.IDataTypeLookupRepository;
 import gov.cdc.xmlhl7parserservice.repository.IServiceActionPairRepository;
 

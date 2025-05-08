@@ -3,8 +3,6 @@ package gov.cdc.xmlhl7parserservice.helper;
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.DataTypeException;
 
-import ca.uhn.hl7v2.model.GenericPrimitive;
-import ca.uhn.hl7v2.model.Message;
 import ca.uhn.hl7v2.model.Varies;
 import ca.uhn.hl7v2.model.v25.datatype.*;
 import ca.uhn.hl7v2.model.v25.datatype.DTM;
@@ -20,6 +18,7 @@ import gov.cdc.xmlhl7parserservice.model.generated.jaxb.*;
 import gov.cdc.xmlhl7parserservice.repository.IDataTypeLookupRepository;
 import gov.cdc.xmlhl7parserservice.repository.IServiceActionPairRepository;
 
+import gov.cdc.xmlhl7parserservice.repository.model.ServiceActionPairModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

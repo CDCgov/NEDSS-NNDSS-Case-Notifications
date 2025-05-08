@@ -3,7 +3,7 @@ package gov.cdc.xmlhl7parserservice.helper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import gov.cdc.xmlhl7parserservice.helper.interfaces.HL7FieldProcessor;
-import gov.cdc.xmlhl7parserservice.model.DataTypeModel;
+import gov.cdc.xmlhl7parserservice.repository.model.DataTypeModel;
 import gov.cdc.xmlhl7parserservice.repository.IDataTypeLookupRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -5,8 +5,8 @@ import gov.cdc.dataextractionservice.kafka.ProducerService;
 import gov.cdc.dataextractionservice.model.CnTransportqOutMessage;
 import gov.cdc.dataextractionservice.model.CnTransportqOutValue;
 import gov.cdc.dataextractionservice.model.MessageAfterStdChecker;
-import gov.cdc.dataextractionservice.service.StdCheckerTransformerService;
 import gov.cdc.dataextractionservice.service.CnTransportQOutUpdateService;
+import gov.cdc.dataextractionservice.service.StdCheckerTransformerService;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,12 +58,12 @@ public class ConsumerService {
                             || "BOTH".equalsIgnoreCase(transformed.getNetssMessageOnly())) {
                         updateService.updateRecordStatus(
                                 transformed.getCnTransportqOutUid(),
-                                "CLOUD_STD_PROCESSING"
+                                "STD_PROCESSING"
                         );
                     } else {
                         updateService.updateRecordStatus(
                                 transformed.getCnTransportqOutUid(),
-                                "CLOUD_NON_STD_PROCESSING"
+                                "NON_STD_PROCESSING"
                         );
                     }
                 }

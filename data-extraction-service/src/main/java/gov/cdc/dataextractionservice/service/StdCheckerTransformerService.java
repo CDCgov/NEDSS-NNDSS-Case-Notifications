@@ -21,7 +21,7 @@ public class StdCheckerTransformerService {
         }
 
         String recordStatusCd = value.getRecord_status_cd();
-        if (recordStatusCd == null || !"UNPROCESSED".equalsIgnoreCase(recordStatusCd)) {
+        if (!"UNPROCESSED".equalsIgnoreCase(recordStatusCd)) {
             log.info("Skipping message: record_status_cd is not UNPROCESSED or missing.");
             return null;
         }
@@ -56,7 +56,7 @@ public class StdCheckerTransformerService {
 
         return MessageAfterStdChecker.builder()
                 .cnTransportqOutUid(value.getCn_transportq_out_uid())
-                .messagePayload(cleanedPayload)
+//                .messagePayload(cleanedPayload)
                 .notificationLocalId(value.getNotification_local_id())
                 .publicHealthCaseLocalId(value.getPublic_health_case_local_id())
                 .reportStatusCd(value.getReport_status_cd())

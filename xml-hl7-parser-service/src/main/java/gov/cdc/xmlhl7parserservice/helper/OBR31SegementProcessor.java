@@ -5,10 +5,11 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import gov.cdc.xmlhl7parserservice.helper.interfaces.Hl7FieldProcessor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * Implementation of HL7FieldProcessor that reads serviceActionPair.json from Resources

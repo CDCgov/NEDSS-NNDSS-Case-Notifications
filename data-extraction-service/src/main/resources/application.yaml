@@ -1,5 +1,20 @@
 server:
   port: 8090
+  servlet:
+    context-path: /data-extraction
+info:
+  app:
+    name: Data Extraction
+management:
+  endpoint:
+    health:
+      show-details: always
+      roles: ADMIN
+  endpoints:
+    web:
+      base-path: /actuator
+      exposure:
+        include: "health,info"
 
 spring:
   application:
@@ -13,6 +28,8 @@ spring:
       maximum-pool-size: 10
     odse:
       url: jdbc:sqlserver://${NBS_DBSERVER};databaseName=NBS_ODSE;encrypt=true;trustServerCertificate=true;
+    msg:
+      url: jdbc:sqlserver://${NBS_DBSERVER};databaseName=NBS_MSGOUTE;encrypt=true;trustServerCertificate=true;
   jpa:
     show-sql: true
     hibernate:

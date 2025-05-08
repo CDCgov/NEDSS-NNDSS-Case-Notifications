@@ -14,12 +14,7 @@ import static gov.cdc.casenotificationservice.constant.NonStdConstantValue.*;
 public class NonStdNonStdBatchService implements INonStdBatchService {
 
     public boolean isBatchConditionApplied(PHINMSProperties phinmsProperties,  CaseNotificationConfig stdConfig) {
-        if (phinmsProperties.getMessageControlID1().equalsIgnoreCase(stdConfig.getBatchMesageProfileId())) {
-            return true;
-        }
-        else {
-            return false;
-        }
+        return phinmsProperties.getMessageControlID1().equalsIgnoreCase(stdConfig.getBatchMesageProfileId());
     }
 
     public PHINMSProperties ReleaseQueuePopulateBatchFooterProperties() {
@@ -32,24 +27,12 @@ public class NonStdNonStdBatchService implements INonStdBatchService {
         var currentTime = phinmsProperties.getPCurrentTimestamp();
         var SENDING_FACILITY_AND_NAME = phinmsProperties.getSENDING_APPLICATION() + HL7_PIPE + phinmsProperties.getSENDING_FACILITY();
 
-        //        var header = "FHS|^~\\&|"
-//                + SENDING_FACILITY_AND_NAME
-//                + "|PHINCDS^2.16.840.1.114222.4.3.2.10^ISO|PHIN^2.16.840.1.114222^ISO|"
-//                + currentTime
-//                + "|||||\rBHS|^~\\&|"
-//                + SENDING_FACILITY_AND_NAME
-//                + "|PHINCDS^2.16.840.1.114222.4.3.2.10^ISO|PHIN^2.16.840.1.114222^ISO|"
-//                + currentTime
-//                + "|||||\r";
-
         String header = String.format(HL7_BATCH_HEADER_TEMPLATE,
                 SENDING_FACILITY_AND_NAME,
                 currentTime,
                 SENDING_FACILITY_AND_NAME,
                 currentTime);
 
-
-//        var body = phinmsProperties.getPPHINMessageContent2();
         var body = header + batchHL7Msg;
         phinmsProperties.setPPHINMessageContent2(body);
         return phinmsProperties;

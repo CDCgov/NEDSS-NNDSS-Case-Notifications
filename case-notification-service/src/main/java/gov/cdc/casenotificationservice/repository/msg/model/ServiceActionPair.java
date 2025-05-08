@@ -1,8 +1,7 @@
 package gov.cdc.casenotificationservice.repository.msg.model;
 
 
-import jakarta.persistence.*;
-import lombok.*;
+import lombok.Data;
 
 @Data
 //@NoArgsConstructor

@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,7 +35,7 @@ public class NonStdController {
                             schema = @Schema(type = "string"))}
     )
     @PostMapping(path = "/api/non-std/release-queue")
-    public ResponseEntity<String> releaseQueue() throws Exception {
+    public ResponseEntity<String> releaseQueue() {
         nonStdService.releaseHoldQueueAndProcessBatchNonStd();
         return new ResponseEntity<>(HttpStatus.OK);
     }

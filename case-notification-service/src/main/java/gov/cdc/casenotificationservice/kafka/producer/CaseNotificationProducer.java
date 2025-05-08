@@ -1,7 +1,10 @@
 package gov.cdc.casenotificationservice.kafka.producer;
 
 import gov.cdc.casenotificationservice.exception.KafkaProducerException;
+import gov.cdc.casenotificationservice.kafka.consumer.StdEventConsumer;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +14,8 @@ import java.util.concurrent.TimeoutException;
 
 @Service
 public class CaseNotificationProducer {
+    private static final Logger logger = LoggerFactory.getLogger(CaseNotificationProducer.class); //NOSONAR
+
     private final KafkaTemplate<String, String> kafkaTemplate;
 
     public CaseNotificationProducer(KafkaTemplate<String, String> kafkaTemplate) {
@@ -18,16 +23,11 @@ public class CaseNotificationProducer {
     }
 
 
-    private void sendMessage(ProducerRecord<String, String> prodRecord) throws KafkaProducerException {
+    public void sendMessage(String payload, String topic)  {
         try {
-            kafkaTemplate.send(prodRecord).get(3, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new KafkaProducerException("Thread was interrupted while sending Kafka message to topic: "
-                    + prodRecord.topic() + " with UUID: " + prodRecord.value());
-        }
-        catch (TimeoutException | ExecutionException e) {
-            throw new KafkaProducerException("Failed publishing message to kafka topic: " + prodRecord.topic() + " with UUID: " + prodRecord.value());
+            kafkaTemplate.send(topic, payload);
+        } catch (Exception e) {
+            logger.error("Failed to send message to Kafka: {}", e.getMessage(), e);
         }
     }
 }

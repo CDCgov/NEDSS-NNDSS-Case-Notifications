@@ -1,7 +1,9 @@
 package gov.cdc.casenotificationservice.repository.msg.model;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,9 +21,6 @@ public class CaseNotificationConfig {
 
     @Column(name = "config_applied")
     private Boolean configApplied;
-
-    @Column(name = "netss_message_only", length = 50)
-    private String netssMessageOnly;
 
     @Column(name = "batch_mesage_profile_id", length = 255)
     private String batchMesageProfileId;
@@ -52,4 +51,5 @@ public class CaseNotificationConfig {
 
     @Column(name = "phin_priority", length = 255)
     private String phinPriority;
+
 }

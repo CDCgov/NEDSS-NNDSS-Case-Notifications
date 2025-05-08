@@ -6,6 +6,9 @@ plugins {
 
 group = 'gov.cdc'
 version = '0.0.1-SNAPSHOT'
+springBoot {
+    buildInfo()
+}
 
 java {
     toolchain {
@@ -40,7 +43,7 @@ dependencies {
     implementation 'com.zaxxer:HikariCP:5.1.0'
     implementation("com.google.code.gson:gson:2.12.1")
 
-//    implementation 'org.liquibase:liquibase-core:4.31.1'
+    implementation 'org.liquibase:liquibase-core:4.31.1'
 
     // Hapi HL7 lib
     implementation 'ca.uhn.hapi:hapi-base:2.3'

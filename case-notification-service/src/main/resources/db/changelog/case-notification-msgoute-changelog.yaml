@@ -1,0 +1,81 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0
+      author: liquibase
+      runOnChange: true
+      changes:
+        - sqlFile:
+            path: db/msgoute/tables/001-create-notification-config.sql
+            splitStatements: false
+  - changeSet:
+      id: 1
+      author: liquibase
+      runOnChange: true
+      changes:
+        - sqlFile:
+            path: db/msgoute/routines/001-generate-default-config-001.sql
+            splitStatements: false
+  - changeSet:
+      id: 2
+      author: liquibase
+      runOnChange: true
+      changes:
+        - sqlFile:
+            path: db/msgoute/tables/002-alter-notification-config-add-netss-col.sql
+            splitStatements: false
+  - changeSet:
+      id: 3
+      author: liquibase
+      runOnChange: true
+      changes:
+        - sqlFile:
+            path: db/msgoute/tables/003-create-dlt-case-notification.sql
+            splitStatements: false
+  - changeSet:
+      id: 4
+      author: liquibase
+      runOnChange: true
+      changes:
+        - sqlFile:
+            path: db/msgoute/tables/004-create-mmwr-table.sql
+            splitStatements: false
+  - changeSet:
+      id: 5
+      author: liquibase
+      runOnChange: true
+      changes:
+        - sqlFile:
+            path: db/msgoute/tables/005-create-nndlookup-table.sql
+            splitStatements: false
+  - changeSet:
+      id: 6
+      author: liquibase
+      runOnChange: true
+      changes:
+        - sqlFile:
+            path: db/msgoute/tables/006-create-service-pair-table.sql
+            splitStatements: false
+  - changeSet:
+      id: 7
+      author: liquibase
+      runOnChange: true
+      changes:
+        - sqlFile:
+            path: db/msgoute/routines/002-generate-mmwr-data.sql
+            splitStatements: false
+  - changeSet:
+      id: 8
+      author: liquibase
+      runOnChange: true
+      changes:
+        - sqlFile:
+            path: db/msgoute/routines/003-generate-nndlookup-data.sql
+            splitStatements: false
+  - changeSet:
+      id: 9
+      author: liquibase
+      runOnChange: true
+      changes:
+        - sqlFile:
+            path: db/msgoute/routines/004-generate-service-pair-data.sql
+            splitStatements: false

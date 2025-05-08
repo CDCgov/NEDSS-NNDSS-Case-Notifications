@@ -14,6 +14,8 @@ on:
   pull_request:
     paths:
       - "data-extraction-service/**"
+      - "case-notification-service/**"
+      - "xml-hl7-parser-service/**"
       - ".github/workflows/sonar.yaml"
 env:
   deployment_env: dev

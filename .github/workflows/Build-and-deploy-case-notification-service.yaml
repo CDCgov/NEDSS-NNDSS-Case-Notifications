@@ -1,4 +1,4 @@
-name: Build and push data-extraction-service image to ECR
+name: Build and push case-notification-service image to ECR
 on:
   push:
     branches:
@@ -20,24 +20,24 @@ jobs:
     needs: sonar_scan
     uses: CDCgov/NEDSS-Workflows/.github/workflows/Build-gradle-microservice-container.yaml@main
     with:
-      microservice_name: data-extraction-service
-      dockerfile_relative_path: -f ./data-extraction-service/Dockerfile .
+      microservice_name: case-notification-service
+      dockerfile_relative_path: -f ./case-notification-service/Dockerfile .
       environment_classifier: SNAPSHOT
       java_version: "21"
     secrets:
       CDC_NBS_SANDBOX_SHARED_SERVICES_ACCOUNTID: ${{secrets.CDC_NBS_SANDBOX_SHARED_SERVICES_ACCOUNTID}}
-      ECR_REPO_BASE_NAME: ${{secrets.ECR_REPO_BASE_NAME}}/data-extraction-service
+      ECR_REPO_BASE_NAME: ${{secrets.ECR_REPO_BASE_NAME}}/case-notification-service
       GIT_USER_EMAIL: ${{secrets.GIT_USER_EMAIL}}
       GIT_USER_NAME: ${{secrets.GIT_USER_NAME}}
       HELM_TOKEN: ${{secrets.HELM_TOKEN}}
 
-  call-update-helm-data-extraction-service:
+  call-update-helm-case-notification-service:
     name: Request DEV deployment
     needs: call-build-microservice-container-workflow
     uses: CDCgov/NEDSS-Workflows/.github/workflows/Update-helm-charts.yaml@main
     with:
-      microservice_name: data-extraction-service
-      values_file_with_path: charts/data-extraction-service/values-dts1.yaml
+      microservice_name: case-notification-service
+      values_file_with_path: charts/case-notification-service/values-dts1.yaml
       new_image_tag: ${{ needs.call-build-microservice-container-workflow.outputs.output_image_tag }}
     secrets:
       GIT_USER_EMAIL: ${{secrets.GIT_USER_EMAIL}}

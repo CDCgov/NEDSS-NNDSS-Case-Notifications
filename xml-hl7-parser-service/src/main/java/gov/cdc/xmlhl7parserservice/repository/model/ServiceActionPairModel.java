@@ -1,4 +1,4 @@
-package gov.cdc.xmlhl7parserservice.model;
+package gov.cdc.xmlhl7parserservice.repository.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;

@@ -95,7 +95,7 @@ public class NbsDataSourceConfig {
             @Qualifier("nbsDataSource") DataSource nbsDataSource) {
         return nbsEntityManagerFactoryBuilder
                 .dataSource(nbsDataSource)
-                .packages("gov.cdc.xmlhl7parserservice.model")
+                .packages("gov.cdc.xmlhl7parserservice.repository.model")
                 .persistenceUnit("nbs")
                 .build();
     }

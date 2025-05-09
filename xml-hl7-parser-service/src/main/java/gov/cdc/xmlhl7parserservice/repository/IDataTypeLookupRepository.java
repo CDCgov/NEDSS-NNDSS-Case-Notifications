@@ -1,6 +1,6 @@
 package gov.cdc.xmlhl7parserservice.repository;
 
-import gov.cdc.xmlhl7parserservice.model.DataTypeModel;
+import gov.cdc.xmlhl7parserservice.repository.model.DataTypeModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -45,6 +45,11 @@ service:
 cnserver:
   host: ${CN_SERVER_HOST:localhost:8081}
 
+api:
+  clientId: ${NND_DE_CLIENT_ID:}
+  secret: ${NND_DE_SECRET:}
+  endpoint_hl7: ${NND_DE_URL:http://localhost:8088}/api/v1/convert/xml-to-hl7
+
 ---
 spring:
   config:

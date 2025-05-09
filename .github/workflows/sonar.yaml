@@ -8,9 +8,9 @@ on:
       PASSED_GITHUB_TOKEN:
         description: "Secret named GITHUB_TOKEN that references the github token for this repository."
         required: true
-      SONAR_TOKEN:
-        description: "Secret named SONAR_TOKEN that references the sonar token secret corresponding to the project in sonarcloud."
-        required: true
+      //SONAR_TOKEN:
+      //  description: "Secret named SONAR_TOKEN that references the sonar token secret corresponding to the project in sonarcloud."
+      //  required: false
   pull_request:
     paths:
       - "data-extraction-service/**"

@@ -14,7 +14,7 @@ jobs:
     secrets:
       CDC_NBS_SANDBOX_SHARED_SERVICES_ACCOUNTID: ${{secrets.CDC_NBS_SANDBOX_SHARED_SERVICES_ACCOUNTID}}
       PASSED_GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-      SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
+    //  SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
   call-build-microservice-container-workflow:
     name: Build Container
     needs: sonar_scan
@@ -26,7 +26,7 @@ jobs:
       java_version: "21"
     secrets:
       CDC_NBS_SANDBOX_SHARED_SERVICES_ACCOUNTID: ${{secrets.CDC_NBS_SANDBOX_SHARED_SERVICES_ACCOUNTID}}
-      ECR_REPO_BASE_NAME: ${{secrets.ECR_REPO_BASE_NAME}}/data-extraction-service
+      ECR_REPO_BASE_NAME: ${{secrets.ECR_REPO_BASE_NAME}}/nnd-case-notification-service
       GIT_USER_EMAIL: ${{secrets.GIT_USER_EMAIL}}
       GIT_USER_NAME: ${{secrets.GIT_USER_NAME}}
       HELM_TOKEN: ${{secrets.HELM_TOKEN}}

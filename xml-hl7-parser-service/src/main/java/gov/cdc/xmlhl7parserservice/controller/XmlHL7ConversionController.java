@@ -86,4 +86,5 @@ public class XmlHL7ConversionController {
 
         return ResponseEntity.ok(message);
     }
+
 }

@@ -1,4 +1,4 @@
-package gov.cdc.casenotificationservice.service.deadletter.interfaces;
+package gov.cdc.casenotificationservice.service.common.interfaces;
 
 import gov.cdc.casenotificationservice.exception.DltServiceException;
 import gov.cdc.casenotificationservice.model.ApiDltResponseModel;

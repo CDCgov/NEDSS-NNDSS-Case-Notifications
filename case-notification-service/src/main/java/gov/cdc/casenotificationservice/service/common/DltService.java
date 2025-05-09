@@ -1,4 +1,4 @@
-package gov.cdc.casenotificationservice.service.deadletter;
+package gov.cdc.casenotificationservice.service.common;
 
 import com.google.gson.Gson;
 import gov.cdc.casenotificationservice.exception.DltServiceException;
@@ -8,17 +8,14 @@ import gov.cdc.casenotificationservice.model.MessageAfterStdChecker;
 import gov.cdc.casenotificationservice.repository.msg.CaseNotificationDltRepository;
 import gov.cdc.casenotificationservice.repository.msg.model.CaseNotificationDlt;
 import gov.cdc.casenotificationservice.repository.odse.CNTraportqOutRepository;
-import gov.cdc.casenotificationservice.service.deadletter.interfaces.IDltService;
+import gov.cdc.casenotificationservice.service.common.interfaces.IDltService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.kafka.support.KafkaHeaders;
-import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.util.List;
 import java.util.UUID;
 
 import static gov.cdc.casenotificationservice.util.TimeStampHelper.getCurrentTimeStamp;

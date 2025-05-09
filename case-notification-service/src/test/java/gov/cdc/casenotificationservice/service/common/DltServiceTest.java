@@ -1,6 +1,5 @@
-package gov.cdc.casenotificationservice.service.deadletter;
+package gov.cdc.casenotificationservice.service.common;
 
-import com.google.gson.Gson;
 import gov.cdc.casenotificationservice.exception.DltServiceException;
 import gov.cdc.casenotificationservice.kafka.producer.CaseNotificationProducer;
 import gov.cdc.casenotificationservice.model.ApiDltResponseModel;

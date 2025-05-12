@@ -256,6 +256,12 @@ public class HL7MessageBuilder {
         }
         
         for (int z = 0; z < nbsnndIntermediaryMessage.getMessageElement().size(); z++){
+            var testNND = nbsnndIntermediaryMessage.getMessageElement().get(z);
+            if (nbsnndIntermediaryMessage.getMessageElement().get(z).getQuestionIdentifierNND().equalsIgnoreCase("INV827")) {
+                var test = "";
+            }
+
+
             String segmentField = nbsnndIntermediaryMessage.getMessageElement().get(z).getHl7SegmentField().trim();
             if (segmentField.startsWith("MSH")){
                 processMSHFields(nbsnndIntermediaryMessage.getMessageElement().get(z), msh);
@@ -393,18 +399,30 @@ public class HL7MessageBuilder {
                 obx.getOBSERVATION(std121obxOrderGroupId).getOBX().getObservationValue(std121ObsValue).setData(textData);
                 obx.getOBSERVATION(std121obxOrderGroupId).getOBX().getObservationResultStatus().setValue("F");
 
-            } else if(nbsnndIntermediaryMessage.getMessageElement().get(z).getIndicatorCd() != null) {
-                if(nbsnndIntermediaryMessage.getMessageElement().get(z).getIndicatorCd().contains("ParentRepeatBlock")){
-                    mapToDynamicParentRptToRpt(nbsnndIntermediaryMessage.getMessageElement().get(z),  obx2Inc, messageType, oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(0));
-                } else if(nbsnndIntermediaryMessage.getMessageElement().get(z).getIndicatorCd().contains("DiscAsRepeat")){
-                    mapToDynamicRootlDiscToRepeat(nbsnndIntermediaryMessage.getMessageElement().get(z), obx2Inc, oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(0));
-                } else if(nbsnndIntermediaryMessage.getMessageElement().get(z).getIndicatorCd().contains("DiscCdToMultiOBS")){
-                    mapToDisRepeat(nbsnndIntermediaryMessage.getMessageElement().get(z), obx2Inc, oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(0));
-                } else if(nbsnndIntermediaryMessage.getMessageElement().get(z).getIndicatorCd().contains("RepeatToMultiNND")){
-                    mapToRepeatToMultiNND(nbsnndIntermediaryMessage.getMessageElement().get(z), obx2Inc, oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(0));
-                }
-            } else if ((nbsnndIntermediaryMessage.getMessageElement().get(z).getHl7SegmentField().equals("OBX-3.0") || nbsnndIntermediaryMessage.getMessageElement().get(z).getHl7SegmentField().equals("OBX-5.9"))
-                    && nbsnndIntermediaryMessage.getMessageElement().get(z).getQuestionMap() != null && nbsnndIntermediaryMessage.getMessageElement().get(z).getQuestionMap().contains("|")) {
+            }
+            else if(nbsnndIntermediaryMessage.getMessageElement().get(z).getIndicatorCd() != null && nbsnndIntermediaryMessage.getMessageElement().get(z).getIndicatorCd().contains("ParentRepeatBlock"))
+            {
+                mapToDynamicParentRptToRpt(nbsnndIntermediaryMessage.getMessageElement().get(z),  obx2Inc, messageType, oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(0));
+            }
+            else if(nbsnndIntermediaryMessage.getMessageElement().get(z).getIndicatorCd() != null && nbsnndIntermediaryMessage.getMessageElement().get(z).getIndicatorCd().contains("DiscAsRepeat"))
+            {
+                mapToDynamicRootlDiscToRepeat(nbsnndIntermediaryMessage.getMessageElement().get(z), obx2Inc, oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(0));
+            }
+            else if(nbsnndIntermediaryMessage.getMessageElement().get(z).getIndicatorCd() != null && nbsnndIntermediaryMessage.getMessageElement().get(z).getIndicatorCd().contains("DiscCdToMultiOBS"))
+            {
+                mapToDisRepeat(nbsnndIntermediaryMessage.getMessageElement().get(z), obx2Inc, oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(0));
+            }
+            else if(nbsnndIntermediaryMessage.getMessageElement().get(z).getIndicatorCd() != null && nbsnndIntermediaryMessage.getMessageElement().get(z).getIndicatorCd().contains("RepeatToMultiNND"))
+            {
+                mapToRepeatToMultiNND(nbsnndIntermediaryMessage.getMessageElement().get(z), obx2Inc, oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(0));
+            }
+            else if (
+                    (nbsnndIntermediaryMessage.getMessageElement().get(z).getHl7SegmentField().equals("OBX-3.0")
+                    || nbsnndIntermediaryMessage.getMessageElement().get(z).getHl7SegmentField().equals("OBX-5.9"))
+                    && nbsnndIntermediaryMessage.getMessageElement().get(z).getQuestionMap() != null
+                    && nbsnndIntermediaryMessage.getMessageElement().get(z).getQuestionMap().contains("|")
+            )
+            {
                 mapToQuestionMap(nbsnndIntermediaryMessage.getMessageElement().get(z), obx2Inc, oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(0));
             }
 
@@ -3609,7 +3627,7 @@ public class HL7MessageBuilder {
                         || messageType.contains("TB_Case_Map_v2.0") || messageType.contains("Var_Case_Map_v2.0"))
                 {
                     //TODO - 23329
-                    CWE cweDatatype = (CWE) obx.getObservationValue(obx5ValueInc).getData();
+                    CWE cweDatatype = new CWE(obx.getMessage());//obx.getObservationValue(obx5ValueInc).getData();
                     if (codedValue.isEmpty()){
                         cweDatatype.getCwe5_AlternateText().setValue(localCodedValueDescription);
                         obx.getObservationValue(obx5ValueInc).setData(cweDatatype);
@@ -3622,8 +3640,8 @@ public class HL7MessageBuilder {
                 {
                     if (codedValue.isEmpty()){
                         //TODO - 23329
-                        CWE cweDataTYpe = (CWE) obx.getObservationValue(obx5ValueInc).getData();
-                        if (messageElement.getDataElement().getCweDataType().getCweCodedValue()==null)
+                        CWE cweDataTYpe = new CWE(obx.getMessage());
+                        if (messageElement.getDataElement().getCweDataType().getCweCodedValue()==null && messageElement.getDataElement().getCweDataType().getCweLocalCodedValueCodingSystem() != null)
                         {
                             codedValueDescription = messageElement.getDataElement().getCweDataType().getCweLocalCodedValueCodingSystem().trim();
                             if (!codedValueDescription.isEmpty()){
@@ -3864,7 +3882,9 @@ public class HL7MessageBuilder {
 
     }
 
-    private void mapToQuestionMap(MessageElement messageElement, int counter, ORU_R01_ORDER_OBSERVATION orderObservation) throws DataTypeException {
+    private void mapToQuestionMap(MessageElement messageElement, int counter, ORU_R01_ORDER_OBSERVATION orderObservation) throws HL7Exception {
+        OBX obxUpdate = orderObservation.getOBSERVATION(orderObservation.getOBSERVATIONAll().size()).getOBX();
+
         String indPartMain = "";
         String indPart1 = "";
         String indPart2 = "";
@@ -3974,39 +3994,28 @@ public class HL7MessageBuilder {
         }
 
         if (subStringLeft.contains("^")) {
-            String remainingPart = subStringLeft;
-            questPart1 = remainingPart.substring(0, remainingPart.indexOf("^"));
-            remainingPart = remainingPart.substring(remainingPart.indexOf("^") + 1);
+            if (subStringLeft != null && !subStringLeft.isEmpty()) {
+                String[] parts = subStringLeft.split("\\^", -1);
 
-            questPart2 = remainingPart.substring(0, remainingPart.indexOf("^"));
-            remainingPart = remainingPart.substring(remainingPart.indexOf("^") + 1);
-
-            questPart3 = remainingPart.substring(0, remainingPart.indexOf("^"));
-            remainingPart = remainingPart.substring(remainingPart.indexOf("^") + 1);
-
-            questPart4 = remainingPart.substring(0, remainingPart.indexOf("^"));
-            remainingPart = remainingPart.substring(remainingPart.indexOf("^") + 1);
-
-            questPart5 = remainingPart.substring(0, remainingPart.indexOf("^"));
-            questPart6 = remainingPart.substring(remainingPart.indexOf("^") + 1);
+                questPart1 = parts.length > 0 ? parts[0] : "";
+                questPart2 = parts.length > 1 ? parts[1] : "";
+                questPart3 = parts.length > 2 ? parts[2] : "";
+                questPart4 = parts.length > 3 ? parts[3] : "";
+                questPart5 = parts.length > 4 ? parts[4] : "";
+                questPart6 = parts.length > 5 ? parts[5] : "";
+            }
         }
 
         if (subStringRight.contains("^")) {
-            String remainingPart = subStringRight;
-            quest2Part1 = remainingPart.substring(0, remainingPart.indexOf("^"));
-            remainingPart = remainingPart.substring(remainingPart.indexOf("^") + 1);
-
-            quest2Part2 = remainingPart.substring(0, remainingPart.indexOf("^"));
-            remainingPart = remainingPart.substring(remainingPart.indexOf("^") + 1);
-
-            quest2Part3 = remainingPart.substring(0, remainingPart.indexOf("^"));
-            remainingPart = remainingPart.substring(remainingPart.indexOf("^") + 1);
-
-            quest2Part4 = remainingPart.substring(0, remainingPart.indexOf("^"));
-            remainingPart = remainingPart.substring(remainingPart.indexOf("^") + 1);
-
-            quest2Part5 = remainingPart.substring(0, remainingPart.indexOf("^"));
-            quest2Part6 = remainingPart.substring(remainingPart.indexOf("^") + 1);
+            if (subStringRight != null && !subStringRight.isEmpty()) {
+                String[] parts = subStringRight.split("\\^", -1);
+                quest2Part1 = parts.length > 0 ? parts[0] : "";
+                quest2Part2 = parts.length > 1 ? parts[1] : "";
+                quest2Part3 = parts.length > 2 ? parts[2] : "";
+                quest2Part4 = parts.length > 3 ? parts[3] : "";
+                quest2Part5 = parts.length > 4 ? parts[4] : "";
+                quest2Part6 = parts.length > 5 ? parts[5] : "";
+            }
         }
 
         String dataElementCodedValue = "";
@@ -4020,8 +4029,11 @@ public class HL7MessageBuilder {
             questionDataType = messageElement.getDataElement().getQuestionDataTypeNND();
         }
 
-        if (!mappedValue.isEmpty() && !mappedValue.equals(dataElementCodedValue)) {
-        } else if ("SN_WITH_UNIT".equals(questionDataType)) {
+        if (!mappedValue.isEmpty() && !mappedValue.equals(dataElementCodedValue))
+        {
+        }
+        else if ("SN_WITH_UNIT".equals(questionDataType))
+        {
             int checkerNum = 0;
 
             for (DiscreteRepeat item : discreteRepeatSNTypeArray) {
@@ -4067,7 +4079,9 @@ public class HL7MessageBuilder {
             obx.getObservationResultStatus().setValue("F");
 
             obx2Inc++;
-        } else if (messageElement.getQuestionIdentifierNND().contains("_OTH")) {
+        }
+        else if (messageElement.getQuestionIdentifierNND().contains("_OTH"))
+        {
             int checkerNum = 0;
             String tester = "";
 
@@ -4139,9 +4153,10 @@ public class HL7MessageBuilder {
                     mappedAsOtherInt = 1;
                 }
             }
-        } else if (indPartMain.contains("^" + dataElementCodedValue + "^")
-                || (unkObx5 != null && !unkObx5.isEmpty())) {
-
+        }
+        else if (indPartMain.contains("^" + dataElementCodedValue + "^")
+                || (unkObx5 != null && !unkObx5.isEmpty()))
+        {
             int checkerNum = 0;
             String id = messageElement.getQuestionIdentifier();
 
@@ -4181,10 +4196,11 @@ public class HL7MessageBuilder {
             }
 
             // Case 2
-            orderObservation.getOBSERVATION(1).getOBX().getSetIDOBX().setValue(String.valueOf(counter + 1));
-            orderObservation.getOBSERVATION(1).getOBX().getValueType().setValue("CWE");
+            orderObservation.getOBSERVATION(0).getOBX().getSetIDOBX().setValue(String.valueOf(counter + 1));
+            orderObservation.getOBSERVATION(0).getOBX().getValueType().setValue("CWE");
 
-            OBX obx1 = orderObservation.getOBSERVATION(1).getOBX();
+
+            OBX obx1 = orderObservation.getOBSERVATION(0).getOBX();
 
             obx1.getObservationIdentifier().getIdentifier().setValue(questPart1);
             obx1.getObservationIdentifier().getText().setValue(questPart2);
@@ -4193,16 +4209,35 @@ public class HL7MessageBuilder {
             obx1.getObservationIdentifier().getAlternateText().setValue(questPart5);
             obx1.getObservationIdentifier().getNameOfAlternateCodingSystem().setValue(questPart6);
 
+            ObxRepeatingElement obxRepeatingElement = new ObxRepeatingElement();
+            obxRepeatingElement.setElementUid(questPart1);
+            obxRepeatingElement.setObxInc(0);
+            obxRepeatingElementArrayList.add(obxRepeatingElement);
+
             if (checkPoint > 0) {
-                ST stObservationValue = (ST) obx1.getObservationValue(0).getData();
-                stObservationValue.setValue(messageElement.getDataElement().getCweDataType().getCweCodedValue() + "^" +
-                        messageElement.getDataElement().getCweDataType().getCweCodedValueDescription() + "^" +
-                        messageElement.getDataElement().getCweDataType().getCweCodedValueCodingSystem());
-                obx1.getObservationValue(0).setData(stObservationValue);
+//                ST stObservationValue =  new ST(obx1.getMessage()); //(ST) obx1.getObservationValue(0).getData();
+//                stObservationValue.setValue(messageElement.getDataElement().getCweDataType().getCweCodedValue() + "^" +
+//                        messageElement.getDataElement().getCweDataType().getCweCodedValueDescription() + "^" +
+//                        messageElement.getDataElement().getCweDataType().getCweCodedValueCodingSystem());
+//                obx1.getObservationValue(0).setData(stObservationValue);
+                CWE cweObservationValue = new CWE(obx1.getMessage());
+                cweObservationValue.getIdentifier().setValue(messageElement.getDataElement().getCweDataType().getCweCodedValue());
+                cweObservationValue.getText().setValue(messageElement.getDataElement().getCweDataType().getCweCodedValueDescription());
+                cweObservationValue.getNameOfCodingSystem().setValue(messageElement.getDataElement().getCweDataType().getCweCodedValueCodingSystem());
+
+                obx1.getObservationValue(0).setData(cweObservationValue);
+
             } else {
-                ST stObservationValue = (ST) obx1.getObservationValue(0).getData();
-                stObservationValue.setValue(quest2Part1 + "^" + quest2Part2 + "^" + quest2Part3);
-                obx1.getObservationValue(0).setData(stObservationValue);
+//                ST stObservationValue =  new ST(obx1.getMessage()); //(ST) obx1.getObservationValue(0).getData();
+//                stObservationValue.setValue(quest2Part1 + "^" + quest2Part2 + "^" + quest2Part3);
+//                obx1.getObservationValue(0).setData(stObservationValue);
+                CWE cweObservationValue = new CWE(obx1.getMessage());
+                cweObservationValue.getIdentifier().setValue(quest2Part1);
+                cweObservationValue.getText().setValue(quest2Part2);
+                cweObservationValue.getNameOfCodingSystem().setValue(quest2Part3);
+
+                obx1.getObservationValue(0).setData(cweObservationValue);
+
             }
 
             if (messageElement.getQuestionIdentifierNND().equals("OTH") && otherText != null && !otherText.isEmpty()) {
@@ -4230,16 +4265,32 @@ public class HL7MessageBuilder {
             obx2.getObservationIdentifier().getAlternateText().setValue(indPart5);
             obx2.getObservationIdentifier().getNameOfAlternateCodingSystem().setValue(indPart6);
 
+            ObxRepeatingElement obxRepeatingElement1 = new ObxRepeatingElement();
+            obxRepeatingElement1.setElementUid(indPart1);
+            obxRepeatingElement1.setObxInc(1);
+            obxRepeatingElementArrayList.add(obxRepeatingElement1);
+
+
             if (unkObx5 != null && !unkObx5.isEmpty()) {
-                ST stObservationValue = (ST) obx2.getObservationValue(0).getData();
+                ST stObservationValue = new ST(obx2.getMessage()); //(ST) obx2.getObservationValue(0).getData();
                 stObservationValue.setValue(unkObx5);
                 obx2.getObservationValue(0).setData(stObservationValue);
-            } else {
-                ST stObservationValue = (ST) obx2.getObservationValue(0).getData();
-                stObservationValue.setValue(messageElement.getDataElement().getCweDataType().getCweCodedValue() + "^" +
-                        messageElement.getDataElement().getCweDataType().getCweCodedValueDescription() + "^" +
-                        messageElement.getDataElement().getCweDataType().getCweCodedValueCodingSystem());
-                obx2.getObservationValue(0).setData(stObservationValue);
+            }
+            else
+            {
+//                ST stObservationValue =  new ST(obx2.getMessage()); //(ST) obx2.getObservationValue(0).getData();
+//                stObservationValue.setValue(messageElement.getDataElement().getCweDataType().getCweCodedValue() + "^" +
+//                        messageElement.getDataElement().getCweDataType().getCweCodedValueDescription() + "^" +
+//                        messageElement.getDataElement().getCweDataType().getCweCodedValueCodingSystem());
+//                obx2.getObservationValue(0).setData(stObservationValue);
+
+                CWE cweObservationValue = new CWE(obx2.getMessage());
+                cweObservationValue.getIdentifier().setValue(messageElement.getDataElement().getCweDataType().getCweCodedValue());
+                cweObservationValue.getText().setValue(messageElement.getDataElement().getCweDataType().getCweCodedValueDescription());
+                cweObservationValue.getNameOfCodingSystem().setValue(messageElement.getDataElement().getCweDataType().getCweCodedValueCodingSystem());
+
+                obx2.getObservationValue(0).setData(cweObservationValue);
+
             }
 
             obx2.getObservationSubID().setValue(String.valueOf(obx4Counter));

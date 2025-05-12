@@ -1,6 +1,7 @@
 package gov.cdc.dataextractionservice.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -10,12 +11,12 @@ public class CnTransportQOutUpdateService {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public CnTransportQOutUpdateService(JdbcTemplate jdbcTemplate) {
+    public CnTransportQOutUpdateService(@Qualifier("odseJdbcTemplate") JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     public void updateRecordStatus(long cnTransportqOutUid, String newStatus) {
-        String sql = "UPDATE CN_TRANSPORTQ_OUT " +
+        String sql = "UPDATE CN_transportq_out " +
                 "SET record_status_cd = ?, record_status_time = GETDATE() " +
                 "WHERE cn_transportq_out_uid = ?";
 

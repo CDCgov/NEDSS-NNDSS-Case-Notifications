@@ -19,7 +19,6 @@ import java.io.InputStream;
 
 
 @RestController
-@RequestMapping("/api/v1/convert")
 public class XmlHL7ConversionController {
 
     private static final Logger log = LoggerFactory.getLogger(XmlHL7ConversionController.class);

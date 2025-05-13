@@ -7,6 +7,9 @@ build
 .idea
 .vscode
 
+# macOS system files
+.DS_Store
+
 /data-extract-service/build
 /data-extract-service/.gradle
 /data-extract-service/.idea
@@ -20,4 +23,4 @@ build
 /non-std-processor-service/build
 /non-std-processor-service/.gradle
 /non-std-processor-service/.idea
-/non-std-processor-service/.vscode
+/non-std-processor-service/.vscode.DS_Store

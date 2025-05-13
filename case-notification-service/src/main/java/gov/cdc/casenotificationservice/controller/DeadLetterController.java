@@ -4,16 +4,14 @@ import gov.cdc.casenotificationservice.exception.DltServiceException;
 import gov.cdc.casenotificationservice.model.ApiDltResponseModel;
 import gov.cdc.casenotificationservice.model.MessageAfterStdChecker;
 import gov.cdc.casenotificationservice.repository.msg.model.CaseNotificationDlt;
-import gov.cdc.casenotificationservice.service.deadletter.interfaces.IDltService;
+import gov.cdc.casenotificationservice.service.common.interfaces.IDltService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

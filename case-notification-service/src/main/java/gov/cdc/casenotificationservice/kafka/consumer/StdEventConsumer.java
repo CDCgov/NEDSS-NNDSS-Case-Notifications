@@ -47,9 +47,12 @@ public class StdEventConsumer {
             containerFactory = "kafkaListenerContainerFactoryConsumerForStd"
     )
     public void handleMessage(String message) throws StdProcessorServiceException {
+        logger.info("Received std message");
         var gson = new Gson();
         var data = gson.fromJson(message, MessageAfterStdChecker.class);
         xmlService.mappingXmlStringToObject(data);
+        logger.info("Completed std message");
+
     }
     @DltHandler()
     public void handleDlt(

@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class NonStdEventConsumer {
-    private static final Logger logger = LoggerFactory.getLogger(StdEventConsumer.class); //NOSONAR
+    private static final Logger logger = LoggerFactory.getLogger(NonStdEventConsumer.class); //NOSONAR
     private final NonStdService nonStdService;
     private final IDltService dltService;
 
@@ -48,9 +48,12 @@ public class NonStdEventConsumer {
             containerFactory = "kafkaListenerContainerFactoryConsumerForNonStd"
     )
     public void handleMessage(String message) throws IgnorableException, NonStdProcessorServiceException, NonStdBatchProcessorServiceException, APIException {
+        logger.info("Received non std message");
         var gson = new Gson();
         var data = gson.fromJson(message, MessageAfterStdChecker.class);
         nonStdService.nonStdProcessor(data);
+        logger.info("Completed non std message");
+
     }
 
     @DltHandler()

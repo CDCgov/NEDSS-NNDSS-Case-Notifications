@@ -4,6 +4,7 @@ import gov.cdc.casenotificationservice.exception.APIException;
 import gov.cdc.casenotificationservice.exception.IgnorableException;
 import gov.cdc.casenotificationservice.exception.NonStdBatchProcessorServiceException;
 import gov.cdc.casenotificationservice.exception.NonStdProcessorServiceException;
+import gov.cdc.casenotificationservice.kafka.consumer.StdEventConsumer;
 import gov.cdc.casenotificationservice.model.MessageAfterStdChecker;
 import gov.cdc.casenotificationservice.model.PHINMSProperties;
 import gov.cdc.casenotificationservice.repository.msg.CaseNotificationConfigRepository;
@@ -15,12 +16,16 @@ import gov.cdc.casenotificationservice.service.common.interfaces.IApiService;
 import gov.cdc.casenotificationservice.service.nonstd.interfaces.INonStdBatchService;
 import gov.cdc.casenotificationservice.service.nonstd.interfaces.INonStdService;
 import gov.cdc.casenotificationservice.service.nonstd.interfaces.IPHINMSService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 
 @Service
 public class NonStdService implements INonStdService {
+    private static final Logger logger = LoggerFactory.getLogger(NonStdService.class); //NOSONAR
+
     @Value("${service.timezone}")
     private String tz = "UTC";
     private final IPHINMSService phinmsService;

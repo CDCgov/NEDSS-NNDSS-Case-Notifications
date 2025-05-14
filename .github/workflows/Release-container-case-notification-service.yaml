@@ -40,7 +40,7 @@ jobs:
   call-build-microservice-container-workflow:
     uses: CDCgov/NEDSS-Workflows/.github/workflows/Release-gradle-microservice-container.yaml@main
     with:
-      microservice_name: ${{inputs.microservice_name}}
+      microservice_name: nnd-case-notification-service/${{inputs.microservice_name}}
       existing-image-tag: ${{inputs.existing-image-tag}}
       build-new-container: ${{inputs.build-new-container}}
       dockerfile_relative_path: ${{inputs.dockerfile_relative_path}}

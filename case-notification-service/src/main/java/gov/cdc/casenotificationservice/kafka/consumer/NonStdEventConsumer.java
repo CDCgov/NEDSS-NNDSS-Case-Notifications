@@ -1,11 +1,12 @@
 package gov.cdc.casenotificationservice.kafka.consumer;
 
 import com.google.gson.Gson;
+import gov.cdc.casenotificationservice.exception.APIException;
 import gov.cdc.casenotificationservice.exception.IgnorableException;
 import gov.cdc.casenotificationservice.exception.NonStdBatchProcessorServiceException;
 import gov.cdc.casenotificationservice.exception.NonStdProcessorServiceException;
 import gov.cdc.casenotificationservice.model.MessageAfterStdChecker;
-import gov.cdc.casenotificationservice.service.deadletter.interfaces.IDltService;
+import gov.cdc.casenotificationservice.service.common.interfaces.IDltService;
 import gov.cdc.casenotificationservice.service.nonstd.NonStdService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +22,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class NonStdEventConsumer {
-    private static final Logger logger = LoggerFactory.getLogger(StdEventConsumer.class); //NOSONAR
+    private static final Logger logger = LoggerFactory.getLogger(NonStdEventConsumer.class); //NOSONAR
     private final NonStdService nonStdService;
     private final IDltService dltService;
 
@@ -46,10 +47,13 @@ public class NonStdEventConsumer {
             topics = "${spring.kafka.topic.non-std-topic}",
             containerFactory = "kafkaListenerContainerFactoryConsumerForNonStd"
     )
-    public void handleMessage(String message) throws IgnorableException, NonStdProcessorServiceException, NonStdBatchProcessorServiceException {
+    public void handleMessage(String message) throws IgnorableException, NonStdProcessorServiceException, NonStdBatchProcessorServiceException, APIException {
+        logger.info("Received non std message");
         var gson = new Gson();
         var data = gson.fromJson(message, MessageAfterStdChecker.class);
         nonStdService.nonStdProcessor(data);
+        logger.info("Completed non std message");
+
     }
 
     @DltHandler()

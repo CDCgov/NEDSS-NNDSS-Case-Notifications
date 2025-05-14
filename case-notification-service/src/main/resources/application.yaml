@@ -1,5 +1,5 @@
 server:
-  port: 8092
+  port: 8093
   servlet:
     context-path: /case-notification
 
@@ -44,6 +44,11 @@ service:
 
 cnserver:
   host: ${CN_SERVER_HOST:localhost:8081}
+
+api:
+  clientId: ${NND_DE_CLIENT_ID:}
+  secret: ${NND_DE_SECRET:}
+  endpoint_hl7: ${NND_DE_URL:https://dataingestion.dts1.nbspreview.com/hl7-parser}/xml-to-hl7
 
 ---
 spring:

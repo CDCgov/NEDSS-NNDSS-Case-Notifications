@@ -3,7 +3,7 @@ package gov.cdc.casenotificationservice.kafka.consumer;
 import com.google.gson.Gson;
 import gov.cdc.casenotificationservice.exception.StdProcessorServiceException;
 import gov.cdc.casenotificationservice.model.MessageAfterStdChecker;
-import gov.cdc.casenotificationservice.service.deadletter.interfaces.IDltService;
+import gov.cdc.casenotificationservice.service.common.interfaces.IDltService;
 import gov.cdc.casenotificationservice.service.std.interfaces.IXmlService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,9 +47,12 @@ public class StdEventConsumer {
             containerFactory = "kafkaListenerContainerFactoryConsumerForStd"
     )
     public void handleMessage(String message) throws StdProcessorServiceException {
+        logger.info("Received std message");
         var gson = new Gson();
         var data = gson.fromJson(message, MessageAfterStdChecker.class);
         xmlService.mappingXmlStringToObject(data);
+        logger.info("Completed std message");
+
     }
     @DltHandler()
     public void handleDlt(

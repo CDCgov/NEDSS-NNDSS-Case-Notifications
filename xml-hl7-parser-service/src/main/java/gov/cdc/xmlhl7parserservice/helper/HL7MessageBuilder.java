@@ -699,6 +699,7 @@ public class HL7MessageBuilder {
     }
 
     private void mapToRepeatToMultiNND(MessageElement messageElement, int obx2Inc, ORU_R01_ORDER_OBSERVATION orderObservation) throws DataTypeException {
+        ObxRepeatingElement obxRepeatingElement = null;
         String indPartMain = "";
         String indPart1 = "";
         String questPart1 = "";
@@ -787,6 +788,11 @@ public class HL7MessageBuilder {
             observationIdentifier.getNameOfAlternateCodingSystem().setValue(questPart6);
 
             obx.getObservationResultStatus().setValue("F");
+
+            obxRepeatingElement = new ObxRepeatingElement();
+            obxRepeatingElement.setElementUid(questPart1);
+            obxRepeatingElement.setObxInc(1);
+            obxRepeatingElementArrayList.add(obxRepeatingElement);
         }
 
         var localComplex = messageElement.getDataElement();
@@ -838,9 +844,17 @@ public class HL7MessageBuilder {
             output = localComplex.getNmDataType().getNum();
         }
 
-        ST stType = (ST) orderObservation.getOBSERVATION(1).getOBX().getObservationValue(obsCounter).getData();
+
+        ST stType = new ST(orderObservation.getOBSERVATION(1).getOBX().getMessage()); //.getObservationValue(obsCounter).getData();
         stType.setValue(output);
         orderObservation.getOBSERVATION(1).getOBX().getObservationValue(obsCounter).setData(stType);
+
+        if (obxRepeatingElement == null) {
+            obxRepeatingElement = new ObxRepeatingElement();
+            obxRepeatingElement.setElementUid("mapToRepeatToMultiNND");
+            obxRepeatingElement.setObxInc(1);
+            obxRepeatingElementArrayList.add(obxRepeatingElement);
+        }
 
 
 //        out.OBSERVATION[1].OBX[counter].ObservationValue[obsCounter] = output;
@@ -853,6 +867,8 @@ public class HL7MessageBuilder {
     }
 
     private void mapToDisRepeat(MessageElement messageElement, int obx2Inc, ORU_R01_ORDER_OBSERVATION orderObservation) throws DataTypeException {
+        ObxRepeatingElement obxRepeatingElement = null;
+
         String indicatorCode = messageElement.getIndicatorCd();
         int startInd = indicatorCode.indexOf("|");
 
@@ -909,14 +925,27 @@ public class HL7MessageBuilder {
                 obsId.getAlternateText().setValue(questPart5);
                 obsId.getNameOfAlternateCodingSystem().setValue(questPart6);
 
+                obxRepeatingElement = new ObxRepeatingElement();
+                obxRepeatingElement.setElementUid(questPart1);
+                obxRepeatingElement.setObxInc(1);
+                obxRepeatingElementArrayList.add(obxRepeatingElement);
+
                 obx2Inc += 1;
             } else {
                 discreteMulti.setObsValueCounter(discreteMulti.getObsValueCounter() + 1);
             }
 
             //TODO - Verify this implementation everywhere in the code
-            ST stType = (ST) orderObservation.getOBSERVATION(1).getOBX().getObservationValue(discreteMulti.getObsValueCounter()).getData();
+            ST stType = new ST(orderObservation.getOBSERVATION(1).getOBX().getMessage()); // orderObservation.getOBSERVATION(1).getOBX().getObservationValue(discreteMulti.getObsValueCounter()).getData();
             stType.setValue(subStringRight);
+            orderObservation.getOBSERVATION(1).getOBX().getObservationValue(discreteMulti.getObsValueCounter()).setData(stType);
+            if (obxRepeatingElement == null) {
+                obxRepeatingElement = new ObxRepeatingElement();
+                obxRepeatingElement.setElementUid("mapToDisRepeat");
+                obxRepeatingElement.setObxInc(1);
+                obxRepeatingElementArrayList.add(obxRepeatingElement);
+            }
+
         }
     }
 
@@ -969,7 +998,7 @@ public class HL7MessageBuilder {
     private void mapToDynamicIndicatorToObx(MessageElement messageElement, String questionIdentifier, String mappedString, int countNum, int obx2Inc, ORU_R01_ORDER_OBSERVATION orderObservation) throws DataTypeException {
         String separatorWOObx5 = "|:";
         int intIndicator = mappedString.indexOf(separatorWOObx5);
-
+        ObxRepeatingElement obxRepeatingElement = null;
         String partIndicator1 = "";
         String partIndicator2 = "";
         String partIndicator3 = "";
@@ -1026,6 +1055,11 @@ public class HL7MessageBuilder {
             orderObservation.getOBSERVATION(1).getOBX().getValueType().setValue("CWE");
             String questionDataType = messageElement.getDataElement().getQuestionDataTypeNND();
 
+            obxRepeatingElement = new ObxRepeatingElement();
+            obxRepeatingElement.setElementUid("mapToDynamicIndicatorToObx");
+            obxRepeatingElement.setObxInc(1);
+            obxRepeatingElementArrayList.add(obxRepeatingElement);
+
             if(questionDataType.equals("CWE")) {
                 if (intIndicator > 2) {
                     String codedValue = "";
@@ -1072,13 +1106,13 @@ public class HL7MessageBuilder {
                             localCodedValueCodingSystem
                     ) + originalOtherText;
 
-                    ST stData = (ST) obx.getObservationValue(0).getData();
+                    ST stData = new ST(obx.getMessage());
                     stData.setValue(observationValue);
                     obx.getObservationValue(0).setData(stData);
 
                 } else {
                     String observationValue = String.join("^", obx1, obx2, obx3);
-                    ST stData = (ST) obx.getObservationValue(0).getData();
+                    ST stData = new ST(obx.getMessage());
                     stData.setValue(observationValue);
                     obx.getObservationValue(0).setData(stData);
                 }
@@ -1107,7 +1141,7 @@ public class HL7MessageBuilder {
                 if (stringSize >= 23) milli = time.substring(14, 17);
 
                 String formattedTime = year + month + day + hour + minute + second + separator + milli;
-                ST stData = (ST) obx.getObservationValue(0).getData();
+                ST stData = new ST(obx.getMessage());
                 stData.setValue(formattedTime);
                 obx.getObservationValue(0).setData(stData);
             }
@@ -1124,7 +1158,7 @@ public class HL7MessageBuilder {
                     textData = mapToRemoveSpecialCharacters(textData);
                 }
 
-                ST stData = (ST) obx.getObservationValue(0).getData();
+                ST stData = new ST(obx.getMessage());
                 stData.setValue(textData);
                 obx.getObservationValue(0).setData(stData);
             }
@@ -1140,7 +1174,7 @@ public class HL7MessageBuilder {
                     textData = mapToRemoveSpecialCharacters(textData);
                 }
 
-                ST stData = (ST) obx.getObservationValue(0).getData();
+                ST stData = new ST(obx.getMessage());
                 stData.setValue(textData);
                 obx.getObservationValue(0).setData(stData);
             }
@@ -1299,6 +1333,8 @@ public class HL7MessageBuilder {
             repeatCountNum = counter;
 
             OBX obx = orderObservation.getOBSERVATION(1).getOBX();
+
+
             obx.getSetIDOBX().setValue(String.valueOf(obx2Inc + 1));
 
             CE observationIdentifier = obx.getObservationIdentifier();
@@ -1311,6 +1347,12 @@ public class HL7MessageBuilder {
 
             obx.getObservationSubID().setValue(String.valueOf(counter));
             obx.getObservationResultStatus().setValue("F");
+
+            ObxRepeatingElement obxRepeatingElement = new ObxRepeatingElement();
+            obxRepeatingElement.setElementUid(partIndicator1);
+            obxRepeatingElement.setObxInc(1);
+            obxRepeatingElementArrayList.add(obxRepeatingElement);
+
 
             String questionDataType = messageElement.getDataElement().getQuestionDataTypeNND();
             if (questionDataType.equals("CWE") || splitPart == 2) {
@@ -1363,13 +1405,13 @@ public class HL7MessageBuilder {
                             localCodedValueCodingSystem
                     ) + originalOtherText;
 
-                    ST stData = (ST) obx.getObservationValue(1).getData();
+                    ST stData = new ST(obx.getMessage()); //obx.getObservationValue(1).getData();
                     stData.setValue(observationValue);
                     obx.getObservationValue(0).setData(stData);
 
                 } else {
                     String observationValue = String.join("^", obx1, obx2, obx3);
-                    ST stData = (ST) obx.getObservationValue(0).getData();
+                    ST stData = new ST(obx.getMessage()); //(ST) obx.getObservationValue(0).getData();
                     stData.setValue(observationValue);
                     obx.getObservationValue(0).setData(stData);
                 }
@@ -1396,7 +1438,7 @@ public class HL7MessageBuilder {
                 if (stringSize >= 23) milli = time.substring(14, 17);
 
                 String formattedTime = year + month + day + hour + minute + second + separator + milli;
-                ST stData = (ST) obx.getObservationValue(0).getData();
+                ST stData = new ST(obx.getMessage()); //(ST) obx.getObservationValue(0).getData();
                 stData.setValue(formattedTime);
                 obx.getObservationValue(0).setData(stData);
             } else if (questionDataType.equals("TX")) {
@@ -1411,7 +1453,7 @@ public class HL7MessageBuilder {
                     textData = mapToRemoveSpecialCharacters(textData);
                 }
 
-                ST stData = (ST) obx.getObservationValue(0).getData();
+                ST stData = new ST(obx.getMessage()); // (ST) obx.getObservationValue(0).getData();
                 stData.setValue(textData);
                 obx.getObservationValue(0).setData(stData);
             }
@@ -1426,7 +1468,7 @@ public class HL7MessageBuilder {
                     textData = mapToRemoveSpecialCharacters(textData);
                 }
 
-                ST stData = (ST) obx.getObservationValue(0).getData();
+                ST stData = new ST(obx.getMessage());  // (ST) obx.getObservationValue(0).getData();
                 stData.setValue(textData);
                 obx.getObservationValue(0).setData(stData);
             }
@@ -1493,6 +1535,11 @@ public class HL7MessageBuilder {
         obx.getObservationResultStatus().setValue("F");
         obx.getObservationSubID().setValue(String.valueOf(counter));
 
+        ObxRepeatingElement obxRepeatingElement = new ObxRepeatingElement();
+        obxRepeatingElement.setElementUid(messageElement.getQuestionIdentifierNND());
+        obxRepeatingElement.setObxInc(1);
+        obxRepeatingElementArrayList.add(obxRepeatingElement);
+
         if (messageElement.getDataElement().getQuestionDataTypeNND().equals("CWE")) {
             String codedValue = "";
             if (messageElement.getDataElement().getCweDataType().getCweCodedValue() != null) {
@@ -1540,7 +1587,7 @@ public class HL7MessageBuilder {
                     localCodedValueCodingSystem
             ) + originalOtherText;
 
-            ST stData = (ST) obx.getObservationValue(0).getData();
+            ST stData =  new ST(obx.getMessage()); //(ST) obx.getObservationValue(0).getData();
             stData.setValue(finalValue);
             obx.getObservationValue(0).setData(stData);
         }
@@ -1559,7 +1606,7 @@ public class HL7MessageBuilder {
             String timeOut = year + month + day + hour + minute + second + separator + milli;
 
             //TODO - Check how to set value
-            TS tsType = (TS) obx.getObservationValue(0).getData();
+            TS tsType = new TS(obx.getMessage()); //(TS) obx.getObservationValue(0).getData();
             tsType.getTime().setValue(timeOut);
             obx.getObservationValue(0).setData(tsType);
         }
@@ -1570,7 +1617,7 @@ public class HL7MessageBuilder {
             String textData = messageElement.getDataElement().getTxDataType().getTextData();
             textData = textData.replace("\n", " ");
 
-            ST stDataType = (ST) obx.getObservationValue(0).getData();
+            ST stDataType = new ST(obx.getMessage()); // (ST) obx.getObservationValue(0).getData();
             stDataType.setValue(textData);
             obx.getObservationValue(0).setData(stDataType);
         }
@@ -1578,7 +1625,7 @@ public class HL7MessageBuilder {
         if (dataType.equals("ST")) {
             obx.getValueType().setValue(dataType);
             String textData = messageElement.getDataElement().getStDataType().getStringData();
-            ST stDataType = (ST) obx.getObservationValue(0).getData();
+            ST stDataType = new ST(obx.getMessage()); //(ST) obx.getObservationValue(0).getData();
             stDataType.setValue(textData);
             obx.getObservationValue(0).setData(stDataType);
         }

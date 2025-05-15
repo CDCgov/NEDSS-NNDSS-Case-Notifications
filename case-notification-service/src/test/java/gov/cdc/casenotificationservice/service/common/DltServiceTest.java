@@ -100,9 +100,13 @@ public class DltServiceTest {
         CaseNotificationDlt dlt = new CaseNotificationDlt();
         dlt.setOriginalPayload(jsonPayload);
         dlt.setSource("non-std-topic");
+        dlt.setCnTranportqOutUid(123L);
 
         when(dltRepository.findById(UUID.fromString(uuid))).thenReturn(Optional.of(dlt));
-
+        CNTransportqOut mockTransport = new CNTransportqOut();
+        mockTransport.setMessagePayload("mock-payload");
+        mockTransport.setCnTransportqOutUid(123L);
+        when(cnTraportqOutRepository.findTopByRecordUid(123L)).thenReturn(mockTransport);
         dltService.reprocessingCaseNotification(jsonPayload, uuid);
 
         verify(dltRepository).save(any(CaseNotificationDlt.class));

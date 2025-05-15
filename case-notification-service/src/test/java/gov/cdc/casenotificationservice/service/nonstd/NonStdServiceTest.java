@@ -8,6 +8,7 @@ import gov.cdc.casenotificationservice.repository.msg.model.CaseNotificationConf
 import gov.cdc.casenotificationservice.repository.msg.model.TransportQOut;
 import gov.cdc.casenotificationservice.repository.odse.CNTraportqOutRepository;
 import gov.cdc.casenotificationservice.repository.odse.model.CNTransportqOut;
+import gov.cdc.casenotificationservice.service.common.interfaces.IApiService;
 import gov.cdc.casenotificationservice.service.nonstd.interfaces.INonStdBatchService;
 import gov.cdc.casenotificationservice.service.nonstd.interfaces.IPHINMSService;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,6 +39,10 @@ class NonStdServiceTest {
     @Mock
     private CaseNotificationConfigRepository caseNotificationConfigRepository;
 
+    @Mock
+    private IApiService apiService;
+
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -59,6 +64,7 @@ class NonStdServiceTest {
 
         CNTransportqOut mockTransport = new CNTransportqOut();
         mockTransport.setCnTransportqOutUid(123L);
+        when(apiService.callHl7Endpoint("", "123")).thenReturn("TEST");
 
         when(caseNotificationConfigRepository.findNonStdConfig()).thenReturn(config);
         when(cnTraportqOutRepository.findTopByRecordUid(123L)).thenReturn(mockTransport);
@@ -87,6 +93,7 @@ class NonStdServiceTest {
         CNTransportqOut mockTransport = new CNTransportqOut();
         mockTransport.setCnTransportqOutUid(123L);
 
+        when(apiService.callHl7Endpoint("", "123")).thenReturn("TEST");
         when(caseNotificationConfigRepository.findNonStdConfig()).thenReturn(config);
         when(cnTraportqOutRepository.findTopByRecordUid(124L)).thenReturn(mockTransport);
         when(phinmsService.gettingPHIMNSProperties(any(), any(), any())).thenReturn(props);

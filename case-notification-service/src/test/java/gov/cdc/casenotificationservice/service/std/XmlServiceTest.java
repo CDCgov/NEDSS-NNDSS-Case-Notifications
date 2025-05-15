@@ -13,9 +13,12 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -102,10 +105,10 @@ class XmlServiceTest {
         assertEquals("LOG_DEL", savedObject.getRecordStatusCd());
     }
 
-    private String readFileFromResources(String filename) throws IOException {
-        return Files.readString(
-                Paths.get(getClass().getClassLoader().getResource(filename).getPath()),
-                StandardCharsets.UTF_8
+    private String readFileFromResources(String filename) throws IOException, URISyntaxException {
+        Path path = Path.of(Objects.requireNonNull(
+                getClass().getClassLoader().getResource(filename)).toURI()
         );
+        return Files.readString(path);
     }
 }

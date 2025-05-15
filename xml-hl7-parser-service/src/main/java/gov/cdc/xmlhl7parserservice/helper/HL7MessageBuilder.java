@@ -3,6 +3,7 @@ package gov.cdc.xmlhl7parserservice.helper;
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.DataTypeException;
 
+import ca.uhn.hl7v2.model.Type;
 import ca.uhn.hl7v2.model.Varies;
 import ca.uhn.hl7v2.model.v25.datatype.*;
 import ca.uhn.hl7v2.model.v25.datatype.DTM;
@@ -256,6 +257,10 @@ public class HL7MessageBuilder {
         }
         
         for (int z = 0; z < nbsnndIntermediaryMessage.getMessageElement().size(); z++){
+            if (nbsnndIntermediaryMessage.getMessageElement().get(z).getQuestionIdentifierNND().equalsIgnoreCase("INV826") || nbsnndIntermediaryMessage.getMessageElement().get(z).getQuestionIdentifierNND().equalsIgnoreCase("INV827") ) {
+                var test = "";
+            }
+
             String segmentField = nbsnndIntermediaryMessage.getMessageElement().get(z).getHl7SegmentField().trim();
             if (segmentField.startsWith("MSH")){
                 processMSHFields(nbsnndIntermediaryMessage.getMessageElement().get(z), msh);
@@ -302,7 +307,16 @@ public class HL7MessageBuilder {
 
                 if (hcwTextBeforeCodedInd) {
 
-                    TX textDataType = (TX)obx.getOBSERVATION(hcwObxOrderGroupId).getOBX().getObservationValue(hcwObx5ValueInc).getData();
+                    Type obxValue = obx.getOBSERVATION(hcwObxOrderGroupId).getOBX().getObservationValue(hcwObx5ValueInc).getData();
+                    TX textDataType;
+
+                    if (obxValue instanceof TX) {
+                        textDataType = (TX) obxValue;
+                    } else {
+                        textDataType = new TX(obx.getMessage());
+                    }
+
+
                     textDataType.setValue(hcw);
                     obx.getOBSERVATION(hcwObxOrderGroupId).getOBX().getObx5_ObservationValue(hcwObx5ValueInc).setData(textDataType);
                 }else{
@@ -322,7 +336,15 @@ public class HL7MessageBuilder {
                     obx.getOBSERVATION(obxOrderGroupId).getOBX().getObservationIdentifier().getAlternateText().setValue("Notification Comments to CDC");
                     obx.getOBSERVATION(obxOrderGroupId).getOBX().getObservationIdentifier().getNameOfAlternateCodingSystem().setValue("L");
 
-                    TX textData = (TX) obx.getOBSERVATION(obxOrderGroupId).getOBX().getObservationValue(0).getData();
+                    Type obxValue = obx.getOBSERVATION(obxOrderGroupId).getOBX().getObservationValue(0).getData();
+                    TX textData;
+
+                    if (obxValue instanceof TX) {
+                        textData = (TX) obxValue;
+                    } else {
+                        textData = new TX(obx.getMessage());
+                    }
+
                     textData.setValue(hcw);
                     obx.getOBSERVATION(obxOrderGroupId).getOBX().getObservationValue(0).setData(textData);
 
@@ -386,25 +408,47 @@ public class HL7MessageBuilder {
                 if (!nbsnndIntermediaryMessage.getMessageElement().get(z).getDataElement().getCweDataType().getCweOriginalText().trim().isEmpty()){
                     originalOtherText = nbsnndIntermediaryMessage.getMessageElement().get(z).getDataElement().getCweDataType().getCweOriginalText().trim();
                 }
-                TX textData = (TX)obx.getOBSERVATION(std121obxOrderGroupId).getOBX().getObservationValue(std121ObsValue).getData();
+                Type obxValue = obx.getOBSERVATION(std121obxOrderGroupId).getOBX().getObservationValue(std121ObsValue).getData();
+                TX textData;
+
+                if (obxValue instanceof TX) {
+                    textData = (TX) obxValue;
+                } else {
+                    textData = new TX(obx.getMessage());
+                }
+
+
+
                 String value = codedValue + "^"+codedValueDescription+"^"+codedValueCodingSystem+"^"+localCodedValue+"^"+
                         localCodedValueDescription+"^" +localCodedValueCodingSystem+"^"+originalOtherText;
                 textData.setValue(value);
                 obx.getOBSERVATION(std121obxOrderGroupId).getOBX().getObservationValue(std121ObsValue).setData(textData);
                 obx.getOBSERVATION(std121obxOrderGroupId).getOBX().getObservationResultStatus().setValue("F");
 
-            } else if(nbsnndIntermediaryMessage.getMessageElement().get(z).getIndicatorCd() != null) {
-                if(nbsnndIntermediaryMessage.getMessageElement().get(z).getIndicatorCd().contains("ParentRepeatBlock")){
-                    mapToDynamicParentRptToRpt(nbsnndIntermediaryMessage.getMessageElement().get(z),  obx2Inc, messageType, oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(0));
-                } else if(nbsnndIntermediaryMessage.getMessageElement().get(z).getIndicatorCd().contains("DiscAsRepeat")){
-                    mapToDynamicRootlDiscToRepeat(nbsnndIntermediaryMessage.getMessageElement().get(z), obx2Inc, oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(0));
-                } else if(nbsnndIntermediaryMessage.getMessageElement().get(z).getIndicatorCd().contains("DiscCdToMultiOBS")){
-                    mapToDisRepeat(nbsnndIntermediaryMessage.getMessageElement().get(z), obx2Inc, oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(0));
-                } else if(nbsnndIntermediaryMessage.getMessageElement().get(z).getIndicatorCd().contains("RepeatToMultiNND")){
-                    mapToRepeatToMultiNND(nbsnndIntermediaryMessage.getMessageElement().get(z), obx2Inc, oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(0));
-                }
-            } else if ((nbsnndIntermediaryMessage.getMessageElement().get(z).getHl7SegmentField().equals("OBX-3.0") || nbsnndIntermediaryMessage.getMessageElement().get(z).getHl7SegmentField().equals("OBX-5.9"))
-                    && nbsnndIntermediaryMessage.getMessageElement().get(z).getQuestionMap() != null && nbsnndIntermediaryMessage.getMessageElement().get(z).getQuestionMap().contains("|")) {
+            }
+            else if(nbsnndIntermediaryMessage.getMessageElement().get(z).getIndicatorCd() != null && nbsnndIntermediaryMessage.getMessageElement().get(z).getIndicatorCd().contains("ParentRepeatBlock"))
+            {
+                mapToDynamicParentRptToRpt(nbsnndIntermediaryMessage.getMessageElement().get(z),  obx2Inc, messageType, oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(0));
+            }
+            else if(nbsnndIntermediaryMessage.getMessageElement().get(z).getIndicatorCd() != null && nbsnndIntermediaryMessage.getMessageElement().get(z).getIndicatorCd().contains("DiscAsRepeat"))
+            {
+                mapToDynamicRootlDiscToRepeat(nbsnndIntermediaryMessage.getMessageElement().get(z), obx2Inc, oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(0));
+            }
+            else if(nbsnndIntermediaryMessage.getMessageElement().get(z).getIndicatorCd() != null && nbsnndIntermediaryMessage.getMessageElement().get(z).getIndicatorCd().contains("DiscCdToMultiOBS"))
+            {
+                mapToDisRepeat(nbsnndIntermediaryMessage.getMessageElement().get(z), obx2Inc, oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(0));
+            }
+            else if(nbsnndIntermediaryMessage.getMessageElement().get(z).getIndicatorCd() != null && nbsnndIntermediaryMessage.getMessageElement().get(z).getIndicatorCd().contains("RepeatToMultiNND"))
+            {
+                mapToRepeatToMultiNND(nbsnndIntermediaryMessage.getMessageElement().get(z), obx2Inc, oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(0));
+            }
+            else if (
+                    (nbsnndIntermediaryMessage.getMessageElement().get(z).getHl7SegmentField().equals("OBX-3.0")
+                    || nbsnndIntermediaryMessage.getMessageElement().get(z).getHl7SegmentField().equals("OBX-5.9"))
+                    && nbsnndIntermediaryMessage.getMessageElement().get(z).getQuestionMap() != null
+                    && nbsnndIntermediaryMessage.getMessageElement().get(z).getQuestionMap().contains("|")
+            )
+            {
                 mapToQuestionMap(nbsnndIntermediaryMessage.getMessageElement().get(z), obx2Inc, oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(0));
             }
 
@@ -422,26 +466,29 @@ public class HL7MessageBuilder {
 //            }
             else if (segmentField.startsWith("OBX"))
             {
-                ObxRepeatingElement element = null;
-                int finalZ = z;
-                Optional<ObxRepeatingElement> match = obxRepeatingElementArrayList.stream()
-                        .filter(e -> nbsnndIntermediaryMessage.getMessageElement().get(finalZ).getQuestionIdentifierNND().equals(e.getElementUid()))
-                        .findFirst();
-                if (match.isPresent()) {
-                    element = match.get();
-                }
+//                ObxRepeatingElement element = null;
+//                int finalZ = z;
+//                Optional<ObxRepeatingElement> match = obxRepeatingElementArrayList.stream()
+//                        .filter(e -> nbsnndIntermediaryMessage.getMessageElement().get(finalZ).getQuestionIdentifierNND().equals(e.getElementUid()))
+//                        .findFirst();
+//                if (match.isPresent()) {
+//                    element = match.get();
+//                }
+//
+//                if (element != null) {
+//                    int idx = element.getObxInc();
+//                    OBX existObx = obx.getOBSERVATION(idx).getOBX();
+//                    var result = processOBXFields(nbsnndIntermediaryMessage.getMessageElement().get(z), existObx);
+//                }
+//                else {
+//                    OBX obxUpdate = obx.getOBSERVATION(obx.getOBSERVATIONAll().size()).getOBX();
+//                    var result = processOBXFields(nbsnndIntermediaryMessage.getMessageElement().get(z),obxUpdate);
+//                    logger.info("{}", result.getMessage());
+//
+//                }
 
-                if (element != null) {
-                    int idx = element.getObxInc();
-                    OBX existObx = obx.getOBSERVATION(idx).getOBX();
-                    var result = processOBXFields(nbsnndIntermediaryMessage.getMessageElement().get(z), existObx);
-                }
-                else {
-                    OBX obxUpdate = obx.getOBSERVATION(obx.getOBSERVATIONAll().size()).getOBX();
-                    var result = processOBXFields(nbsnndIntermediaryMessage.getMessageElement().get(z),obxUpdate);
-                    logger.info("{}", result.getMessage());
+                var result = processOBXFields(nbsnndIntermediaryMessage.getMessageElement().get(z),oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(0));
 
-                }
             }
 
             if(messageType.contains("Arbo_Case_Map_v1.0") && isDefaultNull && !stateLocalID.isEmpty())
@@ -499,6 +546,7 @@ public class HL7MessageBuilder {
                     obxForGenV2.getObservationIdentifier().getAlternateText().setValue("Date First Reported PHD");
                     obxForGenV2.getObservationIdentifier().getNameOfAlternateCodingSystem().setValue("L");
 
+                    // out.PATIENT_RESULT.ORDER_OBSERVATION[0].OBSERVATION[1].OBX[obx2Inc].ObservationValue[0] = inv177Date;
                     DT dt = new DT(obxForGenV2.getMessage());
                     dt.setValue(inv177Date);
                     obxForGenV2.getObservationValue(0).setData(dt);
@@ -634,10 +682,35 @@ public class HL7MessageBuilder {
 
                     String obxValue = oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObservationValue(0).toString();
                     String obxIdIdentifier = oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObservationIdentifier().getIdentifier().getValue();
-                    ST stType = (ST) oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObservationValue(0).getData();
-                    ST stType1 = (ST) oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObservationValue(1).getData();
+                    Type stobxValue = oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObservationValue(0).getData();
+                    ST stType;
 
-                    int observationValue1Size  = ((ST) oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObservationValue(1).getData()).getValue().length();
+                    if (stobxValue instanceof ST) {
+                        stType = (ST) stobxValue;
+                    } else {
+                        stType = new ST(oruMessage);
+                    }
+
+                    Type stobxValue2 = oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObservationValue(1).getData();
+                    ST stType1;
+
+                    if (stobxValue2 instanceof ST) {
+                        stType1 = (ST) stobxValue2;
+                    } else {
+                        stType1 = new ST(oruMessage);
+                    }
+
+                    Type stobxValue3 = oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObservationValue(1).getData();
+                    ST stType2;
+
+                    if (stobxValue3 instanceof ST) {
+                        stType2 = (ST) stobxValue3;
+                    } else {
+                        stType2 = new ST(oruMessage);
+                    }
+
+                    int observationValue1Size = stType2.getValue() != null ? stType2.getValue().length() : 0;
+
 
                     if(obxValue != null && obxValue.contains("Other Drugs Used^2.16.840.1.114222.4.5.274") && std300 != null && !std300.isEmpty()) {
                         stType.setValue(obxValue + "^^^^^^" + std300);
@@ -669,7 +742,7 @@ public class HL7MessageBuilder {
         logger.info("Final message: {} ", oruMessage.getMessage());
         System.err.println("Final message...: " + oruMessage);
         // based on message type
-        String base64EncodedString = encodeToBase64(oruMessage.getMessage().toString());
+//        String base64EncodedString = encodeToBase64(oruMessage.getMessage().toString());
         //based on the message type and
 //        System.err.println("Final message is..." + base64EncodedString);
 
@@ -680,6 +753,7 @@ public class HL7MessageBuilder {
     }
 
     private void mapToRepeatToMultiNND(MessageElement messageElement, int obx2Inc, ORU_R01_ORDER_OBSERVATION orderObservation) throws DataTypeException {
+        ObxRepeatingElement obxRepeatingElement = null;
         String indPartMain = "";
         String indPart1 = "";
         String questPart1 = "";
@@ -768,6 +842,11 @@ public class HL7MessageBuilder {
             observationIdentifier.getNameOfAlternateCodingSystem().setValue(questPart6);
 
             obx.getObservationResultStatus().setValue("F");
+
+            obxRepeatingElement = new ObxRepeatingElement();
+            obxRepeatingElement.setElementUid(questPart1);
+            obxRepeatingElement.setObxInc(1);
+            obxRepeatingElementArrayList.add(obxRepeatingElement);
         }
 
         var localComplex = messageElement.getDataElement();
@@ -819,9 +898,25 @@ public class HL7MessageBuilder {
             output = localComplex.getNmDataType().getNum();
         }
 
-        ST stType = (ST) orderObservation.getOBSERVATION(1).getOBX().getObservationValue(obsCounter).getData();
+
+        Type obxValue = orderObservation.getOBSERVATION(1).getOBX().getObservationValue(obsCounter).getData();
+        ST stType;
+
+        if (obxValue instanceof ST) {
+            stType = (ST) obxValue;
+        } else {
+            stType = new ST(orderObservation.getOBSERVATION(1).getOBX().getMessage());
+        }
+
         stType.setValue(output);
         orderObservation.getOBSERVATION(1).getOBX().getObservationValue(obsCounter).setData(stType);
+
+        if (obxRepeatingElement == null) {
+            obxRepeatingElement = new ObxRepeatingElement();
+            obxRepeatingElement.setElementUid("mapToRepeatToMultiNND");
+            obxRepeatingElement.setObxInc(1);
+            obxRepeatingElementArrayList.add(obxRepeatingElement);
+        }
 
 
 //        out.OBSERVATION[1].OBX[counter].ObservationValue[obsCounter] = output;
@@ -834,6 +929,8 @@ public class HL7MessageBuilder {
     }
 
     private void mapToDisRepeat(MessageElement messageElement, int obx2Inc, ORU_R01_ORDER_OBSERVATION orderObservation) throws DataTypeException {
+        ObxRepeatingElement obxRepeatingElement = null;
+
         String indicatorCode = messageElement.getIndicatorCd();
         int startInd = indicatorCode.indexOf("|");
 
@@ -890,14 +987,36 @@ public class HL7MessageBuilder {
                 obsId.getAlternateText().setValue(questPart5);
                 obsId.getNameOfAlternateCodingSystem().setValue(questPart6);
 
+                obxRepeatingElement = new ObxRepeatingElement();
+                obxRepeatingElement.setElementUid(questPart1);
+                obxRepeatingElement.setObxInc(1);
+                obxRepeatingElementArrayList.add(obxRepeatingElement);
+
                 obx2Inc += 1;
             } else {
                 discreteMulti.setObsValueCounter(discreteMulti.getObsValueCounter() + 1);
             }
 
             //TODO - Verify this implementation everywhere in the code
-            ST stType = (ST) orderObservation.getOBSERVATION(1).getOBX().getObservationValue(discreteMulti.getObsValueCounter()).getData();
+            Type obxValue = orderObservation.getOBSERVATION(1).getOBX().getObservationValue(discreteMulti.getObsValueCounter()).getData();
+            ST stType;
+
+            if (obxValue instanceof ST) {
+                stType = (ST) obxValue;
+            } else {
+                stType = new ST(orderObservation.getOBSERVATION(1).getOBX().getMessage());
+            }
+
+
             stType.setValue(subStringRight);
+            orderObservation.getOBSERVATION(1).getOBX().getObservationValue(discreteMulti.getObsValueCounter()).setData(stType);
+            if (obxRepeatingElement == null) {
+                obxRepeatingElement = new ObxRepeatingElement();
+                obxRepeatingElement.setElementUid("mapToDisRepeat");
+                obxRepeatingElement.setObxInc(1);
+                obxRepeatingElementArrayList.add(obxRepeatingElement);
+            }
+
         }
     }
 
@@ -950,7 +1069,7 @@ public class HL7MessageBuilder {
     private void mapToDynamicIndicatorToObx(MessageElement messageElement, String questionIdentifier, String mappedString, int countNum, int obx2Inc, ORU_R01_ORDER_OBSERVATION orderObservation) throws DataTypeException {
         String separatorWOObx5 = "|:";
         int intIndicator = mappedString.indexOf(separatorWOObx5);
-
+        ObxRepeatingElement obxRepeatingElement = null;
         String partIndicator1 = "";
         String partIndicator2 = "";
         String partIndicator3 = "";
@@ -1007,6 +1126,11 @@ public class HL7MessageBuilder {
             orderObservation.getOBSERVATION(1).getOBX().getValueType().setValue("CWE");
             String questionDataType = messageElement.getDataElement().getQuestionDataTypeNND();
 
+            obxRepeatingElement = new ObxRepeatingElement();
+            obxRepeatingElement.setElementUid("mapToDynamicIndicatorToObx");
+            obxRepeatingElement.setObxInc(1);
+            obxRepeatingElementArrayList.add(obxRepeatingElement);
+
             if(questionDataType.equals("CWE")) {
                 if (intIndicator > 2) {
                     String codedValue = "";
@@ -1053,13 +1177,30 @@ public class HL7MessageBuilder {
                             localCodedValueCodingSystem
                     ) + originalOtherText;
 
-                    ST stData = (ST) obx.getObservationValue(0).getData();
+                    Type obxValue = obx.getObservationValue(0).getData();
+                    ST stData;
+
+                    if (obxValue instanceof ST) {
+                        stData = (ST) obxValue;
+                    } else {
+                        stData = new ST(obx.getMessage());
+                    }
+
                     stData.setValue(observationValue);
                     obx.getObservationValue(0).setData(stData);
 
                 } else {
                     String observationValue = String.join("^", obx1, obx2, obx3);
-                    ST stData = (ST) obx.getObservationValue(0).getData();
+                    Type obxValue = obx.getObservationValue(0).getData();
+                    ST stData;
+
+                    if (obxValue instanceof ST) {
+                        stData = (ST) obxValue;
+                    } else {
+                        stData = new ST(obx.getMessage());
+                    }
+
+
                     stData.setValue(observationValue);
                     obx.getObservationValue(0).setData(stData);
                 }
@@ -1088,7 +1229,16 @@ public class HL7MessageBuilder {
                 if (stringSize >= 23) milli = time.substring(14, 17);
 
                 String formattedTime = year + month + day + hour + minute + second + separator + milli;
-                ST stData = (ST) obx.getObservationValue(0).getData();
+                Type obxValue = obx.getObservationValue(0).getData();
+                ST stData;
+
+                if (obxValue instanceof ST) {
+                    stData = (ST) obxValue;
+                } else {
+                    stData = new ST(obx.getMessage());
+                }
+
+
                 stData.setValue(formattedTime);
                 obx.getObservationValue(0).setData(stData);
             }
@@ -1105,7 +1255,17 @@ public class HL7MessageBuilder {
                     textData = mapToRemoveSpecialCharacters(textData);
                 }
 
-                ST stData = (ST) obx.getObservationValue(0).getData();
+                Type obxValue = obx.getObservationValue(0).getData();
+                ST stData;
+
+                if (obxValue instanceof ST) {
+                    stData = (ST) obxValue;
+                } else {
+                    stData = new ST(obx.getMessage());
+                }
+
+
+
                 stData.setValue(textData);
                 obx.getObservationValue(0).setData(stData);
             }
@@ -1121,7 +1281,17 @@ public class HL7MessageBuilder {
                     textData = mapToRemoveSpecialCharacters(textData);
                 }
 
-                ST stData = (ST) obx.getObservationValue(0).getData();
+
+                Type obxValue = obx.getObservationValue(0).getData();
+                ST stData;
+
+                if (obxValue instanceof ST) {
+                    stData = (ST) obxValue;
+                } else {
+                    stData = new ST(obx.getMessage());
+                }
+
+
                 stData.setValue(textData);
                 obx.getObservationValue(0).setData(stData);
             }
@@ -1280,6 +1450,8 @@ public class HL7MessageBuilder {
             repeatCountNum = counter;
 
             OBX obx = orderObservation.getOBSERVATION(1).getOBX();
+
+
             obx.getSetIDOBX().setValue(String.valueOf(obx2Inc + 1));
 
             CE observationIdentifier = obx.getObservationIdentifier();
@@ -1292,6 +1464,12 @@ public class HL7MessageBuilder {
 
             obx.getObservationSubID().setValue(String.valueOf(counter));
             obx.getObservationResultStatus().setValue("F");
+
+            ObxRepeatingElement obxRepeatingElement = new ObxRepeatingElement();
+            obxRepeatingElement.setElementUid(partIndicator1);
+            obxRepeatingElement.setObxInc(1);
+            obxRepeatingElementArrayList.add(obxRepeatingElement);
+
 
             String questionDataType = messageElement.getDataElement().getQuestionDataTypeNND();
             if (questionDataType.equals("CWE") || splitPart == 2) {
@@ -1344,13 +1522,33 @@ public class HL7MessageBuilder {
                             localCodedValueCodingSystem
                     ) + originalOtherText;
 
-                    ST stData = (ST) obx.getObservationValue(1).getData();
+
+                    Type obxValue = obx.getObservationValue(1).getData();
+                    ST stData;
+
+                    if (obxValue instanceof ST) {
+                        stData = (ST) obxValue;
+                    } else {
+                        stData = new ST(obx.getMessage());
+                    }
+
+
                     stData.setValue(observationValue);
                     obx.getObservationValue(0).setData(stData);
 
                 } else {
                     String observationValue = String.join("^", obx1, obx2, obx3);
-                    ST stData = (ST) obx.getObservationValue(0).getData();
+                    Type obxValue = obx.getObservationValue(0).getData();
+                    ST stData;
+
+                    if (obxValue instanceof ST) {
+                        stData = (ST) obxValue;
+                    } else {
+                        stData = new ST(obx.getMessage());
+                    }
+
+
+
                     stData.setValue(observationValue);
                     obx.getObservationValue(0).setData(stData);
                 }
@@ -1377,7 +1575,17 @@ public class HL7MessageBuilder {
                 if (stringSize >= 23) milli = time.substring(14, 17);
 
                 String formattedTime = year + month + day + hour + minute + second + separator + milli;
-                ST stData = (ST) obx.getObservationValue(0).getData();
+
+                Type obxValue = obx.getObservationValue(0).getData();
+                ST stData;
+
+                if (obxValue instanceof ST) {
+                    stData = (ST) obxValue;
+                } else {
+                    stData = new ST(obx.getMessage());
+                }
+
+
                 stData.setValue(formattedTime);
                 obx.getObservationValue(0).setData(stData);
             } else if (questionDataType.equals("TX")) {
@@ -1392,7 +1600,16 @@ public class HL7MessageBuilder {
                     textData = mapToRemoveSpecialCharacters(textData);
                 }
 
-                ST stData = (ST) obx.getObservationValue(0).getData();
+                Type obxValue = obx.getObservationValue(0).getData();
+                ST stData;
+
+                if (obxValue instanceof ST) {
+                    stData = (ST) obxValue;
+                } else {
+                    stData = new ST(obx.getMessage());
+                }
+
+
                 stData.setValue(textData);
                 obx.getObservationValue(0).setData(stData);
             }
@@ -1407,7 +1624,16 @@ public class HL7MessageBuilder {
                     textData = mapToRemoveSpecialCharacters(textData);
                 }
 
-                ST stData = (ST) obx.getObservationValue(0).getData();
+                Type obxValue = obx.getObservationValue(0).getData();
+                ST stData;
+
+                if (obxValue instanceof ST) {
+                    stData = (ST) obxValue;
+                } else {
+                    stData = new ST(obx.getMessage());
+                }
+
+
                 stData.setValue(textData);
                 obx.getObservationValue(0).setData(stData);
             }
@@ -1474,6 +1700,11 @@ public class HL7MessageBuilder {
         obx.getObservationResultStatus().setValue("F");
         obx.getObservationSubID().setValue(String.valueOf(counter));
 
+        ObxRepeatingElement obxRepeatingElement = new ObxRepeatingElement();
+        obxRepeatingElement.setElementUid(messageElement.getQuestionIdentifierNND());
+        obxRepeatingElement.setObxInc(1);
+        obxRepeatingElementArrayList.add(obxRepeatingElement);
+
         if (messageElement.getDataElement().getQuestionDataTypeNND().equals("CWE")) {
             String codedValue = "";
             if (messageElement.getDataElement().getCweDataType().getCweCodedValue() != null) {
@@ -1521,7 +1752,17 @@ public class HL7MessageBuilder {
                     localCodedValueCodingSystem
             ) + originalOtherText;
 
-            ST stData = (ST) obx.getObservationValue(0).getData();
+
+            Type obxValue = obx.getObservationValue(0).getData();
+            ST stData;
+
+            if (obxValue instanceof ST) {
+                stData = (ST) obxValue;
+            } else {
+                stData = new ST(obx.getMessage());
+            }
+
+
             stData.setValue(finalValue);
             obx.getObservationValue(0).setData(stData);
         }
@@ -1540,7 +1781,16 @@ public class HL7MessageBuilder {
             String timeOut = year + month + day + hour + minute + second + separator + milli;
 
             //TODO - Check how to set value
-            TS tsType = (TS) obx.getObservationValue(0).getData();
+            Type obxValue = obx.getObservationValue(0).getData();
+            TS tsType;
+
+            if (obxValue instanceof TS) {
+                tsType = (TS) obxValue;
+            } else {
+                tsType = new TS(obx.getMessage());
+            }
+
+
             tsType.getTime().setValue(timeOut);
             obx.getObservationValue(0).setData(tsType);
         }
@@ -1551,7 +1801,16 @@ public class HL7MessageBuilder {
             String textData = messageElement.getDataElement().getTxDataType().getTextData();
             textData = textData.replace("\n", " ");
 
-            ST stDataType = (ST) obx.getObservationValue(0).getData();
+            Type obxValue = obx.getObservationValue(0).getData();
+            ST stDataType;
+
+            if (obxValue instanceof ST) {
+                stDataType = (ST) obxValue;
+            } else {
+                stDataType = new ST(obx.getMessage());
+            }
+
+
             stDataType.setValue(textData);
             obx.getObservationValue(0).setData(stDataType);
         }
@@ -1559,7 +1818,17 @@ public class HL7MessageBuilder {
         if (dataType.equals("ST")) {
             obx.getValueType().setValue(dataType);
             String textData = messageElement.getDataElement().getStDataType().getStringData();
-            ST stDataType = (ST) obx.getObservationValue(0).getData();
+
+            Type obxValue = obx.getObservationValue(0).getData();
+            ST stDataType;
+
+            if (obxValue instanceof ST) {
+                stDataType = (ST) obxValue;
+            } else {
+                stDataType = new ST(obx.getMessage());
+            }
+
+
             stDataType.setValue(textData);
             obx.getObservationValue(0).setData(stDataType);
         }
@@ -2041,7 +2310,27 @@ public class HL7MessageBuilder {
                         }
 
                     String observationValue = mapToObservationValue(messageElement, oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(obrSubCounter).getOBSERVATION(observationCounter).getOBX().getObservationValue(0).toString());
-                    ST stDataType = (ST) oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(obrSubCounter).getOBSERVATION(observationCounter).getOBX().getObservationValue(0).getData();
+                    Type obxValue = oruMessage.getPATIENT_RESULT()
+                            .getORDER_OBSERVATION(obrSubCounter)
+                            .getOBSERVATION(observationCounter)
+                            .getOBX()
+                            .getObservationValue(0)
+                            .getData();
+
+                    ST stDataType;
+                    if (obxValue instanceof ST) {
+                        stDataType = (ST) obxValue;
+                    } else {
+                        stDataType = new ST(
+                                oruMessage.getPATIENT_RESULT()
+                                        .getORDER_OBSERVATION(obrSubCounter)
+                                        .getOBSERVATION(observationCounter)
+                                        .getOBX()
+                                        .getMessage()
+                        );
+                    }
+
+
                     stDataType.setValue(observationValue);
                     // mapToObservationValue(messageElement,out.PATIENT_RESULT.ORDER_OBSERVATION[obrSubCounter].OBSERVATION[observationCounter].OBX[resultedTestCounter].ObservationValue[0]);
                 }
@@ -2097,7 +2386,27 @@ public class HL7MessageBuilder {
             if(counter > 0){
                 resultedTestCounter =resultedTestCounter + 1;
             }
-            ST stDataType = (ST) oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(obrSubCounter).getOBSERVATION(observationCounter).getOBX().getObservationValue(0).getData();
+            Type obxValue = oruMessage.getPATIENT_RESULT()
+                    .getORDER_OBSERVATION(obrSubCounter)
+                    .getOBSERVATION(observationCounter)
+                    .getOBX()
+                    .getObservationValue(0)
+                    .getData();
+
+            ST stDataType;
+            if (obxValue instanceof ST) {
+                stDataType = (ST) obxValue;
+            } else {
+                stDataType = new ST(
+                        oruMessage.getPATIENT_RESULT()
+                                .getORDER_OBSERVATION(obrSubCounter)
+                                .getOBSERVATION(observationCounter)
+                                .getOBX()
+                                .getMessage()
+                );
+            }
+
+
             stDataType.setValue("\"\"");
             oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(obrSubCounter).getOBSERVATION(observationCounter).getOBX().getObservationValue(0).setData(stDataType);
             oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(obrSubCounter).getOBSERVATION(observationCounter).getOBX().getSetIDOBX().setValue(String.valueOf(resultedTestCounter + 1));
@@ -2994,7 +3303,12 @@ public class HL7MessageBuilder {
      * @param obx The OBX object that is being built, which will be updated with
      *            data from the provided messageElement.
      */
-    private OBX processOBXFields(MessageElement messageElement, OBX obx) throws HL7Exception {
+    private ORU_R01_ORDER_OBSERVATION processOBXFields(MessageElement messageElement, ORU_R01_ORDER_OBSERVATION orderObservation) throws HL7Exception {
+        if (messageElement.getQuestionIdentifierNND().equalsIgnoreCase("INV826") || messageElement.getQuestionIdentifierNND().equalsIgnoreCase("INV827") ) {
+            var test = "";
+        }
+
+
         String obxField = messageElement.getHl7SegmentField().trim();
         if (obxField.equals("OBX-3.0")){
             int obxOrderGroupID = 0;
@@ -3090,6 +3404,27 @@ public class HL7MessageBuilder {
 
                 }
             }
+
+            ObxRepeatingElement element = null;
+            Optional<ObxRepeatingElement> match = obxRepeatingElementArrayList.stream()
+                    .filter(e -> messageElement.getQuestionIdentifierNND().equals(e.getElementUid()))
+                    .findFirst();
+            if (match.isPresent()) {
+                element = match.get();
+            }
+            OBX obx;
+            if (
+                    obxFound
+//                    element != null
+            )
+            {
+                int idx = element.getObxInc();
+                obx = orderObservation.getOBSERVATION(idx).getOBX();
+            }
+            else {
+                obx = orderObservation.getOBSERVATION(orderObservation.getOBSERVATIONAll().size()).getOBX();
+            }
+
             if (!obxFound)
             {
                 ObxRepeatingElement obxRepeatingElement = new ObxRepeatingElement();
@@ -3202,9 +3537,7 @@ public class HL7MessageBuilder {
 
             }
             //XPN datatype
-            if (messageElement.getDataElement().getQuestionDataTypeNND().equals("XPN")
-                    || messageElement.getDataElement().getQuestionDataTypeNND().equals("SN"))
-            {
+            if (messageElement.getDataElement().getQuestionDataTypeNND().equals("XPN")) {
                 String comparator = "";
                 if (messageElement.getDataElement().getSnDataType().getComparator()!=null)
                 {
@@ -3230,21 +3563,63 @@ public class HL7MessageBuilder {
 //                ST st = new ST(obx.getMessage());
 //                st.setValue(comparator + "^" +	num1 + "^" + separatorSuffix + "^" + num2);
 
-                SN sn = new SN(obx.getMessage());
+                // out.PATIENT_RESULT.ORDER_OBSERVATION[0].OBSERVATION[obxOrderGroupId].OBX[obxInc].ObservationValue[obx5ValueInc]
+
+                Type obxValue = obx.getObservationValue(obx5ValueInc).getData();
+                SN sn;
+                if (obxValue instanceof SN) {
+                    sn = (SN) obxValue;
+                } else {
+                    sn = new SN(obx.getMessage());
+                }
                 sn.getComparator().setValue(comparator);           // SN-1 (e.g., ">")
                 sn.getNum1().setValue(String.valueOf(num1));       // SN-2
                 sn.getSeparatorSuffix().setValue(separatorSuffix); // SN-3 (optional, may be null or blank)
                 sn.getNum2().setValue(String.valueOf(num2));       // SN-4 (optional)
 
                 obx.getObservationValue(obx5ValueInc).setData(sn);
-
-
-                if (messageElement.getDataElement().getQuestionDataTypeNND().trim().equals("SN")
-                        && (questionIdentifier.equals("INV827b") || questionIdentifier.equals("11920_8")))
-                {
-                    obx.getObservationSubID().setValue("2");
-                }
             }
+
+//            if (messageElement.getDataElement().getQuestionDataTypeNND().equals("XPN")
+//                    || messageElement.getDataElement().getQuestionDataTypeNND().equals("SN"))
+//            {
+//                String comparator = "";
+//                if (messageElement.getDataElement().getSnDataType().getComparator()!=null)
+//                {
+//                    comparator = messageElement.getDataElement().getSnDataType().getComparator().trim();
+//                }
+//                String num1 = "";
+//                if (messageElement.getDataElement().getSnDataType().getNum1()!=null)
+//                {
+//                    num1 = messageElement.getDataElement().getSnDataType().getNum1().trim();
+//                }
+//                String separatorSuffix = "";
+//                if (messageElement.getDataElement().getSnDataType().getSeparatorSuffix()!=null)
+//                {
+//                    separatorSuffix = messageElement.getDataElement().getSnDataType().getSeparatorSuffix().trim();
+//                }
+//
+//                String num2 = "";
+//                if (messageElement.getDataElement().getSnDataType().getNum2()!=null)
+//                {
+//                    num2 = messageElement.getDataElement().getSnDataType().getNum2().trim();
+//                }
+//
+//                SN sn = new SN(obx.getMessage());
+//                sn.getComparator().setValue(comparator);           // SN-1 (e.g., ">")
+//                sn.getNum1().setValue(String.valueOf(num1));       // SN-2
+//                sn.getSeparatorSuffix().setValue(separatorSuffix); // SN-3 (optional, may be null or blank)
+//                sn.getNum2().setValue(String.valueOf(num2));       // SN-4 (optional)
+//
+//                obx.getObservationValue(obx5ValueInc).setData(sn);
+//
+//
+//                if (messageElement.getDataElement().getQuestionDataTypeNND().trim().equals("SN")
+//                        && (questionIdentifier.equals("INV827b") || questionIdentifier.equals("11920_8")))
+//                {
+//                    obx.getObservationSubID().setValue("2");
+//                }
+//            }
 
             //XTN datatype
             if (messageElement.getDataElement().getQuestionDataTypeNND().equals("XTN"))
@@ -3272,7 +3647,14 @@ public class HL7MessageBuilder {
                 }
 
                 //build XTN object
-                XTN xtnDataType = (XTN)obx.getObservationValue(obx5ValueInc).getData();
+                Type obxValue = obx.getObservationValue(obx5ValueInc).getData();
+                XTN xtnDataType;
+                if (obxValue instanceof XTN) {
+                    xtnDataType = (XTN) obxValue;
+                } else {
+                    xtnDataType = new XTN(obx.getMessage());
+                }
+
 
                 xtnDataType.getTelecommunicationUseCode().setValue(telecommunicationUseCode);
                 xtnDataType.getTelecommunicationEquipmentType().setValue(telecommunicationEquipmentType);
@@ -3296,7 +3678,14 @@ public class HL7MessageBuilder {
                 }
 
                 //Build XPN object
-                XPN xpn  = (XPN) obx.getObservationValue(obx5ValueInc).getData();
+                Type obxValue = obx.getObservationValue(obx5ValueInc).getData();
+                XPN xpn;
+                if (obxValue instanceof XPN) {
+                    xpn = (XPN) obxValue;
+                } else {
+                    xpn = new XPN(obx.getMessage());
+                }
+
                 xpn.getXpn1_FamilyName().getFn1_Surname().setValue(familyName);
                 xpn.getXpn2_GivenName().setValue(givenName);
                 obx.getObservationValue(obx5ValueInc).setData(xpn);
@@ -3325,8 +3714,14 @@ public class HL7MessageBuilder {
                     num2 = messageElement.getDataElement().getSnDataType().getNum2();
                 }
 
-
-                SN sn = new SN(obx.getMessage());
+                //out.PATIENT_RESULT.ORDER_OBSERVATION[0].OBSERVATION[obxOrderGroupId].OBX[obxInc].ObservationValue[obx5ValueInc]
+                Type obxValue = obx.getObservationValue(obx5ValueInc).getData();
+                SN sn;
+                if (obxValue instanceof SN) {
+                    sn = (SN) obxValue;
+                } else {
+                    sn = new SN(obx.getMessage());
+                }
                 sn.getComparator().setValue(comparator);
                 sn.getNum1().setValue(num1);
                 sn.getSeparatorSuffix().setValue(separatorSuffix);
@@ -3336,13 +3731,13 @@ public class HL7MessageBuilder {
 
                 //HEP Specific code for repeating INV826/INV827 and 11920_8/1742_6
                 if (messageElement.getQuestionIdentifierNND().equalsIgnoreCase("INV827")
-                        || messageElement.getQuestionIdentifierNND().equalsIgnoreCase("1742_6"))
+                        || messageElement.getQuestionIdentifierNND().equalsIgnoreCase("1742_6") || messageElement.getQuestionIdentifierNND().equalsIgnoreCase("1742-6"))
                 {
                     obx.getObservationSubID().setValue("1");
                 }
 
                 if (messageElement.getQuestionIdentifier().equalsIgnoreCase("INV827b")
-                        || messageElement.getQuestionIdentifier().equalsIgnoreCase("11920_8"))
+                        || messageElement.getQuestionIdentifier().equalsIgnoreCase("11920_8") || messageElement.getQuestionIdentifier().equalsIgnoreCase("11920-8"))
                 {
                     obx.getObservationSubID().setValue("2");
                 }
@@ -3369,7 +3764,15 @@ public class HL7MessageBuilder {
                 if (messageElement.getDataElement().getSnunitDataType().getNum2()!=null){
                     num2 = messageElement.getDataElement().getSnunitDataType().getNum2().trim();
                 }
-                SN snDataType = new SN(obx.getMessage());
+                // out.PATIENT_RESULT.ORDER_OBSERVATION[0].OBSERVATION[obxOrderGroupId].OBX[obxInc].ObservationValue[obx5ValueInc]
+                Type obxValue = obx.getObservationValue(obx5ValueInc).getData();
+                SN snDataType;
+                if (obxValue instanceof SN) {
+                    snDataType = (SN) obxValue;
+                } else {
+                    snDataType = new SN(obx.getMessage());
+                }
+
                 snDataType.getComparator().setValue(comparator);
                 snDataType.getNum1().setValue(num1);
                 snDataType.getSeparatorSuffix().setValue(separatorSuffix);
@@ -3457,7 +3860,15 @@ public class HL7MessageBuilder {
                         obx.getObservationIdentifier().getAlternateIdentifier().setValue(messageElement.getQuestionIdentifier().trim());
                         obx.getObservationIdentifier().getAlternateText().setValue(messageElement.getQuestionLabelNND());
                         obx.getObservationIdentifier().getNameOfAlternateCodingSystem().setValue("L");
-                        ST stDataType = (ST)obx.getObservationValue(0).getData();
+                        Type obxValue = obx.getObservationValue(0).getData();
+                        ST stDataType;
+                        if (obxValue instanceof ST) {
+                            stDataType = (ST) obxValue;
+                        } else {
+                            stDataType = new ST(obx.getMessage());
+                        }
+
+
                         stDataType.setValue(messageElement.getDataElement().getStDataType().getStringData().trim());
                         obx.getObservationValue(0).setData(stDataType);
                         obx.getObservationResultStatus().setValue("F");
@@ -3472,7 +3883,15 @@ public class HL7MessageBuilder {
                         obx.getObservationIdentifier().getAlternateText().setValue(description);
                         obx.getObservationIdentifier().getNameOfAlternateCodingSystem().setValue("L");
                         String stringData = messageElement.getDataElement().getStDataType().getStringData().trim();
-                        ST stTypeForObservationValue = (ST) obx.getObservationValue(0).getData();
+                        Type obxValue2 = obx.getObservationValue(0).getData();
+                        ST stTypeForObservationValue;
+                        if (obxValue2 instanceof ST) {
+                            stTypeForObservationValue = (ST) obxValue2;
+                        } else {
+                            stTypeForObservationValue = new ST(obx.getMessage());
+                        }
+
+
                         stTypeForObservationValue.setValue(descriptionValue+"^^^&"+stringData+"&ISO");
                         obx.getObservationValue(0).setData(stTypeForObservationValue);
                         obx.getObservationResultStatus().setValue("F");
@@ -3507,7 +3926,15 @@ public class HL7MessageBuilder {
                         obx.getObservationIdentifier().getAlternateIdentifier().setValue(messageElement.getQuestionLabelNND());
                         obx.getObservationIdentifier().getNameOfAlternateCodingSystem().setValue("L");
 
-                        CX cxDataType = (CX)obx.getObservationValue(0).getData();
+                        Type obxValue = obx.getObservationValue(0).getData();
+                        CX cxDataType;
+                        if (obxValue instanceof CX) {
+                            cxDataType = (CX) obxValue;
+                        } else {
+                            cxDataType = new CX(obx.getMessage());
+                        }
+
+
                         cxDataType.getCx1_IDNumber().setValue(cxData);
                         cxDataType.getCx4_AssigningAuthority().getUniversalID().setValue(STString);
                         cxDataType.getCx4_AssigningAuthority().getNamespaceID().setValue("&ISO");
@@ -3525,19 +3952,42 @@ public class HL7MessageBuilder {
                     && messageElement.getDataElement().getQuestionDataTypeNND().trim().equals("ST"))
             {
                 isDefaultNull = false;
-                ST stringData = new ST(obx.getMessage());
+
+                // out.PATIENT_RESULT.ORDER_OBSERVATION[0].OBSERVATION[obxOrderGroupId].OBX[obxInc].ObservationValue[obx5ValueInc]
+                Type obxValue = obx.getObservationValue(obx5ValueInc).getData();
+                ST stringData;
+                if (obxValue instanceof ST) {
+                    stringData = (ST) obxValue;
+                } else {
+                    stringData = new ST(obx.getMessage());
+                }
+
                 stringData.setValue(messageElement.getDataElement().getStDataType().getStringData().trim());
                 obx.getObservationValue(obx5ValueInc).setData(stringData);
             }
             else if (messageElement.getDataElement().getQuestionDataTypeNND().trim().equals("ST"))
             {
-                ST stringData = new ST(obx.getMessage());
+                Type obxValue = obx.getObservationValue(obx5ValueInc).getData();
+                ST stringData;
+                if (obxValue instanceof ST) {
+                    stringData = (ST) obxValue;
+                } else {
+                    stringData = new ST(obx.getMessage());
+                }
+
                 stringData.setValue(messageElement.getDataElement().getStDataType().getStringData().trim());
                 obx.getObservationValue(obx5ValueInc).setData(stringData);
             }
             //TX datatype
             if (messageElement.getDataElement().getQuestionDataTypeNND().trim().equals("TX")){
-                TX textData = new TX(obx.getMessage());
+                Type obxValue = obx.getObservationValue(obx5ValueInc).getData();
+                TX textData;
+                if (obxValue instanceof TX) {
+                    textData = (TX) obxValue;
+                } else {
+                    textData = new TX(obx.getMessage());
+                }
+
                 String td = messageElement.getDataElement().getTxDataType().getTextData().trim();
                 textData.setValue(td);
                 obx.getObservationValue(obx5ValueInc).setData(textData);
@@ -3554,14 +4004,29 @@ public class HL7MessageBuilder {
             //ID datatype
             if (messageElement.getDataElement().getQuestionDataTypeNND().trim().equals("ID")){
                 String idCodedValue = messageElement.getDataElement().getIdDataType().getIdCodedValue().trim();
-                ID idType = new ID(obx.getMessage());
+                Type obxValue = obx.getObservationValue(obx5ValueInc).getData();
+                ID idType;
+                if (obxValue instanceof ID) {
+                    idType = (ID) obxValue;
+                } else {
+                    idType = new ID(obx.getMessage());
+                }
+
                 idType.setValue(idCodedValue);
                 obx.getObservationValue(obx5ValueInc).setData(idType);
             }
             // IS datatype
             if (messageElement.getDataElement().getQuestionDataTypeNND().trim().equals("IS")){
                 String isCodedValue = messageElement.getDataElement().getIsDataType().getIsCodedValue().trim();
-                IS isType = new IS(obx.getMessage());
+
+                Type obxValue = obx.getObservationValue(obx5ValueInc).getData();
+                IS isType;
+                if (obxValue instanceof IS) {
+                    isType = (IS) obxValue;
+                } else {
+                    isType = new IS(obx.getMessage());
+                }
+
                 isType.setValue(isCodedValue);
                 obx.getObservationValue(obx5ValueInc).setData(isType);
             }
@@ -3609,7 +4074,15 @@ public class HL7MessageBuilder {
                         || messageType.contains("TB_Case_Map_v2.0") || messageType.contains("Var_Case_Map_v2.0"))
                 {
                     //TODO - 23329
-                    CWE cweDatatype = (CWE) obx.getObservationValue(obx5ValueInc).getData();
+                    Type obxValue = obx.getObservationValue(obx5ValueInc).getData();
+                    CWE cweDatatype;
+                    if (obxValue instanceof CWE) {
+                        cweDatatype = (CWE) obxValue;
+                    } else {
+                        cweDatatype = new CWE(obx.getMessage());
+                    }
+
+
                     if (codedValue.isEmpty()){
                         cweDatatype.getCwe5_AlternateText().setValue(localCodedValueDescription);
                         obx.getObservationValue(obx5ValueInc).setData(cweDatatype);
@@ -3622,10 +4095,17 @@ public class HL7MessageBuilder {
                 {
                     if (codedValue.isEmpty()){
                         //TODO - 23329
-                        CWE cweDataTYpe = (CWE) obx.getObservationValue(obx5ValueInc).getData();
-                        if (messageElement.getDataElement().getCweDataType().getCweCodedValue()==null)
+                        Type obxValue = obx.getObservationValue(obx5ValueInc).getData();
+                        CWE cweDataTYpe;
+                        if (obxValue instanceof CWE) {
+                            cweDataTYpe = (CWE) obxValue;
+                        } else {
+                            cweDataTYpe = new CWE(obx.getMessage());
+                        }
+
+                        if (messageElement.getDataElement().getCweDataType().getCweCodedValue()==null && messageElement.getDataElement().getCweDataType().getCweLocalCodedValueDescription() != null)
                         {
-                            codedValueDescription = messageElement.getDataElement().getCweDataType().getCweLocalCodedValueCodingSystem().trim();
+                            codedValueDescription = messageElement.getDataElement().getCweDataType().getCweLocalCodedValueDescription().trim();
                             if (!codedValueDescription.isEmpty()){
                                 codedValueDescription = codedValueDescription.replace("\\","\\E\\");
                                 codedValueDescription = codedValueDescription.replace("|","\\F\\");
@@ -3638,18 +4118,38 @@ public class HL7MessageBuilder {
                         }
                         else if (Objects.equals(messageElement.getDataElement().getCweDataType().getCweCodedValue(), "OTH"))
                         {
-                            cweDataTYpe.getCwe9_OriginalText().setValue(localCodedValue+"^"+localCodedValueDescription+"^"+localCodedValueCodingSystem+"^^^^^^"+originalText);
+                            cweDataTYpe.getCwe1_Identifier().setValue(localCodedValue);                      // CWE.1
+                            cweDataTYpe.getCwe2_Text().setValue(localCodedValueDescription);                // CWE.2
+                            cweDataTYpe.getCwe3_NameOfCodingSystem().setValue(localCodedValueCodingSystem); // CWE.3
+                            cweDataTYpe.getCwe9_OriginalText().setValue(originalText);                      // CWE.9
+
                             obx.getObservationValue(obx5ValueInc).setData(cweDataTYpe);
+
                         }
                         else
                         {
-                            cweDataTYpe.getCwe9_OriginalText().setValue(localCodedValue+"^"+localCodedValueDescription+"^L^^^^^^"+originalText);
+
+//                            cweDataTYpe.getCwe9_OriginalText().setValue(localCodedValue+"^"+localCodedValueDescription+"^L^^^^^^"+originalText);
+//                            obx.getObservationValue(obx5ValueInc).setData(cweDataTYpe);
+
+                            cweDataTYpe.getCwe1_Identifier().setValue(localCodedValue);                         // CWE.1
+                            cweDataTYpe.getCwe2_Text().setValue(localCodedValueDescription);                   // CWE.2
+                            cweDataTYpe.getCwe3_NameOfCodingSystem().setValue("L");                            // CWE.3
+                            cweDataTYpe.getCwe9_OriginalText().setValue(originalText);                         // CWE.9
+
                             obx.getObservationValue(obx5ValueInc).setData(cweDataTYpe);
                         }
                     }
                     else
                     {
-                        CWE cwe = new CWE(obx.getMessage());
+                        Type obxValue = obx.getObservationValue(obx5ValueInc).getData();
+                        CWE cwe;
+                        if (obxValue instanceof CWE) {
+                            cwe = (CWE) obxValue;
+                        } else {
+                            cwe = new CWE(obx.getMessage());
+                        }
+
                         cwe.getIdentifier().setValue(codedValue);                     // OBX-5.1
                         cwe.getText().setValue(codedValueDescription);               // OBX-5.2
                         cwe.getNameOfCodingSystem().setValue(codedValueCodingSystem); // OBX-5.3
@@ -3689,7 +4189,15 @@ public class HL7MessageBuilder {
                     localCodedValueCodingSystem = messageElement.getDataElement().getCeDataType().getCeLocalCodedValueCodingSystem();
                 }
 
-                CE ceDataType = (CE) obx.getObservationValue(obx5ValueInc).getData();
+                Type obxValue = obx.getObservationValue(obx5ValueInc).getData();
+                CE ceDataType;
+                if (obxValue instanceof CE) {
+                    ceDataType = (CE) obxValue;
+                } else {
+                    ceDataType = new CE(obx.getMessage());
+                }
+
+
                 ceDataType.getCe1_Identifier().setValue(codedValue);
                 ceDataType.getCe2_Text().setValue(codedValueDescription);
                 ceDataType.getCe3_NameOfCodingSystem().setValue(codedValueCodingSystem);
@@ -3706,8 +4214,10 @@ public class HL7MessageBuilder {
             }
             else if (messageElement.getDataElement().getQuestionDataTypeNND().equals("DT"))
             {
-                //DT dtDataType = (DT) obx.getObservationValue(obx5ValueInc).getData();
-                DT dtDataType = new DT(obx.getMessage());
+                DT dtDataType = (obx.getObservationValue(obx5ValueInc).getData() instanceof DT)
+                        ? (DT) obx.getObservationValue(obx5ValueInc).getData()
+                        : new DT(obx.getMessage());
+
 
                 if (questionIdentifier.equals("INV162"))
                 {
@@ -3740,7 +4250,13 @@ public class HL7MessageBuilder {
             if (messageElement.getDataElement().getQuestionDataTypeNND().equals("TS"))
             {
                 String timeOutput = "";
-                TS tsDataType = new TS(obx.getMessage());
+                Type obxValue = obx.getObservationValue(obx5ValueInc).getData();
+                TS tsDataType;
+                if (obxValue instanceof TS) {
+                    tsDataType = (TS) obxValue;
+                } else {
+                    tsDataType = new TS(obx.getMessage());
+                }
 
                 if (messageElement.getDataElement().getTsDataType().getYear()!=null)
                 {
@@ -3758,7 +4274,13 @@ public class HL7MessageBuilder {
             // NM datatype
             if (messageElement.getDataElement().getQuestionDataTypeNND().equals("NM"))
             {
-                NM nmDataType = new NM(obx.getMessage());
+                Type obxValue = obx.getObservationValue(obx5ValueInc).getData();
+                NM nmDataType;
+                if (obxValue instanceof NM) {
+                    nmDataType = (NM) obxValue;
+                } else {
+                    nmDataType = new NM(obx.getMessage());
+                }
                 nmDataType.setValue(messageElement.getDataElement().getNmDataType().getNum().trim());
                 obx.getObservationValue(obx5ValueInc).setData(nmDataType);
             }
@@ -3826,9 +4348,18 @@ public class HL7MessageBuilder {
                 obx.getValueType().setValue("CWE");
                 obx.getSetIDOBX().setValue(String.valueOf(obxInc+1));
                 obx.getObservationSubID().setValue(String.valueOf(drugCounter));
-                ST st = new ST(obx.getMessage());
+
+                Type obxValue = obx.getObservationValue(0).getData();
+                ST st;
+                if (obxValue instanceof ST) {
+                    st = (ST) obxValue;
+                } else {
+                    st = new ST(obx.getMessage());
+                }
+
                 st.setValue(observationValue);
                 obx.getObservationValue(0).setData(st);
+
                 obx.getObservationIdentifier().getIdentifier().setValue("STD116");
                 obx.getObservationIdentifier().getText().setValue("Drugs Used Indicator");
                 obx.getObservationIdentifier().getNameOfCodingSystem().setValue("2.16.840.1.114222.4.5.232");
@@ -3848,7 +4379,7 @@ public class HL7MessageBuilder {
                 }
             }
         }
-        return obx;
+        return orderObservation;
     }
 
 
@@ -3864,7 +4395,9 @@ public class HL7MessageBuilder {
 
     }
 
-    private void mapToQuestionMap(MessageElement messageElement, int counter, ORU_R01_ORDER_OBSERVATION orderObservation) throws DataTypeException {
+    private void mapToQuestionMap(MessageElement messageElement, int counter, ORU_R01_ORDER_OBSERVATION orderObservation) throws HL7Exception {
+        OBX obxUpdate = orderObservation.getOBSERVATION(orderObservation.getOBSERVATIONAll().size()).getOBX();
+
         String indPartMain = "";
         String indPart1 = "";
         String indPart2 = "";
@@ -3974,39 +4507,28 @@ public class HL7MessageBuilder {
         }
 
         if (subStringLeft.contains("^")) {
-            String remainingPart = subStringLeft;
-            questPart1 = remainingPart.substring(0, remainingPart.indexOf("^"));
-            remainingPart = remainingPart.substring(remainingPart.indexOf("^") + 1);
+            if (subStringLeft != null && !subStringLeft.isEmpty()) {
+                String[] parts = subStringLeft.split("\\^", -1);
 
-            questPart2 = remainingPart.substring(0, remainingPart.indexOf("^"));
-            remainingPart = remainingPart.substring(remainingPart.indexOf("^") + 1);
-
-            questPart3 = remainingPart.substring(0, remainingPart.indexOf("^"));
-            remainingPart = remainingPart.substring(remainingPart.indexOf("^") + 1);
-
-            questPart4 = remainingPart.substring(0, remainingPart.indexOf("^"));
-            remainingPart = remainingPart.substring(remainingPart.indexOf("^") + 1);
-
-            questPart5 = remainingPart.substring(0, remainingPart.indexOf("^"));
-            questPart6 = remainingPart.substring(remainingPart.indexOf("^") + 1);
+                questPart1 = parts.length > 0 ? parts[0] : "";
+                questPart2 = parts.length > 1 ? parts[1] : "";
+                questPart3 = parts.length > 2 ? parts[2] : "";
+                questPart4 = parts.length > 3 ? parts[3] : "";
+                questPart5 = parts.length > 4 ? parts[4] : "";
+                questPart6 = parts.length > 5 ? parts[5] : "";
+            }
         }
 
         if (subStringRight.contains("^")) {
-            String remainingPart = subStringRight;
-            quest2Part1 = remainingPart.substring(0, remainingPart.indexOf("^"));
-            remainingPart = remainingPart.substring(remainingPart.indexOf("^") + 1);
-
-            quest2Part2 = remainingPart.substring(0, remainingPart.indexOf("^"));
-            remainingPart = remainingPart.substring(remainingPart.indexOf("^") + 1);
-
-            quest2Part3 = remainingPart.substring(0, remainingPart.indexOf("^"));
-            remainingPart = remainingPart.substring(remainingPart.indexOf("^") + 1);
-
-            quest2Part4 = remainingPart.substring(0, remainingPart.indexOf("^"));
-            remainingPart = remainingPart.substring(remainingPart.indexOf("^") + 1);
-
-            quest2Part5 = remainingPart.substring(0, remainingPart.indexOf("^"));
-            quest2Part6 = remainingPart.substring(remainingPart.indexOf("^") + 1);
+            if (subStringRight != null && !subStringRight.isEmpty()) {
+                String[] parts = subStringRight.split("\\^", -1);
+                quest2Part1 = parts.length > 0 ? parts[0] : "";
+                quest2Part2 = parts.length > 1 ? parts[1] : "";
+                quest2Part3 = parts.length > 2 ? parts[2] : "";
+                quest2Part4 = parts.length > 3 ? parts[3] : "";
+                quest2Part5 = parts.length > 4 ? parts[4] : "";
+                quest2Part6 = parts.length > 5 ? parts[5] : "";
+            }
         }
 
         String dataElementCodedValue = "";
@@ -4020,8 +4542,11 @@ public class HL7MessageBuilder {
             questionDataType = messageElement.getDataElement().getQuestionDataTypeNND();
         }
 
-        if (!mappedValue.isEmpty() && !mappedValue.equals(dataElementCodedValue)) {
-        } else if ("SN_WITH_UNIT".equals(questionDataType)) {
+        if (!mappedValue.isEmpty() && !mappedValue.equals(dataElementCodedValue))
+        {
+        }
+        else if ("SN_WITH_UNIT".equals(questionDataType))
+        {
             int checkerNum = 0;
 
             for (DiscreteRepeat item : discreteRepeatSNTypeArray) {
@@ -4057,7 +4582,10 @@ public class HL7MessageBuilder {
             obx.getObservationSubID().setValue(String.valueOf(obx4Counter));
 
             String value = "^" + messageElement.getDataElement().getSnunitDataType().getNum1();
-            ST observationValueStType = (ST) obx.getObservationValue(0).getData();
+            ST observationValueStType = (obx.getObservationValue(0).getData() instanceof ST)
+                    ? (ST) obx.getObservationValue(0).getData()
+                    : new ST(obx.getMessage());
+
             observationValueStType.setValue(value);
             obx.getObservationValue(0).setData(observationValueStType);
 
@@ -4067,7 +4595,9 @@ public class HL7MessageBuilder {
             obx.getObservationResultStatus().setValue("F");
 
             obx2Inc++;
-        } else if (messageElement.getQuestionIdentifierNND().contains("_OTH")) {
+        }
+        else if (messageElement.getQuestionIdentifierNND().contains("_OTH"))
+        {
             int checkerNum = 0;
             String tester = "";
 
@@ -4089,7 +4619,10 @@ public class HL7MessageBuilder {
                 if (obx.getObservationIdentifier().getIdentifier().getValue().equals(questPart1) &&
                         obx.getObservationValue(0).getData().toString().startsWith("OTH^")) {
                     String updatedValue = obx.getObservationValue(0) + "^^^^^^" + originalText;
-                    ST stTempType = (ST) obx.getObservationValue(0).getData();
+                    ST stTempType = (obx.getObservationValue(0).getData() instanceof ST)
+                            ? (ST) obx.getObservationValue(0).getData()
+                            : new ST(obx.getMessage());
+
                     stTempType.setValue(updatedValue);
                     obx.getObservationValue(0).setData(stTempType);
                     tester = "mapped";
@@ -4139,9 +4672,10 @@ public class HL7MessageBuilder {
                     mappedAsOtherInt = 1;
                 }
             }
-        } else if (indPartMain.contains("^" + dataElementCodedValue + "^")
-                || (unkObx5 != null && !unkObx5.isEmpty())) {
-
+        }
+        else if (indPartMain.contains("^" + dataElementCodedValue + "^")
+                || (unkObx5 != null && !unkObx5.isEmpty()))
+        {
             int checkerNum = 0;
             String id = messageElement.getQuestionIdentifier();
 
@@ -4181,10 +4715,11 @@ public class HL7MessageBuilder {
             }
 
             // Case 2
-            orderObservation.getOBSERVATION(1).getOBX().getSetIDOBX().setValue(String.valueOf(counter + 1));
-            orderObservation.getOBSERVATION(1).getOBX().getValueType().setValue("CWE");
+            orderObservation.getOBSERVATION(0).getOBX().getSetIDOBX().setValue(String.valueOf(counter + 1));
+            orderObservation.getOBSERVATION(0).getOBX().getValueType().setValue("CWE");
 
-            OBX obx1 = orderObservation.getOBSERVATION(1).getOBX();
+
+            OBX obx1 = orderObservation.getOBSERVATION(0).getOBX();
 
             obx1.getObservationIdentifier().getIdentifier().setValue(questPart1);
             obx1.getObservationIdentifier().getText().setValue(questPart2);
@@ -4193,22 +4728,45 @@ public class HL7MessageBuilder {
             obx1.getObservationIdentifier().getAlternateText().setValue(questPart5);
             obx1.getObservationIdentifier().getNameOfAlternateCodingSystem().setValue(questPart6);
 
+            ObxRepeatingElement obxRepeatingElement = new ObxRepeatingElement();
+            obxRepeatingElement.setElementUid(questPart1);
+            obxRepeatingElement.setObxInc(0);
+            obxRepeatingElementArrayList.add(obxRepeatingElement);
+
             if (checkPoint > 0) {
-                ST stObservationValue = (ST) obx1.getObservationValue(0).getData();
-                stObservationValue.setValue(messageElement.getDataElement().getCweDataType().getCweCodedValue() + "^" +
-                        messageElement.getDataElement().getCweDataType().getCweCodedValueDescription() + "^" +
-                        messageElement.getDataElement().getCweDataType().getCweCodedValueCodingSystem());
-                obx1.getObservationValue(0).setData(stObservationValue);
+                CWE cweObservationValue = (obx1.getObservationValue(0).getData() instanceof CWE)
+                        ? (CWE) obx1.getObservationValue(0).getData()
+                        : new CWE(obx1.getMessage());
+
+
+
+                cweObservationValue.getIdentifier().setValue(messageElement.getDataElement().getCweDataType().getCweCodedValue());
+                cweObservationValue.getText().setValue(messageElement.getDataElement().getCweDataType().getCweCodedValueDescription());
+                cweObservationValue.getNameOfCodingSystem().setValue(messageElement.getDataElement().getCweDataType().getCweCodedValueCodingSystem());
+
+                obx1.getObservationValue(0).setData(cweObservationValue);
+
             } else {
-                ST stObservationValue = (ST) obx1.getObservationValue(0).getData();
-                stObservationValue.setValue(quest2Part1 + "^" + quest2Part2 + "^" + quest2Part3);
-                obx1.getObservationValue(0).setData(stObservationValue);
+                CWE cweObservationValue = (obx1.getObservationValue(0).getData() instanceof CWE)
+                        ? (CWE) obx1.getObservationValue(0).getData()
+                        : new CWE(obx1.getMessage());
+
+
+                cweObservationValue.getIdentifier().setValue(quest2Part1);
+                cweObservationValue.getText().setValue(quest2Part2);
+                cweObservationValue.getNameOfCodingSystem().setValue(quest2Part3);
+
+                obx1.getObservationValue(0).setData(cweObservationValue);
+
             }
 
             if (messageElement.getQuestionIdentifierNND().equals("OTH") && otherText != null && !otherText.isEmpty()) {
                 //TODO - Check value here
                 String val = obx1.getObservationValue(0).toString() + "^^^^^^" + otherText;
-                ST stObservationValue = (ST) obx1.getObservationValue(0).getData();
+                ST stObservationValue = (obx1.getObservationValue(0).getData() instanceof ST)
+                        ? (ST) obx1.getObservationValue(0).getData()
+                        : new ST(obx1.getMessage());
+
                 stObservationValue.setValue(val);
                 obx1.getObservationValue(0).setData(stObservationValue);
             }
@@ -4230,16 +4788,32 @@ public class HL7MessageBuilder {
             obx2.getObservationIdentifier().getAlternateText().setValue(indPart5);
             obx2.getObservationIdentifier().getNameOfAlternateCodingSystem().setValue(indPart6);
 
+            ObxRepeatingElement obxRepeatingElement1 = new ObxRepeatingElement();
+            obxRepeatingElement1.setElementUid(indPart1);
+            obxRepeatingElement1.setObxInc(1);
+            obxRepeatingElementArrayList.add(obxRepeatingElement1);
+
+
             if (unkObx5 != null && !unkObx5.isEmpty()) {
-                ST stObservationValue = (ST) obx2.getObservationValue(0).getData();
+                ST stObservationValue = (obx2.getObservationValue(0).getData() instanceof ST)
+                        ? (ST) obx2.getObservationValue(0).getData()
+                        : new ST(obx2.getMessage());
+
                 stObservationValue.setValue(unkObx5);
                 obx2.getObservationValue(0).setData(stObservationValue);
-            } else {
-                ST stObservationValue = (ST) obx2.getObservationValue(0).getData();
-                stObservationValue.setValue(messageElement.getDataElement().getCweDataType().getCweCodedValue() + "^" +
-                        messageElement.getDataElement().getCweDataType().getCweCodedValueDescription() + "^" +
-                        messageElement.getDataElement().getCweDataType().getCweCodedValueCodingSystem());
-                obx2.getObservationValue(0).setData(stObservationValue);
+            }
+            else
+            {
+                CWE cweObservationValue = (obx2.getObservationValue(0).getData() instanceof CWE)
+                        ? (CWE) obx2.getObservationValue(0).getData()
+                        : new CWE(obx2.getMessage());
+
+                cweObservationValue.getIdentifier().setValue(messageElement.getDataElement().getCweDataType().getCweCodedValue());
+                cweObservationValue.getText().setValue(messageElement.getDataElement().getCweDataType().getCweCodedValueDescription());
+                cweObservationValue.getNameOfCodingSystem().setValue(messageElement.getDataElement().getCweDataType().getCweCodedValueCodingSystem());
+
+                obx2.getObservationValue(0).setData(cweObservationValue);
+
             }
 
             obx2.getObservationSubID().setValue(String.valueOf(obx4Counter));

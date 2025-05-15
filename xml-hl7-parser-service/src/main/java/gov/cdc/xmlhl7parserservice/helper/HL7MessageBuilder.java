@@ -16,10 +16,10 @@ import gov.cdc.xmlhl7parserservice.constants.Constants;
 import gov.cdc.xmlhl7parserservice.model.*;
 import gov.cdc.xmlhl7parserservice.model.Obx.ObxRepeatingElement;
 import gov.cdc.xmlhl7parserservice.model.generated.jaxb.*;
-import gov.cdc.xmlhl7parserservice.repository.IDataTypeLookupRepository;
-import gov.cdc.xmlhl7parserservice.repository.IServiceActionPairRepository;
+import gov.cdc.xmlhl7parserservice.repository.msgout.IDataTypeLookupRepository;
+import gov.cdc.xmlhl7parserservice.repository.msgout.IServiceActionPairRepository;
 
-import gov.cdc.xmlhl7parserservice.repository.model.ServiceActionPairModel;
+import gov.cdc.xmlhl7parserservice.repository.msgout.model.ServiceActionPairModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -18,11 +18,8 @@ import java.util.List;
 @Slf4j
 public class HL7Validator {
 
-    public boolean nndOruR01Validator(String hl7Message) throws XmlHL7ParserException, HL7Exception {
-        PipeParser parser = new PipeParser();
-        Message message = parser.parse(hl7Message);
-
-        if (!(message instanceof ORU_R01 oruR01)) {
+    public boolean nndOruR01Validator(ORU_R01 hl7Message) throws XmlHL7ParserException, HL7Exception {
+        if (!(hl7Message instanceof ORU_R01 oruR01)) {
             throw new HL7Exception("Message is not ORU_R01");
         }
 

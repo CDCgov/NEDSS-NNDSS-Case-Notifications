@@ -669,7 +669,7 @@ public class HL7MessageBuilder {
         }
 
         HL7Validator validator = new HL7Validator();
-        boolean isHL7Valid = validator.nndOruR01Validator(oruMessage.toString());
+        boolean isHL7Valid = validator.nndOruR01Validator(oruMessage);
         System.err.println("Generated message is: " + (isHL7Valid ? "valid" : "not valid"));
         logger.info("Final message: {} ", oruMessage);
         System.err.println("Final message...: " + oruMessage);

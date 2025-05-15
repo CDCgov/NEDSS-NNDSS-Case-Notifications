@@ -53,7 +53,7 @@ public class DltServiceTest {
 
         when(cnTraportqOutRepository.findTopByRecordUid(12345L)).thenReturn(mockTransport);
 
-        dltService.creatingDlt(jsonPayload, "non-std-topic", "stacktrace", "error", "root");
+        dltService.creatingDlt(jsonPayload, "non-std-topic", "stacktrace", "root");
 
         verify(dltRepository, times(1)).save(any(CaseNotificationDlt.class));
     }

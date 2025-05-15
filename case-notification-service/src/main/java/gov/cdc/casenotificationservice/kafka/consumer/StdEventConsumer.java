@@ -49,7 +49,7 @@ public class StdEventConsumer {
             topics = "${spring.kafka.topic.std-topic}",
             containerFactory = "kafkaListenerContainerFactoryConsumerForStd"
     )
-    public void handleMessage(String message) throws StdProcessorServiceException {
+    public void handleMessage(String message) throws StdProcessorServiceException, NonRetryableException {
         logger.info("Received std message");
         var gson = new Gson();
         if (message.contains("org.apache.kafka.connect.data"))

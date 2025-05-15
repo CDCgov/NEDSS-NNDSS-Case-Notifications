@@ -12,6 +12,7 @@ import ca.uhn.hl7v2.model.v25.segment.*;
 
 import gov.cdc.xmlhl7parserservice.constants.Constants;
 
+import gov.cdc.xmlhl7parserservice.exception.XmlHL7ParserException;
 import gov.cdc.xmlhl7parserservice.model.*;
 import gov.cdc.xmlhl7parserservice.model.Obx.ObxRepeatingElement;
 import gov.cdc.xmlhl7parserservice.model.generated.jaxb.*;
@@ -19,6 +20,7 @@ import gov.cdc.xmlhl7parserservice.repository.IDataTypeLookupRepository;
 import gov.cdc.xmlhl7parserservice.repository.IServiceActionPairRepository;
 
 import gov.cdc.xmlhl7parserservice.repository.model.ServiceActionPairModel;
+import gov.cdc.xmlhl7parserservice.validator.HL7Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -228,7 +230,7 @@ public class HL7MessageBuilder {
     }
 
     // TODO - Extract methods to helper classes
-    public String parseXml(NBSNNDIntermediaryMessage nbsnndIntermediaryMessage) throws HL7Exception, IOException {
+    public String parseXml(NBSNNDIntermediaryMessage nbsnndIntermediaryMessage) throws HL7Exception, IOException, XmlHL7ParserException {
 //        nbsnndIntermediaryMessage = nbsnndIntermediaryMessage;
         ORU_R01 oruMessage = new ORU_R01();
 
@@ -666,8 +668,12 @@ public class HL7MessageBuilder {
             }
         }
 
-        logger.info("Final message: {} ", oruMessage.getMessage());
+        HL7Validator validator = new HL7Validator();
+        boolean isHL7Valid = validator.nndOruR01Validator(oruMessage.toString());
+        System.err.println("Generated message is: " + (isHL7Valid ? "valid" : "not valid"));
+        logger.info("Final message: {} ", oruMessage);
         System.err.println("Final message...: " + oruMessage);
+
         // based on message type
         String base64EncodedString = encodeToBase64(oruMessage.getMessage().toString());
         //based on the message type and

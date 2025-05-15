@@ -41,8 +41,7 @@ public class NonStdEventConsumer {
             topicSuffixingStrategy = TopicSuffixingStrategy.SUFFIX_WITH_INDEX_VALUE,
             // time to wait before attempting to retry
             backoff = @Backoff(delay = 1000, multiplier = 2.0),
-            exclude = {NonRetryableException.class},
-            include = {NonStdProcessorServiceException.class, NonStdBatchProcessorServiceException.class, IgnorableException.class}
+            exclude = {NonRetryableException.class}
     )
     @KafkaListener(
             topics = "${spring.kafka.topic.non-std-topic}",

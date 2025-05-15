@@ -230,7 +230,7 @@ public class HL7MessageBuilder {
     }
 
     // TODO - Extract methods to helper classes
-    public String parseXml(NBSNNDIntermediaryMessage nbsnndIntermediaryMessage) throws HL7Exception, IOException, XmlHL7ParserException {
+    public String parseXml(NBSNNDIntermediaryMessage nbsnndIntermediaryMessage, boolean validationEnabled) throws HL7Exception, IOException, XmlHL7ParserException {
 //        nbsnndIntermediaryMessage = nbsnndIntermediaryMessage;
         ORU_R01 oruMessage = new ORU_R01();
 
@@ -668,9 +668,12 @@ public class HL7MessageBuilder {
             }
         }
 
-        HL7Validator validator = new HL7Validator();
-        boolean isHL7Valid = validator.nndOruR01Validator(oruMessage);
-        System.err.println("Generated message is: " + (isHL7Valid ? "valid" : "not valid"));
+        if (validationEnabled) {
+            HL7Validator validator = new HL7Validator();
+            boolean isHL7Valid = validator.nndOruR01Validator(oruMessage);
+            System.err.println("Generated message is: " + (isHL7Valid ? "valid" : "not valid"));
+        }
+
         logger.info("Final message: {} ", oruMessage);
         System.err.println("Final message...: " + oruMessage);
 

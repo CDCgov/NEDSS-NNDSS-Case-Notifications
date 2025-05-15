@@ -10,10 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.InputStream;
 
@@ -33,7 +30,7 @@ public class XmlHL7ConversionController {
     }
 
     @PostMapping(value = "/xml-to-hl7", produces = MediaType.TEXT_PLAIN_VALUE)
-    public ResponseEntity<String> convertXmlToHl7() {
+    public ResponseEntity<String> convertXmlToHl7(@RequestParam(defaultValue = "true") boolean validationEnabled) {
         log.info("Received request to convert XML file to HL7");
         String message = "";
 
@@ -48,7 +45,7 @@ public class XmlHL7ConversionController {
 
             NBSNNDIntermediaryMessage nbsnndIntermediaryMessage = (NBSNNDIntermediaryMessage) unmarshaller.unmarshal(is);
 
-            message = hl7MessageBuilder.parseXml(nbsnndIntermediaryMessage);
+            message = hl7MessageBuilder.parseXml(nbsnndIntermediaryMessage, validationEnabled);
 
         } catch (Exception e) {
             log.error("Exception occurred while parsing/processing NBSNNDMessage xml file", e);
@@ -75,7 +72,7 @@ public class XmlHL7ConversionController {
 
             NBSNNDIntermediaryMessage nbsnndIntermediaryMessage = (NBSNNDIntermediaryMessage) unmarshaller.unmarshal(is);
 
-            message = hl7MessageBuilder.parseXml(nbsnndIntermediaryMessage);
+            message = hl7MessageBuilder.parseXml(nbsnndIntermediaryMessage, false);
 
         } catch (Exception e) {
             log.error("Exception occurred while parsing/processing NBSNNDMessage xml file", e);

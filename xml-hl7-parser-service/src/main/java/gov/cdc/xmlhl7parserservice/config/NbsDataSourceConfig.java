@@ -25,7 +25,7 @@ import java.util.HashMap;
     entityManagerFactoryRef = "nbsEntityManagerFactory", 
     transactionManagerRef = "nbsTransactionManager",
     basePackages = {
-        "gov.cdc.xmlhl7parserservice.repository"
+        "gov.cdc.xmlhl7parserservice.repository.msgout"
     }
 )
 public class NbsDataSourceConfig {
@@ -95,7 +95,7 @@ public class NbsDataSourceConfig {
             @Qualifier("nbsDataSource") DataSource nbsDataSource) {
         return nbsEntityManagerFactoryBuilder
                 .dataSource(nbsDataSource)
-                .packages("gov.cdc.xmlhl7parserservice.repository.model")
+                .packages("gov.cdc.xmlhl7parserservice.repository.msgout.model")
                 .persistenceUnit("nbs")
                 .build();
     }

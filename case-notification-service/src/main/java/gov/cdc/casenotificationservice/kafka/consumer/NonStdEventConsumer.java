@@ -1,15 +1,13 @@
 package gov.cdc.casenotificationservice.kafka.consumer;
 
 import com.google.gson.Gson;
-import gov.cdc.casenotificationservice.exception.APIException;
-import gov.cdc.casenotificationservice.exception.IgnorableException;
-import gov.cdc.casenotificationservice.exception.NonStdBatchProcessorServiceException;
-import gov.cdc.casenotificationservice.exception.NonStdProcessorServiceException;
+import gov.cdc.casenotificationservice.exception.*;
 import gov.cdc.casenotificationservice.model.MessageAfterStdChecker;
 import gov.cdc.casenotificationservice.service.common.interfaces.IDltService;
 import gov.cdc.casenotificationservice.service.nonstd.NonStdService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.DltHandler;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.annotation.RetryableTopic;
@@ -26,6 +24,8 @@ public class NonStdEventConsumer {
     private final NonStdService nonStdService;
     private final IDltService dltService;
 
+    @Value("${spring.kafka.topic.non-std-topic}")
+    public String topic;
     public NonStdEventConsumer(NonStdService nonStdService, IDltService dltService) {
         this.nonStdService = nonStdService;
         this.dltService = dltService;
@@ -41,7 +41,7 @@ public class NonStdEventConsumer {
             topicSuffixingStrategy = TopicSuffixingStrategy.SUFFIX_WITH_INDEX_VALUE,
             // time to wait before attempting to retry
             backoff = @Backoff(delay = 1000, multiplier = 2.0),
-            include = {NonStdProcessorServiceException.class, NonStdBatchProcessorServiceException.class, IgnorableException.class}
+            exclude = {NonRetryableException.class}
     )
     @KafkaListener(
             topics = "${spring.kafka.topic.non-std-topic}",
@@ -50,8 +50,18 @@ public class NonStdEventConsumer {
     public void handleMessage(String message) throws IgnorableException, NonStdProcessorServiceException, NonStdBatchProcessorServiceException, APIException {
         logger.info("Received non std message");
         var gson = new Gson();
-        var data = gson.fromJson(message, MessageAfterStdChecker.class);
-        nonStdService.nonStdProcessor(data);
+        if (message.contains("org.apache.kafka.connect.data")) {
+            var data = gson.fromJson(message, MessageAfterStdChecker.class);
+            nonStdService.nonStdProcessor(data);
+        }
+        else
+        {
+            var dlt = dltService.getDlt(message);
+            MessageAfterStdChecker checker = new MessageAfterStdChecker();
+            checker.setCnTransportqOutUid(dlt.getCnTranportqOutUid());
+            checker.setReprocessApplied(true);
+            nonStdService.nonStdProcessor(checker);
+        }
         logger.info("Completed non std message");
 
     }
@@ -60,12 +70,10 @@ public class NonStdEventConsumer {
     public void handleDlt(
             String message,
             @Header(KafkaHeaders.RECEIVED_TOPIC) String topic,
-            @Header(KafkaHeaders.EXCEPTION_STACKTRACE) String stacktrace,
-            @Header(KafkaHeaders.EXCEPTION_MESSAGE) String errorMessage,
-            @Header(KafkaHeaders.EXCEPTION_CAUSE_FQCN) String exceptionRoot
+            @Header(KafkaHeaders.EXCEPTION_STACKTRACE) String stacktrace
     ) {
         logger.info("Received DLT message: {}", message);
-        dltService.creatingDlt(message, topic, stacktrace, errorMessage, exceptionRoot);
+        dltService.creatingDlt(message, topic, stacktrace, topic);
 
     }
 }

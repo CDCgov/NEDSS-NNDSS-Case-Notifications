@@ -31,8 +31,6 @@ public class CaseNotificationDlt {
     @Column(name = "error_stack_trace", columnDefinition = "NVARCHAR(MAX)")
     private String errorStackTrace;
 
-    @Column(name = "error_stack_trace_short", columnDefinition = "NVARCHAR(MAX)")
-    private String errorStackTraceShort;
 
     @Column(name = "dlt_status", length = 10)
     private String dltStatus;

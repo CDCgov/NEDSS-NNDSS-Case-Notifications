@@ -1,5 +1,6 @@
 package gov.cdc.casenotificationservice.controller;
 
+import gov.cdc.casenotificationservice.exception.NonRetryableException;
 import gov.cdc.casenotificationservice.service.nonstd.NonStdService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -35,7 +36,7 @@ public class NonStdController {
                             schema = @Schema(type = "string"))}
     )
     @PostMapping(path = "/api/non-std/release-queue")
-    public ResponseEntity<String> releaseQueue() {
+    public ResponseEntity<String> releaseQueue() throws NonRetryableException {
         nonStdService.releaseHoldQueueAndProcessBatchNonStd();
         return new ResponseEntity<>(HttpStatus.OK);
     }

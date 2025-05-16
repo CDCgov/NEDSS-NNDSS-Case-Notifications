@@ -43,7 +43,12 @@ public class DltService implements IDltService {
         this.caseNotificationProducer = caseNotificationProducer;
     }
 
-    public void creatingDlt( String message,String topic,String stacktrace,String errorMessage,String exceptionRoot) {
+    public CaseNotificationDlt getDlt(String uuid) {
+        var res = caseNotificationDltRepository.findById(UUID.fromString(uuid));
+        return res.orElse(null);
+    }
+
+    public void creatingDlt( String message,String topic,String stacktrace, String origin) {
         var gson = new Gson();
         MessageAfterStdChecker data = gson.fromJson(message, MessageAfterStdChecker.class);
         var cnTransportqOut = cnTraportqOutRepository.findTopByRecordUid(data.getCnTransportqOutUid());
@@ -51,7 +56,7 @@ public class DltService implements IDltService {
         CaseNotificationDlt caseNotificationDlt = new CaseNotificationDlt();
         caseNotificationDlt.setCnTranportqOutUid(data.getCnTransportqOutUid());
         caseNotificationDlt.setOriginalPayload(cnTransportqOut.getMessagePayload());
-        caseNotificationDlt.setSource(topic);
+        caseNotificationDlt.setSource(origin);
         caseNotificationDlt.setErrorStackTrace(stacktrace);
         caseNotificationDlt.setCreatedOn(getCurrentTimeStamp(tz));
         caseNotificationDlt.setUpdatedOn(getCurrentTimeStamp(tz));
@@ -85,14 +90,15 @@ public class DltService implements IDltService {
         if (dltResult.isEmpty()) {
             throw new DltServiceException("No DLT Found for Id " + uuid);
         }
-        Gson gson = new Gson();
         var caseNotificationDlt = dltResult.get();
-        caseNotificationDlt.setDltStatus("REINJECTED");
+        caseNotificationDlt.setDltStatus("REPROCESSED");
         caseNotificationDlt.setUpdatedOn(getCurrentTimeStamp(tz));
         caseNotificationDltRepository.save(caseNotificationDlt);
 
-        MessageAfterStdChecker data = gson.fromJson(payload, MessageAfterStdChecker.class);
-        data.setDeadLetterUid(uuid);
+        var cnTransportqOut = cnTraportqOutRepository.findTopByRecordUid(dltResult.get().getCnTranportqOutUid());
+        cnTransportqOut.setMessagePayload(payload); // UPDATE NEW PAYLOAD TO CN TRANSPORT
+        cnTraportqOutRepository.save(cnTransportqOut);
+
         String topic;
         if (caseNotificationDlt.getSource().equalsIgnoreCase(nonStdTopic)) {
             topic = nonStdTopic;
@@ -101,7 +107,7 @@ public class DltService implements IDltService {
         {
             topic = stdTopic;
         }
-        caseNotificationProducer.sendMessage(payload, topic);
+        caseNotificationProducer.sendMessage(uuid, topic);
 
     }
 }

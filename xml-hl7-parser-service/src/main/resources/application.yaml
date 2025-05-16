@@ -2,6 +2,19 @@ server:
   port: 8088
   servlet:
     context-path: /hl7-parser
+info:
+  app:
+    name: Data Extraction
+management:
+  endpoint:
+    health:
+      show-details: always
+      roles: ADMIN
+  endpoints:
+    web:
+      base-path: /actuator
+      exposure:
+        include: "health,info"
 spring:
   config:
     activate:

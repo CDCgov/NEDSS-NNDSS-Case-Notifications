@@ -31,6 +31,7 @@ class NonStdEventConsumerTest {
         // Arrange
         MessageAfterStdChecker mockChecker = new MessageAfterStdChecker();
         mockChecker.setCnTransportqOutUid(123L);
+        mockChecker.setMessagePayload("org.apache.kafka.connect.data");
         String json = new Gson().toJson(mockChecker);
 
         // Act

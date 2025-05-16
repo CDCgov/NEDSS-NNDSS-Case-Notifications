@@ -1,9 +1,6 @@
 package gov.cdc.casenotificationservice.service.nonstd;
 
-import gov.cdc.casenotificationservice.exception.APIException;
-import gov.cdc.casenotificationservice.exception.IgnorableException;
-import gov.cdc.casenotificationservice.exception.NonStdBatchProcessorServiceException;
-import gov.cdc.casenotificationservice.exception.NonStdProcessorServiceException;
+import gov.cdc.casenotificationservice.exception.*;
 import gov.cdc.casenotificationservice.kafka.consumer.StdEventConsumer;
 import gov.cdc.casenotificationservice.model.MessageAfterStdChecker;
 import gov.cdc.casenotificationservice.model.PHINMSProperties;
@@ -98,15 +95,20 @@ public class NonStdService implements INonStdService {
 
     }
 
-    public void releaseHoldQueueAndProcessBatchNonStd() {
+    public void releaseHoldQueueAndProcessBatchNonStd() throws NonRetryableException {
         var updatedPhinmsPropertiesForBatch = batchService.ReleaseQueuePopulateBatchFooterProperties();
         nonStdProcessor(updatedPhinmsPropertiesForBatch);
     }
 
-    protected void nonStdProcessor(PHINMSProperties PHINMSProperties) {
+    protected void nonStdProcessor(PHINMSProperties PHINMSProperties) throws NonRetryableException {
         TransportQOut transportQOut = new TransportQOut(PHINMSProperties, tz);
         transportQOutRepository.save(transportQOut);
-        cnTraportqOutRepository.updateStatusToQueued(PHINMSProperties.getPMessageUid()); // "WHERE IS THIS ID COME FROM"
+
+        try {
+            cnTraportqOutRepository.updateStatusToQueued(PHINMSProperties.getPMessageUid()); // "WHERE IS THIS ID COME FROM"
+        } catch (Exception e) {
+            throw new NonRetryableException(e.getMessage(), e);
+        }
     }
 
     protected void batchNonStdProcessor(PHINMSProperties PHINMSProperties) {

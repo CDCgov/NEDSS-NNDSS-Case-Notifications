@@ -58,7 +58,8 @@ public class NonStdService implements INonStdService {
                 throw new IgnorableException("Payload is empty");
             }
 
-            phinmsProperties.setPMessageUid(messageAfterStdChecker.getCnTransportqOutUid());
+            phinmsProperties.setCnTransportUid(cnTranport.getCnTransportqOutUid());
+            phinmsProperties.setPMessageUid(cnTranport.getNotificationLocalId());
             phinmsProperties.setPNotificationId(String.valueOf(cnTranport.getNotificationUid()));
             phinmsProperties.setPPublicHealthCaseLocalId(cnTranport.getPublicHealthCaseLocalId());
             phinmsProperties.setPReportStatusCd(cnTranport.getReportStatusCd());
@@ -105,7 +106,7 @@ public class NonStdService implements INonStdService {
         transportQOutRepository.save(transportQOut);
 
         try {
-            cnTraportqOutRepository.updateStatusToQueued(PHINMSProperties.getPMessageUid()); // "WHERE IS THIS ID COME FROM"
+            cnTraportqOutRepository.updateStatusToQueued(PHINMSProperties.getCnTransportUid()); // "WHERE IS THIS ID COME FROM"
         } catch (Exception e) {
             throw new NonRetryableException(e.getMessage(), e);
         }

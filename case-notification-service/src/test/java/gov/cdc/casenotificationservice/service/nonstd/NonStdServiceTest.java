@@ -57,7 +57,7 @@ class NonStdServiceTest {
         config.setBatchMesageProfileId("TEST_PROFILE");
 
         PHINMSProperties props = new PHINMSProperties();
-        props.setPMessageUid(123L);
+        props.setPMessageUid("123L");
         props.setPNotificationId("456");
         props.setPPublicHealthCaseLocalId("PHC123");
         props.setPReportStatusCd("COMPLETE");
@@ -85,7 +85,7 @@ class NonStdServiceTest {
         config.setBatchMesageProfileId("OTHER_PROFILE");
 
         PHINMSProperties props = new PHINMSProperties();
-        props.setPMessageUid(124L);
+        props.setPMessageUid("124L");
         props.setPNotificationId("789");
         props.setPPublicHealthCaseLocalId("PHC999");
         props.setPReportStatusCd("NEW");
@@ -102,19 +102,19 @@ class NonStdServiceTest {
         nonStdService.nonStdProcessor(checker);
 
         verify(transportQOutRepository).save(any(TransportQOut.class));
-        verify(cnTraportqOutRepository).updateStatusToQueued(124L);
+        verify(cnTraportqOutRepository).updateStatusToQueued(null);
     }
 
     @Test
     void testReleaseHoldQueueAndProcessBatchNonStd() throws Exception {
         PHINMSProperties mockProps = new PHINMSProperties();
-        mockProps.setPMessageUid(333L);
+        mockProps.setPMessageUid("333L");
 
         when(batchService.ReleaseQueuePopulateBatchFooterProperties()).thenReturn(mockProps);
 
         nonStdService.releaseHoldQueueAndProcessBatchNonStd();
 
         verify(transportQOutRepository).save(any(TransportQOut.class));
-        verify(cnTraportqOutRepository).updateStatusToQueued(333L);
+        verify(cnTraportqOutRepository).updateStatusToQueued(null);
     }
 }

@@ -72,7 +72,7 @@ public class TransportQOut {
         String formatted = ts.toLocalDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
         messageCreationTime = formatted;
 
-        this.messageId = props.getPPHINMessageID();
+        this.messageId = props.getPMessageUid();
         this.processingStatus = props.getPPHINProcessingStatus();
         this.routeInfo = props.getPPHINRoute();
         this.service = props.getSENDING_APPLICATION();

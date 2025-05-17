@@ -52,7 +52,7 @@ public class StdEventConsumer {
     public void handleMessage(String message) throws StdProcessorServiceException, NonRetryableException {
         logger.info("Received std message");
         var gson = new Gson();
-        if (message.contains("org.apache.kafka.connect.data"))
+        if (message.contains("cnTransportqOutUid"))
         {
             var data = gson.fromJson(message, MessageAfterStdChecker.class);
             xmlService.mappingXmlStringToObject(data);
@@ -64,7 +64,6 @@ public class StdEventConsumer {
             checker.setCnTransportqOutUid(dlt.getCnTranportqOutUid());
             checker.setReprocessApplied(true);
             xmlService.mappingXmlStringToObject(checker);
-
         }
         logger.info("Completed std message");
 

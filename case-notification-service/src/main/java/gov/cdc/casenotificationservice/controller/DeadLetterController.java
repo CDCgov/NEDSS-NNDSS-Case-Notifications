@@ -69,7 +69,7 @@ public class DeadLetterController {
                     )
             }
     )
-    @GetMapping
+    @GetMapping("/getDlts")
     public ResponseEntity<Page<CaseNotificationDlt>> getDltsByTimestampRange(
             @RequestParam("from") String from,
             @RequestParam("to") String to,
@@ -161,7 +161,7 @@ public class DeadLetterController {
                     @ApiResponse(responseCode = "500", description = "Internal server error")
             }
     )
-    @GetMapping("/{uuid}")
+    @GetMapping("getDlts/{uuid}")
     public ResponseEntity<ApiDltResponseModel<MessageAfterStdChecker>> getDltByUuid(
             @PathVariable("uuid") String uuid
     ) {

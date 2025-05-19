@@ -1,5 +1,6 @@
 package gov.cdc.xmlhl7parserservice.helper;
 
+import gov.cdc.xmlhl7parserservice.model.Obx.ObxRepeatingElement;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -61,11 +62,27 @@ public class MessageState {
 
     // OBX-related state variables
     private int obxOrderGroupID = 0;
-    private int obxInc = 1;
+    private int obxInc = 0;
     private int obx5ValueInc = 0;
     private String obx5ObservationSubID = null;
     private boolean obxFound = false;
     private String messageTypePattern = "CongenitalSyphilis_MMG_V1.0";
+    private List<ObxRepeatingElement> obxRepeatingElementArrayList = new ArrayList<>();
+    private int drugCounter = 0;
+    private int dupRepeatCongenitalCounter = 0;
+    private int inv290Inv291Counter = 0;
+    private boolean inv177Found = false;
+    private String newDate = "";
+    private String inv177Date = "";
+    private boolean isDefaultNull = true;
+    private String hcw = "";
+    private int hcwObxInc = -1;
+    private int hcwObxOrderGroupId = -1;
+    private int hcwObx5ValueInc = -1;
+    private boolean hcwTextBeforeCodedInd = false;
+    private int obx1Inc = 0;
+    private int obx2Inc = 0;
+    private boolean INV162RepeatIndicator = false;
 
     public Boolean getIsSingleProfile() {
         return isSingleProfile;
@@ -479,6 +496,134 @@ public class MessageState {
         this.messageTypePattern = messageTypePattern;
     }
 
+    public List<ObxRepeatingElement> getObxRepeatingElementArrayList() {
+        return obxRepeatingElementArrayList;
+    }
+
+    public void setObxRepeatingElementArrayList(List<ObxRepeatingElement> obxRepeatingElementArrayList) {
+        this.obxRepeatingElementArrayList = obxRepeatingElementArrayList;
+    }
+
+    public int getDrugCounter() {
+        return drugCounter;
+    }
+
+    public void setDrugCounter(int drugCounter) {
+        this.drugCounter = drugCounter;
+    }
+
+    public int getDupRepeatCongenitalCounter() {
+        return dupRepeatCongenitalCounter;
+    }
+
+    public void setDupRepeatCongenitalCounter(int dupRepeatCongenitalCounter) {
+        this.dupRepeatCongenitalCounter = dupRepeatCongenitalCounter;
+    }
+
+    public int getInv290Inv291Counter() {
+        return inv290Inv291Counter;
+    }
+
+    public void setInv290Inv291Counter(int inv290Inv291Counter) {
+        this.inv290Inv291Counter = inv290Inv291Counter;
+    }
+
+    public boolean isInv177Found() {
+        return inv177Found;
+    }
+
+    public void setInv177Found(boolean inv177Found) {
+        this.inv177Found = inv177Found;
+    }
+
+    public String getNewDate() {
+        return newDate;
+    }
+
+    public void setNewDate(String newDate) {
+        this.newDate = newDate;
+    }
+
+    public String getInv177Date() {
+        return inv177Date;
+    }
+
+    public void setInv177Date(String inv177Date) {
+        this.inv177Date = inv177Date;
+    }
+
+    public boolean isDefaultNull() {
+        return isDefaultNull;
+    }
+
+    public void setDefaultNull(boolean defaultNull) {
+        isDefaultNull = defaultNull;
+    }
+
+    public String getHcw() {
+        return hcw;
+    }
+
+    public void setHcw(String hcw) {
+        this.hcw = hcw;
+    }
+
+    public int getHcwObxInc() {
+        return hcwObxInc;
+    }
+
+    public void setHcwObxInc(int hcwObxInc) {
+        this.hcwObxInc = hcwObxInc;
+    }
+
+    public int getHcwObxOrderGroupId() {
+        return hcwObxOrderGroupId;
+    }
+
+    public void setHcwObxOrderGroupId(int hcwObxOrderGroupId) {
+        this.hcwObxOrderGroupId = hcwObxOrderGroupId;
+    }
+
+    public int getHcwObx5ValueInc() {
+        return hcwObx5ValueInc;
+    }
+
+    public void setHcwObx5ValueInc(int hcwObx5ValueInc) {
+        this.hcwObx5ValueInc = hcwObx5ValueInc;
+    }
+
+    public boolean isHcwTextBeforeCodedInd() {
+        return hcwTextBeforeCodedInd;
+    }
+
+    public void setHcwTextBeforeCodedInd(boolean hcwTextBeforeCodedInd) {
+        this.hcwTextBeforeCodedInd = hcwTextBeforeCodedInd;
+    }
+
+    public int getObx1Inc() {
+        return obx1Inc;
+    }
+
+    public void setObx1Inc(int obx1Inc) {
+        this.obx1Inc = obx1Inc;
+    }
+
+    public int getObx2Inc() {
+        return obx2Inc;
+    }
+
+    public void setObx2Inc(int obx2Inc) {
+        this.obx2Inc = obx2Inc;
+    }
+
+    public boolean isINV162RepeatIndicator() {
+        return INV162RepeatIndicator;
+    }
+
+    public void setINV162RepeatIndicator(boolean INV162RepeatIndicator) {
+        this.INV162RepeatIndicator = INV162RepeatIndicator;
+    }
+
     public void reset() {
         isSingleProfile = false;
         entityIdentifierGroup1 = "";
@@ -536,5 +681,21 @@ public class MessageState {
         obx5ObservationSubID = null;
         obxFound = false;
         messageTypePattern = "CongenitalSyphilis_MMG_V1.0";
+        obxRepeatingElementArrayList = new ArrayList<>();
+        drugCounter = 0;
+        dupRepeatCongenitalCounter = 0;
+        inv290Inv291Counter = 0;
+        inv177Found = false;
+        newDate = "";
+        inv177Date = "";
+        isDefaultNull = true;
+        hcw = "";
+        hcwObxInc = -1;
+        hcwObxOrderGroupId = -1;
+        hcwObx5ValueInc = -1;
+        hcwTextBeforeCodedInd = false;
+        obx1Inc = 0;
+        obx2Inc = 0;
+        INV162RepeatIndicator = false;
     }
 } 

@@ -9,6 +9,9 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -16,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@SecurityRequirement(name = "bearer-key")
+@Tag(name = "Configuration", description = "Configuration API")
 public class ConfigurationController {
     private final IConfigurationService configurationService;
 
@@ -47,8 +52,16 @@ public class ConfigurationController {
     @Operation(
             summary = "Get the applied Case Notification config",
             parameters = {
-                    @Parameter(in = ParameterIn.HEADER, name = "clientid", required = true, schema = @Schema(type = "string")),
-                    @Parameter(in = ParameterIn.HEADER, name = "clientsecret", required = true, schema = @Schema(type = "string"))
+                    @Parameter(in = ParameterIn.HEADER,
+                            name = "clientid",
+                            description = "The Client Id",
+                            required = true,
+                            schema = @Schema(type = "string")),
+                    @Parameter(in = ParameterIn.HEADER,
+                            name = "clientsecret",
+                            description = "The Client Secret",
+                            required = true,
+                            schema = @Schema(type = "string"))
             },
             responses = {
                     @ApiResponse(responseCode = "200", description = "Returned config", content = @Content(schema = @Schema(implementation = CaseNotificationConfig.class))),

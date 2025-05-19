@@ -77,23 +77,23 @@ public class HL7MessageBuilder {
 
     //initialize variables
     private String stateLocalID = "";
-    boolean isDefaultNull= true;
 
     private final List<ObxRepeatingElement> obxRepeatingElementArrayList = messageState.getObxRepeatingElementArrayList();
 
-    String entityIdentifier2 = "";
-    String obr7 = "";
-    String OBR7DataType = "";
-    String OBR7QuestionDataTypeNND = "";
-    String reasonForStudyIdentifier2="";
-    String reasonForStudyText2="";
-    String reasonForStudyNameOfCodingSystem2="";
-    String reasonForStudyAlternateIdentifier2="";
-    String reasonForStudyAlternateText2="";
-    String reasonForStudyNameOfAlternateCodingSystem2="";
-    String nndmessageVersion="";
-
-
+    // Removed variables now managed by MessageState
+//    String entityIdentifier2 = "";
+//    String obr7 = "";
+//    String OBR7DataType = "";
+//    String OBR7QuestionDataTypeNND = "";
+//    String reasonForStudyIdentifier2="";
+//    String reasonForStudyText2="";
+//    String reasonForStudyNameOfCodingSystem2="";
+//    String reasonForStudyAlternateIdentifier2="";
+//    String reasonForStudyAlternateText2="";
+//    String reasonForStudyNameOfAlternateCodingSystem2="";
+//    String nndmessageVersion="";
+//
+//
     int inv290Inv291Counter1 = 0;
     int inv290Inv291Counter2 = 0;
     int std121ObxInc = -1;
@@ -101,37 +101,37 @@ public class HL7MessageBuilder {
     int std121ObsValue = -1;
     String NBS246observationSubID = "";
     String std300 = "";
-
-    //HCW Specific fields
-    boolean hcwTextBeforeCodedInd=false;
-    String hcw="";
-    int hcwTextcounter=-1;
-    int hcwObxInc=-1;
+//
+//    //HCW Specific fields
+    boolean hcwTextBeforeCodedInd = messageState.isHcwTextBeforeCodedInd();
+    String hcw = messageState.getHcw();
+//    int hcwTextcounter=-1;
+//    int hcwObxInc=-1;
     int obx2Inc = messageState.getObx2Inc();
     int obx1Inc = messageState.getObx1Inc();
-    int hcwObxOrderGroupId=-1;
-    int hcwObx5ValueInc=-1;
-    int raceCounterNK1 = 0;
-    String OTH_COMP_TEXT = "";
-    String OTH_COMP_REPLACE ="";
-    int complicationCounter = 0;
-    String OTH_SANDS_TEXT = "";
-    String OTH_SANDS_REPLACE ="";
-    int signSymptomsCounter = 0;
-    private String fillerOrderNumberUniversalID2 = "";
-    private String fillerOrderNumberUniversalIDType2 = "";
-    private String obrEntityIdentifierGroup1 = "";
-    private String getObrEntityIdentifierGroup2 ="";
-    private String fillerOrderNumberNameSpaceIDGroup1 = "";
-    private String fillerOrderNumberNameSpaceIDGroup2 = "";
-    private String universalServiceIdentifierGroup1 = "";
-    private String universalServiceIdentifierGroup2 = "";
-    private String universalServiceIDTextGroup1 = "";
-    private String universalServiceIDTextGroup2 = "";
-    private String universalServiceIDNameOfCodingSystemGroup1 ="";
-    private String universalServiceIDNameOfCodingSystemGroup2 ="";
-    private String observationDateTime = "";
-    private String resultStatusChgTime = "";
+//    int hcwObxOrderGroupId=-1;
+//    int hcwObx5ValueInc=-1;
+//    int raceCounterNK1 = 0;
+    String OTH_COMP_TEXT = "\"\"";
+    String OTH_COMP_REPLACE = "\"\"";
+//    int complicationCounter = 0;
+    String OTH_SANDS_TEXT = "\"\"";
+    String OTH_SANDS_REPLACE = "\"\"";
+//    int signSymptomsCounter = 0;
+//    private String fillerOrderNumberUniversalID2 = "";
+//    private String fillerOrderNumberUniversalIDType2 = "";
+//    private String obrEntityIdentifierGroup1 = "";
+//    private String getObrEntityIdentifierGroup2 ="";
+//    private String fillerOrderNumberNameSpaceIDGroup1 = "";
+//    private String fillerOrderNumberNameSpaceIDGroup2 = "";
+//    private String universalServiceIdentifierGroup1 = "";
+//    private String universalServiceIdentifierGroup2 = "";
+//    private String universalServiceIDTextGroup1 = "";
+//    private String universalServiceIDTextGroup2 = "";
+//    private String universalServiceIDNameOfCodingSystemGroup1 ="";
+//    private String universalServiceIDNameOfCodingSystemGroup2 ="";
+//    private String observationDateTime = "";
+//    private String resultStatusChgTime = "";
 
     List<DynamicRepeatMulti>  dynamicRepeatMultiArray = new ArrayList<>();
     DiscreteMulti discreteMulti = new DiscreteMulti();
@@ -146,17 +146,18 @@ public class HL7MessageBuilder {
         messageState.reset();
         stateLocalID = "";
         obxRepeatingElementArrayList.clear();
-        entityIdentifier2 = "";
-        obr7 = "";
-        OBR7DataType = "";
-        OBR7QuestionDataTypeNND = "";
-        reasonForStudyIdentifier2 = "";
-        reasonForStudyText2 = "";
-        reasonForStudyNameOfCodingSystem2 = "";
-        reasonForStudyAlternateIdentifier2 = "";
-        reasonForStudyAlternateText2 = "";
-        reasonForStudyNameOfAlternateCodingSystem2 = "";
-        nndmessageVersion = "";
+        // Removed variables now managed by MessageState
+//        entityIdentifier2 = "";
+//        obr7 = "";
+//        OBR7DataType = "";
+//        OBR7QuestionDataTypeNND = "";
+//        reasonForStudyIdentifier2 = "";
+//        reasonForStudyText2 = "";
+//        reasonForStudyNameOfCodingSystem2 = "";
+//        reasonForStudyAlternateIdentifier2 = "";
+//        reasonForStudyAlternateText2 = "";
+//        reasonForStudyNameOfAlternateCodingSystem2 = "";
+//        nndmessageVersion = "";
         inv290Inv291Counter1 = 0;
         inv290Inv291Counter2 = 0;
         std121ObxInc = -1;
@@ -164,28 +165,28 @@ public class HL7MessageBuilder {
         std121ObsValue = -1;
         NBS246observationSubID = "";
         std300 = "";
-        hcwTextcounter = -1;
-        raceCounterNK1 = 0;
-        OTH_COMP_TEXT = "";
-        OTH_COMP_REPLACE = "";
-        complicationCounter = 0;
-        OTH_SANDS_TEXT = "";
-        OTH_SANDS_REPLACE = "";
-        signSymptomsCounter = 0;
-        fillerOrderNumberUniversalID2 = "";
-        fillerOrderNumberUniversalIDType2 = "";
-        obrEntityIdentifierGroup1 = "";
-        getObrEntityIdentifierGroup2 = "";
-        fillerOrderNumberNameSpaceIDGroup1 = "";
-        fillerOrderNumberNameSpaceIDGroup2 = "";
-        universalServiceIdentifierGroup1 = "";
-        universalServiceIdentifierGroup2 = "";
-        universalServiceIDTextGroup1 = "";
-        universalServiceIDTextGroup2 = "";
-        universalServiceIDNameOfCodingSystemGroup1 = "";
-        universalServiceIDNameOfCodingSystemGroup2 = "";
-        observationDateTime = "";
-        resultStatusChgTime = "";
+//        hcwTextcounter = -1;
+//        raceCounterNK1 = 0;
+        OTH_COMP_TEXT = "\"\"";
+        OTH_COMP_REPLACE = "\"\"";
+//        complicationCounter = 0;
+        OTH_SANDS_TEXT = "\"\"";
+        OTH_SANDS_REPLACE = "\"\"";
+//        signSymptomsCounter = 0;
+//        fillerOrderNumberUniversalID2 = "";
+//        fillerOrderNumberUniversalIDType2 = "";
+//        obrEntityIdentifierGroup1 = "";
+//        getObrEntityIdentifierGroup2 = "";
+//        fillerOrderNumberNameSpaceIDGroup1 = "";
+//        fillerOrderNumberNameSpaceIDGroup2 = "";
+//        universalServiceIdentifierGroup1 = "";
+//        universalServiceIdentifierGroup2 = "";
+//        universalServiceIDTextGroup1 = "";
+//        universalServiceIDTextGroup2 = "";
+//        universalServiceIDNameOfCodingSystemGroup1 = "";
+//        universalServiceIDNameOfCodingSystemGroup2 = "";
+//        observationDateTime = "";
+//        resultStatusChgTime = "";
         dynamicRepeatMultiArray.clear();
         repeatMultiArray.clear();
         discreteRepeatArray.clear();
@@ -271,7 +272,7 @@ public class HL7MessageBuilder {
 
                 if (hcwTextBeforeCodedInd) {
 
-                    Type obxValue = obx.getOBSERVATION(hcwObxOrderGroupId).getOBX().getObservationValue(hcwObx5ValueInc).getData();
+                    Type obxValue = obx.getOBSERVATION(messageState.getHcwObxOrderGroupId()).getOBX().getObservationValue(messageState.getHcwObx5ValueInc()).getData();
                     TX textDataType;
 
                     if (obxValue instanceof TX) {
@@ -282,7 +283,7 @@ public class HL7MessageBuilder {
 
 
                     textDataType.setValue(hcw);
-                    obx.getOBSERVATION(hcwObxOrderGroupId).getOBX().getObx5_ObservationValue(hcwObx5ValueInc).setData(textDataType);
+                    obx.getOBSERVATION(messageState.getHcwObxOrderGroupId()).getOBX().getObx5_ObservationValue(messageState.getHcwObx5ValueInc()).setData(textDataType);
                 }else{
                     int obxOrderGroupId;
                     if (nbsnndIntermediaryMessage.getMessageElement().get(z).getOrderGroupId().trim().equals("1")){
@@ -322,11 +323,11 @@ public class HL7MessageBuilder {
                     if (nbsnndIntermediaryMessage.getMessageElement().get(z).getOrderGroupId().trim().equals("1")){
                         std121ObxInc = obx1Inc;
                         std121obxOrderGroupId = 0;
-                        obx1Inc += 1;
+                        messageState.setObx1Inc(obx1Inc++);
                     }else{
                         std121ObxInc = obx2Inc;
                         std121obxOrderGroupId = 1;
-                        obx2Inc += 1;
+                        messageState.setObx2Inc(obx2Inc++);
                     }
                 }
                 obx.getOBSERVATION(std121obxOrderGroupId).getOBX().getSetIDOBX().setValue(String.valueOf(std121ObxInc+1));
@@ -420,7 +421,7 @@ public class HL7MessageBuilder {
                 processOBXFields(nbsnndIntermediaryMessage.getMessageElement().get(z),oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(0));
             }
 
-            if(messageState.getMessageType().contains("Arbo_Case_Map_v1.0") && isDefaultNull && !stateLocalID.isEmpty())
+            if(messageState.getMessageType().contains("Arbo_Case_Map_v1.0") && messageState.isDefaultNull() && !stateLocalID.isEmpty())
             {
                 // Pushing this down to the last index
                 if (z == nbsnndIntermediaryMessage.getMessageElement().size() - 1) {
@@ -512,35 +513,43 @@ public class HL7MessageBuilder {
 
             }
 
-            if ("NND_ORU_v2.0".equals(nndmessageVersion)) {
+            if ("NND_ORU_v2.0".equals(messageState.getNndMessageVersion())) {
                 OBR obrForNND_ORU_v2 = oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(0).getOBR();
                 obrForNND_ORU_v2.getSetIDOBR().setValue("2");
 
-                obrForNND_ORU_v2.getFillerOrderNumber().getEntityIdentifier().setValue(entityIdentifier2);
-                obrForNND_ORU_v2.getFillerOrderNumber().getNamespaceID().setValue(fillerOrderNumberNameSpaceIDGroup2);
-                obrForNND_ORU_v2.getFillerOrderNumber().getUniversalID().setValue(fillerOrderNumberUniversalID2);
-                obrForNND_ORU_v2.getFillerOrderNumber().getUniversalIDType().setValue(fillerOrderNumberUniversalIDType2);
+                obrForNND_ORU_v2.getFillerOrderNumber().getEntityIdentifier().setValue(messageState.getEntityIdentifier2());
+                obrForNND_ORU_v2.getFillerOrderNumber().getNamespaceID().setValue(messageState.getFillerOrderNumberNameSpaceIDGroup2());
+                obrForNND_ORU_v2.getFillerOrderNumber().getUniversalID().setValue(messageState.getFillerOrderNumberUniversalID2());
+                obrForNND_ORU_v2.getFillerOrderNumber().getUniversalIDType().setValue(messageState.getFillerOrderNumberUniversalIDType2());
 
-                obrForNND_ORU_v2.getUniversalServiceIdentifier().getIdentifier().setValue(universalServiceIdentifierGroup1);
-                obrForNND_ORU_v2.getUniversalServiceIdentifier().getText().setValue(universalServiceIDTextGroup1);
-                obrForNND_ORU_v2.getUniversalServiceIdentifier().getNameOfCodingSystem().setValue(universalServiceIDNameOfCodingSystemGroup1);
+                obrForNND_ORU_v2.getUniversalServiceIdentifier().getIdentifier().setValue(messageState.getUniversalServiceIdentifierGroup1());
+                obrForNND_ORU_v2.getUniversalServiceIdentifier().getText().setValue(messageState.getUniversalServiceIDTextGroup1());
+                obrForNND_ORU_v2.getUniversalServiceIdentifier().getNameOfCodingSystem().setValue(messageState.getUniversalServiceIDNameOfCodingSystemGroup1());
 
-                obrForNND_ORU_v2.getUniversalServiceIdentifier().getIdentifier().setValue(universalServiceIdentifierGroup2);
-                obrForNND_ORU_v2.getUniversalServiceIdentifier().getText().setValue(universalServiceIDTextGroup1);
-                obrForNND_ORU_v2.getUniversalServiceIdentifier().getNameOfCodingSystem().setValue(universalServiceIDNameOfCodingSystemGroup2);
+                obrForNND_ORU_v2.getUniversalServiceIdentifier().getIdentifier().setValue(messageState.getUniversalServiceIdentifierGroup2());
+                obrForNND_ORU_v2.getUniversalServiceIdentifier().getText().setValue(messageState.getUniversalServiceIDTextGroup1());
+                obrForNND_ORU_v2.getUniversalServiceIdentifier().getNameOfCodingSystem().setValue(messageState.getUniversalServiceIDNameOfCodingSystemGroup2());
 
                 // TODO - Validate these two date values
-                String dateFormatForObr7 = dateFormatUtil.formatDate(observationDateTime, OBR7QuestionDataTypeNND, OBR7DataType, "OBR-7.0");
+                String dateFormatForObr7 = dateFormatUtil.formatDate(
+                        messageState.getObservationDateTime(),
+                        messageState.getObr7QuestionDataTypeNND(),
+                        messageState.getObr7DataType(),
+                        "OBR-7.0"
+                );
                 obr.getObr7_ObservationDateTime().getTime().setValue(dateFormatForObr7);
 
-                String dateFormatForObr22 = dateFormatUtil.formatDate(resultStatusChgTime, OBR7QuestionDataTypeNND, OBR7DataType, "OBR22.0");
+                String dateFormatForObr22 = dateFormatUtil.formatDate(
+                        messageState.getResultStatusChgTime(),
+                        messageState.getObr7QuestionDataTypeNND(),
+                        messageState.getObr7DataType(),
+                        "OBR22.0"
+                );
                 obr.getObr22_ResultsRptStatusChngDateTime().getTime().setValue(dateFormatForObr22);
 
-//                out.PATIENT_RESULT.ORDER_OBSERVATION[0].OBR[1].ResultStatus = out.PATIENT_RESULT.ORDER_OBSERVATION[0].OBR[0].ResultStatus;
-
-                obrForNND_ORU_v2.getReasonForStudy(0).getIdentifier().setValue(reasonForStudyIdentifier2);
-                obrForNND_ORU_v2.getReasonForStudy(0).getText().setValue(reasonForStudyText2);
-                obrForNND_ORU_v2.getReasonForStudy(0).getNameOfCodingSystem().setValue(reasonForStudyNameOfCodingSystem2);
+                obrForNND_ORU_v2.getReasonForStudy(0).getIdentifier().setValue(messageState.getReasonForStudyIdentifier2());
+                obrForNND_ORU_v2.getReasonForStudy(0).getText().setValue(messageState.getReasonForStudyText2());
+                obrForNND_ORU_v2.getReasonForStudy(0).getNameOfCodingSystem().setValue(messageState.getReasonForStudyNameOfCodingSystem2());
             }
 
         }

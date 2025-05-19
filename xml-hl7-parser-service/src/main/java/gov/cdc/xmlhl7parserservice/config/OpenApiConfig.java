@@ -45,13 +45,13 @@ public class OpenApiConfig {
 
         Contact contact = new Contact();
         contact.setEmail("nndservice@cdc.com");
-        contact.setName("Case Notification Service");
+        contact.setName("HL7 Parser Service");
 
         Info info = new Info()
-                .title("Case Notification Service API")
+                .title("HL7 Parser (CNS) API")
                 .version("1.0")
                 .contact(contact)
-                .description("This API exposes endpoints to manage Case Notification Service.");
+                .description("This API exposes endpoints to manage HL7 Parser Service.");
 
         Components components=new Components().
                 addSecuritySchemes("bearer-key",

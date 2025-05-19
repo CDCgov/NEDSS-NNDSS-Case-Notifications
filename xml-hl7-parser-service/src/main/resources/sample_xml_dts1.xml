@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<NBS_NND_Intermediary_Message xmlns="http://www.cdc.gov/NEDSS"
-                              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<NBS_NND_Intermediary_Message xmlns="http://www.cdc.gov/NEDSS" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <MessageElement>
         <questionIdentifierNND xsi:nil="true"/>
         <questionLabelNND xsi:nil="true"/>
@@ -12,7 +11,7 @@
         <dataElement>
             <questionDataTypeNND>ST</questionDataTypeNND>
             <stDataType>
-                <stringData>NOT10222057GA01</stringData>
+                <stringData>NOT10222211GA01</stringData>
             </stDataType>
         </dataElement>
     </MessageElement>
@@ -72,7 +71,7 @@
         <dataElement>
             <questionDataTypeNND>TS</questionDataTypeNND>
             <tsDataType>
-                <time>2025-05-06T19:31:13.667Z</time>
+                <time>2025-05-16T21:56:11.667Z</time>
             </tsDataType>
         </dataElement>
     </MessageElement>
@@ -87,7 +86,7 @@
         <dataElement>
             <questionDataTypeNND>TS</questionDataTypeNND>
             <tsDataType>
-                <time>2025-05-06T19:31:13.667Z</time>
+                <time>2025-05-16T21:56:11.667Z</time>
             </tsDataType>
         </dataElement>
     </MessageElement>
@@ -175,7 +174,7 @@
         <dataElement>
             <questionDataTypeNND>TS</questionDataTypeNND>
             <tsDataType>
-                <time>1965-02-14T00:00:00.000Z</time>
+                <time>1928-01-06T00:00:00.000Z</time>
             </tsDataType>
         </dataElement>
     </MessageElement>
@@ -190,8 +189,8 @@
         <dataElement>
             <questionDataTypeNND>CE</questionDataTypeNND>
             <ceDataType>
-                <ceCodedValue>1049-6</ceCodedValue>
-                <ceCodedValueDescription>1049-6</ceCodedValueDescription>
+                <ceCodedValue>1725-1</ceCodedValue>
+                <ceCodedValueDescription>1725-1</ceCodedValueDescription>
                 <ceCodedValueCodingSystem>2.16.840.1.114222.4.5.1</ceCodedValueCodingSystem>
                 <ceLocalCodedValue xsi:nil="true"/>
                 <ceLocalCodedValueDescription xsi:nil="true"/>
@@ -210,8 +209,8 @@
         <dataElement>
             <questionDataTypeNND>CWE</questionDataTypeNND>
             <cweDataType>
-                <cweCodedValue>26</cweCodedValue>
-                <cweCodedValueDescription>Michigan</cweCodedValueDescription>
+                <cweCodedValue>02</cweCodedValue>
+                <cweCodedValueDescription>Alaska</cweCodedValueDescription>
                 <cweCodedValueCodingSystem>2.16.840.1.113883.6.92</cweCodedValueCodingSystem>
                 <cweLocalCodedValue xsi:nil="true"/>
                 <cweLocalCodedValueDescription xsi:nil="true"/>
@@ -245,7 +244,7 @@
         <dataElement>
             <questionDataTypeNND>CX</questionDataTypeNND>
             <cxDataType>
-                <cxData>PSN10478551GA01</cxData>
+                <cxData>PSN10598718GA01</cxData>
             </cxDataType>
         </dataElement>
     </MessageElement>
@@ -275,7 +274,7 @@
         <dataElement>
             <questionDataTypeNND>DT</questionDataTypeNND>
             <dtDataType>
-                <date>2025-05-06Z</date>
+                <date>2025-05-16Z</date>
             </dtDataType>
         </dataElement>
     </MessageElement>
@@ -375,7 +374,7 @@
         <dataElement>
             <questionDataTypeNND>TS</questionDataTypeNND>
             <tsDataType>
-                <time>2025-05-06T00:00:00.000Z</time>
+                <time>2025-05-16T00:00:00.000Z</time>
             </tsDataType>
         </dataElement>
     </MessageElement>
@@ -423,7 +422,7 @@
         <dataElement>
             <questionDataTypeNND>TS</questionDataTypeNND>
             <tsDataType>
-                <time>2025-05-06T00:00:00.000Z</time>
+                <time>2025-05-16T00:00:00.000Z</time>
             </tsDataType>
         </dataElement>
     </MessageElement>
@@ -706,7 +705,7 @@
         <dataElement>
             <questionDataTypeNND>ST</questionDataTypeNND>
             <stDataType>
-                <stringData>CAS10228128GA01</stringData>
+                <stringData>CAS10228341GA01</stringData>
             </stDataType>
         </dataElement>
     </MessageElement>
@@ -1057,7 +1056,7 @@
         <dataElement>
             <questionDataTypeNND>DT</questionDataTypeNND>
             <dtDataType>
-                <date>2025-05-06Z</date>
+                <date>2025-05-16Z</date>
             </dtDataType>
         </dataElement>
     </MessageElement>
@@ -1582,6 +1581,376 @@
             <isDataType>
                 <isCodedValue>PHINCDS</isCodedValue>
             </isDataType>
+        </dataElement>
+    </MessageElement>
+    <MessageElement>
+        <questionIdentifierNND xsi:nil="true"/>
+        <questionLabelNND>Receiving Application OID</questionLabelNND>
+        <questionOID xsi:nil="true"/>
+        <questionIdentifier>MSG106</questionIdentifier>
+        <questionLabel>Receiving Application OID</questionLabel>
+        <hl7SegmentField>MSH-5.2</hl7SegmentField>
+        <orderGroupId xsi:nil="true"/>
+        <dataElement>
+            <questionDataTypeNND>ST</questionDataTypeNND>
+            <stDataType>
+                <stringData>2.16.840.1.114222.4.3.2.10</stringData>
+            </stDataType>
+        </dataElement>
+    </MessageElement>
+    <MessageElement>
+        <questionIdentifierNND xsi:nil="true"/>
+        <questionLabelNND>Receiving Facility</questionLabelNND>
+        <questionOID xsi:nil="true"/>
+        <questionIdentifier>MSG107</questionIdentifier>
+        <questionLabel>Receiving Facility</questionLabel>
+        <hl7SegmentField>MSH-6.1</hl7SegmentField>
+        <orderGroupId xsi:nil="true"/>
+        <dataElement>
+            <questionDataTypeNND>IS</questionDataTypeNND>
+            <isDataType>
+                <isCodedValue>PHIN</isCodedValue>
+            </isDataType>
+        </dataElement>
+    </MessageElement>
+    <MessageElement>
+        <questionIdentifierNND xsi:nil="true"/>
+        <questionLabelNND>Receiving Facility OID</questionLabelNND>
+        <questionOID xsi:nil="true"/>
+        <questionIdentifier>MSG108</questionIdentifier>
+        <questionLabel>Receiving Facility OID</questionLabel>
+        <hl7SegmentField>MSH-6.2</hl7SegmentField>
+        <orderGroupId xsi:nil="true"/>
+        <dataElement>
+            <questionDataTypeNND>ST</questionDataTypeNND>
+            <stDataType>
+                <stringData>2.16.840.1.114222</stringData>
+            </stDataType>
+        </dataElement>
+    </MessageElement>
+    <MessageElement>
+        <questionIdentifierNND xsi:nil="true"/>
+        <questionLabelNND>Entity Identifier 1</questionLabelNND>
+        <questionOID xsi:nil="true"/>
+        <questionIdentifier>MSG109</questionIdentifier>
+        <questionLabel>Entity Identifier 1</questionLabel>
+        <hl7SegmentField>MSH-21.1</hl7SegmentField>
+        <orderGroupId>1</orderGroupId>
+        <dataElement>
+            <questionDataTypeNND>ST</questionDataTypeNND>
+            <stDataType>
+                <stringData>NOTF_ORU_v3.0</stringData>
+            </stDataType>
+        </dataElement>
+    </MessageElement>
+    <MessageElement>
+        <questionIdentifierNND xsi:nil="true"/>
+        <questionLabelNND>Namespace ID 1</questionLabelNND>
+        <questionOID xsi:nil="true"/>
+        <questionIdentifier>MSG111</questionIdentifier>
+        <questionLabel>Namespace ID 1</questionLabel>
+        <hl7SegmentField>MSH-21.2</hl7SegmentField>
+        <orderGroupId>1</orderGroupId>
+        <dataElement>
+            <questionDataTypeNND>IS</questionDataTypeNND>
+            <isDataType>
+                <isCodedValue>PHINProfileID</isCodedValue>
+            </isDataType>
+        </dataElement>
+    </MessageElement>
+    <MessageElement>
+        <questionIdentifierNND xsi:nil="true"/>
+        <questionLabelNND>Namespace ID 2</questionLabelNND>
+        <questionOID xsi:nil="true"/>
+        <questionIdentifier>MSG112</questionIdentifier>
+        <questionLabel>Namespace ID 2</questionLabel>
+        <hl7SegmentField>MSH-21.2</hl7SegmentField>
+        <orderGroupId>2</orderGroupId>
+        <dataElement>
+            <questionDataTypeNND>IS</questionDataTypeNND>
+            <isDataType>
+                <isCodedValue>PHINMsgMapID</isCodedValue>
+            </isDataType>
+        </dataElement>
+    </MessageElement>
+    <MessageElement>
+        <questionIdentifierNND xsi:nil="true"/>
+        <questionLabelNND>Profile ID 1</questionLabelNND>
+        <questionOID xsi:nil="true"/>
+        <questionIdentifier>MSG113</questionIdentifier>
+        <questionLabel>Profile ID 1</questionLabel>
+        <hl7SegmentField>MSH-21.3</hl7SegmentField>
+        <orderGroupId>1</orderGroupId>
+        <dataElement>
+            <questionDataTypeNND>ST</questionDataTypeNND>
+            <stDataType>
+                <stringData>2.16.840.1.114222.4.10.3</stringData>
+            </stDataType>
+        </dataElement>
+    </MessageElement>
+    <MessageElement>
+        <questionIdentifierNND xsi:nil="true"/>
+        <questionLabelNND>Profile ID 2</questionLabelNND>
+        <questionOID xsi:nil="true"/>
+        <questionIdentifier>MSG114</questionIdentifier>
+        <questionLabel>Profile ID 2</questionLabel>
+        <hl7SegmentField>MSH-21.3</hl7SegmentField>
+        <orderGroupId>2</orderGroupId>
+        <dataElement>
+            <questionDataTypeNND>ST</questionDataTypeNND>
+            <stDataType>
+                <stringData>2.16.840.1.114222.4.10.4</stringData>
+            </stDataType>
+        </dataElement>
+    </MessageElement>
+    <MessageElement>
+        <questionIdentifierNND xsi:nil="true"/>
+        <questionLabelNND>Message Structure</questionLabelNND>
+        <questionOID xsi:nil="true"/>
+        <questionIdentifier>MSG115</questionIdentifier>
+        <questionLabel>Message Structure</questionLabel>
+        <hl7SegmentField>MSH-9.3</hl7SegmentField>
+        <orderGroupId xsi:nil="true"/>
+        <dataElement>
+            <questionDataTypeNND>ID</questionDataTypeNND>
+            <idDataType>
+                <idCodedValue>ORU_R01</idCodedValue>
+            </idDataType>
+        </dataElement>
+    </MessageElement>
+    <MessageElement>
+        <questionIdentifierNND xsi:nil="true"/>
+        <questionLabelNND>Processing ID</questionLabelNND>
+        <questionOID xsi:nil="true"/>
+        <questionIdentifier>MSG116</questionIdentifier>
+        <questionLabel>Processing ID</questionLabel>
+        <hl7SegmentField>MSH-11.1</hl7SegmentField>
+        <orderGroupId xsi:nil="true"/>
+        <dataElement>
+            <questionDataTypeNND>ID</questionDataTypeNND>
+            <idDataType>
+                <idCodedValue>P</idCodedValue>
+            </idDataType>
+        </dataElement>
+    </MessageElement>
+    <MessageElement>
+        <questionIdentifierNND xsi:nil="true"/>
+        <questionLabelNND>Version ID</questionLabelNND>
+        <questionOID xsi:nil="true"/>
+        <questionIdentifier>MSG117</questionIdentifier>
+        <questionLabel>Version ID</questionLabel>
+        <hl7SegmentField>MSH-12.1</hl7SegmentField>
+        <orderGroupId xsi:nil="true"/>
+        <dataElement>
+            <questionDataTypeNND>ID</questionDataTypeNND>
+            <idDataType>
+                <idCodedValue>2.5.1</idCodedValue>
+            </idDataType>
+        </dataElement>
+    </MessageElement>
+    <MessageElement>
+        <questionIdentifierNND xsi:nil="true"/>
+        <questionLabelNND>Name Type Code</questionLabelNND>
+        <questionOID xsi:nil="true"/>
+        <questionIdentifier>MSG118</questionIdentifier>
+        <questionLabel>Name Type Code</questionLabel>
+        <hl7SegmentField>PID-5.7</hl7SegmentField>
+        <orderGroupId xsi:nil="true"/>
+        <dataElement>
+            <questionDataTypeNND>ID</questionDataTypeNND>
+            <idDataType>
+                <idCodedValue>S</idCodedValue>
+            </idDataType>
+        </dataElement>
+    </MessageElement>
+    <MessageElement>
+        <questionIdentifierNND xsi:nil="true"/>
+        <questionLabelNND>Universal Service ID 1 Identifier</questionLabelNND>
+        <questionOID xsi:nil="true"/>
+        <questionIdentifier>MSG119</questionIdentifier>
+        <questionLabel>UniversalServiceID 1 Identifier</questionLabel>
+        <hl7SegmentField>OBR-4.1</hl7SegmentField>
+        <orderGroupId>1</orderGroupId>
+        <dataElement>
+            <questionDataTypeNND>ST</questionDataTypeNND>
+            <stDataType>
+                <stringData>PERSUBJ</stringData>
+            </stDataType>
+        </dataElement>
+    </MessageElement>
+    <MessageElement>
+        <questionIdentifierNND xsi:nil="true"/>
+        <questionLabelNND>Universal Service ID 1 Text</questionLabelNND>
+        <questionOID xsi:nil="true"/>
+        <questionIdentifier>MSG120</questionIdentifier>
+        <questionLabel>Universal Service ID 1 Text</questionLabel>
+        <hl7SegmentField>OBR-4.2</hl7SegmentField>
+        <orderGroupId>1</orderGroupId>
+        <dataElement>
+            <questionDataTypeNND>ST</questionDataTypeNND>
+            <stDataType>
+                <stringData>Person Subject</stringData>
+            </stDataType>
+        </dataElement>
+    </MessageElement>
+    <MessageElement>
+        <questionIdentifierNND xsi:nil="true"/>
+        <questionLabelNND>Universal Service ID 1 Coding System</questionLabelNND>
+        <questionOID xsi:nil="true"/>
+        <questionIdentifier>MSG121</questionIdentifier>
+        <questionLabel>Universal Service ID 1 Coding System</questionLabel>
+        <hl7SegmentField>OBR-4.3</hl7SegmentField>
+        <orderGroupId>1</orderGroupId>
+        <dataElement>
+            <questionDataTypeNND>ID</questionDataTypeNND>
+            <idDataType>
+                <idCodedValue>2.16.840.1.114222.4.5.274</idCodedValue>
+            </idDataType>
+        </dataElement>
+    </MessageElement>
+    <MessageElement>
+        <questionIdentifierNND xsi:nil="true"/>
+        <questionLabelNND>Universal Service ID 2 Identifier</questionLabelNND>
+        <questionOID xsi:nil="true"/>
+        <questionIdentifier>MSG122</questionIdentifier>
+        <questionLabel>Universal Service ID 2 Identifier</questionLabel>
+        <hl7SegmentField>OBR-4.1</hl7SegmentField>
+        <orderGroupId>2</orderGroupId>
+        <dataElement>
+            <questionDataTypeNND>ST</questionDataTypeNND>
+            <stDataType>
+                <stringData>NOTF</stringData>
+            </stDataType>
+        </dataElement>
+    </MessageElement>
+    <MessageElement>
+        <questionIdentifierNND xsi:nil="true"/>
+        <questionLabelNND>Universal Service ID 2 Text</questionLabelNND>
+        <questionOID xsi:nil="true"/>
+        <questionIdentifier>MSG123</questionIdentifier>
+        <questionLabel>Universal Service ID 2 Text</questionLabel>
+        <hl7SegmentField>OBR-4.2</hl7SegmentField>
+        <orderGroupId>2</orderGroupId>
+        <dataElement>
+            <questionDataTypeNND>ST</questionDataTypeNND>
+            <stDataType>
+                <stringData>Individual Case Notification</stringData>
+            </stDataType>
+        </dataElement>
+    </MessageElement>
+    <MessageElement>
+        <questionIdentifierNND xsi:nil="true"/>
+        <questionLabelNND>Universal Service ID 2 Coding System</questionLabelNND>
+        <questionOID xsi:nil="true"/>
+        <questionIdentifier>MSG124</questionIdentifier>
+        <questionLabel>Universal Service ID 2 Coding System</questionLabel>
+        <hl7SegmentField>OBR-4.3</hl7SegmentField>
+        <orderGroupId>2</orderGroupId>
+        <dataElement>
+            <questionDataTypeNND>ID</questionDataTypeNND>
+            <idDataType>
+                <idCodedValue>2.16.840.1.114222.4.5.274</idCodedValue>
+            </idDataType>
+        </dataElement>
+    </MessageElement>
+    <MessageElement>
+        <questionIdentifierNND>MTH109</questionIdentifierNND>
+        <questionLabelNND>Mothers Birth Country</questionLabelNND>
+        <questionOID>2.16.840.1.114222.4.5.232</questionOID>
+        <questionIdentifier>MTH109</questionIdentifier>
+        <questionLabel>What is the birth country of the mother?</questionLabel>
+        <hl7SegmentField>OBX-3.0</hl7SegmentField>
+        <orderGroupId>2</orderGroupId>
+        <dataElement>
+            <questionDataTypeNND>CWE</questionDataTypeNND>
+            <cweDataType>
+                <cweCodedValue>GBR</cweCodedValue>
+                <cweCodedValueDescription>UNITED KINGDOM</cweCodedValueDescription>
+                <cweCodedValueCodingSystem>1.0.3166.1</cweCodedValueCodingSystem>
+                <cweLocalCodedValue xsi:nil="true"/>
+                <cweLocalCodedValueDescription xsi:nil="true"/>
+                <cweLocalCodedValueCodingSystem xsi:nil="true"/>
+            </cweDataType>
+        </dataElement>
+    </MessageElement>
+    <MessageElement>
+        <questionIdentifierNND>77966-0</questionIdentifierNND>
+        <questionLabelNND>Reporting State</questionLabelNND>
+        <questionOID>2.16.840.1.113883.6.1</questionOID>
+        <questionIdentifier>NOT109</questionIdentifier>
+        <questionLabel>Reporting State</questionLabel>
+        <hl7SegmentField>OBX-3.0</hl7SegmentField>
+        <orderGroupId>2</orderGroupId>
+        <dataElement>
+            <questionDataTypeNND>CWE</questionDataTypeNND>
+            <cweDataType>
+                <cweCodedValue>13</cweCodedValue>
+                <cweCodedValueDescription>Georgia</cweCodedValueDescription>
+                <cweCodedValueCodingSystem>2.16.840.1.113883.6.92</cweCodedValueCodingSystem>
+                <cweLocalCodedValue xsi:nil="true"/>
+                <cweLocalCodedValueDescription xsi:nil="true"/>
+                <cweLocalCodedValueCodingSystem xsi:nil="true"/>
+            </cweDataType>
+        </dataElement>
+    </MessageElement>
+    <MessageElement>
+        <questionIdentifierNND>77967-8</questionIdentifierNND>
+        <questionLabelNND>Reporting County</questionLabelNND>
+        <questionOID>2.16.840.1.113883.6.1</questionOID>
+        <questionIdentifier>NOT113</questionIdentifier>
+        <questionLabel>Reporting County</questionLabel>
+        <hl7SegmentField>OBX-3.0</hl7SegmentField>
+        <orderGroupId>2</orderGroupId>
+        <dataElement>
+            <questionDataTypeNND>CWE</questionDataTypeNND>
+            <cweDataType>
+                <cweCodedValue>13005</cweCodedValue>
+                <cweCodedValueDescription>Bacon, GA</cweCodedValueDescription>
+                <cweCodedValueCodingSystem>2.16.840.1.113883.6.93</cweCodedValueCodingSystem>
+                <cweLocalCodedValue xsi:nil="true"/>
+                <cweLocalCodedValueDescription xsi:nil="true"/>
+                <cweLocalCodedValueCodingSystem xsi:nil="true"/>
+            </cweDataType>
+        </dataElement>
+    </MessageElement>
+    <MessageElement>
+        <questionIdentifierNND>77968-6</questionIdentifierNND>
+        <questionLabelNND>National Reporting Jurisdiction</questionLabelNND>
+        <questionOID>2.16.840.1.113883.6.1</questionOID>
+        <questionIdentifier>NOT116</questionIdentifier>
+        <questionLabel>National Reporting Jurisdiction</questionLabel>
+        <hl7SegmentField>OBX-3.0</hl7SegmentField>
+        <orderGroupId>2</orderGroupId>
+        <dataElement>
+            <questionDataTypeNND>CWE</questionDataTypeNND>
+            <cweDataType>
+                <cweCodedValue>13</cweCodedValue>
+                <cweCodedValueDescription>Georgia</cweCodedValueDescription>
+                <cweCodedValueCodingSystem>2.16.840.1.113883.6.92</cweCodedValueCodingSystem>
+                <cweLocalCodedValue xsi:nil="true"/>
+                <cweLocalCodedValueDescription xsi:nil="true"/>
+                <cweLocalCodedValueCodingSystem xsi:nil="true"/>
+            </cweDataType>
+        </dataElement>
+    </MessageElement>
+    <MessageElement>
+        <questionIdentifierNND>77965-2</questionIdentifierNND>
+        <questionLabelNND>Immediate National Notifiable Condition</questionLabelNND>
+        <questionOID>2.16.840.1.113883.6.1</questionOID>
+        <questionIdentifier>NOT120</questionIdentifier>
+        <questionLabel>Immediate National Notifiable Condition</questionLabel>
+        <hl7SegmentField>OBX-3.0</hl7SegmentField>
+        <orderGroupId>2</orderGroupId>
+        <dataElement>
+            <questionDataTypeNND>CWE</questionDataTypeNND>
+            <cweDataType>
+                <cweCodedValue>Y</cweCodedValue>
+                <cweCodedValueDescription>Yes</cweCodedValueDescription>
+                <cweCodedValueCodingSystem>2.16.840.1.113883.12.136</cweCodedValueCodingSystem>
+                <cweLocalCodedValue xsi:nil="true"/>
+                <cweLocalCodedValueDescription xsi:nil="true"/>
+                <cweLocalCodedValueCodingSystem xsi:nil="true"/>
+            </cweDataType>
         </dataElement>
     </MessageElement>
 </NBS_NND_Intermediary_Message>

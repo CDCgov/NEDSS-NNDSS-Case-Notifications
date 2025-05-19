@@ -18,18 +18,19 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
     private static final String[] AUTH_WHITELIST = {
-            "/v2/api-docs",
-            "/swagger-resources",
-            "/swagger-resources/**",
-            "/configuration/ui",
-            "/configuration/security",
-            "/swagger-ui.html",
-            "/webjars/**",
-            "/v3/api-docs/**",
-            "/swagger-ui/**",
-            "/api/auth/token",
-            "/actuator/health",
-            "/actuator/info"
+            "**"
+//            "/v2/api-docs",
+//            "/swagger-resources",
+//            "/swagger-resources/**",
+//            "/configuration/ui",
+//            "/configuration/security",
+//            "/swagger-ui.html",
+//            "/webjars/**",
+//            "/v3/api-docs/**",
+//            "/swagger-ui/**",
+//            "/api/auth/token",
+//            "/actuator/health",
+//            "/actuator/info"
     };
 
     @Bean

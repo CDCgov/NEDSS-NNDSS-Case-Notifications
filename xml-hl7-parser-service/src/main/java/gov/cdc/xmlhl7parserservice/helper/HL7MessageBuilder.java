@@ -461,11 +461,11 @@ public class HL7MessageBuilder {
                 if (z == nbsnndIntermediaryMessage.getMessageElement().size() - 1) {
                     OBX obxForGenV2 = obx.getOBSERVATION(obx.getOBSERVATIONAll().size()).getOBX();
 
-                    logger.info("{}", obxForGenV2.getMessage());
                     var obxElement = new ObxRepeatingElement();
                     obxElement.setElementUid("77970-2");
                     obxRepeatingElementArrayList.add(obxElement);
-                    obxForGenV2.getObx1_SetIDOBX().setValue(String.valueOf(obxRepeatingElementArrayList.size()));
+                    messageState.setObx2Inc(messageState.getObxInc() + 1);
+                    obxForGenV2.getObx1_SetIDOBX().setValue(String.valueOf(messageState.getObxInc()));
 
                     obxForGenV2.getValueType().setValue("DT");
                     obxForGenV2.getObservationResultStatus().setValue("F");
@@ -493,7 +493,8 @@ public class HL7MessageBuilder {
                 if (z == nbsnndIntermediaryMessage.getMessageElement().size() - 1) {
                     OBX obxForGenV1 = oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(0).getOBSERVATION(1).getOBX();
 
-                    obxForGenV1.getObx1_SetIDOBX().setValue(String.valueOf(obx2Inc + 1));
+                    messageState.setObx2Inc(messageState.getObxInc() + 1);
+                    obxForGenV1.getObx1_SetIDOBX().setValue(String.valueOf(messageState.getObxInc()));
                     obxForGenV1.getValueType().setValue("TS");
                     obxForGenV1.getObservationResultStatus().setValue("F");
 

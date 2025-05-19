@@ -43,7 +43,7 @@ service:
   timezone: ${SERVICE_TZ:UTC}
 
 cnserver:
-  host: ${CN_SERVER_HOST:localhost:8081}
+  host: ${CN_SERVER_HOST:localhost:8093}
 
 api:
   clientId: ${NND_DE_CLIENT_ID:}

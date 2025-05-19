@@ -28,18 +28,18 @@ public interface CaseNotificationConfigRepository extends JpaRepository<CaseNoti
 
     @Modifying
     @Query(
-            value = "UPDATE NBS_Case_Notification_Config SET config_applied = 1 " +
+            value = "UPDATE NBS_Case_Notification_Config SET config_applied = :applied " +
                     "WHERE id = :id",
             nativeQuery = true
     )
-    int updateConfigAppliedById(@Param("id") int id);
+    int updateConfigAppliedById(@Param("id") int id, @Param("applied") int applied);
 
     @Modifying
     @Query(
-            value = "UPDATE NBS_Case_Notification_Config SET config_applied = 1 " +
+            value = "UPDATE NBS_Case_Notification_Config SET config_applied = :applied " +
                     "WHERE id = (SELECT TOP 1 id FROM NBS_Case_Notification_Config " +
                     "WHERE config_name = 'NON_STD_CASE_NOTIFICATION')",
             nativeQuery = true
     )
-    int updateTopNonStdConfigToApplied();
+    int updateTopNonStdConfigToApplied(@Param("applied") int applied);
 }

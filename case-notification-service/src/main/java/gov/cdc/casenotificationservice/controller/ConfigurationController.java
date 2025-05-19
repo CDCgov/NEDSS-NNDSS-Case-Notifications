@@ -36,7 +36,8 @@ public class ConfigurationController {
             parameters = {
                     @Parameter(in = ParameterIn.HEADER, name = "clientid", required = true, schema = @Schema(type = "string")),
                     @Parameter(in = ParameterIn.HEADER, name = "clientsecret", required = true, schema = @Schema(type = "string")),
-                    @Parameter(in = ParameterIn.QUERY, name = "id", required = false, schema = @Schema(type = "integer"))
+                    @Parameter(in = ParameterIn.QUERY, name = "id", required = false, schema = @Schema(type = "integer")),
+                    @Parameter(in = ParameterIn.QUERY, name = "enabled", required = true, schema = @Schema(type = "boolean"))
             },
             responses = {
                     @ApiResponse(responseCode = "200", description = "Update success"),
@@ -44,8 +45,9 @@ public class ConfigurationController {
             }
     )
     @PutMapping("config/update")
-    public ResponseEntity<Void> updateConfiguration(@RequestParam(value = "id", required = false) Integer id) {
-        configurationService.updateConfiguration(id);
+    public ResponseEntity<Void> updateConfiguration(@RequestParam(value = "id", required = false) Integer id,
+                                                    @RequestParam(value = "enabled", required = true) boolean enabled) {
+        configurationService.updateConfiguration(id, enabled);
         return ResponseEntity.ok().build();
     }
 

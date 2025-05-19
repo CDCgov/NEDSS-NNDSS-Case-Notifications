@@ -4,6 +4,6 @@ import gov.cdc.casenotificationservice.repository.msg.model.CaseNotificationConf
 
 public interface IConfigurationService {
     boolean checkConfigurationAvailable();
-    void updateConfiguration(Integer id);
+    void updateConfiguration(Integer id, boolean configApplied);
     CaseNotificationConfig getAppliedCaseNotificationConfig();
 }

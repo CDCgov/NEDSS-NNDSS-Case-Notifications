@@ -4,6 +4,7 @@ import gov.cdc.casenotificationservice.repository.msg.CaseNotificationConfigRepo
 import gov.cdc.casenotificationservice.repository.msg.model.CaseNotificationConfig;
 import gov.cdc.casenotificationservice.service.common.interfaces.IConfigurationService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ConfigurationService implements IConfigurationService {
@@ -17,13 +18,25 @@ public class ConfigurationService implements IConfigurationService {
         return caseNotificationConfigRepository.isConfigApplied();
     }
 
-    public void updateConfiguration(Integer id) {
-        if (id == null) {
-            caseNotificationConfigRepository.updateTopNonStdConfigToApplied();
+    @Transactional(transactionManager = "msgTransactionManager")
+    public void updateConfiguration(Integer id, boolean configApplied) {
+        try {
+            var status = 0;
+            if (configApplied) {
+                status = 1;
+            }
+
+            if (id == null) {
+                caseNotificationConfigRepository.updateTopNonStdConfigToApplied(status);
+            }
+            else {
+                caseNotificationConfigRepository.updateConfigAppliedById(id, status);
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
         }
-        else {
-            caseNotificationConfigRepository.updateConfigAppliedById(id);
-        }
+
     }
 
     public CaseNotificationConfig getAppliedCaseNotificationConfig() {

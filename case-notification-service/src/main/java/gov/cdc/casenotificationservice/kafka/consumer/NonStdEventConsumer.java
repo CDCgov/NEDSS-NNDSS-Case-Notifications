@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import gov.cdc.casenotificationservice.exception.*;
 import gov.cdc.casenotificationservice.model.MessageAfterStdChecker;
 import gov.cdc.casenotificationservice.repository.odse.model.CNTransportqOut;
+import gov.cdc.casenotificationservice.service.common.interfaces.IConfigurationService;
 import gov.cdc.casenotificationservice.service.common.interfaces.IDltService;
 import gov.cdc.casenotificationservice.service.nonstd.NonStdService;
 import org.slf4j.Logger;
@@ -24,12 +25,14 @@ public class NonStdEventConsumer {
     private static final Logger logger = LoggerFactory.getLogger(NonStdEventConsumer.class); //NOSONAR
     private final NonStdService nonStdService;
     private final IDltService dltService;
+    private final IConfigurationService configurationService;
 
     @Value("${spring.kafka.topic.non-std-topic}")
     public String topic;
-    public NonStdEventConsumer(NonStdService nonStdService, IDltService dltService) {
+    public NonStdEventConsumer(NonStdService nonStdService, IDltService dltService, IConfigurationService configurationService) {
         this.nonStdService = nonStdService;
         this.dltService = dltService;
+        this.configurationService = configurationService;
     }
 
     @RetryableTopic(
@@ -50,18 +53,20 @@ public class NonStdEventConsumer {
     )
     public void handleMessage(String message) throws IgnorableException, NonStdProcessorServiceException, NonStdBatchProcessorServiceException, APIException {
         logger.info("Received non std message");
-        var gson = new Gson();
-        if (message.contains("cnTransportqOutUid")) {
-            var data = gson.fromJson(message, MessageAfterStdChecker.class);
-            nonStdService.nonStdProcessor(data);
-        }
-        else
-        {
-            var dlt = dltService.getDlt(message);
-            MessageAfterStdChecker checker = new MessageAfterStdChecker();
-            checker.setCnTransportqOutUid(dlt.getCnTranportqOutUid());
-            checker.setReprocessApplied(true);
-            nonStdService.nonStdProcessor(checker);
+        if(configurationService.checkConfigurationAvailable()) {
+            var gson = new Gson();
+            if (message.contains("cnTransportqOutUid")) {
+                var data = gson.fromJson(message, MessageAfterStdChecker.class);
+                nonStdService.nonStdProcessor(data);
+            }
+            else
+            {
+                var dlt = dltService.getDlt(message);
+                MessageAfterStdChecker checker = new MessageAfterStdChecker();
+                checker.setCnTransportqOutUid(dlt.getCnTranportqOutUid());
+                checker.setReprocessApplied(true);
+                nonStdService.nonStdProcessor(checker);
+            }
         }
         logger.info("Completed non std message");
 

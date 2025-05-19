@@ -44,7 +44,7 @@ public class HL7MessageBuilder {
     private final IDataTypeLookupRepository iDataTypeLookupRepository;
     private final DataTypeProcessor dataTypeProcessor;
     private final MSHSegmentBuilder mshSegmentBuilder;
-    private final MessageState messageState;
+    private MessageState messageState = new MessageState();
     private final PIDSegmentBuilder pidSegmentBuilder;
     private final NK1SegmentBuilder nk1SegmentBuilder;
     private final OBRSegmentBuilder obrSegmentBuilder;
@@ -76,12 +76,10 @@ public class HL7MessageBuilder {
     }
 
     //initialize variables
-    private String newDate = "";
-    private String inv177Date = "";
     private String stateLocalID = "";
     boolean isDefaultNull= true;
 
-    private final List<ObxRepeatingElement> obxRepeatingElementArrayList = new ArrayList<>();
+    private final List<ObxRepeatingElement> obxRepeatingElementArrayList = messageState.getObxRepeatingElementArrayList();
 
     String entityIdentifier2 = "";
     String obr7 = "";
@@ -95,13 +93,9 @@ public class HL7MessageBuilder {
     String reasonForStudyNameOfAlternateCodingSystem2="";
     String nndmessageVersion="";
 
-    //Repeating block for lab
-    //int drugCounter = 0;
-    //int dupRepeatCongenitalCounter = 0;
-//    int inv290Inv291Counter = 0;
+
     int inv290Inv291Counter1 = 0;
     int inv290Inv291Counter2 = 0;
-//    boolean inv177Found = false;
     int std121ObxInc = -1;
     int std121obxOrderGroupId = 0;
     int std121ObsValue = -1;
@@ -113,8 +107,8 @@ public class HL7MessageBuilder {
     String hcw="";
     int hcwTextcounter=-1;
     int hcwObxInc=-1;
-    int obx2Inc = 0;
-    int obx1Inc = 0;
+    int obx2Inc = messageState.getObx2Inc();
+    int obx1Inc = messageState.getObx1Inc();
     int hcwObxOrderGroupId=-1;
     int hcwObx5ValueInc=-1;
     int raceCounterNK1 = 0;
@@ -124,7 +118,6 @@ public class HL7MessageBuilder {
     String OTH_SANDS_TEXT = "";
     String OTH_SANDS_REPLACE ="";
     int signSymptomsCounter = 0;
-//    boolean INV162RepeatIndicator = false;
     private String fillerOrderNumberUniversalID2 = "";
     private String fillerOrderNumberUniversalIDType2 = "";
     private String obrEntityIdentifierGroup1 = "";
@@ -151,22 +144,27 @@ public class HL7MessageBuilder {
     // Reset the processor state
     public void reset() {
         messageState.reset();
-        newDate = "";
-        inv177Date = "";
         stateLocalID = "";
         obxRepeatingElementArrayList.clear();
+        entityIdentifier2 = "";
+        obr7 = "";
+        OBR7DataType = "";
+        OBR7QuestionDataTypeNND = "";
+        reasonForStudyIdentifier2 = "";
+        reasonForStudyText2 = "";
+        reasonForStudyNameOfCodingSystem2 = "";
+        reasonForStudyAlternateIdentifier2 = "";
+        reasonForStudyAlternateText2 = "";
+        reasonForStudyNameOfAlternateCodingSystem2 = "";
+        nndmessageVersion = "";
+        inv290Inv291Counter1 = 0;
+        inv290Inv291Counter2 = 0;
+        std121ObxInc = -1;
         std121obxOrderGroupId = 0;
         std121ObsValue = -1;
         NBS246observationSubID = "";
         std300 = "";
-        hcwTextBeforeCodedInd = false;
-        hcw = "";
         hcwTextcounter = -1;
-        hcwObxInc = -1;
-        obx2Inc = 0;
-        obx1Inc = 0;
-        hcwObxOrderGroupId = -1;
-        hcwObx5ValueInc = -1;
         raceCounterNK1 = 0;
         OTH_COMP_TEXT = "";
         OTH_COMP_REPLACE = "";
@@ -186,8 +184,9 @@ public class HL7MessageBuilder {
         universalServiceIDTextGroup2 = "";
         universalServiceIDNameOfCodingSystemGroup1 = "";
         universalServiceIDNameOfCodingSystemGroup2 = "";
+        observationDateTime = "";
+        resultStatusChgTime = "";
         dynamicRepeatMultiArray.clear();
-        discreteMulti = new DiscreteMulti();
         repeatMultiArray.clear();
         discreteRepeatArray.clear();
         discreteRepeatSNTypeArray.clear();
@@ -507,7 +506,7 @@ public class HL7MessageBuilder {
 
                     Varies value = obxForGenV1.getObservationValue(0);
                     TS ts = new TS(oruMessage);
-                    ts.getTime().setValue(inv177Date + "000000.000"); //for TS18 format
+                    ts.getTime().setValue(messageState.getInv177Date() + "000000.000"); //for TS18 format
                     value.setData(ts);
                 }
 

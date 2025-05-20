@@ -87,11 +87,15 @@ public class XmlHL7ConversionController {
                             name = "recordId",
                             description = "The Record ID to convert",
                             required = true,
-                            schema = @Schema(type = "string"))
+                            schema = @Schema(type = "string")),
+                    @Parameter(in = ParameterIn.QUERY,
+                            name = "validationEnabled",
+                            description = "Flag to turn on/off validation for generated HL7",
+                            schema = @Schema(type = "boolean"))
             }
     )
     @PostMapping(value = "/xml-to-hl7/{recordId}", produces = MediaType.TEXT_PLAIN_VALUE)
-    public ResponseEntity<String> convertXmlToHl7ById(@PathVariable String recordId) {
+    public ResponseEntity<String> convertXmlToHl7ById(@PathVariable String recordId, @RequestParam(defaultValue = "true") boolean validationEnabled) {
         try {
             String messagePayload = cnTraportqOutRepository
                     .findTopByRecordUid(Long.valueOf(recordId))
@@ -110,7 +114,7 @@ public class XmlHL7ConversionController {
                     (NBSNNDIntermediaryMessage) unmarshaller.unmarshal(reader);
 
             // Convert to HL7
-            String response = hl7MessageBuilder.parseXml(nbsnndIntermediaryMessage, false);
+            String response = hl7MessageBuilder.parseXml(nbsnndIntermediaryMessage, validationEnabled);
             return ResponseEntity.ok(response);
 
         } catch (Exception e) {

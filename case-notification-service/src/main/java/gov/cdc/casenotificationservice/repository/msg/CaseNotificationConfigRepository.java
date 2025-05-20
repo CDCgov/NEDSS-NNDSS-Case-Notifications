@@ -27,10 +27,9 @@ public interface CaseNotificationConfigRepository extends JpaRepository<CaseNoti
     boolean isConfigApplied();
 
     @Query(
-            value = "SELECT CASE WHEN EXISTS (" +
+            value =
                     "SELECT hl7_validation_enabled FROM NBS_Case_Notification_Config " +
-                    "WHERE config_applied = 1 AND config_name = 'NON_STD_CASE_NOTIFICATION')" +
-                    " THEN CAST(1 AS BIT) ELSE CAST(0 AS BIT) END",
+                    "WHERE config_applied = 1 AND config_name = 'NON_STD_CASE_NOTIFICATION'",
             nativeQuery = true
     )
     boolean isHl7ValidationApplied();

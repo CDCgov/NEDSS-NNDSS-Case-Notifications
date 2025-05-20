@@ -4,7 +4,7 @@ server:
     context-path: /hl7-parser
 info:
   app:
-    name: Data Extraction
+    name: XML Parser
 management:
   endpoint:
     health:

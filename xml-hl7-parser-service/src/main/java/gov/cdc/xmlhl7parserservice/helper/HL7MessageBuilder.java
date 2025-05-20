@@ -51,9 +51,6 @@ public class HL7MessageBuilder {
 
     @Autowired
     public HL7MessageBuilder(
-            IServiceActionPairRepository iServiceActionPairRepository,
-            IDataTypeLookupRepository iDataTypeLookupRepository,
-            DataTypeProcessor dataTypeProcessor,
             MSHSegmentBuilder mshSegmentBuilder,
             MessageState messageState,
             PIDSegmentBuilder pidSegmentBuilder,

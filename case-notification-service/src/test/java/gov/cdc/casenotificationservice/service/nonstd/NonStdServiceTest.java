@@ -64,14 +64,16 @@ class NonStdServiceTest {
 
         CNTransportqOut mockTransport = new CNTransportqOut();
         mockTransport.setCnTransportqOutUid(123L);
-        when(apiService.callHl7Endpoint("", "123")).thenReturn("TEST");
+
+        when(apiService.callToken()).thenReturn("TEST");
+        when(apiService.callHl7Endpoint("TEST", "123", true)).thenReturn("TEST");
 
         when(caseNotificationConfigRepository.findNonStdConfig()).thenReturn(config);
         when(cnTraportqOutRepository.findTopByRecordUid(123L)).thenReturn(mockTransport);
         when(phinmsService.gettingPHIMNSProperties(any(), any(), any())).thenReturn(props);
         when(batchService.isBatchConditionApplied(props, config)).thenReturn(true);
 
-        nonStdService.nonStdProcessor(checker);
+        nonStdService.nonStdProcessor(checker, true);
 
         verify(batchService).holdQueue(props);
     }
@@ -93,13 +95,14 @@ class NonStdServiceTest {
         CNTransportqOut mockTransport = new CNTransportqOut();
         mockTransport.setCnTransportqOutUid(123L);
 
-        when(apiService.callHl7Endpoint("", "123")).thenReturn("TEST");
+        when(apiService.callToken()).thenReturn("TEST");
+        when(apiService.callHl7Endpoint("TEST", "123", true)).thenReturn("TEST");
         when(caseNotificationConfigRepository.findNonStdConfig()).thenReturn(config);
         when(cnTraportqOutRepository.findTopByRecordUid(124L)).thenReturn(mockTransport);
         when(phinmsService.gettingPHIMNSProperties(any(), any(), any())).thenReturn(props);
         when(batchService.isBatchConditionApplied(props, config)).thenReturn(false);
 
-        nonStdService.nonStdProcessor(checker);
+        nonStdService.nonStdProcessor(checker, true);
 
         verify(transportQOutRepository).save(any(TransportQOut.class));
         verify(cnTraportqOutRepository).updateStatusToQueued(null);

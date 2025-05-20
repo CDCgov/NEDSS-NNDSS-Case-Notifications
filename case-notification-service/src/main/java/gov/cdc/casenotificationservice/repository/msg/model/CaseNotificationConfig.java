@@ -52,4 +52,7 @@ public class CaseNotificationConfig {
     @Column(name = "phin_priority", length = 255)
     private String phinPriority;
 
+    @Column(name= "hl7_validation_applied")
+    private Boolean hl7ValidationApplied;
+
 }

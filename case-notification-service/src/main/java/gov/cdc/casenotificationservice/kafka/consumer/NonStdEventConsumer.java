@@ -54,10 +54,11 @@ public class NonStdEventConsumer {
     public void handleMessage(String message) throws IgnorableException, NonStdProcessorServiceException, NonStdBatchProcessorServiceException, APIException {
         logger.info("Received non std message");
         if(configurationService.checkConfigurationAvailable()) {
+            var hl7Applied = configurationService.checkHl7ValidationApplied();
             var gson = new Gson();
             if (message.contains("cnTransportqOutUid")) {
                 var data = gson.fromJson(message, MessageAfterStdChecker.class);
-                nonStdService.nonStdProcessor(data);
+                nonStdService.nonStdProcessor(data, hl7Applied);
             }
             else
             {
@@ -65,7 +66,7 @@ public class NonStdEventConsumer {
                 MessageAfterStdChecker checker = new MessageAfterStdChecker();
                 checker.setCnTransportqOutUid(dlt.getCnTranportqOutUid());
                 checker.setReprocessApplied(true);
-                nonStdService.nonStdProcessor(checker);
+                nonStdService.nonStdProcessor(checker, hl7Applied);
             }
         }
         logger.info("Completed non std message");

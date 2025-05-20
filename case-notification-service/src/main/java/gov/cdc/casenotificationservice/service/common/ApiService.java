@@ -60,7 +60,7 @@ public class ApiService implements IApiService {
         return response.getBody();
     }
 
-    public String callHl7Endpoint(String token, String recordId) throws APIException {
+    public String callHl7Endpoint(String token, String recordId, boolean hl7ValidationApplied) throws APIException {
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.setBearerAuth(token);
@@ -71,6 +71,7 @@ public class ApiService implements IApiService {
 
             URI uri = UriComponentsBuilder.fromHttpUrl(hl7Endpoint)
                     .pathSegment(recordId)
+                    .queryParam("validationEnabled", hl7ValidationApplied)
                     .build()
                     .toUri();
 

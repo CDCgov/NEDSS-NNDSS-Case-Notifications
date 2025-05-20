@@ -6,4 +6,5 @@ public interface IConfigurationService {
     boolean checkConfigurationAvailable();
     void updateConfiguration(Integer id, boolean configApplied);
     CaseNotificationConfig getAppliedCaseNotificationConfig();
+    boolean checkHl7ValidationApplied();
 }

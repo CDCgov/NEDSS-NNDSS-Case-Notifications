@@ -1,4 +1,4 @@
-package gov.cdc.xmlhl7parserservice.helper.interfaces;
+package gov.cdc.xmlhl7parserservice.util.interfaces;
 
 import java.util.Map;
 

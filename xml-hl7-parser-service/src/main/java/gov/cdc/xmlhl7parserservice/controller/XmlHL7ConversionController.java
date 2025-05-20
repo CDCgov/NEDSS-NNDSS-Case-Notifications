@@ -3,7 +3,6 @@ package gov.cdc.xmlhl7parserservice.controller;
 import gov.cdc.xmlhl7parserservice.helper.HL7MessageBuilder;
 import gov.cdc.xmlhl7parserservice.model.generated.jaxb.NBSNNDIntermediaryMessage;
 import gov.cdc.xmlhl7parserservice.repository.odse.CNTraportqOutRepository;
-import gov.cdc.xmlhl7parserservice.service.XmlHL7ConversionService;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Unmarshaller;
 import org.slf4j.Logger;
@@ -25,14 +24,11 @@ public class XmlHL7ConversionController {
 
     private static final Logger log = LoggerFactory.getLogger(XmlHL7ConversionController.class);
 
-    private final XmlHL7ConversionService xmlHl7ConversionService;
     private final HL7MessageBuilder hl7MessageBuilder;
     private final CNTraportqOutRepository cnTraportqOutRepository;
 
-    public XmlHL7ConversionController(XmlHL7ConversionService xmlHl7ConversionService,
-                                      HL7MessageBuilder hl7MessageBuilder,
+    public XmlHL7ConversionController(HL7MessageBuilder hl7MessageBuilder,
                                       CNTraportqOutRepository cnTraportqOutRepository) {
-        this.xmlHl7ConversionService = xmlHl7ConversionService;
         this.hl7MessageBuilder = hl7MessageBuilder;
         this.cnTraportqOutRepository = cnTraportqOutRepository;
     }

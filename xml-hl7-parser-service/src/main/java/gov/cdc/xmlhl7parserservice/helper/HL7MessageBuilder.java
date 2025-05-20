@@ -21,6 +21,7 @@ import gov.cdc.xmlhl7parserservice.model.generated.jaxb.*;
 import gov.cdc.xmlhl7parserservice.repository.msgout.IDataTypeLookupRepository;
 import gov.cdc.xmlhl7parserservice.repository.msgout.IServiceActionPairRepository;
 
+import gov.cdc.xmlhl7parserservice.util.DataTypeProcessor;
 import gov.cdc.xmlhl7parserservice.validator.HL7Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,9 +41,6 @@ import gov.cdc.xmlhl7parserservice.helper.obr.OBRSegmentBuilder;
 @Service
 public class HL7MessageBuilder {
 
-    private final IServiceActionPairRepository iServiceActionPairRepository;
-    private final IDataTypeLookupRepository iDataTypeLookupRepository;
-    private final DataTypeProcessor dataTypeProcessor;
     private final MSHSegmentBuilder mshSegmentBuilder;
     private MessageState messageState = new MessageState();
     private final PIDSegmentBuilder pidSegmentBuilder;
@@ -63,9 +61,6 @@ public class HL7MessageBuilder {
             OBRSegmentBuilder obrSegmentBuilder, OBXSegmentBuilder obxSegmentBuilder,
             HL7DateFormatUtil dateFormatUtil
     ) {
-        this.iServiceActionPairRepository = iServiceActionPairRepository;
-        this.iDataTypeLookupRepository = iDataTypeLookupRepository;
-        this.dataTypeProcessor = dataTypeProcessor;
         this.mshSegmentBuilder = mshSegmentBuilder;
         this.messageState = messageState;
         this.pidSegmentBuilder = pidSegmentBuilder;
@@ -80,20 +75,6 @@ public class HL7MessageBuilder {
 
     private final List<ObxRepeatingElement> obxRepeatingElementArrayList = messageState.getObxRepeatingElementArrayList();
 
-    // Removed variables now managed by MessageState
-//    String entityIdentifier2 = "";
-//    String obr7 = "";
-//    String OBR7DataType = "";
-//    String OBR7QuestionDataTypeNND = "";
-//    String reasonForStudyIdentifier2="";
-//    String reasonForStudyText2="";
-//    String reasonForStudyNameOfCodingSystem2="";
-//    String reasonForStudyAlternateIdentifier2="";
-//    String reasonForStudyAlternateText2="";
-//    String reasonForStudyNameOfAlternateCodingSystem2="";
-//    String nndmessageVersion="";
-//
-//
     int inv290Inv291Counter1 = 0;
     int inv290Inv291Counter2 = 0;
     int std121ObxInc = -1;
@@ -101,37 +82,16 @@ public class HL7MessageBuilder {
     int std121ObsValue = -1;
     String NBS246observationSubID = "";
     String std300 = "";
-//
-//    //HCW Specific fields
+
+    //HCW Specific fields
     boolean hcwTextBeforeCodedInd = messageState.isHcwTextBeforeCodedInd();
     String hcw = messageState.getHcw();
-//    int hcwTextcounter=-1;
-//    int hcwObxInc=-1;
     int obx2Inc = messageState.getObx2Inc();
     int obx1Inc = messageState.getObx1Inc();
-//    int hcwObxOrderGroupId=-1;
-//    int hcwObx5ValueInc=-1;
-//    int raceCounterNK1 = 0;
     String OTH_COMP_TEXT = "\"\"";
     String OTH_COMP_REPLACE = "\"\"";
-//    int complicationCounter = 0;
     String OTH_SANDS_TEXT = "\"\"";
     String OTH_SANDS_REPLACE = "\"\"";
-//    int signSymptomsCounter = 0;
-//    private String fillerOrderNumberUniversalID2 = "";
-//    private String fillerOrderNumberUniversalIDType2 = "";
-//    private String obrEntityIdentifierGroup1 = "";
-//    private String getObrEntityIdentifierGroup2 ="";
-//    private String fillerOrderNumberNameSpaceIDGroup1 = "";
-//    private String fillerOrderNumberNameSpaceIDGroup2 = "";
-//    private String universalServiceIdentifierGroup1 = "";
-//    private String universalServiceIdentifierGroup2 = "";
-//    private String universalServiceIDTextGroup1 = "";
-//    private String universalServiceIDTextGroup2 = "";
-//    private String universalServiceIDNameOfCodingSystemGroup1 ="";
-//    private String universalServiceIDNameOfCodingSystemGroup2 ="";
-//    private String observationDateTime = "";
-//    private String resultStatusChgTime = "";
 
     List<DynamicRepeatMulti>  dynamicRepeatMultiArray = new ArrayList<>();
     DiscreteMulti discreteMulti = new DiscreteMulti();
@@ -146,18 +106,6 @@ public class HL7MessageBuilder {
         messageState.reset();
         stateLocalID = "";
         obxRepeatingElementArrayList.clear();
-        // Removed variables now managed by MessageState
-//        entityIdentifier2 = "";
-//        obr7 = "";
-//        OBR7DataType = "";
-//        OBR7QuestionDataTypeNND = "";
-//        reasonForStudyIdentifier2 = "";
-//        reasonForStudyText2 = "";
-//        reasonForStudyNameOfCodingSystem2 = "";
-//        reasonForStudyAlternateIdentifier2 = "";
-//        reasonForStudyAlternateText2 = "";
-//        reasonForStudyNameOfAlternateCodingSystem2 = "";
-//        nndmessageVersion = "";
         inv290Inv291Counter1 = 0;
         inv290Inv291Counter2 = 0;
         std121ObxInc = -1;
@@ -165,28 +113,10 @@ public class HL7MessageBuilder {
         std121ObsValue = -1;
         NBS246observationSubID = "";
         std300 = "";
-//        hcwTextcounter = -1;
-//        raceCounterNK1 = 0;
         OTH_COMP_TEXT = "\"\"";
         OTH_COMP_REPLACE = "\"\"";
-//        complicationCounter = 0;
         OTH_SANDS_TEXT = "\"\"";
         OTH_SANDS_REPLACE = "\"\"";
-//        signSymptomsCounter = 0;
-//        fillerOrderNumberUniversalID2 = "";
-//        fillerOrderNumberUniversalIDType2 = "";
-//        obrEntityIdentifierGroup1 = "";
-//        getObrEntityIdentifierGroup2 = "";
-//        fillerOrderNumberNameSpaceIDGroup1 = "";
-//        fillerOrderNumberNameSpaceIDGroup2 = "";
-//        universalServiceIdentifierGroup1 = "";
-//        universalServiceIdentifierGroup2 = "";
-//        universalServiceIDTextGroup1 = "";
-//        universalServiceIDTextGroup2 = "";
-//        universalServiceIDNameOfCodingSystemGroup1 = "";
-//        universalServiceIDNameOfCodingSystemGroup2 = "";
-//        observationDateTime = "";
-//        resultStatusChgTime = "";
         dynamicRepeatMultiArray.clear();
         repeatMultiArray.clear();
         discreteRepeatArray.clear();
@@ -195,7 +125,6 @@ public class HL7MessageBuilder {
 
     // TODO - Extract methods to helper classes
     public String parseXml(NBSNNDIntermediaryMessage nbsnndIntermediaryMessage, boolean validationEnabled) throws HL7Exception, IOException, XmlHL7ParserException {
-//        nbsnndIntermediaryMessage = nbsnndIntermediaryMessage;
         ORU_R01 oruMessage = new ORU_R01();
 
         MSH msh = oruMessage.getMSH();
@@ -685,16 +614,13 @@ public class HL7MessageBuilder {
         if (validationEnabled) {
             HL7Validator validator = new HL7Validator();
             boolean isHL7Valid = validator.nndOruR01Validator(oruMessage);
-            System.err.println("Generated message is: " + (isHL7Valid ? "valid" : "not valid"));
         }
 
         logger.info("Final message: {} ", oruMessage);
-        System.err.println("Final message...: " + oruMessage);
 
         // based on message type
 //        String base64EncodedString = encodeToBase64(oruMessage.getMessage().toString());
         //based on the message type and
-//        System.err.println("Final message is..." + base64EncodedString);
 
         //TODO - connector.persistNotification(base64EncodedString,Constants.NETSS_TRANSPORT_Q_OUT_TABLE);
 
@@ -3275,11 +3201,6 @@ public class HL7MessageBuilder {
 
             obx2Inc++;
         }
-    }
-
-    private static String encodeToBase64(String hl7Message){
-
-        return Base64.getEncoder().encodeToString(hl7Message.getBytes());
     }
 
     private void mapToNK1Element(MessageElement messageElement, NK1 nk1) throws DataTypeException {

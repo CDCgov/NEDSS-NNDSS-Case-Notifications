@@ -1,7 +1,6 @@
 package gov.cdc.xmlhl7parserservice.util;
 
 import gov.cdc.xmlhl7parserservice.constants.Constants;
-import gov.cdc.xmlhl7parserservice.helper.DataTypeProcessor;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;

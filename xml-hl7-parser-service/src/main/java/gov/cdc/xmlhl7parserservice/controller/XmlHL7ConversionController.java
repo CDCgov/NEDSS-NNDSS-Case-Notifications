@@ -83,13 +83,11 @@ public class XmlHL7ConversionController {
                             description = "The Client Secret",
                             required = true,
                             schema = @Schema(type = "string")),
-                    @Parameter(
-                            in = ParameterIn.PATH,
+                    @Parameter(in = ParameterIn.PATH,
                             name = "recordId",
                             description = "The Record ID to convert",
                             required = true,
-                            schema = @Schema(type = "string")
-                    )
+                            schema = @Schema(type = "string"))
             }
     )
     @PostMapping(value = "/xml-to-hl7/{recordId}", produces = MediaType.TEXT_PLAIN_VALUE)

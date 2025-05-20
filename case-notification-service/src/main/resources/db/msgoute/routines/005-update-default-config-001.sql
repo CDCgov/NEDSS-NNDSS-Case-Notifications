@@ -16,7 +16,7 @@ INSERT INTO NBS_Case_Notification_Config (
     phin_public_key_dn,
     phin_recipient,
     phin_priority,
-    hl7_validation_enabled,
+    hl7_validation_enabled
 )
 VALUES (
            'NON_STD_CASE_NOTIFICATION',

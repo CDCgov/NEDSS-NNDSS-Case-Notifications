@@ -4,7 +4,7 @@ server:
     context-path: /hl7-parser
 info:
   app:
-    name: XML Parser
+    name: Data Extraction
 management:
   endpoint:
     health:
@@ -24,13 +24,13 @@ spring:
     password: ${NBS_DBPASSWORD}
     driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
     hikari:
-      maximum-pool-size: ${HIKARI_POOL_SIZE:2}
-      connection-timeout: ${HIKARI_CON_TIMEOUT:30000}
+      maximum-pool-size: ${HIKARI_POOL_SIZE:40}
+      connection-timeout: ${HIKARI_CON_TIMEOUT:300000}
       minimum-idle: ${HIKARI_MINIMUM_IDLE:20}
-      idle-timeout: ${HIKARI_IDLE_TIMEOUT:12000}
-      max-lifetime: ${HIKARI_MAX_LIFETIME:120000}
+      idle-timeout: ${HIKARI_IDLE_TIMEOUT:120000}
+      max-lifetime: ${HIKARI_MAX_LIFETIME:1200000}
       pool-name: ${HIKARI_POOL_NAME:SQLServerHikariCP}
-      leak-detection-threshold: ${LEAK_DETECTION_THRESHOLD:30000}
+      leak-detection-threshold: ${LEAK_DETECTION_THRESHOLD:300000}
     odse:
       url: jdbc:sqlserver://${NBS_DBSERVER};databaseName=NBS_ODSE;encrypt=true;trustServerCertificate=true;
     msgoute:
@@ -40,5 +40,13 @@ spring:
     hibernate:
       ddl-auto: none
 
-cnserver:
-  host: ${CN_SERVER_HOST:localhost:8088}
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${DI_AUTH_URI}
+          jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
+
+auth:
+  token-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/token
+  introspect-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/token/introspect

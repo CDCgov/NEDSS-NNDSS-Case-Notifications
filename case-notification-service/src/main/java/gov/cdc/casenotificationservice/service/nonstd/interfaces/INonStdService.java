@@ -4,6 +4,6 @@ import gov.cdc.casenotificationservice.exception.NonRetryableException;
 import gov.cdc.casenotificationservice.model.MessageAfterStdChecker;
 
 public interface INonStdService {
-    void nonStdProcessor(MessageAfterStdChecker messageAfterStdChecker, boolean hl7ValidationApplied) throws Exception;
+    void nonStdProcessor(MessageAfterStdChecker messageAfterStdChecker, boolean hl7ValidationEnabled) throws Exception;
     void releaseHoldQueueAndProcessBatchNonStd() throws NonRetryableException;
 }

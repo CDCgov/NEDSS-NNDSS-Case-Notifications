@@ -1,2 +1,2 @@
 ALTER TABLE NBS_Case_Notification_Config
-    ADD hl7_validation_applied BIT DEFAULT 1;
+    ADD hl7_validation_enabled BIT DEFAULT 1;

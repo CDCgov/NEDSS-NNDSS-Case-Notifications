@@ -51,7 +51,11 @@ public class NonStdService implements INonStdService {
             CaseNotificationConfig stdConfig = caseNotificationConfigRepository.findNonStdConfig();
             var cnTranport = cnTraportqOutRepository.findTopByRecordUid(messageAfterStdChecker.getCnTransportqOutUid());
 
-            var tranformedData = apiService.callHl7Endpoint("", String.valueOf(cnTranport.getCnTransportqOutUid()));
+            var token = apiService.callToken();
+            if (token == null || token.isEmpty()) {
+                throw new IgnorableException("Token is Invalid");
+            }
+            var tranformedData = apiService.callHl7Endpoint(token, String.valueOf(cnTranport.getCnTransportqOutUid()));
             // TODO: Logic to tranform xml to HL7
             String payload = tranformedData;
             if (payload.isEmpty()) {

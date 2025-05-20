@@ -39,8 +39,26 @@ public class ApiService implements IApiService {
     protected String hl7Endpoint;
 
 
+    @Value("${api.endpoint_token}")
+    private String tokenEndpoint;
+
+
+
     private final RestTemplate restTemplate = new RestTemplate();
 
+    public String callToken() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("clientid", clientId);
+        headers.add("clientsecret", clientSecret);
+
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+
+        URI uri = UriComponentsBuilder.fromHttpUrl(tokenEndpoint)
+                .build()
+                .toUri();
+        ResponseEntity<String> response = restTemplate.exchange(uri, HttpMethod.POST, entity, String.class);
+        return response.getBody();
+    }
 
     public String callHl7Endpoint(String token, String recordId) throws APIException {
         try {

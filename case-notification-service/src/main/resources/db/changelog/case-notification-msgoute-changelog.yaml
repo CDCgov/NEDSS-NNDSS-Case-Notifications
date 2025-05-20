@@ -95,3 +95,11 @@ databaseChangeLog:
         - sqlFile:
             path: db/msgoute/tables/008-alter-notification-config-add-hl7-validation.sql
             splitStatements: false
+  - changeSet:
+      id: 12
+      author: liquibase
+      runOnChange: true
+      changes:
+        - sqlFile:
+            path: db/msgoute/routines/005-update-default-config-001.sql
+            splitStatements: false

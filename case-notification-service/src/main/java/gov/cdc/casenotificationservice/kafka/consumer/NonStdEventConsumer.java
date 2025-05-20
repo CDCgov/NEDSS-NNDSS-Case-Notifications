@@ -57,19 +57,22 @@ public class NonStdEventConsumer {
             var hl7Applied = configurationService.checkHl7ValidationApplied();
             var gson = new Gson();
             if (message.contains("cnTransportqOutUid")) {
+                logger.info("NON STD DLT: started");
                 var data = gson.fromJson(message, MessageAfterStdChecker.class);
                 nonStdService.nonStdProcessor(data, hl7Applied);
+                logger.info("NON STD DLT: completed");
             }
             else
             {
+                logger.info("NON STD started");
                 var dlt = dltService.getDlt(message);
                 MessageAfterStdChecker checker = new MessageAfterStdChecker();
                 checker.setCnTransportqOutUid(dlt.getCnTranportqOutUid());
                 checker.setReprocessApplied(true);
                 nonStdService.nonStdProcessor(checker, hl7Applied);
+                logger.info("NON STD: completed");
             }
         }
-        logger.info("Completed non std message");
 
     }
 

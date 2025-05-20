@@ -33,9 +33,10 @@ public class NonStdController {
                             name = "clientsecret",
                             description = "The Client Secret",
                             required = true,
-                            schema = @Schema(type = "string"))}
+                            schema = @Schema(type = "string"))
+            }
     )
-    @PostMapping(path = "/api/non-std/release-queue")
+    @PostMapping(path = "/non-std/release-queue")
     public ResponseEntity<String> releaseQueue() throws NonRetryableException {
         nonStdService.releaseHoldQueueAndProcessBatchNonStd();
         return new ResponseEntity<>(HttpStatus.OK);

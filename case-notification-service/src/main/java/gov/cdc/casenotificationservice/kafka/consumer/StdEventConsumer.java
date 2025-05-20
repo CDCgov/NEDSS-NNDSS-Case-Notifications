@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import gov.cdc.casenotificationservice.exception.NonRetryableException;
 import gov.cdc.casenotificationservice.exception.StdProcessorServiceException;
 import gov.cdc.casenotificationservice.model.MessageAfterStdChecker;
+import gov.cdc.casenotificationservice.service.common.interfaces.IConfigurationService;
 import gov.cdc.casenotificationservice.service.common.interfaces.IDltService;
 import gov.cdc.casenotificationservice.service.std.interfaces.IXmlService;
 import org.slf4j.Logger;
@@ -25,11 +26,13 @@ public class StdEventConsumer {
     private static final Logger logger = LoggerFactory.getLogger(StdEventConsumer.class); //NOSONAR
     private final IXmlService xmlService;
     private final IDltService dltService;
+    private final IConfigurationService configurationService;
     @Value("${spring.kafka.topic.std-topic}")
     public String topic;
-    public StdEventConsumer(IXmlService xmlService, IDltService dltService) {
+    public StdEventConsumer(IXmlService xmlService, IDltService dltService, IConfigurationService configurationService) {
         this.xmlService = xmlService;
         this.dltService = dltService;
+        this.configurationService = configurationService;
     }
 
     @RetryableTopic(
@@ -51,23 +54,23 @@ public class StdEventConsumer {
     )
     public void handleMessage(String message) throws StdProcessorServiceException, NonRetryableException {
         logger.info("Received std message");
-        var gson = new Gson();
-        if (message.contains("cnTransportqOutUid"))
-        {
-            var data = gson.fromJson(message, MessageAfterStdChecker.class);
-            xmlService.mappingXmlStringToObject(data);
-        }
-        else
-        {
-            var dlt = dltService.getDlt(message);
-            MessageAfterStdChecker checker = new MessageAfterStdChecker();
-            checker.setCnTransportqOutUid(dlt.getCnTranportqOutUid());
-            checker.setReprocessApplied(true);
-            xmlService.mappingXmlStringToObject(checker);
+        if (configurationService.checkConfigurationAvailable()) {
+            var gson = new Gson();
+            if (message.contains("cnTransportqOutUid"))
+            {
+                var data = gson.fromJson(message, MessageAfterStdChecker.class);
+                xmlService.mappingXmlStringToObject(data);
+            }
+            else
+            {
+                var dlt = dltService.getDlt(message);
+                MessageAfterStdChecker checker = new MessageAfterStdChecker();
+                checker.setCnTransportqOutUid(dlt.getCnTranportqOutUid());
+                checker.setReprocessApplied(true);
+                xmlService.mappingXmlStringToObject(checker);
+            }
         }
         logger.info("Completed std message");
-
-
     }
     @DltHandler()
     public void handleDlt(

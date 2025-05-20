@@ -31,9 +31,12 @@ dependencies {
     // Swagger / openapi documentation
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.1'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
     implementation 'org.springframework.boot:spring-boot-starter-logging'
+    implementation 'org.springframework.security:spring-security-core'
+    implementation 'org.springframework.security:spring-security-config'
     implementation files('libs/hl7-parser-0.0.1-SNAPSHOT.jar')
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.apache.kafka:kafka-streams'
@@ -42,6 +45,7 @@ dependencies {
     implementation 'com.microsoft.sqlserver:mssql-jdbc:12.6.1.jre11'
     implementation 'com.zaxxer:HikariCP:5.1.0'
     implementation("com.google.code.gson:gson:2.12.1")
+    implementation("org.apache.httpcomponents.core5:httpcore5:5.2.5")
 
     implementation 'org.liquibase:liquibase-core:4.31.1'
 

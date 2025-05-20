@@ -1,8 +1,8 @@
-package gov.cdc.xmlhl7parserservice.helper;
+package gov.cdc.xmlhl7parserservice.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import gov.cdc.xmlhl7parserservice.helper.interfaces.HL7FieldProcessor;
+import gov.cdc.xmlhl7parserservice.util.interfaces.HL7FieldProcessor;
 import gov.cdc.xmlhl7parserservice.repository.msgout.model.DataTypeModel;
 import gov.cdc.xmlhl7parserservice.repository.msgout.IDataTypeLookupRepository;
 import org.slf4j.Logger;

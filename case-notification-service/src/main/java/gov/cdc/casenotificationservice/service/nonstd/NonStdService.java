@@ -46,13 +46,16 @@ public class NonStdService implements INonStdService {
         this.apiService = apiService;
     }
 
-    public void nonStdProcessor(MessageAfterStdChecker messageAfterStdChecker) throws IgnorableException, NonStdProcessorServiceException, NonStdBatchProcessorServiceException, APIException {
+    public void nonStdProcessor(MessageAfterStdChecker messageAfterStdChecker, boolean hl7ValidationEnabled) throws IgnorableException, NonStdProcessorServiceException, NonStdBatchProcessorServiceException, APIException {
             PHINMSProperties phinmsProperties = new PHINMSProperties();
             CaseNotificationConfig stdConfig = caseNotificationConfigRepository.findNonStdConfig();
             var cnTranport = cnTraportqOutRepository.findTopByRecordUid(messageAfterStdChecker.getCnTransportqOutUid());
 
-            var tranformedData = apiService.callHl7Endpoint("", String.valueOf(cnTranport.getCnTransportqOutUid()));
-            // TODO: Logic to tranform xml to HL7
+            var token = apiService.callToken();
+            if (token == null || token.isEmpty()) {
+                throw new IgnorableException("Token is Invalid");
+            }
+            var tranformedData = apiService.callHl7Endpoint(token, String.valueOf(cnTranport.getCnTransportqOutUid()), hl7ValidationEnabled);
             String payload = tranformedData;
             if (payload.isEmpty()) {
                 throw new IgnorableException("Payload is empty");

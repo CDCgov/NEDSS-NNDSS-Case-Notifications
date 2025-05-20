@@ -3,6 +3,7 @@ package gov.cdc.casenotificationservice.kafka.consumer;
 
 import com.google.gson.Gson;
 import gov.cdc.casenotificationservice.model.MessageAfterStdChecker;
+import gov.cdc.casenotificationservice.service.common.interfaces.IConfigurationService;
 import gov.cdc.casenotificationservice.service.std.interfaces.IXmlService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,7 +18,8 @@ class StdEventConsumerTest {
 
     @Mock
     private IXmlService xmlService;
-
+    @Mock
+    private IConfigurationService configurationService;
     @InjectMocks
     private StdEventConsumer consumer;
 
@@ -33,6 +35,9 @@ class StdEventConsumerTest {
         checker.setCnTransportqOutUid(100L);
         checker.setMessagePayload("org.apache.kafka.connect.data");
         String json = new Gson().toJson(checker);
+
+        when(configurationService.checkConfigurationAvailable()).thenReturn(true);
+        when(configurationService.checkConfigurationAvailable()).thenReturn(true);
 
         // Act
         consumer.handleMessage(json);

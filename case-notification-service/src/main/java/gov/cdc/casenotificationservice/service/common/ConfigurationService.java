@@ -18,6 +18,11 @@ public class ConfigurationService implements IConfigurationService {
         return caseNotificationConfigRepository.isConfigApplied();
     }
 
+    public boolean checkHl7ValidationApplied() {
+        return caseNotificationConfigRepository.isHl7ValidationApplied();
+    }
+
+
     @Transactional(transactionManager = "msgTransactionManager")
     public void updateConfiguration(Integer id, boolean configApplied) {
         try {

@@ -87,3 +87,11 @@ databaseChangeLog:
         - sqlFile:
             path: db/msgoute/tables/007-after-dlt-case-notification.sql
             splitStatements: false
+  - changeSet:
+      id: 11
+      author: liquibase
+      runOnChange: true
+      changes:
+        - sqlFile:
+            path: db/msgoute/tables/008-alter-notification-config-add-hl7-validation.sql
+            splitStatements: false

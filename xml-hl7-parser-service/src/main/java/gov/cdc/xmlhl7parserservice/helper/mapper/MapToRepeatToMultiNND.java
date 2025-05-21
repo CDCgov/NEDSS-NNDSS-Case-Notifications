@@ -6,11 +6,20 @@ import ca.uhn.hl7v2.model.v25.datatype.CE;
 import ca.uhn.hl7v2.model.v25.datatype.ST;
 import ca.uhn.hl7v2.model.v25.group.ORU_R01_ORDER_OBSERVATION;
 import ca.uhn.hl7v2.model.v25.segment.OBX;
+import gov.cdc.xmlhl7parserservice.helper.MessageState;
 import gov.cdc.xmlhl7parserservice.model.DiscreteMulti;
 import gov.cdc.xmlhl7parserservice.model.Obx.ObxRepeatingElement;
 import gov.cdc.xmlhl7parserservice.model.generated.jaxb.MessageElement;
+import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
+@Component
 public class MapToRepeatToMultiNND {
+    List<DiscreteMulti> repeatMultiArray = new ArrayList<>();
+    MessageState messageState = new MessageState();
+
     public void mapToRepeatToMultiNND(MessageElement messageElement, int obx2Inc, ORU_R01_ORDER_OBSERVATION orderObservation) throws DataTypeException {
         ObxRepeatingElement obxRepeatingElement = null;
         String indPartMain = "";
@@ -105,7 +114,7 @@ public class MapToRepeatToMultiNND {
             obxRepeatingElement = new ObxRepeatingElement();
             obxRepeatingElement.setElementUid(questPart1);
             obxRepeatingElement.setObxInc(1);
-            obxRepeatingElementArrayList.add(obxRepeatingElement);
+            messageState.getObxRepeatingElementArrayList().add(obxRepeatingElement);
         }
 
         var localComplex = messageElement.getDataElement();
@@ -174,7 +183,7 @@ public class MapToRepeatToMultiNND {
             obxRepeatingElement = new ObxRepeatingElement();
             obxRepeatingElement.setElementUid("mapToRepeatToMultiNND");
             obxRepeatingElement.setObxInc(1);
-            obxRepeatingElementArrayList.add(obxRepeatingElement);
+            messageState.getObxRepeatingElementArrayList().add(obxRepeatingElement);
         }
 
 

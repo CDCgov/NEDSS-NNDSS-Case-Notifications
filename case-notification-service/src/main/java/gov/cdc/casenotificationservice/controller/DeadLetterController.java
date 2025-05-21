@@ -79,7 +79,8 @@ public class DeadLetterController {
             @RequestParam("to") String to,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size
-    ) {
+    )
+    {
         try {
             Timestamp start = Timestamp.valueOf(from);
             Timestamp end = Timestamp.valueOf(to);
@@ -124,7 +125,8 @@ public class DeadLetterController {
     public ResponseEntity<Void> reprocessCaseNotification(
             @RequestBody String payload,
             @PathVariable("uuid") String uuid
-    ) {
+    )
+    {
         try {
             dltService.reprocessingCaseNotification(payload, uuid);
             return ResponseEntity.ok().build();
@@ -168,7 +170,8 @@ public class DeadLetterController {
     @GetMapping("getDlts/{uuid}")
     public ResponseEntity<ApiDltResponseModel<MessageAfterStdChecker>> getDltByUuid(
             @PathVariable("uuid") String uuid
-    ) {
+    )
+    {
         try {
             ApiDltResponseModel<MessageAfterStdChecker> response = dltService.getDltByUid(uuid);
             if (response == null) {

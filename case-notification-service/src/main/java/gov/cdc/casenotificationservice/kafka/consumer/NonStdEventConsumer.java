@@ -6,6 +6,7 @@ import gov.cdc.casenotificationservice.model.MessageAfterStdChecker;
 import gov.cdc.casenotificationservice.repository.odse.model.CNTransportqOut;
 import gov.cdc.casenotificationservice.service.common.interfaces.IConfigurationService;
 import gov.cdc.casenotificationservice.service.common.interfaces.IDltService;
+import gov.cdc.casenotificationservice.service.common.interfaces.IStatusService;
 import gov.cdc.casenotificationservice.service.nonstd.NonStdService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +30,9 @@ public class NonStdEventConsumer {
 
     @Value("${spring.kafka.topic.non-std-topic}")
     public String topic;
-    public NonStdEventConsumer(NonStdService nonStdService, IDltService dltService, IConfigurationService configurationService) {
+    public NonStdEventConsumer(NonStdService nonStdService,
+                               IDltService dltService,
+                               IConfigurationService configurationService) {
         this.nonStdService = nonStdService;
         this.dltService = dltService;
         this.configurationService = configurationService;
@@ -73,7 +76,6 @@ public class NonStdEventConsumer {
                 logger.info("NON STD: completed");
             }
         }
-
     }
 
     @DltHandler()

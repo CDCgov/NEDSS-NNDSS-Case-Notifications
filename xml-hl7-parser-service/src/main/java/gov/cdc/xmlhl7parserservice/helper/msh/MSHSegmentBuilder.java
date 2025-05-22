@@ -2,7 +2,6 @@ package gov.cdc.xmlhl7parserservice.helper.msh;
 
 import ca.uhn.hl7v2.model.DataTypeException;
 import ca.uhn.hl7v2.model.v25.segment.MSH;
-import gov.cdc.xmlhl7parserservice.constants.Constants;
 import gov.cdc.xmlhl7parserservice.helper.MessageState;
 import gov.cdc.xmlhl7parserservice.model.generated.jaxb.MessageElement;
 import org.springframework.stereotype.Component;
@@ -18,6 +17,8 @@ public class MSHSegmentBuilder {
     public MSHSegmentBuilder(MessageState messageState) {
         this.messageState = messageState;
     }
+    public static final String GENERIC_MMG_VERSION = "Generic_MMG_V2.0";
+
 
     public void processMSHFields(MessageElement messageElement, MSH msh) throws DataTypeException {
         String mshField = messageElement.getHl7SegmentField().trim();
@@ -118,7 +119,7 @@ public class MSHSegmentBuilder {
                 case "MSH-21.0" -> {
                     messageState.setMessageType(messageElement.getDataElement().getStDataType().getStringData().trim());
                     messageState.setEntityIdentifierGroup2(messageElement.getDataElement().getStDataType().getStringData().trim());
-                    if (messageState.getEntityIdentifierGroup2().equals(Constants.GENERIC_MMG_VERSION)) {
+                    if (messageState.getEntityIdentifierGroup2().equals(GENERIC_MMG_VERSION)) {
                         messageState.setGenericMMGv20(true);
                     }
                 }

@@ -73,17 +73,20 @@ public class XmlService implements IXmlService {
             netssTransportQOut.setMmwrYear(Short.valueOf(netssPersistModel.getVMessageYr()));
             netssTransportQOut.setMmwrWeek(Short.valueOf(netssPersistModel.getVMessageWeek()));
             netssTransportQOut.setNetssCaseId(netssPersistModel.getVCaseReptId());
-            netssTransportQOut.setPhcLocalId(netssTransportQOut.getPhcLocalId());
-            netssTransportQOut.setNotificationLocalId(netssTransportQOut.getNotificationLocalId());
+            netssTransportQOut.setPhcLocalId(cnTransportqOut.getPublicHealthCaseLocalId());
+            netssTransportQOut.setNotificationLocalId(cnTransportqOut.getNotificationLocalId());
             netssTransportQOut.setPayload(netssSummary);
             netssTransportQOut.setRecordStatusCd(netssPersistModel.getRecordStatusCd());
             netssTransportQOut.setAddTime(getCurrentTimeStamp(tz));
+            netssTransportQOut.setRecordTypeCd("Individual Case");
             try {
                 netssTransportQOutRepository.save(netssTransportQOut);
             } catch (Exception e) {
+                e.printStackTrace();
                 throw new NonRetryableException(e.getMessage(), e);
             }
         } catch (Exception e) {
+            e.printStackTrace();
             cnTraportqOutRepository.updateStatus(cnTransportqOut.getCnTransportqOutUid(), "STD_ERROR");
             if (e instanceof NonRetryableException)
             {

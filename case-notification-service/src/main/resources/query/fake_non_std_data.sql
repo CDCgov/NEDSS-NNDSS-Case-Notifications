@@ -27,7 +27,7 @@ SELECT
     notification_local_id,
     public_health_case_local_id,
     report_status_cd,
-    record_status_cd,
+    'UNPROCESSED',
     record_status_time,
     version_ctrl_nbr
 FROM CN_transportq_out

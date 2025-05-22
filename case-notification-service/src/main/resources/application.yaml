@@ -93,3 +93,23 @@ spring:
       max-retry: 2
       suffix: -retry
 
+logging:
+  level:
+    root: WARN
+    # Retain INFO logs for your own class
+    gov.cdc.casenotificationservice: INFO
+    # Kafka internals
+    org.apache.kafka: WARN
+    # JPA / Hibernate
+    org.hibernate: WARN
+    org.springframework.orm.jpa: WARN
+    org.springframework.transaction: WARN
+    # HikariCP
+    com.zaxxer.hikari: WARN
+    # Spring Data JPA repositories
+    org.springframework.data.jpa.repository: WARN
+    # JDBC (optional)
+#    org.springframework.jdbc.core: WARN
+#    org.hibernate.SQL: DEBUG
+#    org.hibernate.type.descriptor.sql: TRACE
+#    org.hibernate.type.descriptor.sql.BasicBinder: TRACE

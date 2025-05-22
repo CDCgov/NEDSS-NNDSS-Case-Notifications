@@ -1,0 +1,653 @@
+{
+	"info": {
+		"_postman_id": "cf89cd66-aab4-4cea-835c-2b10f73ef993",
+		"name": "case-notification-DTS1",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "14185531"
+	},
+	"item": [
+		{
+			"name": "Token",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "msgType",
+						"value": "HL7"
+					},
+					{
+						"key": "validationActive",
+						"value": "true",
+						"disabled": true
+					},
+					{
+						"key": "Content-Type",
+						"value": "text/plain"
+					},
+					{
+						"key": "Authorization",
+						"value": "Basic ZGl0ZWFtYWRtaW46dGVtcDEyMw==",
+						"disabled": true
+					},
+					{
+						"key": "clientid",
+						"value": "di-keycloak-client",
+						"type": "text"
+					},
+					{
+						"key": "clientsecret",
+						"value": "tw3lNJw1XrDvYTXB9LaprrnrkM1VkYFB",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://dataingestion.dts1.nbspreview.com/hl7-parser/api/auth/token",
+					"protocol": "https",
+					"host": [
+						"dataingestion",
+						"dts1",
+						"nbspreview",
+						"com"
+					],
+					"path": [
+						"hl7-parser",
+						"api",
+						"auth",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Batch - Release QUEUE",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJYLW04bC1wcFN1OFlRbmlpdnhFRTVGdnNPX3lEYmpiX0ZOM1NWUmxqcWVRIn0.eyJleHAiOjE3NDUzMzkzNDQsImlhdCI6MTc0NTMzNzU0NCwianRpIjoiYzliYmJhYzYtNjU0Zi00N2EyLTlmZjctMDk3OTUzM2Y0MjgwIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MTAwL3JlYWxtcy9OQlMiLCJhdWQiOiJhY2NvdW50Iiwic3ViIjoiMjYzNDQ5M2MtZjliMC00YWExLWJlYTMtNWYyYmZlOTQ5MGZkIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiZGkta2V5Y2xvYWstY2xpZW50IiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6WyIvKiJdLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsib2ZmbGluZV9hY2Nlc3MiLCJkZWZhdWx0LXJvbGVzLW5icyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJlbWFpbCBwcm9maWxlIiwiY2xpZW50SG9zdCI6IjE3Mi4xOC4wLjEiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsInByZWZlcnJlZF91c2VybmFtZSI6InNlcnZpY2UtYWNjb3VudC1kaS1rZXljbG9hay1jbGllbnQiLCJjbGllbnRBZGRyZXNzIjoiMTcyLjE4LjAuMSIsImNsaWVudF9pZCI6ImRpLWtleWNsb2FrLWNsaWVudCJ9.n1A82XKwIQtIrmORzqMUmhDrk9KTnZvmK9qhPuhuejSeBcppbyEiCG9FrhSNoLmaA07Dqh3gXoGPZazgFGrUqsWZPI4Pn6gPKfftPu4arYXfVWsyrWLMBGW3Thu_Mb8ZwHEHl9_w5MFI61l0KdVoAZKRS7QbgvkixHrdraMH2zEmPgEe8ne-rgFWRzmanjf5_ZmP5mJhYoM4-E9pKRF6sbWCyr_pQKUd-sRl7dxBEAIbxKWjjwfIM18Qa3wvU7HLseQYuCz4DMT5bhzc-OhHu7o10Rx6nBPE9hUShbmxmRu1WZs2L_N9NAlrAYEPgLDzcsFhSZmcSRoIe-Px3R0wZA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "msgType",
+						"value": "HL7"
+					},
+					{
+						"key": "validationActive",
+						"value": "true",
+						"disabled": true
+					},
+					{
+						"key": "Content-Type",
+						"value": "text/plain"
+					},
+					{
+						"key": "Authorization",
+						"value": "Basic ZGl0ZWFtYWRtaW46dGVtcDEyMw==",
+						"disabled": true
+					},
+					{
+						"key": "clientid",
+						"value": "di-keycloak-client",
+						"type": "text"
+					},
+					{
+						"key": "clientsecret",
+						"value": "OhBq1ar96aep8cnirHwkCNfgsO9yybZI",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:8092/case-notification/api/non-std/release-queue",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8092",
+					"path": [
+						"case-notification",
+						"api",
+						"non-std",
+						"release-queue"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Config - Config Check",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJSdHNXT1FxbW9VSThiSjNQWjNtbnZjSzJuZEJra2xaSHJaZE81T0E2UGZvIn0.eyJleHAiOjE3NDc4NzQ2NTcsImlhdCI6MTc0Nzg3Mjg1NywianRpIjoiNDg2OWE4YWUtOWFiOC00YmIzLWE1ZDctYTM4ZGIzZGJlMmZmIiwiaXNzIjoiaHR0cDovL2tleWNsb2FrLmRlZmF1bHQuc3ZjLmNsdXN0ZXIubG9jYWwvYXV0aC9yZWFsbXMvTkJTIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6ImJlMWFjODA4LTIxOTMtNGY2ZC04ZTUxLWM1MTE3YWFjYmU5MyIsInR5cCI6IkJlYXJlciIsImF6cCI6ImRpLWtleWNsb2FrLWNsaWVudCIsImFjciI6IjEiLCJhbGxvd2VkLW9yaWdpbnMiOlsiLyoiXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwiZGVmYXVsdC1yb2xlcy1uYnMiLCJ1bWFfYXV0aG9yaXphdGlvbiJdfSwicmVzb3VyY2VfYWNjZXNzIjp7ImFjY291bnQiOnsicm9sZXMiOlsibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdfX0sInNjb3BlIjoicHJvZmlsZSBlbWFpbCIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwiY2xpZW50SG9zdCI6IjEwLjUyLjMuMTE1IiwicHJlZmVycmVkX3VzZXJuYW1lIjoic2VydmljZS1hY2NvdW50LWRpLWtleWNsb2FrLWNsaWVudCIsImNsaWVudEFkZHJlc3MiOiIxMC41Mi4zLjExNSIsImNsaWVudF9pZCI6ImRpLWtleWNsb2FrLWNsaWVudCJ9.VzJVmoPuvv1E_ixS3l8lOds290hTqD74l0PJledCeOjPTUAmveI8Y6dmF2EuufnFU9ZNEHGnPFupARWYxRKAfNvOGWaG2xV66m_7TDsqKzP6zVKxNvj7kafqZKRyJ48P12mrh6OaOOCNmeORygTIquuYtGiDbxv3FGjCdNYFYxp4ob1AKstc1-eauucpjMGK1pFlfLbuc5G-GoRinAaucUaFfhq3DjPMbw1fimYhKJjc63D9DvDq4BNGKiQzWEdOVmqCA4-crHNHuUMJ42BZKQhVra8qNaTzr3bX3-ozYcK0pdoFZFTDhldMm3Gi8mJDhDbYEvhBZu3gabJioT5Ttw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "msgType",
+						"value": "HL7"
+					},
+					{
+						"key": "validationActive",
+						"value": "true",
+						"disabled": true
+					},
+					{
+						"key": "Content-Type",
+						"value": "text/plain"
+					},
+					{
+						"key": "Authorization",
+						"value": "Basic ZGl0ZWFtYWRtaW46dGVtcDEyMw==",
+						"disabled": true
+					},
+					{
+						"key": "clientid",
+						"value": "di-keycloak-client",
+						"type": "text"
+					},
+					{
+						"key": "clientsecret",
+						"value": "tw3lNJw1XrDvYTXB9LaprrnrkM1VkYFB",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://dataingestion.dts1.nbspreview.com/case-notification/config/check",
+					"protocol": "https",
+					"host": [
+						"dataingestion",
+						"dts1",
+						"nbspreview",
+						"com"
+					],
+					"path": [
+						"case-notification",
+						"config",
+						"check"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Status - message status",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJSdHNXT1FxbW9VSThiSjNQWjNtbnZjSzJuZEJra2xaSHJaZE81T0E2UGZvIn0.eyJleHAiOjE3NDc4NzQ2NTcsImlhdCI6MTc0Nzg3Mjg1NywianRpIjoiNDg2OWE4YWUtOWFiOC00YmIzLWE1ZDctYTM4ZGIzZGJlMmZmIiwiaXNzIjoiaHR0cDovL2tleWNsb2FrLmRlZmF1bHQuc3ZjLmNsdXN0ZXIubG9jYWwvYXV0aC9yZWFsbXMvTkJTIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6ImJlMWFjODA4LTIxOTMtNGY2ZC04ZTUxLWM1MTE3YWFjYmU5MyIsInR5cCI6IkJlYXJlciIsImF6cCI6ImRpLWtleWNsb2FrLWNsaWVudCIsImFjciI6IjEiLCJhbGxvd2VkLW9yaWdpbnMiOlsiLyoiXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwiZGVmYXVsdC1yb2xlcy1uYnMiLCJ1bWFfYXV0aG9yaXphdGlvbiJdfSwicmVzb3VyY2VfYWNjZXNzIjp7ImFjY291bnQiOnsicm9sZXMiOlsibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdfX0sInNjb3BlIjoicHJvZmlsZSBlbWFpbCIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwiY2xpZW50SG9zdCI6IjEwLjUyLjMuMTE1IiwicHJlZmVycmVkX3VzZXJuYW1lIjoic2VydmljZS1hY2NvdW50LWRpLWtleWNsb2FrLWNsaWVudCIsImNsaWVudEFkZHJlc3MiOiIxMC41Mi4zLjExNSIsImNsaWVudF9pZCI6ImRpLWtleWNsb2FrLWNsaWVudCJ9.VzJVmoPuvv1E_ixS3l8lOds290hTqD74l0PJledCeOjPTUAmveI8Y6dmF2EuufnFU9ZNEHGnPFupARWYxRKAfNvOGWaG2xV66m_7TDsqKzP6zVKxNvj7kafqZKRyJ48P12mrh6OaOOCNmeORygTIquuYtGiDbxv3FGjCdNYFYxp4ob1AKstc1-eauucpjMGK1pFlfLbuc5G-GoRinAaucUaFfhq3DjPMbw1fimYhKJjc63D9DvDq4BNGKiQzWEdOVmqCA4-crHNHuUMJ42BZKQhVra8qNaTzr3bX3-ozYcK0pdoFZFTDhldMm3Gi8mJDhDbYEvhBZu3gabJioT5Ttw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "msgType",
+						"value": "HL7"
+					},
+					{
+						"key": "validationActive",
+						"value": "true",
+						"disabled": true
+					},
+					{
+						"key": "Content-Type",
+						"value": "text/plain"
+					},
+					{
+						"key": "Authorization",
+						"value": "Basic ZGl0ZWFtYWRtaW46dGVtcDEyMw==",
+						"disabled": true
+					},
+					{
+						"key": "clientid",
+						"value": "di-keycloak-client",
+						"type": "text"
+					},
+					{
+						"key": "clientsecret",
+						"value": "tw3lNJw1XrDvYTXB9LaprrnrkM1VkYFB",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://dataingestion.dts1.nbspreview.com/case-notification/message-status?cnTransportUid=23543",
+					"protocol": "https",
+					"host": [
+						"dataingestion",
+						"dts1",
+						"nbspreview",
+						"com"
+					],
+					"path": [
+						"case-notification",
+						"message-status"
+					],
+					"query": [
+						{
+							"key": "cnTransportUid",
+							"value": "23543"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Config - Config Update",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJYLW04bC1wcFN1OFlRbmlpdnhFRTVGdnNPX3lEYmpiX0ZOM1NWUmxqcWVRIn0.eyJleHAiOjE3NDc4NTU2MDYsImlhdCI6MTc0Nzg1MzgwNiwianRpIjoiOGJmODhiNTgtNTkxMi00MjM0LWEyMDgtMjY0ZTZjYzc3ZmI0IiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MTAwL3JlYWxtcy9OQlMiLCJhdWQiOiJhY2NvdW50Iiwic3ViIjoiMjYzNDQ5M2MtZjliMC00YWExLWJlYTMtNWYyYmZlOTQ5MGZkIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiZGkta2V5Y2xvYWstY2xpZW50IiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6WyIvKiJdLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsib2ZmbGluZV9hY2Nlc3MiLCJkZWZhdWx0LXJvbGVzLW5icyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJlbWFpbCBwcm9maWxlIiwiY2xpZW50SG9zdCI6IjE3Mi4xOC4wLjEiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsInByZWZlcnJlZF91c2VybmFtZSI6InNlcnZpY2UtYWNjb3VudC1kaS1rZXljbG9hay1jbGllbnQiLCJjbGllbnRBZGRyZXNzIjoiMTcyLjE4LjAuMSIsImNsaWVudF9pZCI6ImRpLWtleWNsb2FrLWNsaWVudCJ9.IJDDwn4PVbF5UOG613it0YicztSgW0A0ftd7WnTNtfIvyw4QGEOjRMYB4vRNF8rHy4i_oXitE0Si0sBxZGEimun8EsT2bW3wJaxqanDpok4jM2MJ6c0Adi176oRGFO6L1auNUxSJU8fEq5KVpZaZ7C2NXpwqwLLjclxUm4X2kTHGohxrkZrkK9e7OYXz_PzJJxHFsQ49FOgaoLuAP50tv2LFcNQ3O-kgIWemhFgFLGAaIS92nBlf2vlIoYV3DCulkhuJBiZGaIMScuRpU97o3zyUdjG7ui6FtzDUGeyA6SN5PqUA3au73Aldssv-yAK1nPp1RyI8dmi_aGciH_sFmg",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "msgType",
+						"value": "HL7"
+					},
+					{
+						"key": "validationActive",
+						"value": "true",
+						"disabled": true
+					},
+					{
+						"key": "Content-Type",
+						"value": "text/plain"
+					},
+					{
+						"key": "Authorization",
+						"value": "Basic ZGl0ZWFtYWRtaW46dGVtcDEyMw==",
+						"disabled": true
+					},
+					{
+						"key": "clientid",
+						"value": "di-keycloak-client",
+						"type": "text"
+					},
+					{
+						"key": "clientsecret",
+						"value": "tw3lNJw1XrDvYTXB9LaprrnrkM1VkYFB",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://dataingestion.dts1.nbspreview.com/case-notification/config/update?id=4&enabled=true",
+					"protocol": "https",
+					"host": [
+						"dataingestion",
+						"dts1",
+						"nbspreview",
+						"com"
+					],
+					"path": [
+						"case-notification",
+						"config",
+						"update"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "4"
+						},
+						{
+							"key": "enabled",
+							"value": "true"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DLT - getDlts",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJSdHNXT1FxbW9VSThiSjNQWjNtbnZjSzJuZEJra2xaSHJaZE81T0E2UGZvIn0.eyJleHAiOjE3NDc4NzQ2NTcsImlhdCI6MTc0Nzg3Mjg1NywianRpIjoiNDg2OWE4YWUtOWFiOC00YmIzLWE1ZDctYTM4ZGIzZGJlMmZmIiwiaXNzIjoiaHR0cDovL2tleWNsb2FrLmRlZmF1bHQuc3ZjLmNsdXN0ZXIubG9jYWwvYXV0aC9yZWFsbXMvTkJTIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6ImJlMWFjODA4LTIxOTMtNGY2ZC04ZTUxLWM1MTE3YWFjYmU5MyIsInR5cCI6IkJlYXJlciIsImF6cCI6ImRpLWtleWNsb2FrLWNsaWVudCIsImFjciI6IjEiLCJhbGxvd2VkLW9yaWdpbnMiOlsiLyoiXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwiZGVmYXVsdC1yb2xlcy1uYnMiLCJ1bWFfYXV0aG9yaXphdGlvbiJdfSwicmVzb3VyY2VfYWNjZXNzIjp7ImFjY291bnQiOnsicm9sZXMiOlsibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdfX0sInNjb3BlIjoicHJvZmlsZSBlbWFpbCIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwiY2xpZW50SG9zdCI6IjEwLjUyLjMuMTE1IiwicHJlZmVycmVkX3VzZXJuYW1lIjoic2VydmljZS1hY2NvdW50LWRpLWtleWNsb2FrLWNsaWVudCIsImNsaWVudEFkZHJlc3MiOiIxMC41Mi4zLjExNSIsImNsaWVudF9pZCI6ImRpLWtleWNsb2FrLWNsaWVudCJ9.VzJVmoPuvv1E_ixS3l8lOds290hTqD74l0PJledCeOjPTUAmveI8Y6dmF2EuufnFU9ZNEHGnPFupARWYxRKAfNvOGWaG2xV66m_7TDsqKzP6zVKxNvj7kafqZKRyJ48P12mrh6OaOOCNmeORygTIquuYtGiDbxv3FGjCdNYFYxp4ob1AKstc1-eauucpjMGK1pFlfLbuc5G-GoRinAaucUaFfhq3DjPMbw1fimYhKJjc63D9DvDq4BNGKiQzWEdOVmqCA4-crHNHuUMJ42BZKQhVra8qNaTzr3bX3-ozYcK0pdoFZFTDhldMm3Gi8mJDhDbYEvhBZu3gabJioT5Ttw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "msgType",
+						"value": "HL7"
+					},
+					{
+						"key": "validationActive",
+						"value": "true",
+						"disabled": true
+					},
+					{
+						"key": "Content-Type",
+						"value": "text/plain"
+					},
+					{
+						"key": "Authorization",
+						"value": "Basic ZGl0ZWFtYWRtaW46dGVtcDEyMw==",
+						"disabled": true
+					},
+					{
+						"key": "clientid",
+						"value": "di-keycloak-client",
+						"type": "text"
+					},
+					{
+						"key": "clientsecret",
+						"value": "tw3lNJw1XrDvYTXB9LaprrnrkM1VkYFB",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://dataingestion.dts1.nbspreview.com/case-notification/getDlts?from=2025-01-01 00:00:00&to=2025-06-01 00:00:00&page=1&size=50",
+					"protocol": "https",
+					"host": [
+						"dataingestion",
+						"dts1",
+						"nbspreview",
+						"com"
+					],
+					"path": [
+						"case-notification",
+						"getDlts"
+					],
+					"query": [
+						{
+							"key": "from",
+							"value": "2025-01-01 00:00:00"
+						},
+						{
+							"key": "to",
+							"value": "2025-06-01 00:00:00"
+						},
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "size",
+							"value": "50"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DLT - get Dlt by Id",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJSdHNXT1FxbW9VSThiSjNQWjNtbnZjSzJuZEJra2xaSHJaZE81T0E2UGZvIn0.eyJleHAiOjE3NDc4NzQ2NTcsImlhdCI6MTc0Nzg3Mjg1NywianRpIjoiNDg2OWE4YWUtOWFiOC00YmIzLWE1ZDctYTM4ZGIzZGJlMmZmIiwiaXNzIjoiaHR0cDovL2tleWNsb2FrLmRlZmF1bHQuc3ZjLmNsdXN0ZXIubG9jYWwvYXV0aC9yZWFsbXMvTkJTIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6ImJlMWFjODA4LTIxOTMtNGY2ZC04ZTUxLWM1MTE3YWFjYmU5MyIsInR5cCI6IkJlYXJlciIsImF6cCI6ImRpLWtleWNsb2FrLWNsaWVudCIsImFjciI6IjEiLCJhbGxvd2VkLW9yaWdpbnMiOlsiLyoiXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwiZGVmYXVsdC1yb2xlcy1uYnMiLCJ1bWFfYXV0aG9yaXphdGlvbiJdfSwicmVzb3VyY2VfYWNjZXNzIjp7ImFjY291bnQiOnsicm9sZXMiOlsibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdfX0sInNjb3BlIjoicHJvZmlsZSBlbWFpbCIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwiY2xpZW50SG9zdCI6IjEwLjUyLjMuMTE1IiwicHJlZmVycmVkX3VzZXJuYW1lIjoic2VydmljZS1hY2NvdW50LWRpLWtleWNsb2FrLWNsaWVudCIsImNsaWVudEFkZHJlc3MiOiIxMC41Mi4zLjExNSIsImNsaWVudF9pZCI6ImRpLWtleWNsb2FrLWNsaWVudCJ9.VzJVmoPuvv1E_ixS3l8lOds290hTqD74l0PJledCeOjPTUAmveI8Y6dmF2EuufnFU9ZNEHGnPFupARWYxRKAfNvOGWaG2xV66m_7TDsqKzP6zVKxNvj7kafqZKRyJ48P12mrh6OaOOCNmeORygTIquuYtGiDbxv3FGjCdNYFYxp4ob1AKstc1-eauucpjMGK1pFlfLbuc5G-GoRinAaucUaFfhq3DjPMbw1fimYhKJjc63D9DvDq4BNGKiQzWEdOVmqCA4-crHNHuUMJ42BZKQhVra8qNaTzr3bX3-ozYcK0pdoFZFTDhldMm3Gi8mJDhDbYEvhBZu3gabJioT5Ttw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "msgType",
+						"value": "HL7"
+					},
+					{
+						"key": "validationActive",
+						"value": "true",
+						"disabled": true
+					},
+					{
+						"key": "Content-Type",
+						"value": "text/plain"
+					},
+					{
+						"key": "Authorization",
+						"value": "Basic ZGl0ZWFtYWRtaW46dGVtcDEyMw==",
+						"disabled": true
+					},
+					{
+						"key": "clientid",
+						"value": "di-keycloak-client",
+						"type": "text"
+					},
+					{
+						"key": "clientsecret",
+						"value": "tw3lNJw1XrDvYTXB9LaprrnrkM1VkYFB",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://dataingestion.dts1.nbspreview.com/case-notification/getDlts/ead97f98-7b57-469e-ba97-2c1df0120b3b",
+					"protocol": "https",
+					"host": [
+						"dataingestion",
+						"dts1",
+						"nbspreview",
+						"com"
+					],
+					"path": [
+						"case-notification",
+						"getDlts",
+						"ead97f98-7b57-469e-ba97-2c1df0120b3b"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DLT - DLT Reprocess",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJSdHNXT1FxbW9VSThiSjNQWjNtbnZjSzJuZEJra2xaSHJaZE81T0E2UGZvIn0.eyJleHAiOjE3NDc4NzQ2NTcsImlhdCI6MTc0Nzg3Mjg1NywianRpIjoiNDg2OWE4YWUtOWFiOC00YmIzLWE1ZDctYTM4ZGIzZGJlMmZmIiwiaXNzIjoiaHR0cDovL2tleWNsb2FrLmRlZmF1bHQuc3ZjLmNsdXN0ZXIubG9jYWwvYXV0aC9yZWFsbXMvTkJTIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6ImJlMWFjODA4LTIxOTMtNGY2ZC04ZTUxLWM1MTE3YWFjYmU5MyIsInR5cCI6IkJlYXJlciIsImF6cCI6ImRpLWtleWNsb2FrLWNsaWVudCIsImFjciI6IjEiLCJhbGxvd2VkLW9yaWdpbnMiOlsiLyoiXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwiZGVmYXVsdC1yb2xlcy1uYnMiLCJ1bWFfYXV0aG9yaXphdGlvbiJdfSwicmVzb3VyY2VfYWNjZXNzIjp7ImFjY291bnQiOnsicm9sZXMiOlsibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdfX0sInNjb3BlIjoicHJvZmlsZSBlbWFpbCIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwiY2xpZW50SG9zdCI6IjEwLjUyLjMuMTE1IiwicHJlZmVycmVkX3VzZXJuYW1lIjoic2VydmljZS1hY2NvdW50LWRpLWtleWNsb2FrLWNsaWVudCIsImNsaWVudEFkZHJlc3MiOiIxMC41Mi4zLjExNSIsImNsaWVudF9pZCI6ImRpLWtleWNsb2FrLWNsaWVudCJ9.VzJVmoPuvv1E_ixS3l8lOds290hTqD74l0PJledCeOjPTUAmveI8Y6dmF2EuufnFU9ZNEHGnPFupARWYxRKAfNvOGWaG2xV66m_7TDsqKzP6zVKxNvj7kafqZKRyJ48P12mrh6OaOOCNmeORygTIquuYtGiDbxv3FGjCdNYFYxp4ob1AKstc1-eauucpjMGK1pFlfLbuc5G-GoRinAaucUaFfhq3DjPMbw1fimYhKJjc63D9DvDq4BNGKiQzWEdOVmqCA4-crHNHuUMJ42BZKQhVra8qNaTzr3bX3-ozYcK0pdoFZFTDhldMm3Gi8mJDhDbYEvhBZu3gabJioT5Ttw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "msgType",
+						"value": "HL7"
+					},
+					{
+						"key": "validationActive",
+						"value": "true",
+						"disabled": true
+					},
+					{
+						"key": "Content-Type",
+						"value": "text/plain"
+					},
+					{
+						"key": "Authorization",
+						"value": "Basic ZGl0ZWFtYWRtaW46dGVtcDEyMw==",
+						"disabled": true
+					},
+					{
+						"key": "clientid",
+						"value": "di-keycloak-client",
+						"type": "text"
+					},
+					{
+						"key": "clientsecret",
+						"value": "tw3lNJw1XrDvYTXB9LaprrnrkM1VkYFB",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://dataingestion.dts1.nbspreview.com/case-notification/reprocess/ead97f98-7b57-469e-ba97-2c1df0120b3b",
+					"protocol": "https",
+					"host": [
+						"dataingestion",
+						"dts1",
+						"nbspreview",
+						"com"
+					],
+					"path": [
+						"case-notification",
+						"reprocess",
+						"ead97f98-7b57-469e-ba97-2c1df0120b3b"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "HL7 - HL7 Parser",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJSdHNXT1FxbW9VSThiSjNQWjNtbnZjSzJuZEJra2xaSHJaZE81T0E2UGZvIn0.eyJleHAiOjE3NDc4NzQ2NTcsImlhdCI6MTc0Nzg3Mjg1NywianRpIjoiNDg2OWE4YWUtOWFiOC00YmIzLWE1ZDctYTM4ZGIzZGJlMmZmIiwiaXNzIjoiaHR0cDovL2tleWNsb2FrLmRlZmF1bHQuc3ZjLmNsdXN0ZXIubG9jYWwvYXV0aC9yZWFsbXMvTkJTIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6ImJlMWFjODA4LTIxOTMtNGY2ZC04ZTUxLWM1MTE3YWFjYmU5MyIsInR5cCI6IkJlYXJlciIsImF6cCI6ImRpLWtleWNsb2FrLWNsaWVudCIsImFjciI6IjEiLCJhbGxvd2VkLW9yaWdpbnMiOlsiLyoiXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwiZGVmYXVsdC1yb2xlcy1uYnMiLCJ1bWFfYXV0aG9yaXphdGlvbiJdfSwicmVzb3VyY2VfYWNjZXNzIjp7ImFjY291bnQiOnsicm9sZXMiOlsibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdfX0sInNjb3BlIjoicHJvZmlsZSBlbWFpbCIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwiY2xpZW50SG9zdCI6IjEwLjUyLjMuMTE1IiwicHJlZmVycmVkX3VzZXJuYW1lIjoic2VydmljZS1hY2NvdW50LWRpLWtleWNsb2FrLWNsaWVudCIsImNsaWVudEFkZHJlc3MiOiIxMC41Mi4zLjExNSIsImNsaWVudF9pZCI6ImRpLWtleWNsb2FrLWNsaWVudCJ9.VzJVmoPuvv1E_ixS3l8lOds290hTqD74l0PJledCeOjPTUAmveI8Y6dmF2EuufnFU9ZNEHGnPFupARWYxRKAfNvOGWaG2xV66m_7TDsqKzP6zVKxNvj7kafqZKRyJ48P12mrh6OaOOCNmeORygTIquuYtGiDbxv3FGjCdNYFYxp4ob1AKstc1-eauucpjMGK1pFlfLbuc5G-GoRinAaucUaFfhq3DjPMbw1fimYhKJjc63D9DvDq4BNGKiQzWEdOVmqCA4-crHNHuUMJ42BZKQhVra8qNaTzr3bX3-ozYcK0pdoFZFTDhldMm3Gi8mJDhDbYEvhBZu3gabJioT5Ttw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "msgType",
+						"value": "HL7",
+						"disabled": true
+					},
+					{
+						"key": "validationActive",
+						"value": "true",
+						"disabled": true
+					},
+					{
+						"key": "Content-Type",
+						"value": "text/plain"
+					},
+					{
+						"key": "Authorization",
+						"value": "Basic ZGl0ZWFtYWRtaW46dGVtcDEyMw==",
+						"disabled": true
+					},
+					{
+						"key": "clientid",
+						"value": "di-keycloak-client",
+						"type": "text"
+					},
+					{
+						"key": "clientsecret",
+						"value": "tw3lNJw1XrDvYTXB9LaprrnrkM1VkYFB",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "text"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://dataingestion.dts1.nbspreview.com/hl7-parser/xml-to-hl7/23531?validationEnabled=false",
+					"protocol": "https",
+					"host": [
+						"dataingestion",
+						"dts1",
+						"nbspreview",
+						"com"
+					],
+					"path": [
+						"hl7-parser",
+						"xml-to-hl7",
+						"23531"
+					],
+					"query": [
+						{
+							"key": "validationEnabled",
+							"value": "false"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

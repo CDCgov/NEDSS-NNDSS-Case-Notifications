@@ -121,7 +121,7 @@ public class DeadLetterController {
                     content = @Content(schema = @Schema(type = "string"))
             )
     )
-    @PostMapping("/reprocess/{uuid}")
+    @PostMapping(value = "/reprocess/{uuid}", consumes = "text/plain")
     public ResponseEntity<Void> reprocessCaseNotification(
             @RequestBody String payload,
             @PathVariable("uuid") String uuid
@@ -168,12 +168,12 @@ public class DeadLetterController {
             }
     )
     @GetMapping("getDlts/{uuid}")
-    public ResponseEntity<ApiDltResponseModel<MessageAfterStdChecker>> getDltByUuid(
+    public ResponseEntity<ApiDltResponseModel<CaseNotificationDlt>> getDltByUuid(
             @PathVariable("uuid") String uuid
     )
     {
         try {
-            ApiDltResponseModel<MessageAfterStdChecker> response = dltService.getDltByUid(uuid);
+            ApiDltResponseModel<CaseNotificationDlt> response = dltService.getDltByUid(uuid);
             if (response == null) {
                 return ResponseEntity.notFound().build();
             }

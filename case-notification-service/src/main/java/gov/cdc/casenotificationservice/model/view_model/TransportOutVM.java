@@ -47,5 +47,38 @@ public class TransportOutVM {
 
     }
 
-    public TransportOutVM(TransportQOut transportQOut) {}
+    public TransportOutVM(TransportQOut transportQOut) {
+        this.recordId = transportQOut.getRecordId();
+        this.messageId = transportQOut.getMessageId();
+        this.payloadFile = transportQOut.getPayloadFile();
+        this.destinationFilename = transportQOut.getDestinationFilename();
+        this.routeInfo = transportQOut.getRouteInfo();
+        this.service = transportQOut.getService();
+        this.action = transportQOut.getAction();
+        this.arguments = transportQOut.getArguments();
+        this.messageRecipient = transportQOut.getMessageRecipient();
+        this.messageCreationTime = transportQOut.getMessageCreationTime();
+        this.encryption = transportQOut.getEncryption();
+        this.signature = transportQOut.getSignature();
+        this.publicKeyLdapAddress = transportQOut.getPublicKeyLdapAddress();
+        this.publicKeyLdapBaseDN = transportQOut.getPublicKeyLdapBaseDN();
+        this.publicKeyLdapDN = transportQOut.getPublicKeyLdapDN();
+        this.certificateURL = transportQOut.getCertificateURL();
+        this.processingStatus = transportQOut.getProcessingStatus();
+        this.transportStatus = transportQOut.getTransportStatus();
+        this.transportErrorCode = transportQOut.getTransportErrorCode();
+        this.applicationStatus = transportQOut.getApplicationStatus();
+        this.applicationErrorCode = transportQOut.getApplicationErrorCode();
+        this.applicationResponse = transportQOut.getApplicationResponse();
+        this.messageSentTime = transportQOut.getMessageSentTime();
+        this.messageReceivedTime = transportQOut.getMessageReceivedTime();
+        this.responseMessageId = transportQOut.getResponseMessageId();
+        this.responseArguments = transportQOut.getResponseArguments();
+        this.responseLocalFile = transportQOut.getResponseLocalFile();
+        this.responseFilename = transportQOut.getResponseFilename();
+        this.responseMessageOrigin = transportQOut.getResponseMessageOrigin();
+        this.responseMessageSignature = transportQOut.getResponseMessageSignature();
+        this.priority = transportQOut.getPriority();
+    }
+
 }

@@ -1,6 +1,5 @@
 package gov.cdc.xmlhl7parserservice.util;
 
-import gov.cdc.xmlhl7parserservice.constants.Constants;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -11,6 +10,8 @@ public class HL7DateFormatUtil {
     
     private final DataTypeProcessor dataTypeProcessor;
     private String messageType = "other"; // Default value
+    public static final String HL_SEVEN_SEGMENT_FIELD = "hl7SegmentField";
+
 
     public HL7DateFormatUtil(DataTypeProcessor dataTypeProcessor) {
         this.dataTypeProcessor = dataTypeProcessor;
@@ -28,7 +29,7 @@ public class HL7DateFormatUtil {
      */
     public String formatDate(String dateValue, String questionDataTypeNND, String questionIdentifierNND, String segmentField) {
         Map<String, String> fields = new HashMap<>();
-        fields.put(Constants.HL_SEVEN_SEGMENT_FIELD, dateValue);
+        fields.put(HL_SEVEN_SEGMENT_FIELD, dateValue);
         fields.put("mmgVersion", messageType);
         fields.put("inputDataType", questionDataTypeNND);
         fields.put("questionIdentifier", questionIdentifierNND);

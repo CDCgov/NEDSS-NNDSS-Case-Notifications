@@ -6,6 +6,7 @@ import gov.cdc.casenotificationservice.model.MessageAfterStdChecker;
 import gov.cdc.casenotificationservice.repository.odse.model.CNTransportqOut;
 import gov.cdc.casenotificationservice.service.common.interfaces.IConfigurationService;
 import gov.cdc.casenotificationservice.service.common.interfaces.IDltService;
+import gov.cdc.casenotificationservice.service.common.interfaces.IStatusService;
 import gov.cdc.casenotificationservice.service.nonstd.NonStdService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +30,9 @@ public class NonStdEventConsumer {
 
     @Value("${spring.kafka.topic.non-std-topic}")
     public String topic;
-    public NonStdEventConsumer(NonStdService nonStdService, IDltService dltService, IConfigurationService configurationService) {
+    public NonStdEventConsumer(NonStdService nonStdService,
+                               IDltService dltService,
+                               IConfigurationService configurationService) {
         this.nonStdService = nonStdService;
         this.dltService = dltService;
         this.configurationService = configurationService;
@@ -57,20 +60,22 @@ public class NonStdEventConsumer {
             var hl7Applied = configurationService.checkHl7ValidationApplied();
             var gson = new Gson();
             if (message.contains("cnTransportqOutUid")) {
+                logger.info("NON STD DLT: started");
                 var data = gson.fromJson(message, MessageAfterStdChecker.class);
                 nonStdService.nonStdProcessor(data, hl7Applied);
+                logger.info("NON STD DLT: completed");
             }
             else
             {
+                logger.info("NON STD started");
                 var dlt = dltService.getDlt(message);
                 MessageAfterStdChecker checker = new MessageAfterStdChecker();
                 checker.setCnTransportqOutUid(dlt.getCnTranportqOutUid());
                 checker.setReprocessApplied(true);
                 nonStdService.nonStdProcessor(checker, hl7Applied);
+                logger.info("NON STD: completed");
             }
         }
-        logger.info("Completed non std message");
-
     }
 
     @DltHandler()

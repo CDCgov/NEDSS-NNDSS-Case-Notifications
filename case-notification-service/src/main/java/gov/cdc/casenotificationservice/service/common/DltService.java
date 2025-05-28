@@ -69,17 +69,16 @@ public class DltService implements IDltService {
         return caseNotificationDltRepository.findByCreatedOnBetween(from, to, pageable);
     }
 
-    public ApiDltResponseModel<MessageAfterStdChecker> getDltByUid(String uuid) throws DltServiceException {
+    public ApiDltResponseModel<CaseNotificationDlt> getDltByUid(String uuid) throws DltServiceException {
         var dltResult = caseNotificationDltRepository.findById(UUID.fromString(uuid));
         if (dltResult.isEmpty()) {
             throw new DltServiceException("No DLT Found for Id " + uuid);
         }
-        Gson gson = new Gson();
-        var messageAfterStdChecker = gson.fromJson(dltResult.get().getOriginalPayload(), MessageAfterStdChecker.class);
-        var apiResponse = new ApiDltResponseModel<MessageAfterStdChecker>();
-        apiResponse.setPayload(messageAfterStdChecker);
-        // dont need to return ori payload here
-        dltResult.get().setOriginalPayload("");
+        CaseNotificationDlt dlt = dltResult.get();
+
+
+        var apiResponse = new ApiDltResponseModel<CaseNotificationDlt>();
+        apiResponse.setPayload(dlt);
         apiResponse.setCaseNotificationDlt(dltResult.get());
         return apiResponse;
     }

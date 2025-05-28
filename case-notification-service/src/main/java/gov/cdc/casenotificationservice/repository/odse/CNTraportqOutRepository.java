@@ -26,6 +26,7 @@ public interface CNTraportqOutRepository extends JpaRepository<CNTransportqOut, 
     @Query(value = "SELECT TOP 1 * FROM dbo.CN_transportq_out WHERE message_payload LIKE '%STD_MMG_V1.0%'   ORDER BY add_time DESC", nativeQuery = true)
     CNTransportqOut findTopStdForTesting();
 
+
     /***
      *
      * Update CN_transportq_out_TEST set record_status_cd = 'PHINMS_QUEUED', record_status_time = getdate()
@@ -51,5 +52,4 @@ public interface CNTraportqOutRepository extends JpaRepository<CNTransportqOut, 
     WHERE cn_transportq_out_uid  = :messageUid
     """, nativeQuery = true)
     int updateStatus(@Param("messageUid") Long messageUid, @Param("status") String status);
-
 }

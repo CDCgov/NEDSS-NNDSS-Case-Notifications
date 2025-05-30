@@ -1,3 +1,10 @@
+DECLARE @prefix NVARCHAR(10) = 'NOT';
+DECLARE @suffix NVARCHAR(10) = 'GA01';
+
+-- Generate a random 8-digit number as string (leading zeros preserved)
+DECLARE @randomNumber NVARCHAR(8) = RIGHT('00000000' + CAST(ABS(CHECKSUM(NEWID())) % 100000000 AS NVARCHAR), 8);
+
+DECLARE @randomId NVARCHAR(20) = @prefix + @randomNumber + @suffix;
 
 INSERT INTO CN_transportq_out (
     add_reason_cd,
@@ -24,7 +31,7 @@ SELECT
     last_chg_user_id,
     message_payload,
     notification_uid,
-    notification_local_id,
+    @randomId,
     public_health_case_local_id,
     report_status_cd,
     'UNPROCESSED',

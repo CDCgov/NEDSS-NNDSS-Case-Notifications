@@ -99,7 +99,7 @@ public class MSHSegmentBuilder {
                 }
                 case "MSH-21.1" -> {
                     messageState.setNndMessageVersion(messageElement.getDataElement().getStDataType().getStringData().trim());
-                    msh.getMessageProfileIdentifier(0).getEntityIdentifier().setValue(messageState.getNndMessageVersion());
+                    msh.getMessageProfileIdentifier(0).getEntityIdentifier().setValue(messageElement.getDataElement().getStDataType().getStringData());
                 }
                 case "MSH-21.2" -> {
                     String nameSpaceID = messageElement.getDataElement().getIsDataType().getIsCodedValue().trim();

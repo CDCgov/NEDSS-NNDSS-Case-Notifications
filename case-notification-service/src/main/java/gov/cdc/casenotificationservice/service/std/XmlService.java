@@ -42,7 +42,6 @@ public class XmlService implements IXmlService {
     }
 
     // pRecordStatus can be retrieved from DB
-    @Transactional
     public void mappingXmlStringToObject(MessageAfterStdChecker messageAfterStdChecker) throws StdProcessorServiceException, NonRetryableException {
         var cnTransportqOut = cnTraportqOutRepository.findTopByRecordUid(messageAfterStdChecker.getCnTransportqOutUid());
         String netssSummary;

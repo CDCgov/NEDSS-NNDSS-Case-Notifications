@@ -2,7 +2,6 @@ package gov.cdc.casenotificationservice.service.common.interfaces;
 
 import gov.cdc.casenotificationservice.exception.DltServiceException;
 import gov.cdc.casenotificationservice.model.ApiDltResponseModel;
-import gov.cdc.casenotificationservice.model.MessageAfterStdChecker;
 import gov.cdc.casenotificationservice.repository.msg.model.CaseNotificationDlt;
 import org.springframework.data.domain.Page;
 

@@ -12,12 +12,9 @@ import gov.cdc.casenotificationservice.repository.odse.CNTraportqOutRepository;
 import gov.cdc.casenotificationservice.service.std.interfaces.IStdMapperService;
 import gov.cdc.casenotificationservice.service.std.interfaces.IXmlService;
 import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.StringReader;
 

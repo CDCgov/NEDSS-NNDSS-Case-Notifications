@@ -10,7 +10,6 @@ import gov.cdc.casenotificationservice.repository.msg.NetssTransportQOutReposito
 import gov.cdc.casenotificationservice.repository.msg.TransportQOutRepository;
 import gov.cdc.casenotificationservice.repository.odse.CNTraportqOutRepository;
 import gov.cdc.casenotificationservice.repository.odse.model.CNTransportqOut;
-import gov.cdc.casenotificationservice.service.common.interfaces.IDltService;
 import gov.cdc.casenotificationservice.service.common.interfaces.IStatusService;
 import org.springframework.stereotype.Service;
 

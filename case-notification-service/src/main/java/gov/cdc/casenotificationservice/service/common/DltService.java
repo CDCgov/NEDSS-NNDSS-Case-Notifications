@@ -63,7 +63,6 @@ public class DltService implements IDltService {
 
         caseNotificationDltRepository.save(caseNotificationDlt);
 
-        cnTraportqOutRepository.updateStatus(data.getCnTransportqOutUid(), "CASE_NOTIFICATION_ERROR");
     }
 
     public Page<CaseNotificationDlt> getDltsBetweenWithPagination(Timestamp from, Timestamp to, int page, int size) {

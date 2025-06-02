@@ -17,6 +17,7 @@ import jakarta.xml.bind.Unmarshaller;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.StringReader;
 
@@ -41,6 +42,7 @@ public class XmlService implements IXmlService {
     }
 
     // pRecordStatus can be retrieved from DB
+    @Transactional
     public void mappingXmlStringToObject(MessageAfterStdChecker messageAfterStdChecker) throws StdProcessorServiceException, NonRetryableException {
         var cnTransportqOut = cnTraportqOutRepository.findTopByRecordUid(messageAfterStdChecker.getCnTransportqOutUid());
         String netssSummary;

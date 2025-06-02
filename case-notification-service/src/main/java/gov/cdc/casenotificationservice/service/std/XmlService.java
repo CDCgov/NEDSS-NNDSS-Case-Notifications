@@ -88,7 +88,6 @@ public class XmlService implements IXmlService {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            cnTraportqOutRepository.updateStatus(cnTransportqOut.getCnTransportqOutUid(), "STD_ERR");
             if (e instanceof NonRetryableException)
             {
                 throw new NonRetryableException(e.getMessage(), e);

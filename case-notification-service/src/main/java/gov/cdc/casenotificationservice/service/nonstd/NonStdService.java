@@ -75,7 +75,6 @@ public class NonStdService implements INonStdService {
             try {
                 updatedPhinmsProperties = phinmsService.gettingPHIMNSProperties(payload, phinmsProperties, stdConfig);
             } catch (Exception e) {
-                cnTraportqOutRepository.updateStatus(messageAfterStdChecker.getCnTransportqOutUid(), "NON_ERR");
                 throw new NonStdProcessorServiceException("Failure at PHINMS processor", e);
             }
 
@@ -91,7 +90,6 @@ public class NonStdService implements INonStdService {
                 try {
                     nonStdProcessor(updatedPhinmsProperties);
                 } catch (Exception e) {
-                    cnTraportqOutRepository.updateStatus(messageAfterStdChecker.getCnTransportqOutUid(), "NON_ERR");
                     throw new NonStdProcessorServiceException("Failure at Non Std DB Logic", e);
 
                 }

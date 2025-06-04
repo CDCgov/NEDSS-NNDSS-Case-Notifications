@@ -1,7 +1,6 @@
 package gov.cdc.casenotificationservice.repository.msg;
 
 import gov.cdc.casenotificationservice.repository.msg.model.NetssTransportQOut;
-import gov.cdc.casenotificationservice.repository.msg.model.TransportQOut;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

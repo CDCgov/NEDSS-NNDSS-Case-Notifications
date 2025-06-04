@@ -1,7 +1,6 @@
 package gov.cdc.casenotificationservice.service.nonstd;
 
 import gov.cdc.casenotificationservice.exception.*;
-import gov.cdc.casenotificationservice.kafka.consumer.StdEventConsumer;
 import gov.cdc.casenotificationservice.model.MessageAfterStdChecker;
 import gov.cdc.casenotificationservice.model.PHINMSProperties;
 import gov.cdc.casenotificationservice.repository.msg.CaseNotificationConfigRepository;
@@ -74,7 +73,6 @@ public class NonStdService implements INonStdService {
             try {
                 updatedPhinmsProperties = phinmsService.gettingPHIMNSProperties(payload, phinmsProperties, stdConfig);
             } catch (Exception e) {
-                cnTraportqOutRepository.updateStatus(messageAfterStdChecker.getCnTransportqOutUid(), "NON_STD_ERROR");
                 throw new NonStdProcessorServiceException("Failure at PHINMS processor", e);
             }
 
@@ -90,7 +88,6 @@ public class NonStdService implements INonStdService {
                 try {
                     nonStdProcessor(updatedPhinmsProperties);
                 } catch (Exception e) {
-                    cnTraportqOutRepository.updateStatus(messageAfterStdChecker.getCnTransportqOutUid(), "NON_STD_ERROR");
                     throw new NonStdProcessorServiceException("Failure at Non Std DB Logic", e);
 
                 }

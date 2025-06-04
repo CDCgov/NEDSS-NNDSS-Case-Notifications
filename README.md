@@ -1,75 +1,158 @@
-# CDCgov GitHub Organization Open Source Project Template
+# CDC Case Notification System - Technical Documentation
 
-**Template for clearance: This project serves as a template to aid projects in starting up and moving through clearance procedures. To start, create a new repository and implement the required [open practices](open_practices.md), train on and agree to adhere to the organization's [rules of behavior](rules_of_behavior.md), and [send a request through the create repo form](https://forms.office.com/Pages/ResponsePage.aspx?id=aQjnnNtg_USr6NJ2cHf8j44WSiOI6uNOvdWse4I-C2NUNk43NzMwODJTRzA4NFpCUk1RRU83RTFNVi4u) using language from this template as a Guide.**
+This document outlines how the CDC Case Notification system operates end-to-end.
 
-**General disclaimer** This repository was created for use by CDC programs to collaborate on public health related projects in support of the [CDC mission](https://www.cdc.gov/about/organization/mission.htm).  GitHub is not hosted by the CDC, but is a third party website used by CDC and its partners to share information and collaborate on software. CDC use of GitHub does not imply an endorsement of any one particular service, product, or enterprise. 
+---
 
-## Access Request, Repo Creation Request
+## Input
 
-* [CDC GitHub Open Project Request Form](https://forms.office.com/Pages/ResponsePage.aspx?id=aQjnnNtg_USr6NJ2cHf8j44WSiOI6uNOvdWse4I-C2NUNk43NzMwODJTRzA4NFpCUk1RRU83RTFNVi4u) _[Requires a CDC Office365 login, if you do not have a CDC Office365 please ask a friend who does to submit the request on your behalf. If you're looking for access to the CDCEnt private organization, please use the [GitHub Enterprise Cloud Access Request form](https://forms.office.com/Pages/ResponsePage.aspx?id=aQjnnNtg_USr6NJ2cHf8j44WSiOI6uNOvdWse4I-C2NUQjVJVDlKS1c0SlhQSUxLNVBaOEZCNUczVS4u).]_
+The pipeline begins with a **Debezium source connector** configured on the `ODSE..CNTransportQOut` table.
 
-## Related documents
+- Any new data inserted into this table is detected by the connector.
+- The connector publishes the data to a **Kafka topic**.
+- This topic is consumed by the **Data Extraction** service.
 
-* [Open Practices](open_practices.md)
-* [Rules of Behavior](rules_of_behavior.md)
-* [Thanks and Acknowledgements](thanks.md)
-* [Disclaimer](DISCLAIMER.md)
-* [Contribution Notice](CONTRIBUTING.md)
-* [Code of Conduct](code-of-conduct.md)
+The **Case Notification** process depends on predefined configurations stored in the `MSOUTE..Case_Notification_Config` table.
 
-## Overview
+- This table contains all essential settings required for the pipeline to operate correctly.
+- It includes **PHINMS properties** that are critical for downstream processing.
 
-Describe the purpose of your project. Add additional sections as necessary to help collaborators and potential collaborators understand and use your project.
-  
-## Public Domain Standard Notice
-This repository constitutes a work of the United States Government and is not
-subject to domestic copyright protection under 17 USC § 105. This repository is in
-the public domain within the United States, and copyright and related rights in
-the work worldwide are waived through the [CC0 1.0 Universal public domain dedication](https://creativecommons.org/publicdomain/zero/1.0/).
-All contributions to this repository will be released under the CC0 dedication. By
-submitting a pull request you are agreeing to comply with this waiver of
-copyright interest.
+---
 
-## License Standard Notice
-The repository utilizes code licensed under the terms of the Apache Software
-License and therefore is licensed under ASL v2 or later.
+## Output
 
-This source code in this repository is free: you can redistribute it and/or modify it under
-the terms of the Apache Software License version 2, or (at your option) any
-later version.
+- Processed data is stored in either:
+    - `MSGOUTE..TransportQOut`
+    - `MSGOUTE..NetssTransportQOut`
 
-This source code in this repository is distributed in the hope that it will be useful, but WITHOUT ANY
-WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-PARTICULAR PURPOSE. See the Apache Software License for more details.
+- Faulty data is routed to:
+    - `MSGOUTE..case_notification_dlt` (Dead Letter Table)
+    - For further investigation by analysts.
 
-You should have received a copy of the Apache Software License along with this
-program. If not, see http://www.apache.org/licenses/LICENSE-2.0.html
+---
 
-The source code forked from other open source projects will inherit its license.
+## Service Requirements
 
-## Privacy Standard Notice
-This repository contains only non-sensitive, publicly available data and
-information. All material and community participation is covered by the
-[Disclaimer](DISCLAIMER.md)
-and [Code of Conduct](code-of-conduct.md).
-For more information about CDC's privacy policy, please visit [http://www.cdc.gov/other/privacy.html](https://www.cdc.gov/other/privacy.html).
+To function correctly, **all three services** must be available:
 
-## Contributing Standard Notice
-Anyone is encouraged to contribute to the repository by [forking](https://help.github.com/articles/fork-a-repo)
-and submitting a pull request. (If you are new to GitHub, you might start with a
-[basic tutorial](https://help.github.com/articles/set-up-git).) By contributing
-to this project, you grant a world-wide, royalty-free, perpetual, irrevocable,
-non-exclusive, transferable license to all users under the terms of the
-[Apache Software License v2](http://www.apache.org/licenses/LICENSE-2.0.html) or
-later.
+- **Data Extraction**
+- **Case Notification**
+- **HL7 Parser**
 
-All comments, messages, pull requests, and other submissions received through
-CDC including this GitHub page may be subject to applicable federal law, including but not limited to the Federal Records Act, and may be archived. Learn more at [http://www.cdc.gov/other/privacy.html](http://www.cdc.gov/other/privacy.html).
+---
 
-## Records Management Standard Notice
-This repository is not a source of government records, but is a copy to increase
-collaboration and collaborative potential. All government records will be
-published through the [CDC web site](http://www.cdc.gov).
+## Data Extraction
 
-## Additional Standard Notices
-Please refer to [CDC's Template Repository](https://github.com/CDCgov/template) for more information about [contributing to this repository](https://github.com/CDCgov/template/blob/main/CONTRIBUTING.md), [public domain notices and disclaimers](https://github.com/CDCgov/template/blob/main/DISCLAIMER.md), and [code of conduct](https://github.com/CDCgov/template/blob/main/code-of-conduct.md).
+- Continuously extracts and categorizes data.
+- Sends data downstream using Debezium and Kafka.
+
+### Requirements:
+
+- Source connector must be set up **before launching** the service.
+- Source connector on `CNTransportQOut` is maintained by the **RTR Data Team**.
+- Must use the **same Kafka cluster** as RTR.
+
+---
+
+## Case Notification
+
+### Components:
+
+- Microservice and APIs
+
+### Responsibilities:
+
+- Listens for events from the Data Extraction module.
+- Processes valid event types:
+    - `MMG (NON_STD)`
+    - `STD`
+- Valid events are sent to:
+    - `TransportQOut`
+    - `NetssTransportQOut`
+- Invalid events are ignored.
+- Faulty MMG or STD events are pushed to:
+    - `Case_Notification_DLT`
+
+### Dependencies:
+
+- Requires a **constant connection to the HL7 server** to transform NND XML into HL7.
+
+### API Capabilities:
+
+- Update configurations
+- Check data status
+- Investigate issues
+- Reprocess records from DLT
+
+👉 [Explore the APIs via Swagger](https://dataingestion.dts1.nbspreview.com/case-notification/swagger-ui/index.html#/)
+
+### Database Management:
+
+- Includes **Liquibase integration** for auto-managing schema changes.
+
+---
+
+## HL7 Service
+
+- Helper service used by Case Notification.
+- Transforms **NND XML** into **HL7 2.5.1** format.
+- Validates output against HL7 standards.
+- Provides API endpoints for testing transformations.
+
+👉 [Explore HL7 API via Swagger](https://dataingestion.dts1.nbspreview.com/hl7-parser/swagger-ui/index.html#/)
+
+---
+
+## 🛠 Liquibase Info
+
+- [Liquibase DB Scripts](https://github.com/CDCgov/NEDSS-NNDSS-Case-Notifications/tree/main/case-notification-service/src/main/resources/db)
+
+---
+
+## 🌐 Project Repository
+
+- [CDC Case Notification GitHub Repo](https://github.com/CDCgov/NEDSS-NNDSS-Case-Notifications/tree/main)
+
+---
+
+## ⚙️ Required Environment Variables
+
+### Data Extraction
+
+| Variable              | Description              |
+|-----------------------|--------------------------|
+| `NBS_DBSERVER`        | Database URL             |
+| `NBS_DBUSER`          | Database username        |
+| `NBS_DBPASSWORD`      | Database password        |
+| `KAFKA_BOOTSTRAP_SERVER` | Kafka URL              |
+
+---
+
+### Case Notification
+
+| Variable              | Description                                                      |
+|-----------------------|------------------------------------------------------------------|
+| `NBS_DBSERVER`        | Database URL                                                     |
+| `NBS_DBUSER`          | Database username                                                |
+| `NBS_DBPASSWORD`      | Database password                                                |
+| `KAFKA_BOOTSTRAP_SERVER` | Kafka URL                                                    |
+| `SERVICE_TZ`          | Timezone (default: `UTC`)                                       |
+| `CN_AUTH_URI`         | Keycloak host                                                   |
+| `CN_SERVER_HOST`      | Server host used for Swagger UI (default: `localhost:8093`)     |
+| `NND_DE_CLIENT_ID`    | Client ID for HL7 Parser API                                    |
+| `NND_DE_SECRET`       | Client secret for HL7 Parser API                                |
+| `NND_DE_URL`          | URL for HL7 Parser API (e.g., `https://dataingestion.dts1.nbspreview.com/hl7-parser`) |
+
+---
+
+### HL7 Parser
+
+| Variable              | Description                                                  |
+|-----------------------|--------------------------------------------------------------|
+| `NBS_DBSERVER`        | Database URL                                                 |
+| `NBS_DBUSER`          | Database username                                            |
+| `NBS_DBPASSWORD`      | Database password                                            |
+| `CN_AUTH_URI`         | Keycloak host                                               |
+| `CN_SERVER_HOST`      | Server host used for Swagger UI (default: `localhost:8093`) |
+
+---

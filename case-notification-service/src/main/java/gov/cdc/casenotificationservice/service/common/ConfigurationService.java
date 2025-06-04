@@ -1,6 +1,5 @@
 package gov.cdc.casenotificationservice.service.common;
 
-import gov.cdc.casenotificationservice.exception.APIException;
 import gov.cdc.casenotificationservice.model.dto.CaseNotificationConfigDto;
 import gov.cdc.casenotificationservice.repository.msg.CaseNotificationConfigRepository;
 import gov.cdc.casenotificationservice.repository.msg.model.CaseNotificationConfig;
@@ -10,8 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static gov.cdc.casenotificationservice.util.TimeStampHelper.getCurrentTimeStamp;
 
 @Service
 public class ConfigurationService implements IConfigurationService {

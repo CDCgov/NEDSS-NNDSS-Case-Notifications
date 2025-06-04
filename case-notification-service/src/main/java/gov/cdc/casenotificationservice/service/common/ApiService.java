@@ -1,6 +1,5 @@
 package gov.cdc.casenotificationservice.service.common;
 
-import com.google.gson.Gson;
 import gov.cdc.casenotificationservice.exception.APIException;
 import gov.cdc.casenotificationservice.service.common.interfaces.IApiService;
 import org.slf4j.Logger;
@@ -11,18 +10,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
-import java.net.http.HttpClient;
-import java.util.Map;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.TimeUnit;
 
 @Service
 public class ApiService implements IApiService {

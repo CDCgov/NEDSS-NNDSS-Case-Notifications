@@ -12,10 +12,8 @@ import gov.cdc.casenotificationservice.repository.odse.CNTraportqOutRepository;
 import gov.cdc.casenotificationservice.service.std.interfaces.IStdMapperService;
 import gov.cdc.casenotificationservice.service.std.interfaces.IXmlService;
 import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.io.StringReader;
@@ -87,7 +85,6 @@ public class XmlService implements IXmlService {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            cnTraportqOutRepository.updateStatus(cnTransportqOut.getCnTransportqOutUid(), "STD_ERROR");
             if (e instanceof NonRetryableException)
             {
                 throw new NonRetryableException(e.getMessage(), e);

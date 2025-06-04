@@ -62,6 +62,13 @@ public class DltService implements IDltService {
         caseNotificationDlt.setUpdatedOn(getCurrentTimeStamp(tz));
 
         caseNotificationDltRepository.save(caseNotificationDlt);
+
+        if (topic.equalsIgnoreCase(nonStdTopic)) {
+            cnTraportqOutRepository.updateStatus(data.getCnTransportqOutUid(), "NONSTD_ERR");
+        }
+        else {
+            cnTraportqOutRepository.updateStatus(data.getCnTransportqOutUid(), "STD_ERR");
+        }
     }
 
     public Page<CaseNotificationDlt> getDltsBetweenWithPagination(Timestamp from, Timestamp to, int page, int size) {

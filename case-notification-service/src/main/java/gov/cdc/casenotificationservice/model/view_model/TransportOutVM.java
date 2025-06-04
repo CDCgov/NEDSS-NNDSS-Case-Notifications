@@ -1,12 +1,8 @@
 package gov.cdc.casenotificationservice.model.view_model;
 
 import gov.cdc.casenotificationservice.repository.msg.model.TransportQOut;
-import jakarta.persistence.Column;
-import jakarta.persistence.Lob;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.sql.Blob;
 
 @Getter
 @Setter

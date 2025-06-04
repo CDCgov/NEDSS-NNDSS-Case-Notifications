@@ -1,7 +1,6 @@
 package gov.cdc.casenotificationservice.model.view_model;
 
 import gov.cdc.casenotificationservice.repository.odse.model.CNTransportqOut;
-import jakarta.persistence.Column;
 import lombok.Getter;
 import lombok.Setter;
 

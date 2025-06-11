@@ -128,31 +128,24 @@ public class MSHSegmentBuilder {
                 case "MSH-21.4" -> messageState.setUniversalIDTypeGroup2(messageElement.getDataElement().getIdDataType().getIdCodedValue().trim());
             }
         }
-
-        // Process MSH21 field
-        if (messageState.getIsSingleProfile()) {
-            setSingleProfileMSH21(msh);
-        } else {
-            setMultiProfileMSH21(msh);
-        }
     }
 
-    private void setSingleProfileMSH21(MSH msh) throws DataTypeException {
-        msh.getMessageProfileIdentifier(0).getEntityIdentifier().setValue(messageState.getEntityIdentifierGroup2());
-        msh.getMessageProfileIdentifier(0).getNamespaceID().setValue(messageState.getNameSpaceIDGroup2());
-        msh.getMessageProfileIdentifier(0).getUniversalID().setValue(messageState.getUniversalIDGroup2());
-        msh.getMessageProfileIdentifier(0).getUniversalIDType().setValue(messageState.getUniversalIDTypeGroup2());
-    }
-
-    private void setMultiProfileMSH21(MSH msh) throws DataTypeException {
-        msh.getMessageProfileIdentifier(0).getEntityIdentifier().setValue(messageState.getEntityIdentifierGroup1());
-        msh.getMessageProfileIdentifier(0).getNamespaceID().setValue(messageState.getNameSpaceIDGroup2());
-        msh.getMessageProfileIdentifier(0).getUniversalID().setValue(messageState.getUniversalIDGroup2());
-        msh.getMessageProfileIdentifier(0).getUniversalIDType().setValue(messageState.getUniversalIDTypeGroup2());
-
+    public void setSingleProfileMSH21(MSH msh) throws DataTypeException {
         msh.getMessageProfileIdentifier(1).getEntityIdentifier().setValue(messageState.getEntityIdentifierGroup2());
         msh.getMessageProfileIdentifier(1).getNamespaceID().setValue(messageState.getNameSpaceIDGroup2());
         msh.getMessageProfileIdentifier(1).getUniversalID().setValue(messageState.getUniversalIDGroup2());
         msh.getMessageProfileIdentifier(1).getUniversalIDType().setValue(messageState.getUniversalIDTypeGroup2());
+    }
+
+    public void setMultiProfileMSH21(MSH msh) throws DataTypeException {
+        msh.getMessageProfileIdentifier(1).getEntityIdentifier().setValue(messageState.getEntityIdentifierGroup1());
+        msh.getMessageProfileIdentifier(1).getNamespaceID().setValue(messageState.getNameSpaceIDGroup2());
+        msh.getMessageProfileIdentifier(1).getUniversalID().setValue(messageState.getUniversalIDGroup2());
+        msh.getMessageProfileIdentifier(1).getUniversalIDType().setValue(messageState.getUniversalIDTypeGroup2());
+
+        msh.getMessageProfileIdentifier(2).getEntityIdentifier().setValue(messageState.getEntityIdentifierGroup2());
+        msh.getMessageProfileIdentifier(2).getNamespaceID().setValue(messageState.getNameSpaceIDGroup2());
+        msh.getMessageProfileIdentifier(2).getUniversalID().setValue(messageState.getUniversalIDGroup2());
+        msh.getMessageProfileIdentifier(2).getUniversalIDType().setValue(messageState.getUniversalIDTypeGroup2());
     }
 } 

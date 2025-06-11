@@ -11,7 +11,7 @@
         <dataElement>
             <questionDataTypeNND>ST</questionDataTypeNND>
             <stDataType>
-                <stringData>NOT10222060GA01</stringData>
+                <stringData>NOT10273104GA01</stringData>
             </stDataType>
         </dataElement>
     </MessageElement>
@@ -71,7 +71,7 @@
         <dataElement>
             <questionDataTypeNND>TS</questionDataTypeNND>
             <tsDataType>
-                <time>2025-05-08T14:32:04.021Z</time>
+                <time>2025-06-09T22:09:11.667Z</time>
             </tsDataType>
         </dataElement>
     </MessageElement>
@@ -86,7 +86,7 @@
         <dataElement>
             <questionDataTypeNND>TS</questionDataTypeNND>
             <tsDataType>
-                <time>2025-05-08T14:32:04.021Z</time>
+                <time>2025-06-09T22:09:11.667Z</time>
             </tsDataType>
         </dataElement>
     </MessageElement>
@@ -159,7 +159,7 @@
         <dataElement>
             <questionDataTypeNND>IS</questionDataTypeNND>
             <isDataType>
-                <isCodedValue>F</isCodedValue>
+                <isCodedValue>M</isCodedValue>
             </isDataType>
         </dataElement>
     </MessageElement>
@@ -174,8 +174,28 @@
         <dataElement>
             <questionDataTypeNND>TS</questionDataTypeNND>
             <tsDataType>
-                <time>1960-11-09T00:00:00.000Z</time>
+                <time>1968-03-23T00:00:00.000Z</time>
             </tsDataType>
+        </dataElement>
+    </MessageElement>
+    <MessageElement>
+        <questionIdentifierNND>78746-5</questionIdentifierNND>
+        <questionLabelNND>Country of Birth</questionLabelNND>
+        <questionOID>2.16.840.1.113883.6.1</questionOID>
+        <questionIdentifier>DEM126</questionIdentifier>
+        <questionLabel>Country of Birth</questionLabel>
+        <hl7SegmentField>OBX-3.0</hl7SegmentField>
+        <orderGroupId>2</orderGroupId>
+        <dataElement>
+            <questionDataTypeNND>CWE</questionDataTypeNND>
+            <cweDataType>
+                <cweCodedValue>New Jessica</cweCodedValue>
+                <cweCodedValueDescription>New Jessica</cweCodedValueDescription>
+                <cweCodedValueCodingSystem>2.16.840.1.114222.4.5.1</cweCodedValueCodingSystem>
+                <cweLocalCodedValue xsi:nil="true"/>
+                <cweLocalCodedValueDescription xsi:nil="true"/>
+                <cweLocalCodedValueCodingSystem xsi:nil="true"/>
+            </cweDataType>
         </dataElement>
     </MessageElement>
     <MessageElement>
@@ -189,8 +209,28 @@
         <dataElement>
             <questionDataTypeNND>CE</questionDataTypeNND>
             <ceDataType>
-                <ceCodedValue>2106-3</ceCodedValue>
-                <ceCodedValueDescription>White</ceCodedValueDescription>
+                <ceCodedValue>2028-9</ceCodedValue>
+                <ceCodedValueDescription>Asian</ceCodedValueDescription>
+                <ceCodedValueCodingSystem>2.16.840.1.113883.6.238</ceCodedValueCodingSystem>
+                <ceLocalCodedValue xsi:nil="true"/>
+                <ceLocalCodedValueDescription xsi:nil="true"/>
+                <ceLocalCodedValueCodingSystem xsi:nil="true"/>
+            </ceDataType>
+        </dataElement>
+    </MessageElement>
+    <MessageElement>
+        <questionIdentifierNND>DEM155</questionIdentifierNND>
+        <questionLabelNND>Ethnic Group</questionLabelNND>
+        <questionOID>2.16.840.1.114222.4.5.232</questionOID>
+        <questionIdentifier>DEM155</questionIdentifier>
+        <questionLabel>Ethnicity</questionLabel>
+        <hl7SegmentField>PID-22.0</hl7SegmentField>
+        <orderGroupId>1</orderGroupId>
+        <dataElement>
+            <questionDataTypeNND>CE</questionDataTypeNND>
+            <ceDataType>
+                <ceCodedValue>2135-2</ceCodedValue>
+                <ceCodedValueDescription>Hispanic or Latino</ceCodedValueDescription>
                 <ceCodedValueCodingSystem>2.16.840.1.113883.6.238</ceCodedValueCodingSystem>
                 <ceLocalCodedValue xsi:nil="true"/>
                 <ceLocalCodedValueDescription xsi:nil="true"/>
@@ -209,8 +249,8 @@
         <dataElement>
             <questionDataTypeNND>CWE</questionDataTypeNND>
             <cweDataType>
-                <cweCodedValue>23</cweCodedValue>
-                <cweCodedValueDescription>Maine</cweCodedValueDescription>
+                <cweCodedValue>40</cweCodedValue>
+                <cweCodedValueDescription>Oklahoma</cweCodedValueDescription>
                 <cweCodedValueCodingSystem>2.16.840.1.113883.6.92</cweCodedValueCodingSystem>
                 <cweLocalCodedValue xsi:nil="true"/>
                 <cweLocalCodedValueDescription xsi:nil="true"/>
@@ -244,7 +284,7 @@
         <dataElement>
             <questionDataTypeNND>CX</questionDataTypeNND>
             <cxDataType>
-                <cxData>PSN10478589GA01</cxData>
+                <cxData>PSN11796823GA01</cxData>
             </cxDataType>
         </dataElement>
     </MessageElement>
@@ -274,7 +314,7 @@
         <dataElement>
             <questionDataTypeNND>DT</questionDataTypeNND>
             <dtDataType>
-                <date>2025-05-08Z</date>
+                <date>2025-06-09Z</date>
             </dtDataType>
         </dataElement>
     </MessageElement>
@@ -374,7 +414,7 @@
         <dataElement>
             <questionDataTypeNND>TS</questionDataTypeNND>
             <tsDataType>
-                <time>2025-05-08T00:00:00.000Z</time>
+                <time>2025-06-09T00:00:00.000Z</time>
             </tsDataType>
         </dataElement>
     </MessageElement>
@@ -422,7 +462,7 @@
         <dataElement>
             <questionDataTypeNND>TS</questionDataTypeNND>
             <tsDataType>
-                <time>2025-05-08T00:00:00.000Z</time>
+                <time>2025-06-09T00:00:00.000Z</time>
             </tsDataType>
         </dataElement>
     </MessageElement>
@@ -705,7 +745,7 @@
         <dataElement>
             <questionDataTypeNND>ST</questionDataTypeNND>
             <stDataType>
-                <stringData>CAS10228145GA01</stringData>
+                <stringData>CAS10279118GA01</stringData>
             </stDataType>
         </dataElement>
     </MessageElement>
@@ -1056,7 +1096,7 @@
         <dataElement>
             <questionDataTypeNND>DT</questionDataTypeNND>
             <dtDataType>
-                <date>2025-05-08Z</date>
+                <date>2025-06-09Z</date>
             </dtDataType>
         </dataElement>
     </MessageElement>

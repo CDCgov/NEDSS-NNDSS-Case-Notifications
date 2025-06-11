@@ -415,7 +415,7 @@ public class HL7MessageBuilder {
                 }
             }
 
-            /*This code should execute for Gen V1 guides, exculdes varicella and Arbo*/
+            /*This code should execute for Gen V1 guides, excludes varicella and Arbo*/
             if (!messageState.isInv177Found() && messageState.getInv177Date() != null && !messageState.getInv177Date().isEmpty() && messageState.getMessageType().startsWith("Gen_Case_Map_v1.0"))
             {
                 // Pushing this down to the last index
@@ -440,7 +440,6 @@ public class HL7MessageBuilder {
                     ts.getTime().setValue(messageState.getInv177Date() + "000000.000"); //for TS18 format
                     value.setData(ts);
                 }
-
             }
 
             if ("NND_ORU_v2.0".equals(messageState.getNndMessageVersion())) {
@@ -481,7 +480,13 @@ public class HL7MessageBuilder {
                 obrForNND_ORU_v2.getReasonForStudy(0).getText().setValue(messageState.getReasonForStudyText2());
                 obrForNND_ORU_v2.getReasonForStudy(0).getNameOfCodingSystem().setValue(messageState.getReasonForStudyNameOfCodingSystem2());
             }
+        }
 
+        // Process MSH21 field
+        if (messageState.getIsSingleProfile()) {
+            mshSegmentBuilder.setSingleProfileMSH21(msh);
+        } else {
+            mshSegmentBuilder.setMultiProfileMSH21(msh);
         }
 
         int	labObrCounter = 1;

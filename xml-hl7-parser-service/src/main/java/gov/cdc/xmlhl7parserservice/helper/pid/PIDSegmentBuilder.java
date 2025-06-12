@@ -7,6 +7,8 @@ import gov.cdc.xmlhl7parserservice.model.generated.jaxb.MessageElement;
 import gov.cdc.xmlhl7parserservice.util.HL7DateFormatUtil;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
+
 @Component
 public class PIDSegmentBuilder {
     private final MessageState messageState;
@@ -37,7 +39,13 @@ public class PIDSegmentBuilder {
         } else if (pidField.startsWith("PID-3.4.3")) {
             pid.getPid3_PatientIdentifierList(0).getAssigningAuthority().getUniversalIDType().setValue(messageElement.getDataElement().getIdDataType().getIdCodedValue());
         } else if (pidField.startsWith("PID-5.7")) {
-            pid.getPid5_PatientName(0).getNameTypeCode().setValue(messageElement.getDataElement().getIdDataType().getIdCodedValue());
+            if (pid.getPid5_PatientName(0).getNameTypeCode() != null) {
+                pid.getPid5_PatientName(0).getNameTypeCode().setValue("");
+                pid.getPid5_PatientName(1).getNameTypeCode().setValue(messageElement.getDataElement().getIdDataType().getIdCodedValue());
+            }
+            else {
+                pid.getPid5_PatientName(0).getNameTypeCode().setValue(messageElement.getDataElement().getIdDataType().getIdCodedValue());
+            }
         } else if (pidField.startsWith("PID-7.0")) {
             pidFieldValue = messageElement.getDataElement().getTsDataType().getTime().toString();
             String dateFormat = dateFormatUtil.formatDate(pidFieldValue, questionDataTypeNND, questionIdentifierNND, "PID-7");

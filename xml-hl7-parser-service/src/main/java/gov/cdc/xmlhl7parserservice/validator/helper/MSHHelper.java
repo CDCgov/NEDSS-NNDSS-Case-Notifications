@@ -55,17 +55,17 @@ public class MSHHelper {
         }
 
         validator.validateField("MSH-8", msh.getSecurity().getValue(), false, 0, 40);
-        validator.validateField("MSH-9", msh.getMessageType().toString(), true, 1, 15);
+        validator.validateField("MSH-9", msh.getMessageType().encode(), true, 1, 15);
         validator.validateField("MSH-10", msh.getMessageControlID().getValue(), true, 1, 199);
-        validator.validateField("MSH-11", msh.getProcessingID().toString(), true, 1, 3);
-        validator.validateField("MSH-12", msh.getVersionID().toString(), true, 1, 60);
+        validator.validateField("MSH-11", msh.getProcessingID().encode(), true, 1, 3);
+        validator.validateField("MSH-12", msh.getVersionID().encode(), true, 1, 60);
         validator.validateField("MSH-13", msh.getSequenceNumber().getValue(), false, 0, 15);
         validator.validateField("MSH-14", msh.getContinuationPointer().getValue(), false, 0, 180);
         validator.validateField("MSH-15", msh.getAcceptAcknowledgmentType().getValue(), false, 0, 2);
         validator.validateField("MSH-16", msh.getApplicationAcknowledgmentType().getValue(), false, 0, 2);
         validator.validateField("MSH-17", msh.getCountryCode().getValue(), false, 0, 3);
         validator.validateField("MSH-18", msh.getCharacterSet(0).getValue(), false, 0, 16);
-        validator.validateField("MSH-19", msh.getPrincipalLanguageOfMessage().toString(), false, 0, 250);
+        validator.validateField("MSH-19", msh.getPrincipalLanguageOfMessage().encode(), false, 0, 250);
         validator.validateField("MSH-20", msh.getAlternateCharacterSetHandlingScheme().getValue(), false, 0, 20);
 
 

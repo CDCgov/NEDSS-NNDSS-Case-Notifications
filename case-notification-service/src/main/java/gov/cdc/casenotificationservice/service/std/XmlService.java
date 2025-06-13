@@ -57,8 +57,7 @@ public class XmlService implements IXmlService {
             netssPersistModel.setVCaseReptId(netss.getCaseReportId());
             netssPersistModel.setVMessageWeek(netss.getWeek());
 
-
-            if (cnTransportqOut.getRecordStatusCd().equalsIgnoreCase("X")) {
+            if (cnTransportqOut.getRecordStatusCd().equalsIgnoreCase("X") || netss.getCaseStatus().equalsIgnoreCase("X")) {
                 netssPersistModel.setRecordStatusCd("LOG_DEL");
             }
             else {
@@ -80,11 +79,9 @@ public class XmlService implements IXmlService {
             try {
                 netssTransportQOutRepository.save(netssTransportQOut);
             } catch (Exception e) {
-                e.printStackTrace();
                 throw new NonRetryableException(e.getMessage(), e);
             }
         } catch (Exception e) {
-            e.printStackTrace();
             if (e instanceof NonRetryableException)
             {
                 throw new NonRetryableException(e.getMessage(), e);

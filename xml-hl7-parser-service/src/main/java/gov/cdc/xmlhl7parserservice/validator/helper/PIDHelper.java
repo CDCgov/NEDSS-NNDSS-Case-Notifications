@@ -23,11 +23,6 @@ public class PIDHelper {
 
         String dob = pid.getDateTimeOfBirth().getTime().getValue();
         validator.validateField("PID-7", dob, true, 0, 26);
-//        if (dob != null && !dob.isEmpty()) {
-//            if (!dob.matches("\\d{8}")) {
-//                throw new HL7Exception("PID-7 must be in YYYYMMDD format");
-//            }
-//        }
 
 //        validator.validateField("PID-8", pid.getAdministrativeSex().getValue(), true, 1, 1);
 //        String sex = pid.getAdministrativeSex().getValue();

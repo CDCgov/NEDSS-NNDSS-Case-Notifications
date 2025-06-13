@@ -63,8 +63,8 @@ public class ConsumerService {
                         producerService.sendMessage(transformed);
 
                         // Update database record_status_cd
-                        if ("NETSS_MESSAGE_ONLY".equalsIgnoreCase(transformed.getNetssMessageOnly())
-                                || "BOTH".equalsIgnoreCase(transformed.getNetssMessageOnly())) {
+                        if (transformed.isStdMessageDetected() && ("NETSS_MESSAGE_ONLY".equals(transformed.getNetssMessageOnly())
+                                || "BOTH".equals(transformed.getNetssMessageOnly()))) {
                             updateService.updateRecordStatus(
                                     transformed.getCnTransportqOutUid(),
                                     "STD_PROCESSING"

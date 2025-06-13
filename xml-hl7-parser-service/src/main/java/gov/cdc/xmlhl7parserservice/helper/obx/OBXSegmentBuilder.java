@@ -15,6 +15,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -188,8 +191,8 @@ public class OBXSegmentBuilder {
             messageState.setInv177Found(true);
         }
         if (questionIdentifier.equals("INV111")
-                || questionIdentifierNND.equals("INV120")
-                || questionIdentifierNND.equals("INV121"))
+                || questionIdentifier.equals("INV120")
+                || questionIdentifier.equals("INV121"))
         {
             if (questionIdentifier.equals("INV111") && messageElement.getDataElement().getQuestionDataTypeNND().equals("DT"))
             {
@@ -201,15 +204,34 @@ public class OBXSegmentBuilder {
             else
             {
                 if (messageElement.getDataElement().getTsDataType() != null) {
-                    int year = Integer.parseInt(messageElement.getDataElement().getTsDataType().getYear());
+                    int year = messageElement.getDataElement().getTsDataType().getTime().getYear();
                     int month = messageElement.getDataElement().getTsDataType().getTime().getMonth();
                     int day = messageElement.getDataElement().getTsDataType().getTime().getDay();
                     messageState.setNewDate(String.format("%04d%02d%02d", year, month, day));
                 }
             }
-            if (messageState.getInv177Date().isEmpty())
-            {
-                messageState.setInv177Date(messageState.getNewDate());
+
+            String inv177DateStr = messageState.getInv177Date();
+            String newDateStr = messageState.getNewDate();
+            LocalDate inv177Date = null;
+            LocalDate newDate = null;
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+
+            try {
+                if (inv177DateStr != null && !inv177DateStr.isEmpty()) {
+                    inv177Date = LocalDate.parse(inv177DateStr, formatter);
+                }
+
+                if (newDateStr != null && !newDateStr.isEmpty()) {
+                    newDate = LocalDate.parse(newDateStr, formatter);
+                }
+
+                if (inv177Date == null || (newDate != null && newDate.isBefore(inv177Date))) {
+                    messageState.setInv177Date(newDateStr);
+                }
+            } catch (DateTimeParseException e) {
+                logger.error("Invalid date format: {}", e.getMessage());
             }
         }
 
@@ -956,7 +978,7 @@ public class OBXSegmentBuilder {
                         messageElement.getDataElement().getQuestionDataTypeNND().trim()
                 );
             }
-            tsDataType.getTs2_DegreeOfPrecision().setValue(timeOutput);
+            tsDataType.getTs1_Time().setValue(timeOutput);
             obx.getObservationValue(obx5ValueInc).setData(tsDataType);
         }
         // NM datatype

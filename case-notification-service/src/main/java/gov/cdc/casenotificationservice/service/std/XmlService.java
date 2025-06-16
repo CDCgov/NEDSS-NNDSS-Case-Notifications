@@ -63,7 +63,6 @@ public class XmlService implements IXmlService {
             else {
                 netssPersistModel.setRecordStatusCd("ACTIVE");
             }
-            cnTraportqOutRepository.updateStatus(cnTransportqOut.getCnTransportqOutUid(), "STD_COMPLETED");
 
             NetssTransportQOut netssTransportQOut = new NetssTransportQOut();
             netssTransportQOut.setRecordStatusCd("Individual Case");
@@ -91,7 +90,5 @@ public class XmlService implements IXmlService {
                 throw new StdProcessorServiceException("Error While Processing NETSS", e);
             }
         }
-
-
     }
 }

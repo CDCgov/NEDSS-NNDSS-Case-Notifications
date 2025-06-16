@@ -28,17 +28,16 @@ public class ProducerService {
     public void sendMessage(MessageAfterStdChecker transformedMessage) {
         try {
             String payload = gson.toJson(transformedMessage);
-            String targetTopic;
 
             if (transformedMessage.isStdMessageDetected()) {
-                targetTopic = stdTopic;
+                kafkaTemplate.send(stdTopic, payload);
+                log.info("Sent transformed message to std topic {}: {}", stdTopic, payload);
+                kafkaTemplate.send(nonStdTopic, payload);
+                log.info("Sent transformed message to non-std topic {}: {}", nonStdTopic, payload);
             } else {
-                targetTopic = nonStdTopic;
+                kafkaTemplate.send(nonStdTopic, payload);
+                log.info("Sent transformed message to non-std topic {}: {}", nonStdTopic, payload);
             }
-
-            kafkaTemplate.send(targetTopic, payload);
-            log.info("Sent transformed message to topic {}: {}", targetTopic, payload);
-
         } catch (Exception e) {
             log.error("Failed to send message to Kafka: {}", e.getMessage(), e);
         }

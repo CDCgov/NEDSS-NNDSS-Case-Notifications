@@ -81,7 +81,7 @@ public class MSHSegmentBuilder {
             processMSH21Fields(messageElement, msh);
         }
 
-        // Set message date/time
+        // Set message date/time - MSH-7
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss.SSS");
         String currentTime = now.format(formatter);

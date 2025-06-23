@@ -835,9 +835,6 @@ public class OBXSegmentBuilder {
                     }
                     else
                     {
-
-
-
                         cweDataTYpe.getCwe1_Identifier().setValue(localCodedValue);                         // CWE.1
                         cweDataTYpe.getCwe2_Text().setValue(localCodedValueDescription);                   // CWE.2
                         cweDataTYpe.getCwe3_NameOfCodingSystem().setValue("L");                            // CWE.3

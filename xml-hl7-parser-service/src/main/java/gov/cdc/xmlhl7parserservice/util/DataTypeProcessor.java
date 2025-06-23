@@ -119,8 +119,8 @@ public class DataTypeProcessor implements HL7FieldProcessor {
                 seconds = extractDateComponent(hl7SegmentDateField,17, 19);
             }
         }
-        //seconds
-        if (outputDataType.equals("TS18")) {
+        //milliseconds
+        if (outputDataType.equals("TS17")) {
             matchFound = true;
         }else if (!matchFound) {
             if (hl7SegmentDateField.length() <23) {
@@ -129,11 +129,18 @@ public class DataTypeProcessor implements HL7FieldProcessor {
                 milliseconds = extractDateComponent(hl7SegmentDateField,20, 23);
             }
         }
-
-        if(milliseconds.isEmpty()) {
-            return year + month + day + hours + minutes + seconds + milliseconds;
+        //milliseconds
+        if (outputDataType.equals("TS18")) {
+            if (hl7SegmentDateField.length() <23) {
+                milliseconds = "000";
+            }else{
+                milliseconds = extractDateComponent(hl7SegmentDateField,20, 23);
+            }
         }
-        return year + month + day + hours + minutes + seconds + "." + milliseconds;
+
+        return milliseconds.isEmpty()
+                ? year + month + day + hours + minutes + seconds + milliseconds
+                : year + month + day + hours + minutes + seconds + "." + milliseconds;
     }
 
     /**

@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.4.0'
+    id 'org.springframework.boot' version '3.4.5'
     id 'io.spring.dependency-management' version '1.1.6'
 }
 
@@ -33,7 +33,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
-    implementation 'org.apache.kafka:kafka-streams'
+    implementation 'org.apache.kafka:kafka-streams:3.9.1'
+    implementation 'org.apache.kafka:kafka-clients:3.9.1'
     implementation 'org.springframework.kafka:spring-kafka'
     implementation 'com.google.code.gson:gson:2.13.0'
     implementation 'com.microsoft.sqlserver:mssql-jdbc:12.6.1.jre11'
@@ -43,6 +44,15 @@ dependencies {
     testImplementation 'org.springframework.kafka:spring-kafka-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
+
+dependencyManagement {
+    dependencies {
+        dependency 'org.apache.tomcat.embed:tomcat-embed-core:10.1.42'
+        dependency 'org.apache.tomcat.embed:tomcat-embed-el:10.1.42'
+        dependency 'org.apache.tomcat.embed:tomcat-embed-websocket:10.1.42'
+    }
+}
+
 
 tasks.named('test') {
     useJUnitPlatform()

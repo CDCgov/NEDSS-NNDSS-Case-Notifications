@@ -19,6 +19,11 @@ RUN ./gradlew :case-notification-service:buildNeeded -x test --no-daemon
 
 FROM amazoncorretto:21
 
+# Update system packages to patch known vulnerabilities
+RUN yum -y update && \
+    yum -y install libxml2 && \
+    yum clean all
+
 COPY --from=builder /usr/src/casenotificationservice/case-notification-service/build/libs/case-notification-service*.jar case-notification-service.jar
 
 # Run jar

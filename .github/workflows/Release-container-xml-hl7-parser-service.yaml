@@ -2,6 +2,10 @@ name: Release xml-hl7-parser-service image
 on:
   workflow_dispatch:
     inputs:
+      version:
+        description: "Optional: Base version number (e.g., 1.0.0). If not set, defaults to 0.0.1"
+        required: false
+        type: string
       microservice_name:
         description: "Microservice name matching your repository (ex. xml-hl7-parser-service)."
         required: true
@@ -37,6 +41,12 @@ on:
         type: boolean
 
 jobs:
+  generate-image-tag:
+    if: inputs.build-new-container == true
+    uses: ./.github/workflows/versioning.yaml
+    with:
+      base_version: ${{ inputs.version }}
+      environment_classifier: ${{ inputs.environment_classifier }}
   call-build-microservice-container-workflow:
     uses: CDCgov/NEDSS-Workflows/.github/workflows/Release-gradle-microservice-container.yaml@main
     with:

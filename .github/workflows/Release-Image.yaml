@@ -1,0 +1,89 @@
+name: Release Service image
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Optional: Base version number (e.g., 1.0.0). If not set, defaults to 0.0.1"
+        required: true
+        type: string
+      microservice_name:
+        description: "Select the microservice to release."
+        required: true
+        type: choice
+        options:
+          - xml-hl7-parser-service
+          - case-notification-service
+          - data-extraction-service
+      dockerfile_relative_path:
+        description: "Dockerfile build context for the service."
+        required: true
+        type: string
+        default: -f ./<service-name>/Dockerfile .
+      existing-image-tag:
+        description: "Image tag of existing container in ECR (not used if build-new-container=true)."
+        required: false
+        type: string
+      environment_classifier:
+        description: "Metadata to append to version. 'NONE' strips metadata. 'SNAPSHOT' = 1.0.0-SNAPSHOT.<sha>"
+        required: true
+        type: string
+        default: SNAPSHOT
+      values_file_with_path:
+        description: "Path to Helm chart values file for this service."
+        type: string
+        default: charts/<service-name>/values-dev.yaml
+      build-new-container:
+        description: "Check this to build a new container image."
+        required: true
+        default: false
+        type: boolean
+      update_helm_chart:
+        description: "Do you want to update the specified Helm chart?"
+        required: true
+        default: true
+        type: boolean
+
+jobs:
+  generate-image-tag:
+    if: inputs.build-new-container == true
+    uses: ./.github/workflows/versioning.yaml
+    with:
+      base_version: ${{ inputs.version }}
+      environment_classifier: ${{ inputs.environment_classifier }}
+
+  call-build-microservice-container-workflow:
+    if: inputs.build-new-container == true
+    needs: generate-image-tag
+    uses: CDCgov/NEDSS-Workflows/.github/workflows/Release-gradle-microservice-container.yaml@main
+    with:
+      microservice_name: nnd-case-notification-service/${{ inputs.microservice_name }}
+      existing-image-tag: ${{ inputs.existing-image-tag }}
+      build-new-container: ${{ inputs.build-new-container }}
+      dockerfile_relative_path: -f ./${{ inputs.microservice_name }}/Dockerfile .
+      environment_classifier: ${{ inputs.environment_classifier }}
+      image_tag: ${{ needs.generate-image-tag.outputs.image_tag }}
+    secrets:
+      CDC_NBS_SANDBOX_SHARED_SERVICES_ACCOUNTID: ${{ secrets.CDC_NBS_SANDBOX_SHARED_SERVICES_ACCOUNTID }}
+      ECR_REPO_BASE_NAME: ${{ secrets.ECR_REPO_BASE_NAME }}
+      GIT_USER_EMAIL: ${{ secrets.GIT_USER_EMAIL }}
+      GIT_USER_NAME: ${{ secrets.GIT_USER_NAME }}
+      HELM_TOKEN: ${{ secrets.HELM_TOKEN }}
+
+  call-update-helm:
+    if: inputs.update_helm_chart == true
+    needs: [call-build-microservice-container-workflow, generate-image-tag]
+    uses: CDCgov/NEDSS-Workflows/.github/workflows/Update-helm-charts.yaml@main
+    with:
+      microservice_name: nnd-case-notification-service/${{ inputs.microservice_name }}
+      values_file_with_path: charts/${{ inputs.microservice_name }}/values-dev.yaml
+      new_image_tag: >-
+        ${{
+          inputs.build-new-container == true &&
+          needs.call-build-microservice-container-workflow.outputs.output_image_tag ||
+          inputs.existing-image-tag
+        }}
+    secrets:
+      GIT_USER_EMAIL: ${{ secrets.GIT_USER_EMAIL }}
+      GIT_USER_NAME: ${{ secrets.GIT_USER_NAME }}
+      HELM_TOKEN: ${{ secrets.HELM_TOKEN }}

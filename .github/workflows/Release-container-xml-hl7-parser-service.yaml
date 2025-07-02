@@ -2,10 +2,6 @@ name: Release xml-hl7-parser-service image
 on:
   workflow_dispatch:
     inputs:
-      version:
-        description: "Optional: Base version number (e.g., 1.0.0). If not set, defaults to 0.0.1"
-        required: false
-        type: string
       microservice_name:
         description: "Microservice name matching your repository (ex. xml-hl7-parser-service)."
         required: true
@@ -41,44 +37,29 @@ on:
         type: boolean
 
 jobs:
-  generate-image-tag:
-    if: inputs.build-new-container == true
-    uses: ./.github/workflows/versioning.yaml
-    with:
-      base_version: ${{ inputs.version }}
-      environment_classifier: ${{ inputs.environment_classifier }}
   call-build-microservice-container-workflow:
-    if: inputs.build-new-container == true
-    needs: generate-image-tag
     uses: CDCgov/NEDSS-Workflows/.github/workflows/Release-gradle-microservice-container.yaml@main
     with:
-      microservice_name: nnd-case-notification-service/${{ inputs.microservice_name }}
-      existing-image-tag: ${{ inputs.existing-image-tag }}
-      build-new-container: ${{ inputs.build-new-container }}
-      dockerfile_relative_path: ${{ inputs.dockerfile_relative_path }}
-      environment_classifier: ${{ inputs.environment_classifier }}
-      image_tag: ${{ needs.generate-image-tag.outputs.image_tag }}
+      microservice_name: nnd-case-notification-service/${{inputs.microservice_name}}
+      existing-image-tag: ${{inputs.existing-image-tag}}
+      build-new-container: ${{inputs.build-new-container}}
+      dockerfile_relative_path: ${{inputs.dockerfile_relative_path}}
+      environment_classifier: ${{inputs.environment_classifier}}
     secrets:
-      CDC_NBS_SANDBOX_SHARED_SERVICES_ACCOUNTID: ${{ secrets.CDC_NBS_SANDBOX_SHARED_SERVICES_ACCOUNTID }}
-      ECR_REPO_BASE_NAME: ${{ secrets.ECR_REPO_BASE_NAME }}
-      GIT_USER_EMAIL: ${{ secrets.GIT_USER_EMAIL }}
-      GIT_USER_NAME: ${{ secrets.GIT_USER_NAME }}
-      HELM_TOKEN: ${{ secrets.HELM_TOKEN }}
+      CDC_NBS_SANDBOX_SHARED_SERVICES_ACCOUNTID: ${{secrets.CDC_NBS_SANDBOX_SHARED_SERVICES_ACCOUNTID}}
+      ECR_REPO_BASE_NAME: ${{secrets.ECR_REPO_BASE_NAME}}
+      GIT_USER_EMAIL: ${{secrets.GIT_USER_EMAIL}}
+      GIT_USER_NAME: ${{secrets.GIT_USER_NAME}}
+      HELM_TOKEN: ${{secrets.HELM_TOKEN}}
 
   call-update-helm:
-    if: inputs.update_helm_chart == true
-    needs: [ call-build-microservice-container-workflow, generate-image-tag ]
+    needs: call-build-microservice-container-workflow
     uses: CDCgov/NEDSS-Workflows/.github/workflows/Update-helm-charts.yaml@main
     with:
-      microservice_name: nnd-case-notification-service/${{ inputs.microservice_name }}
-      values_file_with_path: ${{ inputs.values_file_with_path }}
-      new_image_tag: >-
-        ${{
-          inputs.build-new-container == true &&
-          needs.call-build-microservice-container-workflow.outputs.output_image_tag ||
-          inputs.existing-image-tag
-        }}
+      microservice_name: nnd-case-notification-service/${{inputs.microservice_name}}
+      values_file_with_path: ${{inputs.values_file_with_path}}
+      new_image_tag: ${{ needs.call-build-microservice-container-workflow.outputs.output_image_tag }}
     secrets:
-      GIT_USER_EMAIL: ${{ secrets.GIT_USER_EMAIL }}
-      GIT_USER_NAME: ${{ secrets.GIT_USER_NAME }}
-      HELM_TOKEN: ${{ secrets.HELM_TOKEN }}
+      GIT_USER_EMAIL: ${{secrets.GIT_USER_EMAIL}}
+      GIT_USER_NAME: ${{secrets.GIT_USER_NAME}}
+      HELM_TOKEN: ${{secrets.HELM_TOKEN}}

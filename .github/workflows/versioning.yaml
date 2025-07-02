@@ -1,0 +1,43 @@
+name: Generate App Image Tag
+
+on:
+  workflow_call:
+    inputs:
+      base_version:
+        required: false
+        type: string
+      environment_classifier:
+        required: true
+        type: string
+    outputs:
+      image_tag:
+        description: "Formatted image tag like App-1.0.0 or App-1.0.0-SNAPSHOT.abcd123"
+        value: ${{ jobs.versioning.outputs.image_tag }}
+
+
+jobs:
+  versioning:
+    runs-on: ubuntu-latest
+    outputs:
+      image_tag: ${{ steps.set_tag.outputs.image_tag }}
+
+    steps:
+      - name: Set image tag
+        id: set_tag
+        run: |
+          VERSION="${{ inputs.base_version }}"
+          CLASSIFIER="${{ inputs.environment_classifier }}"
+          SHORT_SHA=$(echo "${GITHUB_SHA}" | cut -c1-7)
+
+          # Fallback if version not provided
+          if [[ -z "$VERSION" ]]; then
+            VERSION="0.0.1"
+          fi
+
+          if [[ "$CLASSIFIER" == "NONE" ]]; then
+            IMAGE_TAG="App-${VERSION}"
+          else
+            IMAGE_TAG="App-${VERSION}-${CLASSIFIER}.${SHORT_SHA}"
+          fi
+
+          echo "image_tag=$IMAGE_TAG" >> $GITHUB_OUTPUT

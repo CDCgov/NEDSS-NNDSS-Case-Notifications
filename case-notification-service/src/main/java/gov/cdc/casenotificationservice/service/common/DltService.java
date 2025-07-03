@@ -50,12 +50,40 @@ public class DltService implements IDltService {
 
     public void creatingDlt( String message,String topic,String stacktrace, String origin) {
         var gson = new Gson();
-        MessageAfterStdChecker data = gson.fromJson(message, MessageAfterStdChecker.class);
-        var cnTransportqOut = cnTraportqOutRepository.findTopByRecordUid(data.getCnTransportqOutUid());
+        String status;
+        MessageAfterStdChecker data = null;
+        try {
+            if (message == null || message.trim().isEmpty()) {
+                status = "INVALID_ERR";
+            } else {
+                data = gson.fromJson(message, MessageAfterStdChecker.class);
+                if (data == null || data.getCnTransportqOutUid() == null) {
+                    status = "INVALID_ERR";
+                } else if (Boolean.TRUE.equals(data.isStdMessageDetected())) {
+                    status = "STD_ERR";
+                } else if (Boolean.FALSE.equals(data.isStdMessageDetected())) {
+                    status = "NONSTD_ERR";
+                } else {
+                    status = "UNKNOWN_ERR";
+                }
+            }
+        } catch (Exception e) {
+            status = "INVALID_ERR";
+        }
+
+        var cnTransportqOut = (data != null && data.getCnTransportqOutUid() != null)
+                ? cnTraportqOutRepository.findTopByRecordUid(data.getCnTransportqOutUid())
+                : null;
 
         CaseNotificationDlt caseNotificationDlt = new CaseNotificationDlt();
-        caseNotificationDlt.setCnTranportqOutUid(data.getCnTransportqOutUid());
-        caseNotificationDlt.setOriginalPayload(cnTransportqOut.getMessagePayload());
+        if (data != null) {
+            caseNotificationDlt.setCnTranportqOutUid(data.getCnTransportqOutUid());
+        }
+        if (cnTransportqOut != null) {
+            caseNotificationDlt.setOriginalPayload(cnTransportqOut.getMessagePayload());
+        } else {
+            caseNotificationDlt.setOriginalPayload(message);
+        }
         caseNotificationDlt.setSource(origin);
         caseNotificationDlt.setErrorStackTrace(stacktrace);
         caseNotificationDlt.setCreatedOn(getCurrentTimeStamp(tz));
@@ -63,11 +91,8 @@ public class DltService implements IDltService {
 
         caseNotificationDltRepository.save(caseNotificationDlt);
 
-        if (topic.equalsIgnoreCase(nonStdTopic)) {
-            cnTraportqOutRepository.updateStatus(data.getCnTransportqOutUid(), "NONSTD_ERR");
-        }
-        else {
-            cnTraportqOutRepository.updateStatus(data.getCnTransportqOutUid(), "STD_ERR");
+        if (data != null && data.getCnTransportqOutUid() != null) {
+            cnTraportqOutRepository.updateStatus(data.getCnTransportqOutUid(), status);
         }
     }
 

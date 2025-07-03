@@ -78,7 +78,7 @@ public class DltServiceTest {
 
         when(dltRepository.findById(UUID.fromString(uuid))).thenReturn(Optional.of(dlt));
 
-        ApiDltResponseModel<MessageAfterStdChecker> result = dltService.getDltByUid(uuid);
+        dltService.getDltByUid(uuid);
 
         verify(dltRepository).findById(UUID.fromString(uuid));
     }

@@ -6,7 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class MessageAfterStdChecker {
-    private long cnTransportqOutUid;
+    private Long cnTransportqOutUid;
     private String messagePayload;
     private String notificationLocalId;
     private String publicHealthCaseLocalId;

@@ -12,7 +12,7 @@ on:
           - case-notification-service
           - data-extraction-service
       new_version:
-        description: "New version to set in build.gradle (optional, will auto-increment if omitted)"
+        description: "New version base (optional, will auto-increment if omitted)."
         required: false
         type: string
         default: ""
@@ -39,17 +39,18 @@ jobs:
         run: |
           gradle_path="./${{ inputs.microservice_name }}/build.gradle"
           current_version=$(grep "^version *= *" "$gradle_path" | sed -E "s/version *= *['\"]?([^'\"]*)['\"]?/\1/")
+          echo "Current version is $current_version"
 
           if [ -z "${{ inputs.new_version }}" ]; then
-            IFS='.' read -r major minor patch <<< "$current_version"
+            IFS='.' read -r major minor patch <<< "$(echo $current_version | sed 's/-RELEASE//')"
             minor=$((minor + 1))
             patch=0
-            new_version="${major}.${minor}.${patch}"
+            new_version="${major}.${minor}.${patch}-RELEASE"
           else
-            new_version="${{ inputs.new_version }}"
+            base_version="${{ inputs.new_version }}"
+            new_version="${base_version}-RELEASE"
           fi
 
-          echo "Determined version: $new_version"
           echo "new_version=$new_version" >> $GITHUB_OUTPUT
 
       - name: Update version in build.gradle

@@ -20,6 +20,7 @@ on:
           - BATCH: Increments the batch/metadata version (e.g., 1.0.0 → 1.0.0.1)
         required: true
         type: choice
+        default: BATCH
         options:
           - MAJOR RELEASE
           - RELEASE
@@ -81,11 +82,17 @@ jobs:
           sed -i "s/^version = .*/version = '${{ steps.versioning.outputs.new_version }}'/" "$gradle_path"
           echo "Updated version in $gradle_path to ${{ steps.versioning.outputs.new_version }}"
 
+      - name: Show updated root build.gradle
+        run: cat ./build.gradle
       - name: Update version in ROOT build.gradle for HelmChart
         run: |
           gradle_path="./build.gradle"
-          sed -i "s/^version = .*/version = '${{ steps.versioning.outputs.new_version }}'/" "$gradle_path"
-          echo "Updated version in $gradle_path to ${{ steps.versioning.outputs.new_version }}"
+          new_version="${{ steps.versioning.outputs.new_version }}"
+          sed -i -E "s/^([[:space:]]*version[[:space:]]*=[[:space:]]*)['\"][^'\"]*['\"](.*)/\1'${new_version}'\2/" "$gradle_path"
+          echo "Updated version in $gradle_path to ${new_version}"
+      - name: Show updated root build.gradle
+        run: cat ./build.gradle
+
 
       - name: Commit and create PR using bot
         id: create-pr

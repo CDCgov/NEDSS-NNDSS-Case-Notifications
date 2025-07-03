@@ -63,7 +63,7 @@ jobs:
           GH_TOKEN: ${{ secrets.REPOS_TOKEN }}
         run: |
           branch_name="version-bump-${{ inputs.microservice_name }}-${{ inputs.new_version }}"
-          gh pr merge "$branch_name" --merge --delete-branch --admin
+          gh pr merge "$branch_name" --rebase --delete-branch --admin
 
 #      - name: Approve PR
 #        env:

@@ -59,7 +59,7 @@ jobs:
           
       - name: Auto-merge the PR
         env:
-        GH_TOKEN: ${{ secrets.REPOS_TOKEN }}
+          GH_TOKEN: ${{ secrets.REPOS_TOKEN }}
         run: |
           gh pr merge version-bump-${{ inputs.microservice_name }}-${{ inputs.new_version }} --merge --delete-branch --admin
 #        run: |

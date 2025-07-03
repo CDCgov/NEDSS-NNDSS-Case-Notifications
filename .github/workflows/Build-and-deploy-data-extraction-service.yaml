@@ -8,7 +8,7 @@ on:
     paths-ignore:
       - "docker-compose.yml"
       - "**.md"
-    path:
+    paths:
       - 'data-extraction-service/**'
 jobs:
 #    sonar_scan:

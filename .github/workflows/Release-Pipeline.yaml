@@ -74,7 +74,11 @@ jobs:
             new_version="${major}.${minor}.${patch}-RELEASE"
           fi
 
+          classifier=RELEASE
           echo "new_version=$new_version" >> $GITHUB_OUTPUT
+          echo "classifier=$classifier" >> $GITHUB_OUTPUT
+          echo "CLASSIFIER=$classifier" >> $GITHUB_ENV
+
 
       - name: Update version in build.gradle
         run: |

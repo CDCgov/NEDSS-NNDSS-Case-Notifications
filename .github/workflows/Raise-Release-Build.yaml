@@ -1,0 +1,56 @@
+name: Bump Version and Raise PR
+
+on:
+  workflow_dispatch:
+    inputs:
+      microservice_name:
+        description: "Select the microservice to release."
+        required: true
+        type: choice
+        options:
+          - xml-hl7-parser-service
+          - case-notification-service
+          - data-extraction-service
+      new_version:
+        description: "New version to set in build.gradle (e.g., 1.2.0)"
+        required: true
+        type: string
+
+jobs:
+  bump-version:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Git config
+        run: |
+          git config --global user.name "${{ secrets.REPOS_USERNAME }}"
+          git config --global user.email "${{ secrets.REPOS_EMAIL }}"
+
+      - name: Update version in build.gradle
+        run: |
+          gradle_path="./${{ inputs.microservice_name }}/build.gradle"
+          sed -i "s/^version = .*/version = '${{ inputs.new_version }}'/" "$gradle_path"
+          echo "Updated version in $gradle_path to ${{ inputs.new_version }}"
+
+      - name: Commit and create PR
+        env:
+          GH_TOKEN: ${{ secrets.REPOS_TOKEN }}
+        run: |
+          branch_name="version-bump-${{ inputs.microservice_name }}-${{ inputs.new_version }}"
+          git checkout -b "$branch_name"
+          git add ./${{ inputs.microservice_name }}/build.gradle
+          git commit -m "chore: bump version of ${{ inputs.microservice_name }} to ${{ inputs.new_version }}"
+          git push --set-upstream origin "$branch_name"
+
+          gh pr create \
+            --title "Bump ${{ inputs.microservice_name }} version to ${{ inputs.new_version }}" \
+            --body "This PR updates the version in \`${{ inputs.microservice_name }}/build.gradle\` to \`${{ inputs.new_version }}\`." \
+            --base main \
+            --head "$branch_name"

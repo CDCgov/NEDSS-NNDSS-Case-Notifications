@@ -1,0 +1,54 @@
+name: Release Service image
+
+on:
+  workflow_dispatch:
+    inputs:
+      microservice_name:
+        description: "Select the microservice to release."
+        required: true
+        type: choice
+        options:
+          - xml-hl7-parser-service
+          - case-notification-service
+          - data-extraction-service
+      environment_classifier:
+        description: "Release version"
+        required: true
+        type: string
+        default: RELEASE
+      env_name:
+        description: "Designated deploying environment. Ex: values-dts1"
+        type: string
+        default: values-dts1
+      build-new-container:
+        description: "Check this to build a new container image."
+        required: true
+        default: true
+        type: boolean
+
+jobs:
+  call-build-microservice-container-workflow:
+    uses: CDCgov/NEDSS-Workflows/.github/workflows/Release-gradle-microservice-container.yaml@main
+    with:
+      microservice_name: nnd-case-notification-service/${{inputs.microservice_name}}
+      build-new-container: ${{inputs.build-new-container}}
+      dockerfile_relative_path: -f ./${{inputs.microservice_name}}/Dockerfile .
+      environment_classifier: ${{inputs.environment_classifier}}
+    secrets:
+      CDC_NBS_SANDBOX_SHARED_SERVICES_ACCOUNTID: ${{secrets.CDC_NBS_SANDBOX_SHARED_SERVICES_ACCOUNTID}}
+      ECR_REPO_BASE_NAME: ${{secrets.ECR_REPO_BASE_NAME}}
+      GIT_USER_EMAIL: ${{secrets.GIT_USER_EMAIL}}
+      GIT_USER_NAME: ${{secrets.GIT_USER_NAME}}
+      HELM_TOKEN: ${{secrets.HELM_TOKEN}}
+
+  call-update-helm:
+    needs: call-build-microservice-container-workflow
+    uses: CDCgov/NEDSS-Workflows/.github/workflows/Update-helm-charts.yaml@main
+    with:
+      microservice_name: nnd-case-notification-service/${{ inputs.microservice_name }}
+      values_file_with_path: charts/${{inputs.microservice_name}}/${{ inputs.env_name }}.yaml
+      new_image_tag: ${{ needs.call-build-microservice-container-workflow.outputs.output_image_tag }}
+    secrets:
+      GIT_USER_EMAIL: ${{ secrets.GIT_USER_EMAIL }}
+      GIT_USER_NAME: ${{ secrets.GIT_USER_NAME }}
+      HELM_TOKEN: ${{ secrets.HELM_TOKEN }}

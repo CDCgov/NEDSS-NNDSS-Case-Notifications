@@ -20,10 +20,6 @@ on:
         required: true
         type: string
         default: -f ./<service-name>/Dockerfile .
-      existing-image-tag:
-        description: "Image tag of existing container in ECR (not used if build-new-container=true)."
-        required: false
-        type: string
       environment_classifier:
         description: "Metadata to append to version. 'NONE' strips metadata. 'SNAPSHOT' = 1.0.0-SNAPSHOT.<sha>"
         required: true
@@ -58,7 +54,6 @@ jobs:
     uses: CDCgov/NEDSS-Workflows/.github/workflows/Release-gradle-microservice-container.yaml@main
     with:
       microservice_name: nnd-case-notification-service/${{ inputs.microservice_name }}
-      existing-image-tag: ${{ inputs.existing-image-tag }}
       build-new-container: ${{ inputs.build-new-container }}
       dockerfile_relative_path: -f ./${{ inputs.microservice_name }}/Dockerfile .
       environment_classifier: ${{ inputs.environment_classifier }}
@@ -77,12 +72,7 @@ jobs:
     with:
       microservice_name: nnd-case-notification-service/${{ inputs.microservice_name }}
       values_file_with_path: charts/${{ inputs.microservice_name }}/values-dev.yaml
-      new_image_tag: >-
-        ${{
-          inputs.build-new-container == true &&
-          needs.call-build-microservice-container-workflow.outputs.output_image_tag ||
-          inputs.existing-image-tag
-        }}
+      new_image_tag: ${{ needs.call-build-microservice-container-workflow.outputs.output_image_tag }}
     secrets:
       GIT_USER_EMAIL: ${{ secrets.GIT_USER_EMAIL }}
       GIT_USER_NAME: ${{ secrets.GIT_USER_NAME }}

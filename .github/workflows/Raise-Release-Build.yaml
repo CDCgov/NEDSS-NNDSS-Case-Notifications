@@ -28,10 +28,10 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Set up Git config
+      - name: Set up Git config for bot
         run: |
-          git config --global user.name "${{ secrets.REPOS_USERNAME }}"
-          git config --global user.email "${{ secrets.REPOS_EMAIL }}"
+          git config --global user.name "${{ secrets.BOT_USERNAME }}"
+          git config --global user.email "${{ secrets.BOT_EMAIL }}"
 
       - name: Update version in build.gradle
         run: |
@@ -39,10 +39,10 @@ jobs:
           sed -i "s/^version = .*/version = '${{ inputs.new_version }}'/" "$gradle_path"
           echo "Updated version in $gradle_path to ${{ inputs.new_version }}"
 
-      - name: Commit and create PR
+      - name: Commit and create PR using bot
         id: create-pr
         env:
-          GH_TOKEN: ${{ secrets.REPOS_TOKEN }}
+          GH_TOKEN: ${{ secrets.BOT_TOKEN }}
         run: |
           branch_name="version-bump-${{ inputs.microservice_name }}-${{ inputs.new_version }}"
           git checkout -b "$branch_name"
@@ -58,23 +58,15 @@ jobs:
 
           echo "pr_url=$pr_url" >> $GITHUB_OUTPUT
           echo "branch_name=$branch_name" >> $GITHUB_OUTPUT
-      - name: Auto-merge the PR (bypass required reviews)
+
+      - name: Approve PR using repo account
         env:
           GH_TOKEN: ${{ secrets.REPOS_TOKEN }}
         run: |
-          branch_name="version-bump-${{ inputs.microservice_name }}-${{ inputs.new_version }}"
-          gh pr merge "$branch_name" --rebase --delete-branch --admin
+          gh pr review version-bump-${{ inputs.microservice_name }}-${{ inputs.new_version }} --approve
 
-#      - name: Approve PR
-#        env:
-#          GH_TOKEN: ${{ secrets.REPOS_TOKEN }}
-#        run: |
-#          pr_number=$(gh pr list --state open --head version-bump-${{ inputs.microservice_name }}-${{ inputs.new_version }} --json number --jq '.[0].number')
-#          gh pr review $pr_number --approve
-#
-#      - name: Merge PR
-#        env:
-#          GH_TOKEN: ${{ secrets.REPOS_TOKEN }}
-#        run: |
-#          gh pr merge version-bump-${{ inputs.microservice_name }}-${{ inputs.new_version }} --merge --delete-branch --admin || \
-#          echo "Auto-merge failed (check branch rules or permissions)"
+      - name: Auto-merge the PR
+        env:
+          GH_TOKEN: ${{ secrets.REPOS_TOKEN }}
+        run: |
+          gh pr merge version-bump-${{ inputs.microservice_name }}-${{ inputs.new_version }} --rebase --delete-branch --admin

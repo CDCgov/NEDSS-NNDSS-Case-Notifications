@@ -5,9 +5,6 @@ on:
       - main
       - master
       - update-github-action-**
-    paths-ignore:
-      - "docker-compose.yml"
-      - "**.md"
     paths:
       - 'xml-hl7-parser-service/**'
 jobs:

@@ -5,9 +5,6 @@ on:
       - main
       - master
       - update-github-action-**
-    paths-ignore:
-      - "docker-compose.yml"
-      - "**.md"
     paths:
       - 'case-notification-service/**'
 jobs:

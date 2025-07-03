@@ -48,9 +48,29 @@ jobs:
           git add ./${{ inputs.microservice_name }}/build.gradle
           git commit -m "chore: bump version of ${{ inputs.microservice_name }} to ${{ inputs.new_version }}"
           git push --set-upstream origin "$branch_name"
-
-          gh pr create \
+          
+          pr_url=$(gh pr create \
             --title "Bump ${{ inputs.microservice_name }} version to ${{ inputs.new_version }}" \
             --body "This PR updates the version in \`${{ inputs.microservice_name }}/build.gradle\` to \`${{ inputs.new_version }}\`." \
             --base main \
-            --head "$branch_name"
+            --head "$branch_name" --json url -q .url)
+          
+          echo "Pull request created at: $pr_url"
+          
+      - name: Auto-merge the PR
+        env:
+        GH_TOKEN: ${{ secrets.REPOS_TOKEN }}
+        run: |
+          gh pr merge version-bump-${{ inputs.microservice_name }}-${{ inputs.new_version }} --merge --delete-branch --admin
+#        run: |
+#          branch_name="version-bump-${{ inputs.microservice_name }}-${{ inputs.new_version }}"
+#          git checkout -b "$branch_name"
+#          git add ./${{ inputs.microservice_name }}/build.gradle
+#          git commit -m "chore: bump version of ${{ inputs.microservice_name }} to ${{ inputs.new_version }}"
+#          git push --set-upstream origin "$branch_name"
+#
+#          gh pr create \
+#            --title "Bump ${{ inputs.microservice_name }} version to ${{ inputs.new_version }}" \
+#            --body "This PR updates the version in \`${{ inputs.microservice_name }}/build.gradle\` to \`${{ inputs.new_version }}\`." \
+#            --base main \
+#            --head "$branch_name"

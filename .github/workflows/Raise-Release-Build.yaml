@@ -1,0 +1,46 @@
+name: Bump Version and Raise PR
+
+on:
+  workflow_dispatch:
+    inputs:
+      new_version:
+        description: "New version to set in build.gradle (e.g., 1.2.0)"
+        required: true
+        type: string
+
+jobs:
+  bump-version:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Git config
+        run: |
+          git config --global user.name "${{ secrets.REPOS_USERNAME }}"
+          git config --global user.email "${{ secrets.REPOS_EMAIL }}"
+
+      - name: Update version in build.gradle
+        run: |
+          sed -i "s/^version = .*/version = '${{ inputs.new_version }}'/" build.gradle
+          echo "Updated version to ${{ inputs.new_version }}"
+
+      - name: Commit and create PR
+        env:
+          GH_TOKEN: ${{ secrets.REPOS_TOKEN }}
+        run: |
+          branch_name="version-bump-${{ inputs.new_version }}"
+          git checkout -b "$branch_name"
+          git add build.gradle
+          git commit -m "chore: bump version to ${{ inputs.new_version }}"
+          git push --set-upstream origin "$branch_name"
+          gh pr create \
+            --title "Bump version to ${{ inputs.new_version }}" \
+            --body "This PR updates the Gradle version to ${{ inputs.new_version }} for release." \
+            --base main \
+            --head "$branch_name"

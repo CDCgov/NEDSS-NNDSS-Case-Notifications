@@ -58,17 +58,23 @@ jobs:
 
           echo "pr_url=$pr_url" >> $GITHUB_OUTPUT
           echo "branch_name=$branch_name" >> $GITHUB_OUTPUT
-
-      - name: Approve PR
+      - name: Auto-merge the PR (bypass required reviews)
         env:
           GH_TOKEN: ${{ secrets.REPOS_TOKEN }}
         run: |
-          pr_number=$(gh pr list --state open --head version-bump-${{ inputs.microservice_name }}-${{ inputs.new_version }} --json number --jq '.[0].number')
-          gh pr review $pr_number --approve
+          branch_name="version-bump-${{ inputs.microservice_name }}-${{ inputs.new_version }}"
+          gh pr merge "$branch_name" --merge --delete-branch --admin
 
-      - name: Merge PR
-        env:
-          GH_TOKEN: ${{ secrets.REPOS_TOKEN }}
-        run: |
-          gh pr merge version-bump-${{ inputs.microservice_name }}-${{ inputs.new_version }} --merge --delete-branch --admin || \
-          echo "Auto-merge failed (check branch rules or permissions)"
+#      - name: Approve PR
+#        env:
+#          GH_TOKEN: ${{ secrets.REPOS_TOKEN }}
+#        run: |
+#          pr_number=$(gh pr list --state open --head version-bump-${{ inputs.microservice_name }}-${{ inputs.new_version }} --json number --jq '.[0].number')
+#          gh pr review $pr_number --approve
+#
+#      - name: Merge PR
+#        env:
+#          GH_TOKEN: ${{ secrets.REPOS_TOKEN }}
+#        run: |
+#          gh pr merge version-bump-${{ inputs.microservice_name }}-${{ inputs.new_version }} --merge --delete-branch --admin || \
+#          echo "Auto-merge failed (check branch rules or permissions)"

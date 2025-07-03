@@ -1,0 +1,90 @@
+name: Manual Release with Version
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Release version (e.g., 1.0.0)"
+        required: true
+        type: string
+      microservice_name:
+        description: "Select the microservice to release."
+        required: true
+        type: choice
+        options:
+          - xml-hl7-parser-service
+          - case-notification-service
+          - data-extraction-service
+      env_name:
+        description: "Designated environment (e.g., values-dts1)"
+        required: true
+        default: values-dts1
+        type: string
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Get short SHA
+        id: vars
+        run: echo "sha_short=$(git rev-parse --short $GITHUB_SHA)" >> $GITHUB_OUTPUT
+
+      - name: Set tag from input version
+        id: tag
+        run: echo "image_tag=${{ inputs.version }}.${{ steps.vars.outputs.sha_short }}" >> $GITHUB_OUTPUT
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build and push Docker image
+        env:
+          IMAGE_TAG: ${{ steps.tag.outputs.image_tag }}
+          ECR_REPOSITORY: ${{ secrets.ECR_REPO_BASE_NAME }}/${{ inputs.microservice_name }}
+        run: |
+          docker build -t $ECR_REPOSITORY:$IMAGE_TAG -f ./${{ inputs.microservice_name }}/Dockerfile .
+          docker push $ECR_REPOSITORY:$IMAGE_TAG
+
+      - name: Checkout Helm Chart Repo
+        uses: actions/checkout@v4
+        with:
+          repository: CDCgov/NEDSS-Helm
+          path: helm-repo
+          token: ${{ secrets.HELM_TOKEN }}
+
+      - name: Update Helm chart values
+        working-directory: helm-repo
+        run: |
+          file_path="charts/${{ inputs.microservice_name }}/${{ inputs.env_name }}.yaml"
+          sed -i "s/tag:.*/tag: ${{ steps.tag.outputs.image_tag }}/" "$file_path"
+          echo "Updated tag in $file_path"
+
+      - name: Commit and create PR
+        working-directory: helm-repo
+        env:
+          GITHUB_TOKEN: ${{ secrets.HELM_TOKEN }}
+        run: |
+          git config user.name "${{ secrets.GIT_USER_NAME }}"
+          git config user.email "${{ secrets.GIT_USER_EMAIL }}"
+          branch="release-${{ inputs.microservice_name }}-${{ inputs.version }}"
+          git checkout -b "$branch"
+          git add .
+          git commit -m "Update Helm chart for ${{ inputs.microservice_name }} to ${{ steps.tag.outputs.image_tag }}"
+          git push origin "$branch"
+          
+          gh pr create \
+            --title "Release ${{ inputs.microservice_name }} ${{ inputs.version }}" \
+            --body "Auto-generated release from GitHub Actions." \
+            --base main \
+            --head "$branch"
+          
+          gh pr merge "$branch" --merge --admin --delete-branch

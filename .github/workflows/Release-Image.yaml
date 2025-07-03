@@ -12,21 +12,16 @@ on:
           - case-notification-service
           - data-extraction-service
       environment_classifier:
-        description: "Metadata to append to version. 'NONE' strips metadata. 'SNAPSHOT' = 1.0.0-SNAPSHOT.<sha>"
+        description: "Release version"
         required: true
         type: string
-        default: SNAPSHOT
-      values_file_with_path:
-        description: "Path to Helm chart values file for this service."
+        default: RELEASE
+      env_name:
+        description: "Designated deploying environment. Ex: values-dts1"
         type: string
         default: values-dts1
       build-new-container:
         description: "Check this to build a new container image."
-        required: true
-        default: false
-        type: boolean
-      update_helm_chart:
-        description: "Do you want to update the specified Helm chart?"
         required: true
         default: true
         type: boolean
@@ -36,7 +31,6 @@ jobs:
     uses: CDCgov/NEDSS-Workflows/.github/workflows/Release-gradle-microservice-container.yaml@main
     with:
       microservice_name: nnd-case-notification-service/${{inputs.microservice_name}}
-#      existing-image-tag: ${{inputs.existing-image-tag}}
       build-new-container: ${{inputs.build-new-container}}
       dockerfile_relative_path: -f ./${{inputs.microservice_name}}/Dockerfile .
       environment_classifier: ${{inputs.environment_classifier}}
@@ -52,7 +46,7 @@ jobs:
     uses: CDCgov/NEDSS-Workflows/.github/workflows/Update-helm-charts.yaml@main
     with:
       microservice_name: nnd-case-notification-service/${{ inputs.microservice_name }}
-      values_file_with_path: charts/${{inputs.microservice_name}}/${{ inputs.values_file_with_path }}.yaml
+      values_file_with_path: charts/${{inputs.microservice_name}}/${{ inputs.env_name }}.yaml
       new_image_tag: ${{ needs.call-build-microservice-container-workflow.outputs.output_image_tag }}
     secrets:
       GIT_USER_EMAIL: ${{ secrets.GIT_USER_EMAIL }}

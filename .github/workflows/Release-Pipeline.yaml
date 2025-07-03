@@ -21,10 +21,10 @@ on:
         required: true
         type: choice
         options:
+          - MAJOR RELEASE
           - RELEASE
           - MINOR
           - BATCH
-          - MAJOR RELEASE
 
 jobs:
   bump-version:
@@ -78,6 +78,12 @@ jobs:
       - name: Update version in build.gradle
         run: |
           gradle_path="./${{ inputs.microservice_name }}/build.gradle"
+          sed -i "s/^version = .*/version = '${{ steps.versioning.outputs.new_version }}'/" "$gradle_path"
+          echo "Updated version in $gradle_path to ${{ steps.versioning.outputs.new_version }}"
+
+      - name: Update version in ROOT build.gradle for HelmChart
+        run: |
+          gradle_path="./build.gradle"
           sed -i "s/^version = .*/version = '${{ steps.versioning.outputs.new_version }}'/" "$gradle_path"
           echo "Updated version in $gradle_path to ${{ steps.versioning.outputs.new_version }}"
 

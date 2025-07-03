@@ -8,6 +8,8 @@ on:
     paths-ignore:
       - "docker-compose.yml"
       - "**.md"
+    path:
+      - 'xml-hl7-parser-service/**'
 jobs:
 #    sonar_scan:
 #      uses: ./.github/workflows/sonar.yaml

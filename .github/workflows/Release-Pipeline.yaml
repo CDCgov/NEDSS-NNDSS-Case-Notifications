@@ -20,12 +20,12 @@ on:
           - BATCH: Increments the batch/metadata version (e.g., 1.0.0 → 1.0.0.1)
         required: true
         type: choice
-        default: BATCH
+        default: MINOR
         options:
           - MAJOR RELEASE
           - RELEASE
           - MINOR
-          - BATCH
+#          - BATCH
 
 jobs:
   bump-version:
@@ -51,7 +51,7 @@ jobs:
           current_version=$(grep "^version *= *" "$gradle_path" | sed -E "s/version *= *['\"]?([^'\"]*)['\"]?/\1/")
           echo "Current version: $current_version"
 
-          version_core=$(echo "$current_version" | sed 's/-SNAPSHOT//')
+          version_core=$(echo "$current_version" | sed 's/-RELEASE//')
           IFS='.' read -r major minor patch batch <<< "$(echo "$version_core" | awk -F. '{ printf("%s.%s.%s.%s\n", $1,$2,$3,(NF>3)?$4:0) }')"
 
           bump="${{ inputs.version_bump_type }}"
@@ -69,9 +69,9 @@ jobs:
           esac
 
           if [ "$batch" -gt 0 ]; then
-            new_version="${major}.${minor}.${patch}.${batch}-SNAPSHOT"
+            new_version="${major}.${minor}.${patch}.${batch}-RELEASE"
           else
-            new_version="${major}.${minor}.${patch}-SNAPSHOT"
+            new_version="${major}.${minor}.${patch}-RELEASE"
           fi
 
           echo "new_version=$new_version" >> $GITHUB_OUTPUT
@@ -82,17 +82,12 @@ jobs:
           sed -i "s/^version = .*/version = '${{ steps.versioning.outputs.new_version }}'/" "$gradle_path"
           echo "Updated version in $gradle_path to ${{ steps.versioning.outputs.new_version }}"
 
-      - name: Show updated root build.gradle
-        run: cat ./build.gradle
       - name: Update version in ROOT build.gradle for HelmChart
         run: |
           gradle_path="./build.gradle"
           new_version="${{ steps.versioning.outputs.new_version }}"
           sed -i -E "s/^([[:space:]]*version[[:space:]]*=[[:space:]]*)['\"][^'\"]*['\"](.*)/\1'${new_version}'\2/" "$gradle_path"
           echo "Updated version in $gradle_path to ${new_version}"
-      - name: Show updated root build.gradle
-        run: cat ./build.gradle
-
 
       - name: Commit and create PR using bot
         id: create-pr

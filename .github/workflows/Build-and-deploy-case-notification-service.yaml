@@ -8,6 +8,8 @@ on:
     paths-ignore:
       - "docker-compose.yml"
       - "**.md"
+    path:
+      - 'case-notification-service/**'
 jobs:
 #  sonar_scan:
 #    uses: ./.github/workflows/sonar.yaml

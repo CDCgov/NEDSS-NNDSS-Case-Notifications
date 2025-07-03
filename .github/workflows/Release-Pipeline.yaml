@@ -102,6 +102,7 @@ jobs:
           branch_name="version-bump-${{ inputs.microservice_name }}-${{ steps.versioning.outputs.new_version }}"
           git checkout -b "$branch_name"
           git add "./${{ inputs.microservice_name }}/build.gradle"
+          git add "./build.gradle"
           git commit -m "chore: bump version of ${{ inputs.microservice_name }} to ${{ steps.versioning.outputs.new_version }}"
           git push --set-upstream origin "$branch_name"
 

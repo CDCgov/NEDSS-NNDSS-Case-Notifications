@@ -1,4 +1,4 @@
-name: Bump Version and Raise PR
+name: Release Pipeline (Pump version and Auto merge)
 
 on:
   workflow_dispatch:
@@ -14,10 +14,10 @@ on:
       version_bump_type:
         description: >
           Select the version bump type:
-          - RELEASE: Increments the minor version (e.g., 1.0.0 → 1.1.0)
-          - MINOR: Increments the patch version (e.g., 1.0.0 → 1.0.1)
+          - MAJOR RELEASE: Increments the major version  (e.g., 1.0.0 → 2.0.0)
+          - RELEASE: Increments the minor version        (e.g., 1.0.0 → 1.1.0)
+          - MINOR: Increments the patch version          (e.g., 1.0.0 → 1.0.1)
           - BATCH: Increments the batch/metadata version (e.g., 1.0.0 → 1.0.0.1)
-          - MAJOR RELEASE: Increments the major version (e.g., 1.0.0 → 2.0.0)
         required: true
         type: choice
         options:

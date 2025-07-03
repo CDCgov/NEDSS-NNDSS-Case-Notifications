@@ -3,10 +3,6 @@ name: Release Service image
 on:
   workflow_dispatch:
     inputs:
-      version:
-        description: "Optional: Base version number (e.g., 1.0.0). If not set, defaults to 0.0.1"
-        required: true
-        type: string
       microservice_name:
         description: "Select the microservice to release."
         required: true
@@ -52,8 +48,7 @@ jobs:
       HELM_TOKEN: ${{secrets.HELM_TOKEN}}
 
   call-update-helm:
-    if: inputs.update_helm_chart == true
-    needs: [call-build-microservice-container-workflow, generate-image-tag]
+    needs: call-build-microservice-container-workflow
     uses: CDCgov/NEDSS-Workflows/.github/workflows/Update-helm-charts.yaml@main
     with:
       microservice_name: nnd-case-notification-service/${{ inputs.microservice_name }}

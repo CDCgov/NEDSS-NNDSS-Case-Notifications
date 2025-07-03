@@ -12,9 +12,10 @@ on:
           - case-notification-service
           - data-extraction-service
       new_version:
-        description: "New version to set in build.gradle (e.g., 1.2.0)"
-        required: true
+        description: "New version to set in build.gradle (optional, will auto-increment if omitted)"
+        required: false
         type: string
+        default: ""
 
 jobs:
   bump-version:
@@ -33,26 +34,44 @@ jobs:
           git config --global user.name "${{ secrets.BOT_USERNAME }}"
           git config --global user.email "${{ secrets.BOT_EMAIL }}"
 
+      - name: Determine new version if not provided
+        id: versioning
+        run: |
+          gradle_path="./${{ inputs.microservice_name }}/build.gradle"
+          current_version=$(grep "^version *= *" "$gradle_path" | sed -E "s/version *= *['\"]?([^'\"]*)['\"]?/\1/")
+
+          if [ -z "${{ inputs.new_version }}" ]; then
+            IFS='.' read -r major minor patch <<< "$current_version"
+            minor=$((minor + 1))
+            patch=0
+            new_version="${major}.${minor}.${patch}"
+          else
+            new_version="${{ inputs.new_version }}"
+          fi
+
+          echo "Determined version: $new_version"
+          echo "new_version=$new_version" >> $GITHUB_OUTPUT
+
       - name: Update version in build.gradle
         run: |
           gradle_path="./${{ inputs.microservice_name }}/build.gradle"
-          sed -i "s/^version = .*/version = '${{ inputs.new_version }}'/" "$gradle_path"
-          echo "Updated version in $gradle_path to ${{ inputs.new_version }}"
+          sed -i "s/^version = .*/version = '${{ steps.versioning.outputs.new_version }}'/" "$gradle_path"
+          echo "Updated version in $gradle_path to ${{ steps.versioning.outputs.new_version }}"
 
       - name: Commit and create PR using bot
         id: create-pr
         env:
           GH_TOKEN: ${{ secrets.BOT_TOKEN }}
         run: |
-          branch_name="version-bump-${{ inputs.microservice_name }}-${{ inputs.new_version }}"
+          branch_name="version-bump-${{ inputs.microservice_name }}-${{ steps.versioning.outputs.new_version }}"
           git checkout -b "$branch_name"
           git add "./${{ inputs.microservice_name }}/build.gradle"
-          git commit -m "chore: bump version of ${{ inputs.microservice_name }} to ${{ inputs.new_version }}"
+          git commit -m "chore: bump version of ${{ inputs.microservice_name }} to ${{ steps.versioning.outputs.new_version }}"
           git push --set-upstream origin "$branch_name"
 
           pr_url=$(gh pr create \
-            --title "Bump ${{ inputs.microservice_name }} version to ${{ inputs.new_version }}" \
-            --body "This PR updates \`${{ inputs.microservice_name }}/build.gradle\` to \`${{ inputs.new_version }}\`." \
+            --title "Bump ${{ inputs.microservice_name }} version to ${{ steps.versioning.outputs.new_version }}" \
+            --body "This PR updates \`${{ inputs.microservice_name }}/build.gradle\` to \`${{ steps.versioning.outputs.new_version }}\`." \
             --base main \
             --head "$branch_name")
 
@@ -63,10 +82,10 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.REPOS_TOKEN }}
         run: |
-          gh pr review version-bump-${{ inputs.microservice_name }}-${{ inputs.new_version }} --approve
+          gh pr review "version-bump-${{ inputs.microservice_name }}-${{ steps.versioning.outputs.new_version }}" --approve
 
       - name: Auto-merge the PR
         env:
           GH_TOKEN: ${{ secrets.REPOS_TOKEN }}
         run: |
-          gh pr merge version-bump-${{ inputs.microservice_name }}-${{ inputs.new_version }} --squash --delete-branch --admin
+          gh pr merge "version-bump-${{ inputs.microservice_name }}-${{ steps.versioning.outputs.new_version }}" --squash --delete-branch --admin

@@ -55,15 +55,15 @@ jobs:
 
           if [[ "$bump" == "BATCH" ]]; then
             version_base=$(echo "$current_version" | sed 's/-SNAPSHOT//')
-            if [[ "$version_base" == *_* ]]; then
-              base="${version_base%%_*}"
-              batch="${version_base##*_}"
+            if [[ "$version_base" == *+* ]]; then
+              base="${version_base%%+*}"
+              batch="${version_base##*+}"
               batch=$((batch + 1))
             else
               base="$version_base"
               batch=1
             fi
-            new_version="${base}_$batch-SNAPSHOT"
+            new_version="${base}+$batch-SNAPSHOT"
             echo "new_version=$new_version" >> $GITHUB_OUTPUT
             exit 0
           fi

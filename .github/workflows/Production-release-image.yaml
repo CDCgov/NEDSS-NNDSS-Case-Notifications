@@ -14,16 +14,14 @@ on:
       version_bump_type:
         description: >
           Select the version bump type:
-          - MAJOR RELEASE: Increments the major version  (e.g., 1.0.0 → 2.0.0)
-          - RELEASE: Increments the minor version        (e.g., 1.0.0 → 1.1.0)
-          - MINOR: Increments the patch version          (e.g., 1.0.0 → 1.0.1)
-          - BATCH: Increments the batch/metadata version (e.g., 1.0.0 → 1.0.0.1)
+          - MAJOR: Increments the major version (e.g., 1.0.0 → 2.0.0)
+          - MINOR: Increments the minor version (e.g., 1.0.0 → 1.1.0)
+          - BATCH: Increments the batch version (e.g., 1.0.0 → 1.0.1)
         required: true
         type: choice
         default: MINOR
         options:
-          - MAJOR RELEASE
-          - RELEASE
+          - MAJOR
           - MINOR
           - BATCH
 
@@ -54,38 +52,23 @@ jobs:
           # Strip -SNAPSHOT if present
           version_core=$(echo "$current_version" | sed 's/-SNAPSHOT//')
 
-          # Extract +batch if exists
-          if [[ "$version_core" == *"+"* ]]; then
-            base="${version_core%%+*}"
-            batch="${version_core##*+}"
-          else
-            base="$version_core"
-            batch=0
-          fi
-
-          IFS='.' read -r major minor patch <<< "$base"
+          IFS='.' read -r major minor patch <<< "$version_core"
 
           bump="${{ inputs.version_bump_type }}"
           case "$bump" in
-            "RELEASE")
-              minor=$((minor + 1)); patch=0; batch=0 ;;
+            "MAJOR")
+              major=$((major + 1)); minor=0; patch=0 ;;
             "MINOR")
-              patch=$((patch + 1)); batch=0 ;;
+              minor=$((minor + 1)); patch=0 ;;
             "BATCH")
-              batch=$((batch + 1)) ;;
-            "MAJOR RELEASE")
-              major=$((major + 1)); minor=0; patch=0; batch=0 ;;
+              patch=$((patch + 1)) ;;
             *)
               echo "Unknown bump type: $bump"; exit 1 ;;
           esac
 
-          if [ "$batch" -gt 0 ]; then
-            new_version="${major}.${minor}.${patch}+${batch}-SNAPSHOT"
-          else
-            new_version="${major}.${minor}.${patch}-SNAPSHOT"
-          fi
-
+          new_version="${major}.${minor}.${patch}-SNAPSHOT"
           echo "new_version=$new_version" >> $GITHUB_OUTPUT
+      
       
 
       - name: Update version in build.gradle

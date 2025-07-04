@@ -51,8 +51,19 @@ jobs:
           current_version=$(grep "^version *= *" "$gradle_path" | sed -E "s/version *= *['\"]?([^'\"]*)['\"]?/\1/")
           echo "Current version: $current_version"
 
+          # Strip -SNAPSHOT if present
           version_core=$(echo "$current_version" | sed 's/-SNAPSHOT//')
-          IFS='.' read -r major minor patch batch <<< "$(echo "$version_core" | awk -F. '{ printf("%s.%s.%s.%s\n", $1,$2,$3,(NF>3)?$4:0) }')"
+
+          # Extract +batch if exists
+          if [[ "$version_core" == *"+"* ]]; then
+            base="${version_core%%+*}"
+            batch="${version_core##*+}"
+          else
+            base="$version_core"
+            batch=0
+          fi
+
+          IFS='.' read -r major minor patch <<< "$base"
 
           bump="${{ inputs.version_bump_type }}"
           case "$bump" in
@@ -69,12 +80,13 @@ jobs:
           esac
 
           if [ "$batch" -gt 0 ]; then
-            new_version="${major}.${minor}.${patch}.${batch}-SNAPSHOT"
+            new_version="${major}.${minor}.${patch}+${batch}-SNAPSHOT"
           else
             new_version="${major}.${minor}.${patch}-SNAPSHOT"
           fi
 
           echo "new_version=$new_version" >> $GITHUB_OUTPUT
+      
 
       - name: Update version in build.gradle
         run: |

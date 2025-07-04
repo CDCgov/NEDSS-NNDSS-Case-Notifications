@@ -20,7 +20,7 @@ plugins {
 
 apply plugin: 'org.owasp.dependencycheck'
 
-version = '1.0.8.2+1-SNAPSHOT'
+version = '1.0.8-SNAPSHOT'
 
 //apply plugin: "com.dipien.semantic-version"
 subprojects {

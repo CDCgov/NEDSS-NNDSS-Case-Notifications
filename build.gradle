@@ -9,7 +9,7 @@ buildscript {
         testFailures = 0
     }
     dependencies {
-//        classpath("com.dipien:semantic-version-gradle-plugin:2.0.0")
+        classpath("com.dipien:semantic-version-gradle-plugin:2.0.0")
         classpath 'org.owasp:dependency-check-gradle:9.0.3'
     }
 }
@@ -22,7 +22,7 @@ apply plugin: 'org.owasp.dependencycheck'
 
 version = '1.0.1-SNAPSHOT'
 
-//apply plugin: "com.dipien.semantic-version"
+apply plugin: "com.dipien.semantic-version"
 subprojects {
 
     repositories {

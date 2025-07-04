@@ -49,42 +49,43 @@ jobs:
         run: |
           gradle_path="./${{ inputs.microservice_name }}/build.gradle"
           current_version=$(grep "^version *= *" "$gradle_path" | sed -E "s/version *= *['\"]?([^'\"]*)['\"]?/\1/")
-
-          version_core=$(echo "$current_version" | sed 's/-SNAPSHOT//')
-          IFS='.' read -r major minor patch batch <<< "$(echo "$version_core" | awk -F. '{ printf("%s.%s.%s.%s\n", $1,$2,$3,(NF>3)?$4:0) }')"
+          echo "Current version: $current_version"
 
           bump="${{ inputs.version_bump_type }}"
 
+          if [[ "$bump" == "BATCH" ]]; then
+            version_base=$(echo "$current_version" | sed 's/-SNAPSHOT//')
+            if [[ "$version_base" == *_* ]]; then
+              base="${version_base%%_*}"
+              batch="${version_base##*_}"
+              batch=$((batch + 1))
+            else
+              base="$version_base"
+              batch=1
+            fi
+            new_version="${base}_$batch-SNAPSHOT"
+            echo "new_version=$new_version" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          version_base=$(echo "$current_version" | sed 's/-SNAPSHOT//; s/_.*//')
+          IFS='.' read -r major minor patch <<< "$version_base"
+          batch=0
+
           case "$bump" in
-            "RELEASE")
-              minor=$((minor + 1)); patch=0; batch=0 ;;
-            "MINOR")
-              patch=$((patch + 1)); batch=0 ;;
-            "BATCH")
-              if [[ "$version_core" == *"_"* ]]; then
-                base_version="${version_core%%_*}"
-                batch="${version_core##*_}"
-                batch=$((batch + 1))
-              else
-                base_version="$version_core"
-                batch=1
-              fi
-              new_version="${base_version}_$batch-SNAPSHOT"
-              echo "new_version=$new_version" >> $GITHUB_OUTPUT
-              exit 0 ;;
             "MAJOR RELEASE")
-              major=$((major + 1)); minor=0; patch=0; batch=0 ;;
+              major=$((major + 1)); minor=0; patch=0 ;;
+            "RELEASE")
+              minor=$((minor + 1)); patch=0 ;;
+            "MINOR")
+              patch=$((patch + 1)) ;;
             *)
               echo "Unknown bump type: $bump"; exit 1 ;;
           esac
 
-          if [ "$batch" -gt 0 ]; then
-            new_version="${major}.${minor}.${patch}.${batch}-SNAPSHOT"
-          else
-            new_version="${major}.${minor}.${patch}-SNAPSHOT"
-          fi
-
+          new_version="${major}.${minor}.${patch}-SNAPSHOT"
           echo "new_version=$new_version" >> $GITHUB_OUTPUT
+      
 
       - name: Update version in build.gradle
         run: |

@@ -9,7 +9,7 @@ springBoot {
 }
 
 group = 'gov.cdc'
-version = '1.0.8+1-SNAPSHOT'
+version = '1.0.8+2-SNAPSHOT'
 
 
 repositories {

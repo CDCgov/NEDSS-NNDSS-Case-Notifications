@@ -1,4 +1,4 @@
-name: Release Pipeline (Pump version and Auto merge)
+name: Release Production Ready Image (Pump version and Auto merge)
 
 on:
   workflow_dispatch:
@@ -17,7 +17,7 @@ on:
           - MAJOR RELEASE: Increments the major version  (e.g., 1.0.0 → 2.0.0)
           - RELEASE: Increments the minor version        (e.g., 1.0.0 → 1.1.0)
           - MINOR: Increments the patch version          (e.g., 1.0.0 → 1.0.1)
-          - BATCH: Increments the batch/metadata version (e.g., 1.0.0 → 1.0.0.1)
+          - BATCH: Increments the batch/metadata version (e.g., 1.0.0 → 1.0.0_1)
         required: true
         type: choice
         default: MINOR
@@ -25,7 +25,7 @@ on:
           - MAJOR RELEASE
           - RELEASE
           - MINOR
-#          - BATCH
+          - BATCH
 
 jobs:
   bump-version:
@@ -49,19 +49,29 @@ jobs:
         run: |
           gradle_path="./${{ inputs.microservice_name }}/build.gradle"
           current_version=$(grep "^version *= *" "$gradle_path" | sed -E "s/version *= *['\"]?([^'\"]*)['\"]?/\1/")
-          echo "Current version: $current_version"
 
-          version_core=$(echo "$current_version" | sed 's/-RELEASE//')
+          version_core=$(echo "$current_version" | sed 's/-SNAPSHOT//')
           IFS='.' read -r major minor patch batch <<< "$(echo "$version_core" | awk -F. '{ printf("%s.%s.%s.%s\n", $1,$2,$3,(NF>3)?$4:0) }')"
 
           bump="${{ inputs.version_bump_type }}"
+
           case "$bump" in
             "RELEASE")
               minor=$((minor + 1)); patch=0; batch=0 ;;
             "MINOR")
               patch=$((patch + 1)); batch=0 ;;
             "BATCH")
-              batch=$((batch + 1)) ;;
+              if [[ "$version_core" == *"_"* ]]; then
+                base_version="${version_core%%_*}"
+                batch="${version_core##*_}"
+                batch=$((batch + 1))
+              else
+                base_version="$version_core"
+                batch=1
+              fi
+              new_version="${base_version}_$batch-SNAPSHOT"
+              echo "new_version=$new_version" >> $GITHUB_OUTPUT
+              exit 0 ;;
             "MAJOR RELEASE")
               major=$((major + 1)); minor=0; patch=0; batch=0 ;;
             *)
@@ -69,9 +79,9 @@ jobs:
           esac
 
           if [ "$batch" -gt 0 ]; then
-            new_version="${major}.${minor}.${patch}.${batch}-RELEASE"
+            new_version="${major}.${minor}.${patch}.${batch}-SNAPSHOT"
           else
-            new_version="${major}.${minor}.${patch}-RELEASE"
+            new_version="${major}.${minor}.${patch}-SNAPSHOT"
           fi
 
           echo "new_version=$new_version" >> $GITHUB_OUTPUT

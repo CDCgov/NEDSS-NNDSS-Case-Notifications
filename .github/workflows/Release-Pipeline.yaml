@@ -75,8 +75,6 @@ jobs:
           fi
 
           echo "new_version=$new_version" >> $GITHUB_OUTPUT
-          echo "classifier=RELEASE" >> $GITHUB_OUTPUT  # <<<<<< KEY LINE
-          echo "CLASSIFIER=RELEASE" >> $GITHUB_ENV
 
       - name: Update version in build.gradle
         run: |
@@ -123,8 +121,4 @@ jobs:
           GH_TOKEN: ${{ secrets.REPOS_TOKEN }}
         run: |
           gh pr merge version-bump-${{ inputs.microservice_name }}-${{ steps.versioning.outputs.new_version }} --squash --delete-branch --admin
-    
-
-
-    outputs:
-      classifier: ${{ steps.versioning.outputs.classifier }}
+  

@@ -15,8 +15,7 @@ on:
         description: "Enter the new version (format: n.n.n, e.g., 1.2.3)"
         required: true
         type: string
-        default: ""
-        pattern: '^\d+\.\d+\.\d+$'
+        default: "1.0.0"
 
 jobs:
   bump-version:
@@ -35,23 +34,26 @@ jobs:
           git config --global user.name "${{ secrets.BOT_USERNAME }}"
           git config --global user.email "${{ secrets.BOT_EMAIL }}"
 
-      - name: Prepare version string
-        id: versioning
+      - name: Validate version format
+        id: validate
         run: |
-          new_version="${{ inputs.new_version }}-SNAPSHOT"
-          echo "new_version=$new_version" >> $GITHUB_OUTPUT
-          echo "Using version: $new_version"
+          version="${{ inputs.new_version }}"
+          if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "❌ ERROR: Invalid version format. Expected format: n.n.n (e.g., 1.2.3)"
+            exit 1
+          fi
+          echo "new_version=${version}-SNAPSHOT" >> $GITHUB_OUTPUT
 
       - name: Update version in build.gradle
         run: |
           gradle_path="./${{ inputs.microservice_name }}/build.gradle"
-          sed -i "s/^version = .*/version = '${{ steps.versioning.outputs.new_version }}'/" "$gradle_path"
-          echo "Updated version in $gradle_path to ${{ steps.versioning.outputs.new_version }}"
+          sed -i "s/^version = .*/version = '${{ steps.validate.outputs.new_version }}'/" "$gradle_path"
+          echo "Updated version in $gradle_path to ${{ steps.validate.outputs.new_version }}"
 
       - name: Update version in ROOT build.gradle for HelmChart
         run: |
           gradle_path="./build.gradle"
-          new_version="${{ steps.versioning.outputs.new_version }}"
+          new_version="${{ steps.validate.outputs.new_version }}"
           sed -i -E "s/^([[:space:]]*version[[:space:]]*=[[:space:]]*)['\"][^'\"]*['\"](.*)/\1'${new_version}'\2/" "$gradle_path"
           echo "Updated version in $gradle_path to ${new_version}"
 
@@ -60,16 +62,16 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.BOT_TOKEN }}
         run: |
-          branch_name="version-bump-${{ inputs.microservice_name }}-${{ steps.versioning.outputs.new_version }}"
+          branch_name="version-bump-${{ inputs.microservice_name }}-${{ steps.validate.outputs.new_version }}"
           git checkout -b "$branch_name"
           git add "./${{ inputs.microservice_name }}/build.gradle"
           git add "./build.gradle"
-          git commit -m "chore: bump version of ${{ inputs.microservice_name }} to ${{ steps.versioning.outputs.new_version }}"
+          git commit -m "chore: bump version of ${{ inputs.microservice_name }} to ${{ steps.validate.outputs.new_version }}"
           git push --set-upstream origin "$branch_name"
 
           pr_url=$(gh pr create \
-            --title "Bump ${{ inputs.microservice_name }} version to ${{ steps.versioning.outputs.new_version }}" \
-            --body "This PR updates \`${{ inputs.microservice_name }}/build.gradle\` to \`${{ steps.versioning.outputs.new_version }}\`." \
+            --title "Bump ${{ inputs.microservice_name }} version to ${{ steps.validate.outputs.new_version }}" \
+            --body "This PR updates \`${{ inputs.microservice_name }}/build.gradle\` to \`${{ steps.validate.outputs.new_version }}\`." \
             --base main \
             --head "$branch_name")
 
@@ -80,10 +82,10 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.REPOS_TOKEN }}
         run: |
-          gh pr review version-bump-${{ inputs.microservice_name }}-${{ steps.versioning.outputs.new_version }} --approve
+          gh pr review version-bump-${{ inputs.microservice_name }}-${{ steps.validate.outputs.new_version }} --approve
 
       - name: Auto-merge the PR
         env:
           GH_TOKEN: ${{ secrets.REPOS_TOKEN }}
         run: |
-          gh pr merge version-bump-${{ inputs.microservice_name }}-${{ steps.versioning.outputs.new_version }} --squash --delete-branch --admin
+          gh pr merge version-bump-${{ inputs.microservice_name }}-${{ steps.validate.outputs.new_version }} --squash --delete-branch --admin

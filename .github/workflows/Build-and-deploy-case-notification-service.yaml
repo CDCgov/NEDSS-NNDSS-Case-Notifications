@@ -8,20 +8,41 @@ on:
     paths:
       - 'case-notification-service/**'
 jobs:
-#  sonar_scan:
-#    uses: ./.github/workflows/sonar.yaml
-#    secrets:
-#      CDC_NBS_SANDBOX_SHARED_SERVICES_ACCOUNTID: ${{secrets.CDC_NBS_SANDBOX_SHARED_SERVICES_ACCOUNTID}}
-#      PASSED_GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-#      SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
+  extract-version-suffix:
+    name: Extract image tag from version
+    runs-on: ubuntu-latest
+    outputs:
+      image_tag: ${{ steps.parse.outputs.image_tag }}
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Read version from build.gradle and extract suffix
+        id: parse
+        run: |
+          version_line=$(grep "^version" ./case-notification-service/build.gradle)
+          version=$(echo "$version_line" | sed -E "s/version *= *['\"]([^'\"]+)['\"]/\1/")
+          echo "Full version: $version"
+
+          # Default value
+          image_tag="SNAPSHOT"
+
+          # Match SNAPSHOT-123
+          if [[ "$version" =~ SNAPSHOT-([0-9]+) ]]; then
+            image_tag="SNAPSHOT-${BASH_REMATCH[1]}"
+          elif [[ "$version" =~ SNAPSHOT ]]; then
+            image_tag="SNAPSHOT"
+          fi
+
+          echo "image_tag=$image_tag" >> $GITHUB_OUTPUT
   call-build-microservice-container-workflow:
     name: Build Container
-#    needs: sonar_scan
+    needs: extract-version-suffix
     uses: CDCgov/NEDSS-Workflows/.github/workflows/Build-gradle-microservice-container.yaml@main
     with:
       microservice_name: nnd-case-notification-service/case-notification-service
       dockerfile_relative_path: -f ./case-notification-service/Dockerfile .
-      environment_classifier: SNAPSHOT
+      environment_classifier: ${{ needs.extract-version-suffix.outputs.image_tag }}
       java_version: "21"
     secrets:
       CDC_NBS_SANDBOX_SHARED_SERVICES_ACCOUNTID: ${{secrets.CDC_NBS_SANDBOX_SHARED_SERVICES_ACCOUNTID}}

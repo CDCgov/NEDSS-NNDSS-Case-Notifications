@@ -38,6 +38,7 @@ jobs:
 
   call-build-microservice-container-workflow:
     name: Build Container
+    needs: extract-version-suffix
     uses: CDCgov/NEDSS-Workflows/.github/workflows/Build-gradle-microservice-container.yaml@main
     with:
       microservice_name: nnd-case-notification-service/xml-hl7-parser-service

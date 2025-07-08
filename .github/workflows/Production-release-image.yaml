@@ -11,9 +11,19 @@ on:
           - xml-hl7-parser-service
           - case-notification-service
           - data-extraction-service
+      is_hotfix:
+        description: "Is this a hotfix release?"
+        required: true
+        type: boolean
+        default: false
       new_version:
         description: "Enter the new version (format: n.n.n, e.g., 1.2.3)"
-        required: true
+        required: false
+        type: string
+        default: ""
+      hotfix_version:
+        description: "If hotfix, enter the hotfix number (e.g., 9999)"
+        required: false
         type: string
         default: ""
 
@@ -34,15 +44,36 @@ jobs:
           git config --global user.name "${{ secrets.BOT_USERNAME }}"
           git config --global user.email "${{ secrets.BOT_EMAIL }}"
 
-      - name: Validate version format
+      - name: Determine final version
         id: validate
         run: |
-          version="${{ inputs.new_version }}"
-          if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-            echo "❌ ERROR: Invalid version format. Expected format: n.n.n (e.g., 1.2.3)"
-            exit 1
+          is_hotfix="${{ inputs.is_hotfix }}"
+          base_version="${{ inputs.new_version }}"
+          hotfix_version="${{ inputs.hotfix_version }}"
+
+          if [[ "$is_hotfix" == "true" ]]; then
+            if [[ ! "$hotfix_version" =~ ^[0-9]+$ ]]; then
+              echo "❌ ERROR: Hotfix version must be numeric."
+              exit 1
+            fi
+
+            # Get current version from gradle
+            gradle_path="./${{ inputs.microservice_name }}/build.gradle"
+            current_version_line=$(grep "^version" "$gradle_path")
+            current_version=$(echo "$current_version_line" | sed -E "s/version *= *['\"]([^'\"]+)['\"]/\1/")
+            current_version_base=$(echo "$current_version" | sed 's/-SNAPSHOT.*//')
+
+            final_version="${current_version_base}-SNAPSHOT-${hotfix_version}"
+          else
+            if [[ ! "$base_version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+              echo "❌ ERROR: Version format must be n.n.n (e.g., 1.2.3)"
+              exit 1
+            fi
+            final_version="${base_version}-SNAPSHOT"
           fi
-          echo "new_version=${version}-SNAPSHOT" >> $GITHUB_OUTPUT
+
+          echo "✅ Using version: $final_version"
+          echo "new_version=$final_version" >> $GITHUB_OUTPUT
 
       - name: Update version in build.gradle
         run: |

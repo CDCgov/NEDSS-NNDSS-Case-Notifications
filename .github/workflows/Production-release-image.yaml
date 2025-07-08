@@ -51,20 +51,32 @@ jobs:
           base_version="${{ inputs.new_version }}"
           hotfix_version="${{ inputs.hotfix_version }}"
 
+          gradle_path="./${{ inputs.microservice_name }}/build.gradle"
+
           if [[ "$is_hotfix" == "true" ]]; then
-            if [[ ! "$hotfix_version" =~ ^[0-9]+$ ]]; then
-              echo "❌ ERROR: Hotfix version must be numeric."
+            if [[ -n "$base_version" ]]; then
+              echo "❌ ERROR: Do not enter 'new_version' when 'is_hotfix' is true."
+              exit 1
+            fi
+            if [[ ! "$hotfix_version" =~ ^[0-9]{4}$ ]]; then
+              echo "❌ ERROR: Hotfix version must be exactly 4 digits (e.g., 9999)."
               exit 1
             fi
 
-            # Get current version from gradle
-            gradle_path="./${{ inputs.microservice_name }}/build.gradle"
             current_version_line=$(grep "^version" "$gradle_path")
             current_version=$(echo "$current_version_line" | sed -E "s/version *= *['\"]([^'\"]+)['\"]/\1/")
             current_version_base=$(echo "$current_version" | sed 's/-SNAPSHOT.*//')
 
             final_version="${current_version_base}-SNAPSHOT-${hotfix_version}"
           else
+            if [[ -z "$base_version" ]]; then
+              echo "❌ ERROR: You must provide a 'new_version' when not performing a hotfix."
+              exit 1
+            fi
+            if [[ -n "$hotfix_version" ]]; then
+              echo "❌ ERROR: Do not enter 'hotfix_version' when 'is_hotfix' is false."
+              exit 1
+            fi
             if [[ ! "$base_version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
               echo "❌ ERROR: Version format must be n.n.n (e.g., 1.2.3)"
               exit 1

@@ -11,19 +11,12 @@ on:
           - xml-hl7-parser-service
           - case-notification-service
           - data-extraction-service
-      version_bump_type:
-        description: >
-          Select the version bump type:
-          - MAJOR: Increments the major version (e.g., 1.0.0 → 2.0.0)
-          - MINOR: Increments the minor version (e.g., 1.0.0 → 1.1.0)
-          - BATCH: Increments the batch version (e.g., 1.0.0 → 1.0.1)
+      new_version:
+        description: "Enter the new version (format: n.n.n, e.g., 1.2.3)"
         required: true
-        type: choice
-        default: MINOR
-        options:
-          - MAJOR
-          - MINOR
-          - BATCH
+        type: string
+        default: ""
+        pattern: '^\d+\.\d+\.\d+$'
 
 jobs:
   bump-version:
@@ -42,34 +35,12 @@ jobs:
           git config --global user.name "${{ secrets.BOT_USERNAME }}"
           git config --global user.email "${{ secrets.BOT_EMAIL }}"
 
-      - name: Determine new version
+      - name: Prepare version string
         id: versioning
         run: |
-          gradle_path="./${{ inputs.microservice_name }}/build.gradle"
-          current_version=$(grep "^version *= *" "$gradle_path" | sed -E "s/version *= *['\"]?([^'\"]*)['\"]?/\1/")
-          echo "Current version: $current_version"
-
-          # Strip -SNAPSHOT if present
-          version_core=$(echo "$current_version" | sed 's/-SNAPSHOT//')
-
-          IFS='.' read -r major minor patch <<< "$version_core"
-
-          bump="${{ inputs.version_bump_type }}"
-          case "$bump" in
-            "MAJOR")
-              major=$((major + 1)); minor=0; patch=0 ;;
-            "MINOR")
-              minor=$((minor + 1)); patch=0 ;;
-            "BATCH")
-              patch=$((patch + 1)) ;;
-            *)
-              echo "Unknown bump type: $bump"; exit 1 ;;
-          esac
-
-          new_version="${major}.${minor}.${patch}-SNAPSHOT"
+          new_version="${{ inputs.new_version }}-SNAPSHOT"
           echo "new_version=$new_version" >> $GITHUB_OUTPUT
-      
-      
+          echo "Using version: $new_version"
 
       - name: Update version in build.gradle
         run: |
@@ -116,4 +87,3 @@ jobs:
           GH_TOKEN: ${{ secrets.REPOS_TOKEN }}
         run: |
           gh pr merge version-bump-${{ inputs.microservice_name }}-${{ steps.versioning.outputs.new_version }} --squash --delete-branch --admin
-  

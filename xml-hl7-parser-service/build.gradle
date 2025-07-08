@@ -10,7 +10,7 @@ springBoot {
 
 group = 'gov.cdc'
 
-version = '1.0.2-SNAPSHOT'
+version = 'adad-SNAPSHOT'
 
 
 repositories {

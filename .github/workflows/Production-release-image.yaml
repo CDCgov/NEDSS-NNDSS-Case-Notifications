@@ -15,7 +15,7 @@ on:
         description: "Enter the new version (format: n.n.n, e.g., 1.2.3)"
         required: true
         type: string
-        default: "1.0.0"
+        default: ""
 
 jobs:
   bump-version:

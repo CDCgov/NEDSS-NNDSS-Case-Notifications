@@ -34,28 +34,6 @@ spring:
         jwt:
           issuer-uri: ${CN_AUTH_URI:http://localhost:8100/realms/NBS}
           jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
-
-auth:
-  token-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/token
-  introspect-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/token/introspect
-
-service:
-  timezone: ${SERVICE_TZ:UTC}
-
-cnserver:
-  host: ${CN_SERVER_HOST:localhost:8093}
-
-api:
-  clientId: ${NND_DE_CLIENT_ID:}
-  secret: ${NND_DE_SECRET:}
-  endpoint_hl7: ${NND_DE_URL:https://dataingestion.dts1.nbspreview.com/hl7-parser}/xml-to-hl7
-  endpoint_token: ${NND_DE_URL:https://dataingestion.dts1.nbspreview.com/hl7-parser}/api/auth/token
-
----
-spring:
-  config:
-    activate:
-      on-profile: default
   liquibase:
     user: ${NBS_DBUSER}
     password: ${NBS_DBPASSWORD}
@@ -92,6 +70,45 @@ spring:
     retry:
       max-retry: 2
       suffix: -retry
+
+auth:
+  token-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/token
+  introspect-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/token/introspect
+
+service:
+  timezone: ${SERVICE_TZ:UTC}
+
+cnserver:
+  host: ${CN_SERVER_HOST:localhost:8093}
+
+api:
+  clientId: ${NND_DE_CLIENT_ID:}
+  secret: ${NND_DE_SECRET:}
+  endpoint_hl7: ${NND_DE_URL:https://dataingestion.dts1.nbspreview.com/hl7-parser}/xml-to-hl7
+  endpoint_token: ${NND_DE_URL:https://dataingestion.dts1.nbspreview.com/hl7-parser}/api/auth/token
+
+---
+spring:
+  config:
+    activate:
+      on-profile: default
+  springdoc:
+    api-docs:
+      enabled: false
+    swagger-ui:
+      enabled: false
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  springdoc:
+    api-docs:
+      enabled: true
+    swagger-ui:
+      enabled: true
+---
 
 logging:
   level:

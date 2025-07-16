@@ -15,10 +15,8 @@ management:
       base-path: /actuator
       exposure:
         include: "health,info"
+
 spring:
-  config:
-    activate:
-      on-profile: default
   datasource:
     username: ${NBS_DBUSER}
     password: ${NBS_DBPASSWORD}
@@ -46,6 +44,29 @@ spring:
         jwt:
           issuer-uri: ${CN_AUTH_URI}
           jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
+
+---
+spring:
+  config:
+    activate:
+      on-profile: default
+  springdoc:
+    api-docs:
+      enabled: false
+    swagger-ui:
+      enabled: false
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  springdoc:
+    api-docs:
+      enabled: true
+    swagger-ui:
+      enabled: true
+---
 
 auth:
   token-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/token

@@ -1,0 +1,1412 @@
+{
+	"info": {
+		"_postman_id": "d2148ac8-9496-4514-88d5-9242f9d43100",
+		"name": "Case Notification Service API",
+		"description": "This API exposes endpoints to manage Case Notification Service.\n\nContact Support:\n Name: Case Notification Service\n Email: nndservice@cdc.com",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25680585",
+		"_collection_link": "https://data-team-0400.postman.co/workspace/Data-Services-Swagger~08287add-14ad-4ca6-b115-b6f95b8635db/collection/25680585-d2148ac8-9496-4514-88d5-9242f9d43100?action=share&source=collection_link&creator=25680585"
+	},
+	"item": [
+		{
+			"name": "config",
+			"item": [
+				{
+					"name": "Update Case Notification config",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "clientid",
+								"value": "",
+								"description": "(Required) "
+							},
+							{
+								"key": "clientsecret",
+								"value": "",
+								"description": "(Required) "
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/config/update",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"config",
+								"update"
+							]
+						},
+						"description": "If 'id' is not provided, updates the top config by name; otherwise updates by given id."
+					},
+					"response": [
+						{
+							"name": "Update success",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer <token>",
+										"description": "Added as a part of security scheme: bearer"
+									},
+									{
+										"key": "clientid",
+										"value": "",
+										"description": "(Required) "
+									},
+									{
+										"key": "clientsecret",
+										"value": "",
+										"description": "(Required) "
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/config/update",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"config",
+										"update"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Internal server error",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer <token>",
+										"description": "Added as a part of security scheme: bearer"
+									},
+									{
+										"key": "clientid",
+										"value": "",
+										"description": "(Required) "
+									},
+									{
+										"key": "clientsecret",
+										"value": "",
+										"description": "(Required) "
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/config/update",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"config",
+										"update"
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "Get the applied Case Notification config",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "clientid",
+								"value": "",
+								"description": "(Required) The Client Id"
+							},
+							{
+								"key": "clientsecret",
+								"value": "",
+								"description": "(Required) The Client Secret"
+							},
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/config/check",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"config",
+								"check"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Returned config",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer <token>",
+										"description": "Added as a part of security scheme: bearer"
+									},
+									{
+										"key": "clientid",
+										"value": "",
+										"description": "(Required) The Client Id"
+									},
+									{
+										"key": "clientsecret",
+										"value": "",
+										"description": "(Required) The Client Secret"
+									},
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/config/check",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"config",
+										"check"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"id\": 773841,\n  \"configName\": \"tempor in\",\n  \"configApplied\": false,\n  \"batchMesageProfileId\": \"eiusmod ad\",\n  \"nbsCertificateUrl\": \"magna eiusmod officia irure nulla\",\n  \"phinEncryption\": \"in\",\n  \"phinRoute\": \"nulla exercitation amet dolore incididunt\",\n  \"phinSignature\": \"\",\n  \"phinPublicKeyAddress\": \"anim qui sint elit\",\n  \"phinPublicKeyBaseDn\": \"aute cupidatat nulla ad inc\",\n  \"phinPublicKeyDn\": \"officia occaecat non laboris\",\n  \"phinRecipient\": \"commodo veniam tempor pariatur\",\n  \"phinPriority\": \"eu\",\n  \"hl7ValidationEnabled\": true\n}"
+						},
+						{
+							"name": "Config not found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer <token>",
+										"description": "Added as a part of security scheme: bearer"
+									},
+									{
+										"key": "clientid",
+										"value": "",
+										"description": "(Required) The Client Id"
+									},
+									{
+										"key": "clientsecret",
+										"value": "",
+										"description": "(Required) The Client Secret"
+									},
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/config/check",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"config",
+										"check"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"id\": 773841,\n  \"configName\": \"tempor in\",\n  \"configApplied\": false,\n  \"batchMesageProfileId\": \"eiusmod ad\",\n  \"nbsCertificateUrl\": \"magna eiusmod officia irure nulla\",\n  \"phinEncryption\": \"in\",\n  \"phinRoute\": \"nulla exercitation amet dolore incididunt\",\n  \"phinSignature\": \"\",\n  \"phinPublicKeyAddress\": \"anim qui sint elit\",\n  \"phinPublicKeyBaseDn\": \"aute cupidatat nulla ad inc\",\n  \"phinPublicKeyDn\": \"officia occaecat non laboris\",\n  \"phinRecipient\": \"commodo veniam tempor pariatur\",\n  \"phinPriority\": \"eu\",\n  \"hl7ValidationEnabled\": true\n}"
+						},
+						{
+							"name": "Internal server error",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer <token>",
+										"description": "Added as a part of security scheme: bearer"
+									},
+									{
+										"key": "clientid",
+										"value": "",
+										"description": "(Required) The Client Id"
+									},
+									{
+										"key": "clientsecret",
+										"value": "",
+										"description": "(Required) The Client Secret"
+									},
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/config/check",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"config",
+										"check"
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"id\": 773841,\n  \"configName\": \"tempor in\",\n  \"configApplied\": false,\n  \"batchMesageProfileId\": \"eiusmod ad\",\n  \"nbsCertificateUrl\": \"magna eiusmod officia irure nulla\",\n  \"phinEncryption\": \"in\",\n  \"phinRoute\": \"nulla exercitation amet dolore incididunt\",\n  \"phinSignature\": \"\",\n  \"phinPublicKeyAddress\": \"anim qui sint elit\",\n  \"phinPublicKeyBaseDn\": \"aute cupidatat nulla ad inc\",\n  \"phinPublicKeyDn\": \"officia occaecat non laboris\",\n  \"phinRecipient\": \"commodo veniam tempor pariatur\",\n  \"phinPriority\": \"eu\",\n  \"hl7ValidationEnabled\": true\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "api",
+			"item": [
+				{
+					"name": "notification-config",
+					"item": [
+						{
+							"name": "Get Case Notification Configuration",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{bearerToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "clientid",
+										"value": "{{keycloakClientId}}",
+										"description": "(Required) The Client ID for authentication"
+									},
+									{
+										"key": "clientsecret",
+										"value": "{{keycloakClientSecret}}",
+										"description": "(Required) The Client Secret for authentication"
+									},
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/notification-config",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"notification-config"
+									]
+								},
+								"description": "Fetches one or more case notification configuration records.\n\n- If `configName` is provided, returns the specific matching configuration.\n    \n- If `configName` is omitted, returns all configurations."
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer <token>",
+												"description": "Added as a part of security scheme: bearer"
+											},
+											{
+												"key": "clientid",
+												"value": "",
+												"description": "(Required) The Client ID for authentication"
+											},
+											{
+												"key": "clientsecret",
+												"value": "",
+												"description": "(Required) The Client Secret for authentication"
+											},
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/notification-config",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"notification-config"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "*/*"
+										}
+									],
+									"cookie": [],
+									"body": "{}"
+								}
+							]
+						},
+						{
+							"name": "Create or Update Case Notification Configuration",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{bearerToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "clientid",
+										"value": "{{keycloakClientId}}",
+										"description": "(Required) The Client ID for authentication"
+									},
+									{
+										"key": "clientsecret",
+										"value": "{{keycloakClientSecret}}",
+										"description": "(Required) The Client Secret for authentication"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"id\": 773841,\n  \"configName\": \"tempor in\",\n  \"configApplied\": false,\n  \"batchMesageProfileId\": \"eiusmod ad\",\n  \"nbsCertificateUrl\": \"magna eiusmod officia irure nulla\",\n  \"phinEncryption\": \"in\",\n  \"phinRoute\": \"nulla exercitation amet dolore incididunt\",\n  \"phinSignature\": \"\",\n  \"phinPublicKeyAddress\": \"anim qui sint elit\",\n  \"phinPublicKeyBaseDn\": \"aute cupidatat nulla ad inc\",\n  \"phinPublicKeyDn\": \"officia occaecat non laboris\",\n  \"phinRecipient\": \"commodo veniam tempor pariatur\",\n  \"phinPriority\": \"eu\",\n  \"hl7ValidationEnabled\": true\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/notification-config",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"notification-config"
+									]
+								},
+								"description": "Adds a new or updates an existing case notification configuration.\n\n- If `configName` already exists, the configuration will be updated.\n- Otherwise, a new configuration will be inserted.\n\nThe request body must match the following model:\n```json\n{\n  \"configName\": \"string (required)\",\n  \"configApplied\": true,\n  \"batchMesageProfileId\": \"string\",\n  \"nbsCertificateUrl\": \"string\",\n  \"phinEncryption\": \"string\",\n  \"phinRoute\": \"string\",\n  \"phinSignature\": \"string\",\n  \"phinPublicKeyAddress\": \"string\",\n  \"phinPublicKeyBaseDn\": \"string\",\n  \"phinPublicKeyDn\": \"string\",\n  \"phinRecipient\": \"string\",\n  \"phinPriority\": \"string\",\n  \"hl7ValidationEnabled\": true\n}\n```\n"
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer <token>",
+												"description": "Added as a part of security scheme: bearer"
+											},
+											{
+												"key": "clientid",
+												"value": "",
+												"description": "(Required) The Client ID for authentication"
+											},
+											{
+												"key": "clientsecret",
+												"value": "",
+												"description": "(Required) The Client Secret for authentication"
+											},
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"id\": 773841,\n  \"configName\": \"tempor in\",\n  \"configApplied\": false,\n  \"batchMesageProfileId\": \"eiusmod ad\",\n  \"nbsCertificateUrl\": \"magna eiusmod officia irure nulla\",\n  \"phinEncryption\": \"in\",\n  \"phinRoute\": \"nulla exercitation amet dolore incididunt\",\n  \"phinSignature\": \"\",\n  \"phinPublicKeyAddress\": \"anim qui sint elit\",\n  \"phinPublicKeyBaseDn\": \"aute cupidatat nulla ad inc\",\n  \"phinPublicKeyDn\": \"officia occaecat non laboris\",\n  \"phinRecipient\": \"commodo veniam tempor pariatur\",\n  \"phinPriority\": \"eu\",\n  \"hl7ValidationEnabled\": true\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/notification-config",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"notification-config"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "*/*"
+										}
+									],
+									"cookie": [],
+									"body": "{}"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Get Access Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const token = pm.response.text();",
+									"pm.collectionVariables.set(\"bearerToken\", token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "clientid",
+								"value": "{{keycloakClientId}}",
+								"description": "(Required) The Client ID for authentication"
+							},
+							{
+								"key": "clientsecret",
+								"value": "{{keycloakClientSecret}}",
+								"description": "(Required) The Client Secret for authentication"
+							},
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/token",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"token"
+							]
+						},
+						"description": "Generates an access token using client credentials. The client ID and client secret must be provided in the request headers."
+					},
+					"response": [
+						{
+							"name": "OK",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "clientid",
+										"value": "",
+										"description": "(Required) The Client ID for authentication"
+									},
+									{
+										"key": "clientsecret",
+										"value": "",
+										"description": "(Required) The Client Secret for authentication"
+									},
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/auth/token",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"auth",
+										"token"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": "nostrud labore"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "getDlts",
+			"item": [
+				{
+					"name": "Get Case Notification DLT entries by timestamp range",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "clientid",
+								"value": "{{keycloakClientId}}",
+								"description": "(Required) The Client Id for authentication"
+							},
+							{
+								"key": "clientsecret",
+								"value": "{{keycloakClientSecret}}",
+								"description": "(Required) The Client Secret for authentication"
+							},
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/getDlts?page=0&size=20",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"getDlts"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0",
+									"description": "Page number (zero-based)"
+								},
+								{
+									"key": "size",
+									"value": "20",
+									"description": "Page size (number of records per page)"
+								}
+							]
+						},
+						"description": "Returns a paginated list of CaseNotificationDlt records filtered by a timestamp range. Timestamps must be provided as strings in 'yyyy-MM-dd HH:mm:ss' format."
+					},
+					"response": [
+						{
+							"name": "OK",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer <token>",
+										"description": "Added as a part of security scheme: bearer"
+									},
+									{
+										"key": "clientid",
+										"value": "",
+										"description": "(Required) The Client Id for authentication"
+									},
+									{
+										"key": "clientsecret",
+										"value": "",
+										"description": "(Required) The Client Secret for authentication"
+									},
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/getDlts?page=0&size=20",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"getDlts"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "size",
+											"value": "20"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"totalPages\": -90538844,\n  \"totalElements\": -48747251,\n  \"size\": -31549835,\n  \"content\": [\n    {\n      \"id\": \"urn:uuid:aad30f82-6092-4798-1bbe-d71851d9ddbf\",\n      \"cnTranportqOutUid\": -35275789,\n      \"originalPayload\": \"et mollit consectetur\",\n      \"source\": \"officia aute fugiat consectetur\",\n      \"errorStackTrace\": \"cillum et pariatur ullamco\",\n      \"dltStatus\": \"laborum in\",\n      \"dltOccurrence\": -25790809,\n      \"createdOn\": \"2018-01-01T10:47:01.112Z\",\n      \"updatedOn\": \"1984-03-14T14:17:06.443Z\"\n    },\n    {\n      \"id\": \"f80ca07f-55f7-ae56-746d-23490cce18a2\",\n      \"cnTranportqOutUid\": 65424323,\n      \"originalPayload\": \"ut veniam est voluptate\",\n      \"source\": \"do labore ad aute ut\",\n      \"errorStackTrace\": \"irure dolore aliqua cillum sint\",\n      \"dltStatus\": \"exercitation\",\n      \"dltOccurrence\": 86975661,\n      \"createdOn\": \"1962-01-20T12:09:19.008Z\",\n      \"updatedOn\": \"1978-12-30T13:09:34.252Z\"\n    }\n  ],\n  \"number\": -79935305,\n  \"sort\": {\n    \"empty\": true,\n    \"sorted\": false,\n    \"unsorted\": true\n  },\n  \"numberOfElements\": 97364450,\n  \"pageable\": {\n    \"offset\": 55947583,\n    \"sort\": {\n      \"empty\": false,\n      \"sorted\": false,\n      \"unsorted\": false\n    },\n    \"paged\": false,\n    \"pageNumber\": 24098076,\n    \"pageSize\": -36042614,\n    \"unpaged\": false\n  },\n  \"first\": true,\n  \"last\": false,\n  \"empty\": true\n}"
+						}
+					]
+				},
+				{
+					"name": "Get a DLT entry by UUID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "clientid",
+								"value": "{{keycloakClientId}}",
+								"description": "(Required) The Client Id for authentication"
+							},
+							{
+								"key": "clientsecret",
+								"value": "{{keycloakClientSecret}}",
+								"description": "(Required) The Client Secret for authentication"
+							},
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/getDlts/:uuid",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"getDlts",
+								":uuid"
+							],
+							"variable": [
+								{
+									"key": "uuid",
+									"value": "",
+									"description": "(Required) UUID of the DLT entry"
+								}
+							]
+						},
+						"description": "Returns a DLT message with the given UUID."
+					},
+					"response": [
+						{
+							"name": "DLT entry found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer <token>",
+										"description": "Added as a part of security scheme: bearer"
+									},
+									{
+										"key": "clientid",
+										"value": "",
+										"description": "(Required) The Client Id for authentication"
+									},
+									{
+										"key": "clientsecret",
+										"value": "",
+										"description": "(Required) The Client Secret for authentication"
+									},
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/getDlts/:uuid",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"getDlts",
+										":uuid"
+									],
+									"variable": [
+										{
+											"key": "uuid",
+											"value": "",
+											"description": "(Required) UUID of the DLT entry"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"caseNotificationDlt\": {\n    \"id\": \"ff4833c7-a886-fff5-fc30-8288533e06ce\",\n    \"cnTranportqOutUid\": -45470241,\n    \"originalPayload\": \"quis sed ea in\",\n    \"source\": \"dolore minim\",\n    \"errorStackTrace\": \"dolor sed magna enim ipsum\",\n    \"dltStatus\": \"Ut dolore Lorem\",\n    \"dltOccurrence\": 94695180,\n    \"createdOn\": \"1969-03-20T02:15:14.647Z\",\n    \"updatedOn\": \"1950-08-14T06:11:12.137Z\"\n  },\n  \"payload\": {}\n}"
+						},
+						{
+							"name": "DLT entry not found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer <token>",
+										"description": "Added as a part of security scheme: bearer"
+									},
+									{
+										"key": "clientid",
+										"value": "",
+										"description": "(Required) The Client Id for authentication"
+									},
+									{
+										"key": "clientsecret",
+										"value": "",
+										"description": "(Required) The Client Secret for authentication"
+									},
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/getDlts/:uuid",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"getDlts",
+										":uuid"
+									],
+									"variable": [
+										{
+											"key": "uuid",
+											"value": "",
+											"description": "(Required) UUID of the DLT entry"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"caseNotificationDlt\": {\n    \"id\": \"5c97f415-97f1-5cdf-d87b-cc2b7e0d4fa2\",\n    \"cnTranportqOutUid\": 40072843,\n    \"originalPayload\": \"anim sint commodo\",\n    \"source\": \"sunt dolore\",\n    \"errorStackTrace\": \"culpa ut irure\",\n    \"dltStatus\": \"quis ni\",\n    \"dltOccurrence\": -81731817,\n    \"createdOn\": \"1965-10-28T16:28:02.204Z\",\n    \"updatedOn\": \"1988-11-03T22:18:33.906Z\"\n  },\n  \"payload\": {\n    \"id\": \"urn:uuid:f7c039bb-52d7-af05-1305-64b7452f6516\",\n    \"cnTranportqOutUid\": -24376789,\n    \"originalPayload\": \"nisi et officia\",\n    \"source\": \"et id i\",\n    \"errorStackTrace\": \"anim\",\n    \"dltStatus\": \"deserunt ex dolore Excepteur\",\n    \"dltOccurrence\": 56890620,\n    \"createdOn\": \"1966-05-31T18:13:39.384Z\",\n    \"updatedOn\": \"1954-12-27T19:35:11.637Z\"\n  }\n}"
+						},
+						{
+							"name": "Internal server error",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer <token>",
+										"description": "Added as a part of security scheme: bearer"
+									},
+									{
+										"key": "clientid",
+										"value": "",
+										"description": "(Required) The Client Id for authentication"
+									},
+									{
+										"key": "clientsecret",
+										"value": "",
+										"description": "(Required) The Client Secret for authentication"
+									},
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/getDlts/:uuid",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"getDlts",
+										":uuid"
+									],
+									"variable": [
+										{
+											"key": "uuid",
+											"value": "",
+											"description": "(Required) UUID of the DLT entry"
+										}
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"caseNotificationDlt\": {\n    \"id\": \"5c97f415-97f1-5cdf-d87b-cc2b7e0d4fa2\",\n    \"cnTranportqOutUid\": 40072843,\n    \"originalPayload\": \"anim sint commodo\",\n    \"source\": \"sunt dolore\",\n    \"errorStackTrace\": \"culpa ut irure\",\n    \"dltStatus\": \"quis ni\",\n    \"dltOccurrence\": -81731817,\n    \"createdOn\": \"1965-10-28T16:28:02.204Z\",\n    \"updatedOn\": \"1988-11-03T22:18:33.906Z\"\n  },\n  \"payload\": {\n    \"id\": \"urn:uuid:f7c039bb-52d7-af05-1305-64b7452f6516\",\n    \"cnTranportqOutUid\": -24376789,\n    \"originalPayload\": \"nisi et officia\",\n    \"source\": \"et id i\",\n    \"errorStackTrace\": \"anim\",\n    \"dltStatus\": \"deserunt ex dolore Excepteur\",\n    \"dltOccurrence\": 56890620,\n    \"createdOn\": \"1966-05-31T18:13:39.384Z\",\n    \"updatedOn\": \"1954-12-27T19:35:11.637Z\"\n  }\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Reprocess a dead letter case notification",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{bearerToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "clientid",
+						"value": "{{keycloakClientId}}",
+						"description": "(Required) The Client Id for authentication"
+					},
+					{
+						"key": "clientsecret",
+						"value": "{{keycloakClientSecret}}",
+						"description": "(Required) The Client Secret for authentication"
+					},
+					{
+						"key": "Content-Type",
+						"value": "text/plain"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/reprocess/:uuid",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"reprocess",
+						":uuid"
+					],
+					"variable": [
+						{
+							"key": "uuid",
+							"value": "",
+							"description": "(Required) UUID of the DLT entry"
+						}
+					]
+				},
+				"description": "Reprocesses a previously dead-lettered message using the given payload and UUID."
+			},
+			"response": [
+				{
+					"name": "OK",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer <token>",
+								"description": "Added as a part of security scheme: bearer"
+							},
+							{
+								"key": "clientid",
+								"value": "",
+								"description": "(Required) The Client Id for authentication"
+							},
+							{
+								"key": "clientsecret",
+								"value": "",
+								"description": "(Required) The Client Secret for authentication"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/reprocess/:uuid",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"reprocess",
+								":uuid"
+							],
+							"variable": [
+								{
+									"key": "uuid",
+									"value": "",
+									"description": "(Required) UUID of the DLT entry"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "text",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "text/plain"
+						}
+					],
+					"cookie": [],
+					"body": ""
+				}
+			]
+		},
+		{
+			"name": "Releasing Non Std Queue for Batch Processor",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{bearerToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "clientid",
+						"value": "{{keycloakClientId}}",
+						"description": "(Required) The Client Id"
+					},
+					{
+						"key": "clientsecret",
+						"value": "{{keycloakClientSecret}}",
+						"description": "(Required) The Client Secret"
+					},
+					{
+						"key": "Accept",
+						"value": "*/*"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/non-std/release-queue",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"non-std",
+						"release-queue"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "OK",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer <token>",
+								"description": "Added as a part of security scheme: bearer"
+							},
+							{
+								"key": "clientid",
+								"value": "",
+								"description": "(Required) The Client Id"
+							},
+							{
+								"key": "clientsecret",
+								"value": "",
+								"description": "(Required) The Client Secret"
+							},
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/non-std/release-queue",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"non-std",
+								"release-queue"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "text",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "*/*"
+						}
+					],
+					"cookie": [],
+					"body": "nostrud labore"
+				}
+			]
+		},
+		{
+			"name": "Get a Status by CnTransportUid",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{bearerToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "clientid",
+						"value": "{{keycloakClientId}}",
+						"description": "(Required) The Client Id for authentication"
+					},
+					{
+						"key": "clientsecret",
+						"value": "{{keycloakClientSecret}}",
+						"description": "(Required) The Client Secret for authentication"
+					},
+					{
+						"key": "Accept",
+						"value": "*/*"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/message-status",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"message-status"
+					]
+				},
+				"description": "Return pipeline status"
+			},
+			"response": [
+				{
+					"name": "Status found",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer <token>",
+								"description": "Added as a part of security scheme: bearer"
+							},
+							{
+								"key": "clientid",
+								"value": "",
+								"description": "(Required) The Client Id for authentication"
+							},
+							{
+								"key": "clientsecret",
+								"value": "",
+								"description": "(Required) The Client Secret for authentication"
+							},
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/message-status",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"message-status"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "*/*"
+						}
+					],
+					"cookie": [],
+					"body": "{\n  \"caseNotificationDlt\": {\n    \"id\": \"ff4833c7-a886-fff5-fc30-8288533e06ce\",\n    \"cnTranportqOutUid\": -45470241,\n    \"originalPayload\": \"quis sed ea in\",\n    \"source\": \"dolore minim\",\n    \"errorStackTrace\": \"dolor sed magna enim ipsum\",\n    \"dltStatus\": \"Ut dolore Lorem\",\n    \"dltOccurrence\": 94695180,\n    \"createdOn\": \"1969-03-20T02:15:14.647Z\",\n    \"updatedOn\": \"1950-08-14T06:11:12.137Z\"\n  },\n  \"payload\": {}\n}"
+				},
+				{
+					"name": "Status not found",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer <token>",
+								"description": "Added as a part of security scheme: bearer"
+							},
+							{
+								"key": "clientid",
+								"value": "",
+								"description": "(Required) The Client Id for authentication"
+							},
+							{
+								"key": "clientsecret",
+								"value": "",
+								"description": "(Required) The Client Secret for authentication"
+							},
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/message-status",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"message-status"
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "*/*"
+						}
+					],
+					"cookie": [],
+					"body": "{\n  \"cnTransportqOut\": {\n    \"cnTransportqOutUid\": -83996972,\n    \"addReasonCd\": \"nostrud elit Excepteu\",\n    \"addTime\": \"1994-07-23T13:29:01.043Z\",\n    \"addUserId\": 24161180,\n    \"lastChgReasonCd\": \"est id sunt in\",\n    \"lastChgTime\": \"1970-12-29T21:51:18.282Z\",\n    \"lastChgUserId\": -98276026,\n    \"notificationUid\": 13658639,\n    \"notificationLocalId\": \"commodo elit\",\n    \"publicHealthCaseLocalId\": \"qui esse do\",\n    \"reportStatusCd\": \"Excepteur irure id\",\n    \"recordStatusCd\": \"in sunt\",\n    \"recordStatusTime\": \"1994-08-20T03:21:47.002Z\",\n    \"versionCtrlNbr\": 14747117\n  },\n  \"transportQOut\": [\n    {\n      \"recordId\": -55480788,\n      \"messageId\": \"fugiat exercitation laboris\",\n      \"payloadFile\": \"in magna aliquip anim cillum\",\n      \"destinationFilename\": \"anim do aliquip\",\n      \"routeInfo\": \"comm\",\n      \"service\": \"in cillum dolore\",\n      \"action\": \"ex dolor laboris\",\n      \"arguments\": \"Excepteur ex nostrud tempor Ut\",\n      \"messageRecipient\": \"non\",\n      \"messageCreationTime\": \"ut nulla minim\",\n      \"encryption\": \"consequat id\",\n      \"signature\": \"sit in voluptate ullamco\",\n      \"publicKeyLdapAddress\": \"Lorem deserunt\",\n      \"publicKeyLdapBaseDN\": \"cillum sed\",\n      \"publicKeyLdapDN\": \"consequat est\",\n      \"certificateURL\": \"mollit tempor ex non\",\n      \"processingStatus\": \"aliqua\",\n      \"transportStatus\": \"est cillum\",\n      \"transportErrorCode\": \"in sint Duis\",\n      \"applicationStatus\": \"ut\",\n      \"applicationErrorCode\": \"consequat labore cupidatat ullamco\",\n      \"applicationResponse\": \"id amet in\",\n      \"messageSentTime\": \"ea tempor\",\n      \"messageReceivedTime\": \"quis laboris\",\n      \"responseMessageId\": \"mollit Duis pariatur cillum\",\n      \"responseArguments\": \"quis eu deserunt et nulla\",\n      \"responseLocalFile\": \"officia\",\n      \"responseFilename\": \"consequat dolor cupidatat\",\n      \"responseMessageOrigin\": \"Lorem anim amet\",\n      \"responseMessageSignature\": \"laboris non Ut consectetur\",\n      \"priority\": 41552540\n    },\n    {\n      \"recordId\": -98202401,\n      \"messageId\": \"anim qui aliqua\",\n      \"payloadFile\": \"incididunt qui ea\",\n      \"destinationFilename\": \"proident dolor\",\n      \"routeInfo\": \"in cupidat\",\n      \"service\": \"aliq\",\n      \"action\": \"qui occaecat veniam\",\n      \"arguments\": \"aliqua consectetur incididunt dolore\",\n      \"messageRecipient\": \"dolor ad minim fugiat amet\",\n      \"messageCreationTime\": \"enim sint qui\",\n      \"encryption\": \"cupidatat minim\",\n      \"signature\": \"in commodo nisi fugiat\",\n      \"publicKeyLdapAddress\": \"ex in non\",\n      \"publicKeyLdapBaseDN\": \"ma\",\n      \"publicKeyLdapDN\": \"consequat culpa enim nisi cupid\",\n      \"certificateURL\": \"consectetur in ut nostrud\",\n      \"processingStatus\": \"esse do et dolor in\",\n      \"transportStatus\": \"ullamco\",\n      \"transportErrorCode\": \"dolor ad elit\",\n      \"applicationStatus\": \"culpa qui\",\n      \"applicationErrorCode\": \"esse\",\n      \"applicationResponse\": \"tempor Ut\",\n      \"messageSentTime\": \"deserunt id\",\n      \"messageReceivedTime\": \"laborum ut laboris\",\n      \"responseMessageId\": \"occaecat voluptate culpa non\",\n      \"responseArguments\": \"velit laborum in\",\n      \"responseLocalFile\": \"sint irure\",\n      \"responseFilename\": \"do in\",\n      \"responseMessageOrigin\": \"magna\",\n      \"responseMessageSignature\": \"elit ullamco officia et eu\",\n      \"priority\": -89481471\n    }\n  ],\n  \"netssTransportQOut\": [\n    {\n      \"netssTransportQOutUid\": 42043668,\n      \"recordTypeCd\": \"est laboris\",\n      \"mmwrYear\": -92802062,\n      \"mmwrWeek\": 97241527,\n      \"netssCaseId\": \"amet ut quis \",\n      \"phcLocalId\": \"eu nisi esse\",\n      \"notificationLocalId\": \"exercitation\",\n      \"addTime\": \"1969-12-23T15:44:24.212Z\",\n      \"payload\": \"sint non\",\n      \"recordStatusCd\": \"reprehenderit non fugiat ea ut\"\n    },\n    {\n      \"netssTransportQOutUid\": -55033606,\n      \"recordTypeCd\": \"Excepteur aliquip\",\n      \"mmwrYear\": 11289382,\n      \"mmwrWeek\": -310417,\n      \"netssCaseId\": \"n\",\n      \"phcLocalId\": \"ullamco quis\",\n      \"notificationLocalId\": \"pariatur ullamco ea nulla dolore\",\n      \"addTime\": \"1986-04-23T16:02:16.064Z\",\n      \"payload\": \"Excepteur\",\n      \"recordStatusCd\": \"laboris Excepteur\"\n    }\n  ],\n  \"caseNotificationDlt\": [\n    {\n      \"id\": \"urn:uuid:8bdb2952-7393-9ca8-bba6-3edb757292ab\",\n      \"cnTranportqOutUid\": 71730545,\n      \"source\": \"id in in\",\n      \"errorStackTrace\": \"cillum aute non\",\n      \"dltStatus\": \"est sunt voluptate sed consequat\",\n      \"dltOccurrence\": -37975660,\n      \"createdOn\": \"1999-03-17T03:49:42.174Z\",\n      \"updatedOn\": \"1997-07-21T06:22:20.482Z\"\n    },\n    {\n      \"id\": \"a0121e89-7b48-c491-4ae8-3975e3890543\",\n      \"cnTranportqOutUid\": 95571892,\n      \"source\": \"cupidatat sit ipsum\",\n      \"errorStackTrace\": \"adipisicing\",\n      \"dltStatus\": \"dolore anim culpa deserunt\",\n      \"dltOccurrence\": -67566440,\n      \"createdOn\": \"2016-05-01T21:01:16.923Z\",\n      \"updatedOn\": \"1972-06-25T07:01:26.284Z\"\n    }\n  ]\n}"
+				},
+				{
+					"name": "Internal server error",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer <token>",
+								"description": "Added as a part of security scheme: bearer"
+							},
+							{
+								"key": "clientid",
+								"value": "",
+								"description": "(Required) The Client Id for authentication"
+							},
+							{
+								"key": "clientsecret",
+								"value": "",
+								"description": "(Required) The Client Secret for authentication"
+							},
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/message-status",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"message-status"
+							]
+						}
+					},
+					"status": "Internal Server Error",
+					"code": 500,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "*/*"
+						}
+					],
+					"cookie": [],
+					"body": "{\n  \"cnTransportqOut\": {\n    \"cnTransportqOutUid\": -83996972,\n    \"addReasonCd\": \"nostrud elit Excepteu\",\n    \"addTime\": \"1994-07-23T13:29:01.043Z\",\n    \"addUserId\": 24161180,\n    \"lastChgReasonCd\": \"est id sunt in\",\n    \"lastChgTime\": \"1970-12-29T21:51:18.282Z\",\n    \"lastChgUserId\": -98276026,\n    \"notificationUid\": 13658639,\n    \"notificationLocalId\": \"commodo elit\",\n    \"publicHealthCaseLocalId\": \"qui esse do\",\n    \"reportStatusCd\": \"Excepteur irure id\",\n    \"recordStatusCd\": \"in sunt\",\n    \"recordStatusTime\": \"1994-08-20T03:21:47.002Z\",\n    \"versionCtrlNbr\": 14747117\n  },\n  \"transportQOut\": [\n    {\n      \"recordId\": -55480788,\n      \"messageId\": \"fugiat exercitation laboris\",\n      \"payloadFile\": \"in magna aliquip anim cillum\",\n      \"destinationFilename\": \"anim do aliquip\",\n      \"routeInfo\": \"comm\",\n      \"service\": \"in cillum dolore\",\n      \"action\": \"ex dolor laboris\",\n      \"arguments\": \"Excepteur ex nostrud tempor Ut\",\n      \"messageRecipient\": \"non\",\n      \"messageCreationTime\": \"ut nulla minim\",\n      \"encryption\": \"consequat id\",\n      \"signature\": \"sit in voluptate ullamco\",\n      \"publicKeyLdapAddress\": \"Lorem deserunt\",\n      \"publicKeyLdapBaseDN\": \"cillum sed\",\n      \"publicKeyLdapDN\": \"consequat est\",\n      \"certificateURL\": \"mollit tempor ex non\",\n      \"processingStatus\": \"aliqua\",\n      \"transportStatus\": \"est cillum\",\n      \"transportErrorCode\": \"in sint Duis\",\n      \"applicationStatus\": \"ut\",\n      \"applicationErrorCode\": \"consequat labore cupidatat ullamco\",\n      \"applicationResponse\": \"id amet in\",\n      \"messageSentTime\": \"ea tempor\",\n      \"messageReceivedTime\": \"quis laboris\",\n      \"responseMessageId\": \"mollit Duis pariatur cillum\",\n      \"responseArguments\": \"quis eu deserunt et nulla\",\n      \"responseLocalFile\": \"officia\",\n      \"responseFilename\": \"consequat dolor cupidatat\",\n      \"responseMessageOrigin\": \"Lorem anim amet\",\n      \"responseMessageSignature\": \"laboris non Ut consectetur\",\n      \"priority\": 41552540\n    },\n    {\n      \"recordId\": -98202401,\n      \"messageId\": \"anim qui aliqua\",\n      \"payloadFile\": \"incididunt qui ea\",\n      \"destinationFilename\": \"proident dolor\",\n      \"routeInfo\": \"in cupidat\",\n      \"service\": \"aliq\",\n      \"action\": \"qui occaecat veniam\",\n      \"arguments\": \"aliqua consectetur incididunt dolore\",\n      \"messageRecipient\": \"dolor ad minim fugiat amet\",\n      \"messageCreationTime\": \"enim sint qui\",\n      \"encryption\": \"cupidatat minim\",\n      \"signature\": \"in commodo nisi fugiat\",\n      \"publicKeyLdapAddress\": \"ex in non\",\n      \"publicKeyLdapBaseDN\": \"ma\",\n      \"publicKeyLdapDN\": \"consequat culpa enim nisi cupid\",\n      \"certificateURL\": \"consectetur in ut nostrud\",\n      \"processingStatus\": \"esse do et dolor in\",\n      \"transportStatus\": \"ullamco\",\n      \"transportErrorCode\": \"dolor ad elit\",\n      \"applicationStatus\": \"culpa qui\",\n      \"applicationErrorCode\": \"esse\",\n      \"applicationResponse\": \"tempor Ut\",\n      \"messageSentTime\": \"deserunt id\",\n      \"messageReceivedTime\": \"laborum ut laboris\",\n      \"responseMessageId\": \"occaecat voluptate culpa non\",\n      \"responseArguments\": \"velit laborum in\",\n      \"responseLocalFile\": \"sint irure\",\n      \"responseFilename\": \"do in\",\n      \"responseMessageOrigin\": \"magna\",\n      \"responseMessageSignature\": \"elit ullamco officia et eu\",\n      \"priority\": -89481471\n    }\n  ],\n  \"netssTransportQOut\": [\n    {\n      \"netssTransportQOutUid\": 42043668,\n      \"recordTypeCd\": \"est laboris\",\n      \"mmwrYear\": -92802062,\n      \"mmwrWeek\": 97241527,\n      \"netssCaseId\": \"amet ut quis \",\n      \"phcLocalId\": \"eu nisi esse\",\n      \"notificationLocalId\": \"exercitation\",\n      \"addTime\": \"1969-12-23T15:44:24.212Z\",\n      \"payload\": \"sint non\",\n      \"recordStatusCd\": \"reprehenderit non fugiat ea ut\"\n    },\n    {\n      \"netssTransportQOutUid\": -55033606,\n      \"recordTypeCd\": \"Excepteur aliquip\",\n      \"mmwrYear\": 11289382,\n      \"mmwrWeek\": -310417,\n      \"netssCaseId\": \"n\",\n      \"phcLocalId\": \"ullamco quis\",\n      \"notificationLocalId\": \"pariatur ullamco ea nulla dolore\",\n      \"addTime\": \"1986-04-23T16:02:16.064Z\",\n      \"payload\": \"Excepteur\",\n      \"recordStatusCd\": \"laboris Excepteur\"\n    }\n  ],\n  \"caseNotificationDlt\": [\n    {\n      \"id\": \"urn:uuid:8bdb2952-7393-9ca8-bba6-3edb757292ab\",\n      \"cnTranportqOutUid\": 71730545,\n      \"source\": \"id in in\",\n      \"errorStackTrace\": \"cillum aute non\",\n      \"dltStatus\": \"est sunt voluptate sed consequat\",\n      \"dltOccurrence\": -37975660,\n      \"createdOn\": \"1999-03-17T03:49:42.174Z\",\n      \"updatedOn\": \"1997-07-21T06:22:20.482Z\"\n    },\n    {\n      \"id\": \"a0121e89-7b48-c491-4ae8-3975e3890543\",\n      \"cnTranportqOutUid\": 95571892,\n      \"source\": \"cupidatat sit ipsum\",\n      \"errorStackTrace\": \"adipisicing\",\n      \"dltStatus\": \"dolore anim culpa deserunt\",\n      \"dltOccurrence\": -67566440,\n      \"createdOn\": \"2016-05-01T21:01:16.923Z\",\n      \"updatedOn\": \"1972-06-25T07:01:26.284Z\"\n    }\n  ]\n}"
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "keycloakClientId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "keycloakClientSecret",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "bearerToken",
+			"value": "",
+			"type": "string"
+		}
+	]
+}

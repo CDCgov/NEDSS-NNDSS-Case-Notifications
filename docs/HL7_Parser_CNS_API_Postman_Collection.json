@@ -1,0 +1,256 @@
+{
+	"info": {
+		"_postman_id": "d94bbe48-67a2-4900-b877-273f5600cb95",
+		"name": "HL7 Parser (CNS) API",
+		"description": "This API exposes endpoints to manage HL7 Parser Service for the Case Notification Service.\n\nContact Support:  \nName: HL7 Parser Service  \nEmail: [nndservice@cdc.com](https://mailto:nndservice@cdc.com)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25680585",
+		"_collection_link": "https://data-team-0400.postman.co/workspace/Data-Services-Swagger~08287add-14ad-4ca6-b115-b6f95b8635db/collection/25680585-d94bbe48-67a2-4900-b877-273f5600cb95?action=share&source=collection_link&creator=25680585"
+	},
+	"item": [
+		{
+			"name": "Service class to convert the incoming XML into HL7",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{bearerToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "clientid",
+						"value": "{{keycloakClientId}}",
+						"description": "(Required) The Client Id"
+					},
+					{
+						"key": "clientsecret",
+						"value": "{{keycloakClientSecret}}",
+						"description": "(Required) The Client Secret"
+					},
+					{
+						"key": "Accept",
+						"value": "text/plain"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/xml-to-hl7/:recordId",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"xml-to-hl7",
+						":recordId"
+					],
+					"variable": [
+						{
+							"key": "recordId",
+							"value": "",
+							"description": "(Required) The Record ID to convert"
+						}
+					]
+				},
+				"description": "XML to HL7 parser endpoint"
+			},
+			"response": [
+				{
+					"name": "OK",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer <token>",
+								"description": "Added as a part of security scheme: bearer"
+							},
+							{
+								"key": "clientid",
+								"value": "",
+								"description": "(Required) The Client Id"
+							},
+							{
+								"key": "clientsecret",
+								"value": "",
+								"description": "(Required) The Client Secret"
+							},
+							{
+								"key": "Accept",
+								"value": "text/plain"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/xml-to-hl7/:recordId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"xml-to-hl7",
+								":recordId"
+							],
+							"variable": [
+								{
+									"key": "recordId",
+									"value": "",
+									"description": "(Required) The Record ID to convert"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "text",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "text/plain"
+						}
+					],
+					"cookie": [],
+					"body": "irur"
+				}
+			]
+		},
+		{
+			"name": "Create JWT Token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const token = pm.response.text();",
+							"pm.collectionVariables.set(\"bearerToken\", token);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "clientid",
+						"value": "{{keycloakClientId}}",
+						"description": "(Required) "
+					},
+					{
+						"key": "clientsecret",
+						"value": "{{keycloakClientSecret}}",
+						"description": "(Required) "
+					},
+					{
+						"key": "Accept",
+						"value": "*/*"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/api/auth/token",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"auth",
+						"token"
+					]
+				},
+				"description": "Create JWT Token using Keycloak Client Id and Client Secret."
+			},
+			"response": [
+				{
+					"name": "OK",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "clientid",
+								"value": "irur",
+								"description": "(Required) "
+							},
+							{
+								"key": "clientsecret",
+								"value": "irur",
+								"description": "(Required) "
+							},
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/token",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"token"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "text",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "*/*"
+						}
+					],
+					"cookie": [],
+					"body": "irur"
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "keycloakClientId",
+			"value": "",
+			"type": "default"
+		},
+		{
+			"key": "keycloakClientSecret",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "bearerToken",
+			"value": "",
+			"type": "string"
+		}
+	]
+}

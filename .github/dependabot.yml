@@ -13,6 +13,9 @@ updates:
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 2
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-patch"]
 
   # Enable version updates for Docker
   - package-ecosystem: "docker"
@@ -23,6 +26,9 @@ updates:
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 2
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-patch"]
 
   # Enable version updates for GitHub Actions
   - package-ecosystem: "github-actions"
@@ -32,3 +38,6 @@ updates:
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 2
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-patch"]

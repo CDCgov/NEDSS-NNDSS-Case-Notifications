@@ -10,6 +10,9 @@ build
 # macOS system files
 .DS_Store
 
+# Environment variables
+.env
+
 /data-extract-service/build
 /data-extract-service/.gradle
 /data-extract-service/.idea

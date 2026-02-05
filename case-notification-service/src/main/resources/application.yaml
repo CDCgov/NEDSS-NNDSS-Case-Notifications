@@ -110,6 +110,20 @@ spring:
       enabled: true
 ---
 
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8100/realms/unused
+          jwk-set-uri: http://localhost:8100/realms/unused/protocol/openid-connect/certs
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.security.oauth2.resource.servlet.OAuth2ResourceServerAutoConfiguration
+
 logging:
   level:
     root: WARN

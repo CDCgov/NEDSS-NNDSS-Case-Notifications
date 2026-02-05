@@ -47,6 +47,19 @@ public class SecurityConfig {
     private CustomAuthenticationManagerResolver customauthenticationmanagerresolver;
 
     @Bean
+    @Profile("local")
+    public SecurityFilterChain localSecurityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(auth -> auth
+                        .anyRequest().permitAll())
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
+        return http.build();
+    }
+
+    @Bean
     @Profile("dev")
     public SecurityFilterChain devSecurityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -66,7 +79,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    @Profile("!dev")
+    @Profile("!dev & !local")
     public SecurityFilterChain prodSecurityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)

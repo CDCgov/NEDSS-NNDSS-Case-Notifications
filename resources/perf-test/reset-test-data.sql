@@ -4,8 +4,7 @@
 
 -- Reset CN_transportq_out rows back to UNPROCESSED
 USE NBS_ODSE;
-UPDATE CN_transportq_out
-SET record_status_cd = 'UNPROCESSED', record_status_time = GETDATE()
+DELETE FROM CN_transportq_out
 WHERE notification_local_id LIKE 'NOT-PERF-%';
 
 PRINT CONCAT('Reset ', @@ROWCOUNT, ' rows in CN_transportq_out');

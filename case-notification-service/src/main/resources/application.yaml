@@ -71,6 +71,10 @@ spring:
       max-retry: 2
       suffix: -retry
 
+xmlhl7:
+  parser:
+    mode: service
+
 auth:
   token-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/token
   introspect-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/token/introspect

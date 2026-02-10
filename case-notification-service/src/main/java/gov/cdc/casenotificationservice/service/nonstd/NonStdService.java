@@ -8,19 +8,15 @@ import gov.cdc.casenotificationservice.repository.msg.TransportQOutRepository;
 import gov.cdc.casenotificationservice.repository.msg.model.CaseNotificationConfig;
 import gov.cdc.casenotificationservice.repository.msg.model.TransportQOut;
 import gov.cdc.casenotificationservice.repository.odse.CNTraportqOutRepository;
-import gov.cdc.casenotificationservice.service.common.interfaces.IApiService;
+import gov.cdc.casenotificationservice.service.common.interfaces.IXmlHl7Service;
 import gov.cdc.casenotificationservice.service.nonstd.interfaces.INonStdBatchService;
 import gov.cdc.casenotificationservice.service.nonstd.interfaces.INonStdService;
 import gov.cdc.casenotificationservice.service.nonstd.interfaces.IPHINMSService;
-import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.Unmarshaller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import gov.cdc.xmlhl7parserlib.helper.HL7MessageBuilder;
-
-import java.io.StringReader;
 
 @Service
 public class NonStdService implements INonStdService {
@@ -33,7 +29,7 @@ public class NonStdService implements INonStdService {
     private final TransportQOutRepository transportQOutRepository;
     private final CNTraportqOutRepository cnTraportqOutRepository;
     private final CaseNotificationConfigRepository caseNotificationConfigRepository;
-    private final IApiService apiService;
+    private final IXmlHl7Service apiService;
     private final HL7MessageBuilder hl7MessageBuilder;
 
     public NonStdService(IPHINMSService phinmsService,
@@ -41,7 +37,7 @@ public class NonStdService implements INonStdService {
                          TransportQOutRepository transportQOutRepository,
                          CNTraportqOutRepository cnTraportqOutRepository,
                          CaseNotificationConfigRepository caseNotificationConfigRepository,
-                         IApiService apiService,
+                         IXmlHl7Service apiService,
                          HL7MessageBuilder hl7MessageBuilder) {
         this.phinmsService = phinmsService;
         this.batchService = batchService;
@@ -57,14 +53,9 @@ public class NonStdService implements INonStdService {
             CaseNotificationConfig stdConfig = caseNotificationConfigRepository.findNonStdConfig();
             var cnTransport = cnTraportqOutRepository.findTopByRecordUid(messageAfterStdChecker.getCnTransportqOutUid());
 
-            var payload = hl7MessageBuilder.buildHl7Message(cnTransport.getMessagePayload(), hl7ValidationEnabled);
+//            var payload = hl7MessageBuilder.buildHl7Message(cnTransport.getMessagePayload(), hl7ValidationEnabled);
 
-//            var token = apiService.callToken();
-//            if (token == null || token.isEmpty()) {
-//              throw new IgnorableException("Token is Invalid");
-//            }
-//            var tranformedData = apiService.callHl7Endpoint(token, String.valueOf(cnTransport.getCnTransportqOutUid()), hl7ValidationEnabled);
-//            String payload = tranformedData;
+            var payload = apiService.buildHl7Message(String.valueOf(cnTransport.getCnTransportqOutUid()), hl7ValidationEnabled);
 
             if (payload.isEmpty()) {
                 throw new IgnorableException("Payload is empty");

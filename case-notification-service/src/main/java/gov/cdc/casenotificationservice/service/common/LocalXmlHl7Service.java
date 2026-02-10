@@ -1,10 +1,11 @@
 package gov.cdc.casenotificationservice.service.common;
 
 import gov.cdc.casenotificationservice.exception.APIException;
-import gov.cdc.casenotificationservice.service.common.interfaces.IApiService;
+import gov.cdc.casenotificationservice.service.common.interfaces.IXmlHl7Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpEntity;
@@ -18,10 +19,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 
 @Service
-@Profile("local")
-@Primary
-public class LocalApiService implements IApiService {
-    private static final Logger logger = LoggerFactory.getLogger(LocalApiService.class);
+@ConditionalOnProperty(name = "xmlhl7.parser.mode", havingValue = "service", matchIfMissing = true)
+public class LocalXmlHl7Service implements IXmlHl7Service {
+    private static final Logger logger = LoggerFactory.getLogger(LocalXmlHl7Service.class);
 
     @Value("${api.endpoint_hl7}")
     protected String hl7Endpoint;
@@ -29,12 +29,7 @@ public class LocalApiService implements IApiService {
     private final RestTemplate restTemplate = new RestTemplate();
 
     @Override
-    public String callToken() {
-        return "local-no-auth";
-    }
-
-    @Override
-    public String callHl7Endpoint(String token, String recordId, boolean hl7ValidationEnabled) throws APIException {
+    public String buildHl7Message(String recordId, boolean hl7ValidationEnabled) throws APIException {
         try {
             HttpEntity<String> entity = new HttpEntity<>(new HttpHeaders());
 

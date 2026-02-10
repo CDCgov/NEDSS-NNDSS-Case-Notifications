@@ -1,7 +1,8 @@
 package gov.cdc.casenotificationservice.service.common;
 
 import gov.cdc.casenotificationservice.exception.APIException;
-import gov.cdc.casenotificationservice.service.common.interfaces.IApiService;
+import gov.cdc.casenotificationservice.exception.IgnorableException;
+import gov.cdc.casenotificationservice.service.common.interfaces.IXmlHl7Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,8 +17,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 
 @Service
-public class ApiService implements IApiService {
-    private static final Logger logger = LoggerFactory.getLogger(ApiService.class);
+public class XmlHl7Service implements IXmlHl7Service {
+    private static final Logger logger = LoggerFactory.getLogger(XmlHl7Service.class);
 
     @Value("${api.clientId}")
     private String clientId;
@@ -37,7 +38,7 @@ public class ApiService implements IApiService {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
-    public String callToken() {
+    private String callToken() {
         HttpHeaders headers = new HttpHeaders();
         headers.add("clientid", clientId);
         headers.add("clientsecret", clientSecret);
@@ -51,8 +52,14 @@ public class ApiService implements IApiService {
         return response.getBody();
     }
 
-    public String callHl7Endpoint(String token, String recordId, boolean hl7ValidationEnabled) throws APIException {
+    public String buildHl7Message(String recordId, boolean hl7ValidationEnabled) throws APIException {
         try {
+            String token = callToken();
+
+            if (token == null || token.isEmpty()) {
+              throw new IgnorableException("Token is Invalid");
+            }
+
             HttpHeaders headers = new HttpHeaders();
             headers.setBearerAuth(token);
             headers.add("clientid", clientId);

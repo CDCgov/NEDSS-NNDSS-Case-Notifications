@@ -6,6 +6,7 @@ import gov.cdc.casenotificationservice.service.common.interfaces.IXmlHl7Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -17,6 +18,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 
 @Service
+@Profile("!local")
 public class XmlHl7Service implements IXmlHl7Service {
     private static final Logger logger = LoggerFactory.getLogger(XmlHl7Service.class);
 

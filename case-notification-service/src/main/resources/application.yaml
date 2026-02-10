@@ -73,7 +73,7 @@ spring:
 
 xmlhl7:
   parser:
-    mode: service
+    mode: library
 
 auth:
   token-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/token

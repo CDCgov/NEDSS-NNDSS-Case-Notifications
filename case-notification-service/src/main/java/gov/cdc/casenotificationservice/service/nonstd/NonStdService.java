@@ -16,7 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import gov.cdc.xmlhl7parserlib.helper.HL7MessageBuilder;
 
 @Service
 public class NonStdService implements INonStdService {
@@ -29,23 +28,20 @@ public class NonStdService implements INonStdService {
     private final TransportQOutRepository transportQOutRepository;
     private final CNTraportqOutRepository cnTraportqOutRepository;
     private final CaseNotificationConfigRepository caseNotificationConfigRepository;
-    private final IXmlHl7Service apiService;
-    private final HL7MessageBuilder hl7MessageBuilder;
+    private final IXmlHl7Service xmlHl7Service;
 
     public NonStdService(IPHINMSService phinmsService,
                          INonStdBatchService batchService,
                          TransportQOutRepository transportQOutRepository,
                          CNTraportqOutRepository cnTraportqOutRepository,
                          CaseNotificationConfigRepository caseNotificationConfigRepository,
-                         IXmlHl7Service apiService,
-                         HL7MessageBuilder hl7MessageBuilder) {
+                         IXmlHl7Service xmlHl7Service) {
         this.phinmsService = phinmsService;
         this.batchService = batchService;
         this.transportQOutRepository = transportQOutRepository;
         this.cnTraportqOutRepository = cnTraportqOutRepository;
         this.caseNotificationConfigRepository = caseNotificationConfigRepository;
-        this.apiService = apiService;
-        this.hl7MessageBuilder = hl7MessageBuilder;
+        this.xmlHl7Service = xmlHl7Service;
     }
 
     public void nonStdProcessor(MessageAfterStdChecker messageAfterStdChecker, boolean hl7ValidationEnabled) throws IgnorableException, NonStdProcessorServiceException, NonStdBatchProcessorServiceException, APIException {
@@ -53,9 +49,7 @@ public class NonStdService implements INonStdService {
             CaseNotificationConfig stdConfig = caseNotificationConfigRepository.findNonStdConfig();
             var cnTransport = cnTraportqOutRepository.findTopByRecordUid(messageAfterStdChecker.getCnTransportqOutUid());
 
-//            var payload = hl7MessageBuilder.buildHl7Message(cnTransport.getMessagePayload(), hl7ValidationEnabled);
-
-            var payload = apiService.buildHl7Message(String.valueOf(cnTransport.getCnTransportqOutUid()), hl7ValidationEnabled);
+            var payload = xmlHl7Service.buildHl7Message(String.valueOf(cnTransport.getCnTransportqOutUid()), hl7ValidationEnabled);
 
             if (payload.isEmpty()) {
                 throw new IgnorableException("Payload is empty");

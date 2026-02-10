@@ -25,7 +25,7 @@ import java.util.HashMap;
         entityManagerFactoryRef = "odseEntityManagerFactory",
         transactionManagerRef = "odseTransactionManager",
         basePackages = {
-                "gov.cdc.xmlhl7parserservice.repository.odse",
+                "gov.cdc.xmlhl7parserlib.repository.odse",
         }
 )
 public class OdseDataSourceConfig {
@@ -64,7 +64,7 @@ public class OdseDataSourceConfig {
             @Qualifier("odseDataSource") DataSource odseDataSource) {
         return odseEntityManagerFactoryBuilder
                 .dataSource(odseDataSource)
-                .packages("gov.cdc.xmlhl7parserservice.repository.odse.model")
+                .packages("gov.cdc.xmlhl7parserlib.repository.odse.model")
                 .persistenceUnit("odse")
                 .build();
     }

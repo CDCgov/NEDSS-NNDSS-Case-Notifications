@@ -1,8 +1,8 @@
 package gov.cdc.xmlhl7parserservice.controller;
 
-import gov.cdc.xmlhl7parserservice.helper.HL7MessageBuilder;
-import gov.cdc.xmlhl7parserservice.model.generated.jaxb.NBSNNDIntermediaryMessage;
-import gov.cdc.xmlhl7parserservice.repository.odse.CNTraportqOutRepository;
+import gov.cdc.xmlhl7parserlib.helper.HL7MessageBuilder;
+import gov.cdc.xmlhl7parserlib.model.generated.jaxb.NBSNNDIntermediaryMessage;
+import gov.cdc.xmlhl7parserlib.repository.odse.CNTraportqOutRepository;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

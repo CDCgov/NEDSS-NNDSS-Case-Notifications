@@ -1,6 +1,7 @@
 package gov.cdc.casenotificationservice.service.common;
 
 import gov.cdc.casenotificationservice.exception.APIException;
+import gov.cdc.casenotificationservice.repository.odse.model.CNTransportqOut;
 import gov.cdc.casenotificationservice.service.common.interfaces.IXmlHl7Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,8 +30,9 @@ public class LocalXmlHl7Service implements IXmlHl7Service {
     private final RestTemplate restTemplate = new RestTemplate();
 
     @Override
-    public String buildHl7Message(String recordId, boolean hl7ValidationEnabled) throws APIException {
+    public String buildHl7Message(CNTransportqOut record, boolean hl7ValidationEnabled) throws APIException {
         try {
+            var recordId = String.valueOf(record.getCnTransportqOutUid());
             HttpEntity<String> entity = new HttpEntity<>(new HttpHeaders());
 
             URI uri = UriComponentsBuilder.fromHttpUrl(hl7Endpoint)

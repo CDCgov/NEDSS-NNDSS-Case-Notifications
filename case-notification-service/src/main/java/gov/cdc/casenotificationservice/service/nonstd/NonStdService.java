@@ -49,7 +49,7 @@ public class NonStdService implements INonStdService {
             CaseNotificationConfig stdConfig = caseNotificationConfigRepository.findNonStdConfig();
             var cnTransport = cnTraportqOutRepository.findTopByRecordUid(messageAfterStdChecker.getCnTransportqOutUid());
 
-            var payload = xmlHl7Service.buildHl7Message(String.valueOf(cnTransport.getCnTransportqOutUid()), hl7ValidationEnabled);
+            var payload = xmlHl7Service.buildHl7Message(cnTransport, hl7ValidationEnabled);
 
             if (payload.isEmpty()) {
                 throw new IgnorableException("Payload is empty");

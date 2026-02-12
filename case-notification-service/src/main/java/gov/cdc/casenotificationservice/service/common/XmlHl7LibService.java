@@ -11,17 +11,14 @@ import org.springframework.stereotype.Service;
 @Service
 @ConditionalOnProperty(name = "xmlhl7.parser.mode", havingValue = "library", matchIfMissing = true)
 public class XmlHl7LibService implements IXmlHl7Service {
-  private final CNTraportqOutRepository cnTraportqOutRepository;
   private final HL7MessageBuilder hl7MessageBuilder;
 
-  public XmlHl7LibService(CNTraportqOutRepository cnTraportqOutRepository, HL7MessageBuilder hl7MessageBuilder) {
-    this.cnTraportqOutRepository = cnTraportqOutRepository;
+  public XmlHl7LibService(HL7MessageBuilder hl7MessageBuilder) {
     this.hl7MessageBuilder = hl7MessageBuilder;
   }
 
   @Override
-  public String buildHl7Message(String recordId, boolean hl7ValidationEnabled) throws APIException {
-    var xmlPayload = cnTraportqOutRepository.findTopByRecordUid(Long.valueOf(recordId));
-    return hl7MessageBuilder.buildHl7Message(xmlPayload.getMessagePayload(), hl7ValidationEnabled);
+  public String buildHl7Message(CNTransportqOut record, boolean hl7ValidationEnabled) throws APIException {
+    return hl7MessageBuilder.buildHl7Message(record.getMessagePayload(), hl7ValidationEnabled);
   }
 }

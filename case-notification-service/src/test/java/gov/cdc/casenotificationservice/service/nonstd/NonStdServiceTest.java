@@ -65,7 +65,7 @@ class NonStdServiceTest {
         CNTransportqOut mockTransport = new CNTransportqOut();
         mockTransport.setCnTransportqOutUid(123L);
 
-        when(apiService.buildHl7Message("123", true)).thenReturn("TEST");
+        when(apiService.buildHl7Message(mockTransport, true)).thenReturn("TEST");
 
         when(caseNotificationConfigRepository.findNonStdConfig()).thenReturn(config);
         when(cnTraportqOutRepository.findTopByRecordUid(123L)).thenReturn(mockTransport);
@@ -94,7 +94,7 @@ class NonStdServiceTest {
         CNTransportqOut mockTransport = new CNTransportqOut();
         mockTransport.setCnTransportqOutUid(123L);
 
-        when(apiService.buildHl7Message( "123", true)).thenReturn("TEST");
+        when(apiService.buildHl7Message( mockTransport, true)).thenReturn("TEST");
         when(caseNotificationConfigRepository.findNonStdConfig()).thenReturn(config);
         when(cnTraportqOutRepository.findTopByRecordUid(124L)).thenReturn(mockTransport);
         when(phinmsService.gettingPHIMNSProperties(any(), any(), any())).thenReturn(props);

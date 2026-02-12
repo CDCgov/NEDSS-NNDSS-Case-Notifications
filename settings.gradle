@@ -10,5 +10,4 @@ include 'data-extraction-service'
 
 include 'case-notification-service'
 
-include 'xml-hl7-parser-service'
-
+include 'xml-hl7-parser-lib'

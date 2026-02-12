@@ -8,7 +8,7 @@ import gov.cdc.casenotificationservice.repository.msg.TransportQOutRepository;
 import gov.cdc.casenotificationservice.repository.msg.model.CaseNotificationConfig;
 import gov.cdc.casenotificationservice.repository.msg.model.TransportQOut;
 import gov.cdc.casenotificationservice.repository.odse.CNTraportqOutRepository;
-import gov.cdc.casenotificationservice.service.common.interfaces.IApiService;
+import gov.cdc.casenotificationservice.service.common.interfaces.IXmlHl7Service;
 import gov.cdc.casenotificationservice.service.nonstd.interfaces.INonStdBatchService;
 import gov.cdc.casenotificationservice.service.nonstd.interfaces.INonStdService;
 import gov.cdc.casenotificationservice.service.nonstd.interfaces.IPHINMSService;
@@ -29,42 +29,37 @@ public class NonStdService implements INonStdService {
     private final TransportQOutRepository transportQOutRepository;
     private final CNTraportqOutRepository cnTraportqOutRepository;
     private final CaseNotificationConfigRepository caseNotificationConfigRepository;
-    private final IApiService apiService;
+    private final IXmlHl7Service xmlHl7Service;
 
     public NonStdService(IPHINMSService phinmsService,
                          INonStdBatchService batchService,
                          TransportQOutRepository transportQOutRepository,
                          CNTraportqOutRepository cnTraportqOutRepository,
                          CaseNotificationConfigRepository caseNotificationConfigRepository,
-                         IApiService apiService) {
+                         IXmlHl7Service xmlHl7Service) {
         this.phinmsService = phinmsService;
         this.batchService = batchService;
         this.transportQOutRepository = transportQOutRepository;
         this.cnTraportqOutRepository = cnTraportqOutRepository;
         this.caseNotificationConfigRepository = caseNotificationConfigRepository;
-        this.apiService = apiService;
+        this.xmlHl7Service = xmlHl7Service;
     }
 
     public void nonStdProcessor(MessageAfterStdChecker messageAfterStdChecker, boolean hl7ValidationEnabled) throws IgnorableException, NonStdProcessorServiceException, NonStdBatchProcessorServiceException, APIException {
             PHINMSProperties phinmsProperties = new PHINMSProperties();
             CaseNotificationConfig stdConfig = caseNotificationConfigRepository.findNonStdConfig();
-            var cnTranport = cnTraportqOutRepository.findTopByRecordUid(messageAfterStdChecker.getCnTransportqOutUid());
+            var cnTransport = cnTraportqOutRepository.findTopByRecordUid(messageAfterStdChecker.getCnTransportqOutUid());
 
-            var token = apiService.callToken();
-            if (token == null || token.isEmpty()) {
-                throw new IgnorableException("Token is Invalid");
-            }
-            var tranformedData = apiService.callHl7Endpoint(token, String.valueOf(cnTranport.getCnTransportqOutUid()), hl7ValidationEnabled);
-            String payload = tranformedData;
+            var payload = xmlHl7Service.buildHl7Message(cnTransport.getMessagePayload(), hl7ValidationEnabled);
             if (payload.isEmpty()) {
                 throw new IgnorableException("Payload is empty");
             }
 
-            phinmsProperties.setCnTransportUid(cnTranport.getCnTransportqOutUid());
-            phinmsProperties.setPMessageUid(cnTranport.getNotificationLocalId());
-            phinmsProperties.setPNotificationId(String.valueOf(cnTranport.getNotificationUid()));
-            phinmsProperties.setPPublicHealthCaseLocalId(cnTranport.getPublicHealthCaseLocalId());
-            phinmsProperties.setPReportStatusCd(cnTranport.getReportStatusCd());
+            phinmsProperties.setCnTransportUid(cnTransport.getCnTransportqOutUid());
+            phinmsProperties.setPMessageUid(cnTransport.getNotificationLocalId());
+            phinmsProperties.setPNotificationId(String.valueOf(cnTransport.getNotificationUid()));
+            phinmsProperties.setPPublicHealthCaseLocalId(cnTransport.getPublicHealthCaseLocalId());
+            phinmsProperties.setPReportStatusCd(cnTransport.getReportStatusCd());
             phinmsProperties.setNETSS_MESSAGE_ONLY("queued");
             phinmsProperties.setBATCH_MESSAGE_PROFILE_ID(stdConfig.getBatchMesageProfileId());
 

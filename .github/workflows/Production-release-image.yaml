@@ -8,7 +8,6 @@ on:
         required: true
         type: choice
         options:
-          - xml-hl7-parser-service
           - case-notification-service
           - data-extraction-service
       is_hotfix:

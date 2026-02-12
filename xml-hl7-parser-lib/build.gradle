@@ -1,0 +1,68 @@
+plugins {
+    id 'java-library'
+    id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'gov.cdc'
+version = '7.11.0-SNAPSHOT'
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.boot:spring-boot-dependencies:3.4.5"
+    }
+}
+
+configurations.all {
+    resolutionStrategy {
+        force 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.2'
+    }
+}
+
+dependencies {
+    // HL7 parsing
+    api 'ca.uhn.hapi:hapi-base:2.5.1'
+    api 'ca.uhn.hapi:hapi-structures-v25:2.5.1'
+
+    // JAXB for XML binding
+    api 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.2'
+    implementation 'org.glassfish.jaxb:jaxb-runtime:4.0.5'
+    implementation 'org.glassfish.jaxb:jaxb-xjc:4.0.5'
+
+    // Spring Data JPA (for repository interfaces)
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    // Jackson
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.18.2'
+
+    // Lombok
+    compileOnly 'org.projectlombok:lombok:1.18.38'
+    annotationProcessor 'org.projectlombok:lombok:1.18.38'
+
+    // Logging
+    implementation 'org.slf4j:slf4j-api'
+
+    // Testing
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+// Generate JAXB classes from XSD
+tasks.register('generateJAXBClasses', JavaExec) {
+    mainClass = 'com.sun.tools.xjc.XJCFacade'
+    classpath = configurations.compileClasspath
+    args = ['-d', 'src/main/java', '-p', 'gov.cdc.xmlhl7parserlib.model.generated.jaxb', 'src/main/resources/NBSNNDIntermediaryMessage.xsd']
+}
+
+tasks.named('compileJava') {
+    dependsOn 'generateJAXBClasses'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}

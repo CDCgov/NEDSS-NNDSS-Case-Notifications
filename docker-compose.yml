@@ -38,10 +38,8 @@ services:
       CN_AUTH_URI: ${CN_AUTH_URI}
       NND_DE_CLIENT_ID: ${NND_DE_CLIENT_ID}
       NND_DE_SECRET: ${NND_DE_SECRET}
-      NND_DE_URL: http://xml-hl7-parser-service:8088/hl7-parser
     depends_on:
       - kafka
-      - xml-hl7-parser-service
 
   data-extraction-service:
     build:
@@ -56,16 +54,3 @@ services:
       KAFKA_BOOTSTRAP_SERVER: kafka:9092
     depends_on:
       - kafka
-
-  xml-hl7-parser-service:
-    build:
-      context: .
-      dockerfile: xml-hl7-parser-service/Dockerfile
-    ports:
-      - "8088:8088"
-    environment:
-      SPRING_PROFILES_ACTIVE: local
-      NBS_DBSERVER: host.docker.internal:1433
-      NBS_DBUSER: ${NBS_DBUSER}
-      NBS_DBPASSWORD: ${NBS_DBPASSWORD}
-      CN_AUTH_URI: ${CN_AUTH_URI}

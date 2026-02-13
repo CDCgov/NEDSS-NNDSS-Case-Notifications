@@ -45,7 +45,7 @@ public class NonStdService implements INonStdService {
         this.xmlHl7Service = xmlHl7Service;
     }
 
-    public void nonStdProcessor(MessageAfterStdChecker messageAfterStdChecker, boolean hl7ValidationEnabled) throws IgnorableException, NonStdProcessorServiceException, NonStdBatchProcessorServiceException, APIException {
+    public void nonStdProcessor(MessageAfterStdChecker messageAfterStdChecker, boolean hl7ValidationEnabled) throws IgnorableException, NonStdProcessorServiceException, NonStdBatchProcessorServiceException, XmlHl7ParsingException {
             PHINMSProperties phinmsProperties = new PHINMSProperties();
             CaseNotificationConfig stdConfig = caseNotificationConfigRepository.findNonStdConfig();
             var cnTransport = cnTraportqOutRepository.findTopByRecordUid(messageAfterStdChecker.getCnTransportqOutUid());

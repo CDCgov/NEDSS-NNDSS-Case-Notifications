@@ -1,11 +1,9 @@
 package gov.cdc.casenotificationservice.service.common;
 
-import gov.cdc.casenotificationservice.exception.APIException;
+import gov.cdc.casenotificationservice.exception.XmlHl7ParsingException;
 import gov.cdc.casenotificationservice.service.common.interfaces.IXmlHl7Service;
 import gov.cdc.xmlhl7parserlib.helper.HL7MessageBuilder;
 import org.springframework.stereotype.Service;
-
-import java.net.URI;
 
 @Service
 public class XmlHl7Service implements IXmlHl7Service {
@@ -16,7 +14,7 @@ public class XmlHl7Service implements IXmlHl7Service {
     }
 
     @Override
-    public String buildHl7Message(String xmlPayload, boolean hl7ValidationEnabled) throws APIException {
+    public String buildHl7Message(String xmlPayload, boolean hl7ValidationEnabled) throws XmlHl7ParsingException {
         return hl7MessageBuilder.buildHl7Message(xmlPayload, hl7ValidationEnabled);
     }
 }

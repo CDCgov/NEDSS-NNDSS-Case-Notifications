@@ -69,12 +69,13 @@ class MapperUtilServiceTest {
         tsElement.setQuestionDataTypeNND("TS");
         var ts = new MessageElement.DataElement.TsDataType();
         LocalDateTime ldt = LocalDateTime.of(2024, 4, 28, 12, 0);
-        GregorianCalendar gregorianCalendar = GregorianCalendar.from(ldt.atZone(ZoneId.systemDefault()));
+        ZoneId zone = ZoneId.of("America/New_York");
+        GregorianCalendar gregorianCalendar = GregorianCalendar.from(ldt.atZone(zone));
         XMLGregorianCalendar xmlGregorianCalendar = DatatypeFactory.newInstance().newXMLGregorianCalendar(gregorianCalendar);
 
         ts.setTime(xmlGregorianCalendar);
         tsElement.setTsDataType(ts);
-        assertEquals("2024-04-28T12:00:00.000-07:00", mapperUtilService.mapToData(tsElement));
+        assertEquals("2024-04-28T12:00:00.000-04:00", mapperUtilService.mapToData(tsElement));
 
         // DT type
         var dtElement = new MessageElement.DataElement();

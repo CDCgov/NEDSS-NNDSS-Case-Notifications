@@ -27,6 +27,7 @@ import java.util.HashMap;
         transactionManagerRef = "msgTransactionManager",
         basePackages = {
                 "gov.cdc.casenotificationservice.repository.msg",
+                "gov.cdc.xmlhl7parserlib.repository.msgout",
         }
 )
 public class MsgDataSourceConfig {
@@ -65,7 +66,8 @@ public class MsgDataSourceConfig {
             @Qualifier("msgDataSource") DataSource msgDataSource) {
         return msgEntityManagerFactoryBuilder
                 .dataSource(msgDataSource)
-                .packages("gov.cdc.casenotificationservice.repository.msg")
+                .packages("gov.cdc.casenotificationservice.repository.msg",
+                        "gov.cdc.xmlhl7parserlib.repository.msgout")
                 .persistenceUnit("msg")
                 .build();
     }

@@ -1,13 +1,8 @@
 name: Unit Test Runner
 on:
   pull_request:
-    paths:
-      - "case-notification-service/**"
-      - "data-extraction-service/**"
-      - "xml-hl7-parser-service/**"
-      - "build.gradle"
-      - "settings.gradle"
-      - "gradle/**"
+    branches:
+      - main
 
 jobs:
   pipeline:

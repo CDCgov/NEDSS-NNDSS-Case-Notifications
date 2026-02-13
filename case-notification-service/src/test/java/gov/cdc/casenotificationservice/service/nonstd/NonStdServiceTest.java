@@ -8,9 +8,9 @@ import gov.cdc.casenotificationservice.repository.msg.model.CaseNotificationConf
 import gov.cdc.casenotificationservice.repository.msg.model.TransportQOut;
 import gov.cdc.casenotificationservice.repository.odse.CNTraportqOutRepository;
 import gov.cdc.casenotificationservice.repository.odse.model.CNTransportqOut;
-import gov.cdc.casenotificationservice.service.common.interfaces.IXmlHl7Service;
 import gov.cdc.casenotificationservice.service.nonstd.interfaces.INonStdBatchService;
 import gov.cdc.casenotificationservice.service.nonstd.interfaces.IPHINMSService;
+import gov.cdc.xmlhl7parser.helper.HL7MessageBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -40,7 +40,7 @@ class NonStdServiceTest {
     private CaseNotificationConfigRepository caseNotificationConfigRepository;
 
     @Mock
-    private IXmlHl7Service apiService;
+    private HL7MessageBuilder hl7MessageBuilder;
 
 
     @BeforeEach
@@ -65,7 +65,7 @@ class NonStdServiceTest {
         CNTransportqOut mockTransport = new CNTransportqOut();
         mockTransport.setCnTransportqOutUid(123L);
 
-        when(apiService.buildHl7Message(mockTransport.getMessagePayload(), true)).thenReturn("TEST");
+        when(hl7MessageBuilder.buildHl7Message(mockTransport.getMessagePayload(), true)).thenReturn("TEST");
 
         when(caseNotificationConfigRepository.findNonStdConfig()).thenReturn(config);
         when(cnTraportqOutRepository.findTopByRecordUid(123L)).thenReturn(mockTransport);
@@ -94,7 +94,7 @@ class NonStdServiceTest {
         CNTransportqOut mockTransport = new CNTransportqOut();
         mockTransport.setCnTransportqOutUid(123L);
 
-        when(apiService.buildHl7Message(mockTransport.getMessagePayload(), true)).thenReturn("TEST");
+        when(hl7MessageBuilder.buildHl7Message(mockTransport.getMessagePayload(), true)).thenReturn("TEST");
         when(caseNotificationConfigRepository.findNonStdConfig()).thenReturn(config);
         when(cnTraportqOutRepository.findTopByRecordUid(124L)).thenReturn(mockTransport);
         when(phinmsService.gettingPHIMNSProperties(any(), any(), any())).thenReturn(props);

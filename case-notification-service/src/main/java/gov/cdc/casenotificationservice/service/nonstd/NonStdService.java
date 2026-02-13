@@ -8,10 +8,10 @@ import gov.cdc.casenotificationservice.repository.msg.TransportQOutRepository;
 import gov.cdc.casenotificationservice.repository.msg.model.CaseNotificationConfig;
 import gov.cdc.casenotificationservice.repository.msg.model.TransportQOut;
 import gov.cdc.casenotificationservice.repository.odse.CNTraportqOutRepository;
-import gov.cdc.casenotificationservice.service.common.interfaces.IXmlHl7Service;
 import gov.cdc.casenotificationservice.service.nonstd.interfaces.INonStdBatchService;
 import gov.cdc.casenotificationservice.service.nonstd.interfaces.INonStdService;
 import gov.cdc.casenotificationservice.service.nonstd.interfaces.IPHINMSService;
+import gov.cdc.xmlhl7parser.helper.HL7MessageBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,20 +29,20 @@ public class NonStdService implements INonStdService {
     private final TransportQOutRepository transportQOutRepository;
     private final CNTraportqOutRepository cnTraportqOutRepository;
     private final CaseNotificationConfigRepository caseNotificationConfigRepository;
-    private final IXmlHl7Service xmlHl7Service;
+    private final HL7MessageBuilder hl7MessageBuilder;
 
     public NonStdService(IPHINMSService phinmsService,
                          INonStdBatchService batchService,
                          TransportQOutRepository transportQOutRepository,
                          CNTraportqOutRepository cnTraportqOutRepository,
                          CaseNotificationConfigRepository caseNotificationConfigRepository,
-                         IXmlHl7Service xmlHl7Service) {
+                         HL7MessageBuilder hl7MessageBuilder) {
         this.phinmsService = phinmsService;
         this.batchService = batchService;
         this.transportQOutRepository = transportQOutRepository;
         this.cnTraportqOutRepository = cnTraportqOutRepository;
         this.caseNotificationConfigRepository = caseNotificationConfigRepository;
-        this.xmlHl7Service = xmlHl7Service;
+        this.hl7MessageBuilder = hl7MessageBuilder;
     }
 
     public void nonStdProcessor(MessageAfterStdChecker messageAfterStdChecker, boolean hl7ValidationEnabled) throws IgnorableException, NonStdProcessorServiceException, NonStdBatchProcessorServiceException, XmlHl7ParsingException {
@@ -50,7 +50,7 @@ public class NonStdService implements INonStdService {
             CaseNotificationConfig stdConfig = caseNotificationConfigRepository.findNonStdConfig();
             var cnTransport = cnTraportqOutRepository.findTopByRecordUid(messageAfterStdChecker.getCnTransportqOutUid());
 
-            var payload = xmlHl7Service.buildHl7Message(cnTransport.getMessagePayload(), hl7ValidationEnabled);
+            var payload = hl7MessageBuilder.buildHl7Message(cnTransport.getMessagePayload(), hl7ValidationEnabled);
             if (payload.isEmpty()) {
                 throw new IgnorableException("Payload is empty");
             }

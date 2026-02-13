@@ -8,8 +8,8 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 
 @SpringBootApplication
 @EnableScheduling
-@ComponentScan(basePackages = {"gov.cdc.casenotificationservice", "gov.cdc.xmlhl7parserlib"})
-@EntityScan(basePackages = {"gov.cdc.casenotificationservice", "gov.cdc.xmlhl7parserlib"})
+@ComponentScan(basePackages = {"gov.cdc.casenotificationservice", "gov.cdc.xmlhl7parser"})
+@EntityScan(basePackages = {"gov.cdc.casenotificationservice", "gov.cdc.xmlhl7parser"})
 public class CaseNotificationServiceApplication {
 
     public static void main(String[] args) {

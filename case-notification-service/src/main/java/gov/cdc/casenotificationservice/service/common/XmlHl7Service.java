@@ -2,7 +2,7 @@ package gov.cdc.casenotificationservice.service.common;
 
 import gov.cdc.casenotificationservice.exception.XmlHl7ParsingException;
 import gov.cdc.casenotificationservice.service.common.interfaces.IXmlHl7Service;
-import gov.cdc.xmlhl7parserlib.helper.HL7MessageBuilder;
+import gov.cdc.xmlhl7parser.helper.HL7MessageBuilder;
 import org.springframework.stereotype.Service;
 
 @Service

@@ -20,16 +20,16 @@ spring:
   application:
     name: data-extraction-service
   datasource:
-    username: ${NBS_DBUSER}
-    password: ${NBS_DBPASSWORD}
+    username: ${DATABASE_USER}
+    password: ${DATABASE_PASSWORD}
     driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
     hikari:
       connection-timeout: 60000
       maximum-pool-size: 10
     odse:
-      url: jdbc:sqlserver://${NBS_DBSERVER};databaseName=NBS_ODSE;encrypt=true;trustServerCertificate=true;
+      url: jdbc:sqlserver://${DATABASE_HOST};databaseName=NBS_ODSE;encrypt=true;trustServerCertificate=true;
     msg:
-      url: jdbc:sqlserver://${NBS_DBSERVER};databaseName=NBS_MSGOUTE;encrypt=true;trustServerCertificate=true;
+      url: jdbc:sqlserver://${DATABASE_HOST};databaseName=NBS_MSGOUTE;encrypt=true;trustServerCertificate=true;
   jpa:
     show-sql: true
     hibernate:

@@ -35,23 +35,23 @@ spring:
           issuer-uri: ${CN_AUTH_URI:http://localhost:8100/realms/NBS}
           jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
   liquibase:
-    user: ${NBS_DBUSER}
-    password: ${NBS_DBPASSWORD}
+    user: ${DATABASE_USER}
+    password: ${DATABASE_PASSWORD}
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
     msgoute:
       change-log: classpath:db/changelog/case-notification-msgoute-changelog.yaml
-      url: jdbc:sqlserver://${NBS_DBSERVER};databaseName=NBS_MSGOUTE;encrypt=true;trustServerCertificate=true;
+      url: jdbc:sqlserver://${DATABASE_HOST};databaseName=NBS_MSGOUTE;encrypt=true;trustServerCertificate=true;
   datasource:
-    username: ${NBS_DBUSER}
-    password: ${NBS_DBPASSWORD}
+    username: ${DATABASE_USER}
+    password: ${DATABASE_PASSWORD}
     driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
     hikari:
       connection-timeout: 60000
       maximum-pool-size: 10
     odse:
-      url: jdbc:sqlserver://${NBS_DBSERVER};databaseName=NBS_ODSE;encrypt=true;trustServerCertificate=true;
+      url: jdbc:sqlserver://${DATABASE_HOST};databaseName=NBS_ODSE;encrypt=true;trustServerCertificate=true;
     msg:
-      url: jdbc:sqlserver://${NBS_DBSERVER};databaseName=NBS_MSGOUTE;encrypt=true;trustServerCertificate=true;
+      url: jdbc:sqlserver://${DATABASE_HOST};databaseName=NBS_MSGOUTE;encrypt=true;trustServerCertificate=true;
   jpa:
     show-sql: true
     hibernate:
@@ -80,12 +80,6 @@ service:
 
 cnserver:
   host: ${CN_SERVER_HOST:localhost:8093}
-
-api:
-  clientId: ${NND_DE_CLIENT_ID:}
-  secret: ${NND_DE_SECRET:}
-  endpoint_hl7: ${NND_DE_URL:https://dataingestion.dts1.nbspreview.com/hl7-parser}/xml-to-hl7
-  endpoint_token: ${NND_DE_URL:https://dataingestion.dts1.nbspreview.com/hl7-parser}/api/auth/token
 
 ---
 spring:

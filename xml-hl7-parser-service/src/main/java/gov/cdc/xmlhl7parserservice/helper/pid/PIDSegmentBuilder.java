@@ -7,8 +7,6 @@ import gov.cdc.xmlhl7parserservice.model.generated.jaxb.MessageElement;
 import gov.cdc.xmlhl7parserservice.util.HL7DateFormatUtil;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
-
 @Component
 public class PIDSegmentBuilder {
   private final MessageState messageState;

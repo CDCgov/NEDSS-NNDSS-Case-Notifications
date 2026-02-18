@@ -1,28 +1,26 @@
 package gov.cdc.xmlhl7parserservice.helper.obx;
 
-import ca.uhn.hl7v2.model.Type;
-
-import ca.uhn.hl7v2.model.v25.datatype.*;
-import ca.uhn.hl7v2.model.v25.segment.OBX;
-import ca.uhn.hl7v2.model.v25.group.ORU_R01_ORDER_OBSERVATION;
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.DataTypeException;
-import gov.cdc.xmlhl7parserservice.model.generated.jaxb.MessageElement;
+import ca.uhn.hl7v2.model.Type;
+import ca.uhn.hl7v2.model.v25.datatype.*;
+import ca.uhn.hl7v2.model.v25.group.ORU_R01_ORDER_OBSERVATION;
+import ca.uhn.hl7v2.model.v25.segment.OBX;
 import gov.cdc.xmlhl7parserservice.helper.MessageState;
-import gov.cdc.xmlhl7parserservice.util.HL7DateFormatUtil;
 import gov.cdc.xmlhl7parserservice.model.Obx.ObxRepeatingElement;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
-
+import gov.cdc.xmlhl7parserservice.model.generated.jaxb.MessageElement;
+import gov.cdc.xmlhl7parserservice.util.HL7DateFormatUtil;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 @Component
 public class OBXSegmentBuilder {

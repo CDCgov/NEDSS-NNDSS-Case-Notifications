@@ -1,9 +1,9 @@
 package gov.cdc.xmlhl7parserservice.helper.nk1;
 
-import ca.uhn.hl7v2.model.v25.segment.NK1;
 import ca.uhn.hl7v2.model.DataTypeException;
-import gov.cdc.xmlhl7parserservice.model.generated.jaxb.MessageElement;
+import ca.uhn.hl7v2.model.v25.segment.NK1;
 import gov.cdc.xmlhl7parserservice.helper.MessageState;
+import gov.cdc.xmlhl7parserservice.model.generated.jaxb.MessageElement;
 import org.springframework.stereotype.Component;
 
 @Component

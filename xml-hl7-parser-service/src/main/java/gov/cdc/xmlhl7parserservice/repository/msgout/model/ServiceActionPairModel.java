@@ -1,9 +1,9 @@
 package gov.cdc.xmlhl7parserservice.repository.msgout.model;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.persistence.Entity;
 
 @Entity
 @Table(name = "NNDSS_SERVICE_ACTION_PAIR_LOOKUP")

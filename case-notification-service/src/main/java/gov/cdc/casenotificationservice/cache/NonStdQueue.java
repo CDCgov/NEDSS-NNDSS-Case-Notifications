@@ -1,13 +1,12 @@
 package gov.cdc.casenotificationservice.cache;
 
 import gov.cdc.casenotificationservice.model.PHINMSProperties;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class NonStdQueue {
-  public List<PHINMSProperties> phinmsPropertiesList = new ArrayList<>();
   private static final NonStdQueue INSTANCE = new NonStdQueue();
+  public List<PHINMSProperties> phinmsPropertiesList = new ArrayList<>();
 
   private NonStdQueue() {
     // private constructor to prevent instantiation

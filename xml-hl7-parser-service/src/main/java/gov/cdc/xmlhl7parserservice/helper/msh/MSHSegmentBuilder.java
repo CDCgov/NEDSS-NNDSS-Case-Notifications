@@ -4,21 +4,19 @@ import ca.uhn.hl7v2.model.DataTypeException;
 import ca.uhn.hl7v2.model.v25.segment.MSH;
 import gov.cdc.xmlhl7parserservice.helper.MessageState;
 import gov.cdc.xmlhl7parserservice.model.generated.jaxb.MessageElement;
-import org.springframework.stereotype.Component;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
+import org.springframework.stereotype.Component;
 
 @Component
 public class MSHSegmentBuilder {
+  public static final String GENERIC_MMG_VERSION = "Generic_MMG_V2.0";
   private final MessageState messageState;
 
   public MSHSegmentBuilder(MessageState messageState) {
     this.messageState = messageState;
   }
-
-  public static final String GENERIC_MMG_VERSION = "Generic_MMG_V2.0";
 
   public void processMSHFields(MessageElement messageElement, MSH msh) throws DataTypeException {
     String mshField = messageElement.getHl7SegmentField().trim();

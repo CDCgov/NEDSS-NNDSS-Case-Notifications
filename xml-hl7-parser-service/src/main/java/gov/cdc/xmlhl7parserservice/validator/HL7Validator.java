@@ -1,19 +1,16 @@
 package gov.cdc.xmlhl7parserservice.validator;
 
 import ca.uhn.hl7v2.HL7Exception;
-import ca.uhn.hl7v2.model.Message;
 import ca.uhn.hl7v2.model.v25.group.ORU_R01_OBSERVATION;
 import ca.uhn.hl7v2.model.v25.group.ORU_R01_ORDER_OBSERVATION;
 import ca.uhn.hl7v2.model.v25.group.ORU_R01_PATIENT_RESULT;
 import ca.uhn.hl7v2.model.v25.group.ORU_R01_SPECIMEN;
 import ca.uhn.hl7v2.model.v25.message.ORU_R01;
 import ca.uhn.hl7v2.model.v25.segment.*;
-import ca.uhn.hl7v2.parser.PipeParser;
 import gov.cdc.xmlhl7parserservice.exception.XmlHL7ParserException;
 import gov.cdc.xmlhl7parserservice.validator.helper.*;
-import lombok.extern.slf4j.Slf4j;
-
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class HL7Validator {

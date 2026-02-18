@@ -2,41 +2,38 @@ package gov.cdc.xmlhl7parserservice.helper;
 
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.DataTypeException;
-
 import ca.uhn.hl7v2.model.Type;
 import ca.uhn.hl7v2.model.Varies;
 import ca.uhn.hl7v2.model.v25.datatype.*;
 import ca.uhn.hl7v2.model.v25.group.ORU_R01_ORDER_OBSERVATION;
 import ca.uhn.hl7v2.model.v25.message.ORU_R01;
 import ca.uhn.hl7v2.model.v25.segment.*;
-
 import gov.cdc.xmlhl7parserservice.exception.XmlHL7ParserException;
 import gov.cdc.xmlhl7parserservice.helper.mapper.*;
+import gov.cdc.xmlhl7parserservice.helper.msh.MSHSegmentBuilder;
+import gov.cdc.xmlhl7parserservice.helper.nk1.NK1SegmentBuilder;
+import gov.cdc.xmlhl7parserservice.helper.obr.OBRSegmentBuilder;
 import gov.cdc.xmlhl7parserservice.helper.obx.OBXSegmentBuilder;
+import gov.cdc.xmlhl7parserservice.helper.pid.PIDSegmentBuilder;
 import gov.cdc.xmlhl7parserservice.model.*;
 import gov.cdc.xmlhl7parserservice.model.Obx.ObxRepeatingElement;
 import gov.cdc.xmlhl7parserservice.model.generated.jaxb.*;
-
+import gov.cdc.xmlhl7parserservice.util.HL7DateFormatUtil;
 import gov.cdc.xmlhl7parserservice.validator.HL7Validator;
+import java.io.IOException;
+import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.util.*;
-
-import gov.cdc.xmlhl7parserservice.helper.msh.MSHSegmentBuilder;
-import gov.cdc.xmlhl7parserservice.helper.pid.PIDSegmentBuilder;
-import gov.cdc.xmlhl7parserservice.util.HL7DateFormatUtil;
-import gov.cdc.xmlhl7parserservice.helper.nk1.NK1SegmentBuilder;
-import gov.cdc.xmlhl7parserservice.helper.obr.OBRSegmentBuilder;
-
 @Service
 public class HL7MessageBuilder {
 
+  public static final String FIELD_SEPARATOR = "|";
+  public static final String ENCODING_CHARACTERS = "^~\\&";
+  private static final Logger logger = LoggerFactory.getLogger(HL7MessageBuilder.class);
   private final MSHSegmentBuilder mshSegmentBuilder;
-  private MessageState messageState = new MessageState();
   private final PIDSegmentBuilder pidSegmentBuilder;
   private final NK1SegmentBuilder nk1SegmentBuilder;
   private final OBRSegmentBuilder obrSegmentBuilder;
@@ -48,9 +45,27 @@ public class HL7MessageBuilder {
   private final MapToRepeatToMultiNND mapToRepeatToMultiNND;
   private final MapToQuestionMap mapToQuestionMap;
   private final MapLabReportEventToOBR mapLabReportEventToOBR;
-
-  public static final String FIELD_SEPARATOR = "|";
-  public static final String ENCODING_CHARACTERS = "^~\\&";
+  int inv290Inv291Counter1 = 0;
+  int inv290Inv291Counter2 = 0;
+  int std121ObxInc = -1;
+  int std121obxOrderGroupId = 0;
+  int std121ObsValue = -1;
+  String NBS246observationSubID = "";
+  String std300 = "";
+  String OTH_COMP_TEXT = "\"\"";
+  String OTH_COMP_REPLACE = "\"\"";
+  String OTH_SANDS_TEXT = "\"\"";
+  String OTH_SANDS_REPLACE = "\"\"";
+  private MessageState messageState = new MessageState();
+  private final List<ObxRepeatingElement> obxRepeatingElementArrayList =
+      messageState.getObxRepeatingElementArrayList();
+  // HCW Specific fields
+  boolean hcwTextBeforeCodedInd = messageState.isHcwTextBeforeCodedInd();
+  String hcw = messageState.getHcw();
+  int obx2Inc = messageState.getObx2Inc();
+  int obx1Inc = messageState.getObx1Inc();
+  // initialize variables
+  private String stateLocalID = "";
 
   @Autowired
   public HL7MessageBuilder(
@@ -81,32 +96,6 @@ public class HL7MessageBuilder {
     this.mapToQuestionMap = mapToQuestionMap;
     this.mapLabReportEventToOBR = mapLabReportEventToOBR;
   }
-
-  // initialize variables
-  private String stateLocalID = "";
-
-  private final List<ObxRepeatingElement> obxRepeatingElementArrayList =
-      messageState.getObxRepeatingElementArrayList();
-
-  int inv290Inv291Counter1 = 0;
-  int inv290Inv291Counter2 = 0;
-  int std121ObxInc = -1;
-  int std121obxOrderGroupId = 0;
-  int std121ObsValue = -1;
-  String NBS246observationSubID = "";
-  String std300 = "";
-
-  // HCW Specific fields
-  boolean hcwTextBeforeCodedInd = messageState.isHcwTextBeforeCodedInd();
-  String hcw = messageState.getHcw();
-  int obx2Inc = messageState.getObx2Inc();
-  int obx1Inc = messageState.getObx1Inc();
-  String OTH_COMP_TEXT = "\"\"";
-  String OTH_COMP_REPLACE = "\"\"";
-  String OTH_SANDS_TEXT = "\"\"";
-  String OTH_SANDS_REPLACE = "\"\"";
-
-  private static final Logger logger = LoggerFactory.getLogger(HL7MessageBuilder.class);
 
   // Reset the processor state
   public void reset() {

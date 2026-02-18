@@ -10,10 +10,9 @@ import gov.cdc.xmlhl7parserservice.helper.MessageState;
 import gov.cdc.xmlhl7parserservice.model.DiscreteRepeat;
 import gov.cdc.xmlhl7parserservice.model.Obx.ObxRepeatingElement;
 import gov.cdc.xmlhl7parserservice.model.generated.jaxb.MessageElement;
-import org.springframework.stereotype.Component;
-
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.stereotype.Component;
 
 @Component
 public class MapToQuestionMap {

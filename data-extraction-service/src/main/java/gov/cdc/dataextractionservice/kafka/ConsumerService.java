@@ -1,7 +1,6 @@
 package gov.cdc.dataextractionservice.kafka;
 
 import com.google.gson.Gson;
-import gov.cdc.dataextractionservice.kafka.ProducerService;
 import gov.cdc.dataextractionservice.model.CnTransportqOutMessage;
 import gov.cdc.dataextractionservice.model.CnTransportqOutValue;
 import gov.cdc.dataextractionservice.model.MessageAfterStdChecker;
@@ -21,17 +20,12 @@ import org.springframework.stereotype.Service;
 public class ConsumerService {
 
   private static final Logger logger = LoggerFactory.getLogger(ConsumerService.class);
-
+  private final CaseNotificationConfigRepository caseNotificationConfigRepository;
   @Value("${kafka.topic.cn-tranport-out-topic:}")
   private String transportOutQTopic = "nbs_CN_transportq_out";
-
   @Autowired private StdCheckerTransformerService transformerService;
-
   @Autowired private ProducerService producerService;
-
   @Autowired private CnTransportQOutUpdateService updateService;
-
-  private final CaseNotificationConfigRepository caseNotificationConfigRepository;
 
   public ConsumerService(CaseNotificationConfigRepository caseNotificationConfigRepository) {
     this.caseNotificationConfigRepository = caseNotificationConfigRepository;

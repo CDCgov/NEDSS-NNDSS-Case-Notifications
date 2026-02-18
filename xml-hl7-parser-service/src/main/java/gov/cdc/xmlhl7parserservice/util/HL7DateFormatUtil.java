@@ -1,16 +1,15 @@
 package gov.cdc.xmlhl7parserservice.util;
 
-import org.springframework.stereotype.Component;
-
 import java.util.HashMap;
 import java.util.Map;
+import org.springframework.stereotype.Component;
 
 @Component
 public class HL7DateFormatUtil {
 
+  public static final String HL_SEVEN_SEGMENT_FIELD = "hl7SegmentField";
   private final DataTypeProcessor dataTypeProcessor;
   private String messageType = "other"; // Default value
-  public static final String HL_SEVEN_SEGMENT_FIELD = "hl7SegmentField";
 
   public HL7DateFormatUtil(DataTypeProcessor dataTypeProcessor) {
     this.dataTypeProcessor = dataTypeProcessor;

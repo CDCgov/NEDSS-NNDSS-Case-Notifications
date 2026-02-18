@@ -28,9 +28,6 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 @SuppressWarnings({"java:S1118", "java:S125", "java:S6126", "java:S1135"})
 public class SecurityConfig {
-  @Value("${auth.introspect-uri}")
-  String introspectionUri;
-
   private static final String[] AUTH_WHITELIST_DEV = {
     "/v2/api-docs",
     "/swagger-resources",
@@ -45,7 +42,6 @@ public class SecurityConfig {
     "/actuator/health",
     "/actuator/info"
   };
-
   private static final String[] AUTH_WHITELIST_PROD = {
     "/configuration/ui",
     "/configuration/security",
@@ -54,7 +50,8 @@ public class SecurityConfig {
     "/actuator/health",
     "/actuator/info"
   };
-
+  @Value("${auth.introspect-uri}")
+  String introspectionUri;
   @Autowired private CustomAuthenticationManagerResolver customauthenticationmanagerresolver;
 
   @Bean

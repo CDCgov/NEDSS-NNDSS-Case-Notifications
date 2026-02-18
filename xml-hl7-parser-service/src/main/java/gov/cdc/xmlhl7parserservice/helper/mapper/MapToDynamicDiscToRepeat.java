@@ -10,7 +10,6 @@ import gov.cdc.xmlhl7parserservice.helper.MessageState;
 import gov.cdc.xmlhl7parserservice.model.DynamicRepeatMulti;
 import gov.cdc.xmlhl7parserservice.model.Obx.ObxRepeatingElement;
 import gov.cdc.xmlhl7parserservice.model.generated.jaxb.MessageElement;
-
 import java.util.ArrayList;
 import java.util.List;
 

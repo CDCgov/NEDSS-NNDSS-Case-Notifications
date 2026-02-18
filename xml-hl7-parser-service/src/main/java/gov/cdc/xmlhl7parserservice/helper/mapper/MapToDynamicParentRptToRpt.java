@@ -6,13 +6,11 @@ import ca.uhn.hl7v2.model.v25.datatype.ST;
 import ca.uhn.hl7v2.model.v25.datatype.TS;
 import ca.uhn.hl7v2.model.v25.group.ORU_R01_ORDER_OBSERVATION;
 import ca.uhn.hl7v2.model.v25.segment.OBX;
-import gov.cdc.xmlhl7parserservice.helper.MessageState;
 import gov.cdc.xmlhl7parserservice.model.DynamicRepeatMulti;
 import gov.cdc.xmlhl7parserservice.model.Obx.ObxRepeatingElement;
 import gov.cdc.xmlhl7parserservice.model.generated.jaxb.MessageElement;
-import org.springframework.stereotype.Component;
-
 import java.util.List;
+import org.springframework.stereotype.Component;
 
 @Component
 public class MapToDynamicParentRptToRpt {

@@ -3,9 +3,8 @@ package gov.cdc.xmlhl7parserservice.helper.mapper;
 import ca.uhn.hl7v2.model.DataTypeException;
 import ca.uhn.hl7v2.model.v25.group.ORU_R01_ORDER_OBSERVATION;
 import gov.cdc.xmlhl7parserservice.model.generated.jaxb.MessageElement;
-import org.springframework.stereotype.Component;
-
 import java.util.regex.Pattern;
+import org.springframework.stereotype.Component;
 
 @Component
 public class MapToDynamicRootlDiscToRepeat {

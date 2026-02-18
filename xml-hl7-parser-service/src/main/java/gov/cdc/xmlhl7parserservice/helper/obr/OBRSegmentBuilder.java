@@ -1,18 +1,17 @@
 package gov.cdc.xmlhl7parserservice.helper.obr;
 
-import ca.uhn.hl7v2.model.v25.segment.OBR;
 import ca.uhn.hl7v2.model.DataTypeException;
-import gov.cdc.xmlhl7parserservice.model.generated.jaxb.MessageElement;
+import ca.uhn.hl7v2.model.v25.segment.OBR;
 import gov.cdc.xmlhl7parserservice.helper.MessageState;
-import gov.cdc.xmlhl7parserservice.util.HL7DateFormatUtil;
+import gov.cdc.xmlhl7parserservice.model.generated.jaxb.MessageElement;
 import gov.cdc.xmlhl7parserservice.repository.msgout.IServiceActionPairRepository;
 import gov.cdc.xmlhl7parserservice.repository.msgout.model.ServiceActionPairModel;
+import gov.cdc.xmlhl7parserservice.util.HL7DateFormatUtil;
+import java.util.Objects;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-
-import java.util.Objects;
-import java.util.Optional;
 
 @Component
 public class OBRSegmentBuilder {

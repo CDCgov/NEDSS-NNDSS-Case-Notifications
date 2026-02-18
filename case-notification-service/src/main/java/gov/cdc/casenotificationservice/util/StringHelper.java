@@ -1,10 +1,9 @@
 package gov.cdc.casenotificationservice.util;
 
-import gov.cdc.casenotificationservice.model.Netss;
-
-import java.lang.reflect.Field;
-
 import static gov.cdc.casenotificationservice.constant.StringConfig.*;
+
+import gov.cdc.casenotificationservice.model.Netss;
+import java.lang.reflect.Field;
 
 public class StringHelper {
   public static String strRight(String input, int numChars) {

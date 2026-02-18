@@ -1,13 +1,13 @@
 package gov.cdc.dataextractionservice.service;
 
+import static org.mockito.Mockito.*;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.jdbc.core.JdbcTemplate;
-
-import static org.mockito.Mockito.*;
 
 class CnTransportQOutUpdateServiceTest {
 

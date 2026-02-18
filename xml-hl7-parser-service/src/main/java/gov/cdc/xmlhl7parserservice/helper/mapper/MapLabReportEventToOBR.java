@@ -11,10 +11,9 @@ import gov.cdc.xmlhl7parserservice.model.ResultMethod;
 import gov.cdc.xmlhl7parserservice.model.generated.jaxb.LabReportEvent;
 import gov.cdc.xmlhl7parserservice.model.generated.jaxb.MessageElement;
 import gov.cdc.xmlhl7parserservice.model.generated.jaxb.NBSNNDIntermediaryMessage;
-import org.springframework.stereotype.Component;
-
 import java.util.List;
 import java.util.regex.Pattern;
+import org.springframework.stereotype.Component;
 
 @Component
 public class MapLabReportEventToOBR {

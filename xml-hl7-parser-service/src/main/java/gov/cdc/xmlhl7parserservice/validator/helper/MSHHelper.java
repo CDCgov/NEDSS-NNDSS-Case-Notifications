@@ -1,7 +1,6 @@
 package gov.cdc.xmlhl7parserservice.validator.helper;
 
 import ca.uhn.hl7v2.HL7Exception;
-import ca.uhn.hl7v2.model.v25.message.ORU_R01;
 import ca.uhn.hl7v2.model.v25.segment.MSH;
 import gov.cdc.xmlhl7parserservice.validator.HL7Validator;
 

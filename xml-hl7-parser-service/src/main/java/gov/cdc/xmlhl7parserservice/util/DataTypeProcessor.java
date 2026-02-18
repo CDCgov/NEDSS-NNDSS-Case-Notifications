@@ -1,17 +1,15 @@
 package gov.cdc.xmlhl7parserservice.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import gov.cdc.xmlhl7parserservice.util.interfaces.HL7FieldProcessor;
-import gov.cdc.xmlhl7parserservice.repository.msgout.model.DataTypeModel;
 import gov.cdc.xmlhl7parserservice.repository.msgout.IDataTypeLookupRepository;
+import gov.cdc.xmlhl7parserservice.repository.msgout.model.DataTypeModel;
+import gov.cdc.xmlhl7parserservice.util.interfaces.HL7FieldProcessor;
+import java.util.Map;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.Map;
-import java.util.Optional;
 
 /**
  * Implementation of HL7FieldProcessor that reads DataTypes.json from Resources creates list of Java
@@ -20,8 +18,8 @@ import java.util.Optional;
 @Component
 public class DataTypeProcessor implements HL7FieldProcessor {
 
-  private final ObjectMapper mapper = new ObjectMapper();
   private static final Logger logger = LoggerFactory.getLogger(DataTypeProcessor.class);
+  private final ObjectMapper mapper = new ObjectMapper();
   private final IDataTypeLookupRepository iDataTypeLookupRepository;
 
   @Autowired

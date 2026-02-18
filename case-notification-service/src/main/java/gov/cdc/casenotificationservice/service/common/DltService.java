@@ -24,10 +24,13 @@ public class DltService implements IDltService {
   private final CaseNotificationDltRepository caseNotificationDltRepository;
   private final CNTraportqOutRepository cnTraportqOutRepository;
   private final CaseNotificationProducer caseNotificationProducer;
+
   @Value("${service.timezone}")
   private String tz = "UTC";
+
   @Value("${spring.kafka.topic.non-std-topic}")
   private String nonStdTopic;
+
   @Value("${spring.kafka.topic.std-topic}")
   private String stdTopic;
 

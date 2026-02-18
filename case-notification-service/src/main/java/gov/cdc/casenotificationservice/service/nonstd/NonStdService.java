@@ -26,6 +26,7 @@ public class NonStdService implements INonStdService {
   private final CNTraportqOutRepository cnTraportqOutRepository;
   private final CaseNotificationConfigRepository caseNotificationConfigRepository;
   private final IApiService apiService;
+
   @Value("${service.timezone}")
   private String tz = "UTC";
 

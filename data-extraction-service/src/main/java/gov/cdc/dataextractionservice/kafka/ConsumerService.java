@@ -21,8 +21,10 @@ public class ConsumerService {
 
   private static final Logger logger = LoggerFactory.getLogger(ConsumerService.class);
   private final CaseNotificationConfigRepository caseNotificationConfigRepository;
+
   @Value("${kafka.topic.cn-tranport-out-topic:}")
   private String transportOutQTopic = "nbs_CN_transportq_out";
+
   @Autowired private StdCheckerTransformerService transformerService;
   @Autowired private ProducerService producerService;
   @Autowired private CnTransportQOutUpdateService updateService;

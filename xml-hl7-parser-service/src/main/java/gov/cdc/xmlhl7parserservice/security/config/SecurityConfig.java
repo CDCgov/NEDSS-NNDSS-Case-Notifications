@@ -50,8 +50,10 @@ public class SecurityConfig {
     "/actuator/health",
     "/actuator/info"
   };
+
   @Value("${auth.introspect-uri}")
   String introspectionUri;
+
   @Autowired private CustomAuthenticationManagerResolver customauthenticationmanagerresolver;
 
   @Bean

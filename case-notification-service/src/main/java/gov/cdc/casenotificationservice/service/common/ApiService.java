@@ -18,12 +18,16 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class ApiService implements IApiService {
   private static final Logger logger = LoggerFactory.getLogger(ApiService.class);
   private final RestTemplate restTemplate = new RestTemplate();
+
   @Value("${api.endpoint_hl7}")
   protected String hl7Endpoint;
+
   @Value("${api.clientId}")
   private String clientId;
+
   @Value("${api.secret}")
   private String clientSecret;
+
   @Value("${api.endpoint_token}")
   private String tokenEndpoint;
 

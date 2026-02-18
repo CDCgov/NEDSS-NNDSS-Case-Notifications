@@ -28,8 +28,10 @@ apply plugin: 'java'
 
 spotless {
     java {
-        target '**/*.java'
+        target '**/src/*/java/**/*.java'
+        targetExclude '**/generated/**/*.java'
         googleJavaFormat()
+        formatAnnotations()
         trimTrailingWhitespace()
         endWithNewline()
     }

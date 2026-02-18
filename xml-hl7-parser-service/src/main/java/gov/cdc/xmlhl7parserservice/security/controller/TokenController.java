@@ -16,15 +16,17 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+/**
+ * <ul>
+ *     <li>1118 - require constructor complaint</li>
+ *     <li>125 - comment complaint</li>
+ *     <li>6126 - String block complaint</li>
+ *     <li>1135 - todos complaint</li>
+ * </ul>
+ */
 @Tag(name = "Token API", description = "Token API to create the JWT Token")
 @RestController
 @Slf4j
-/**
- 1118 - require constructor complaint
- 125 - comment complaint
- 6126 - String block complaint
- 1135 - todos complaint
- * */
 @SuppressWarnings({"java:S1118", "java:S125", "java:S6126", "java:S1135"})
 public class TokenController {
     @Value("${auth.token-uri}")

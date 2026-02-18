@@ -13,15 +13,17 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 
+/**
+ * <ul>
+ *     <li>1118 - require constructor complaint</li>
+ *     <li>125 - comment complaint</li>
+ *     <li>6126 - String block complaint</li>
+ *     <li>1135 - todos complaint</li>
+ * </ul>
+ * */
 @RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
-/**
- 1118 - require constructor complaint
- 125 - comment complaint
- 6126 - String block complaint
- 1135 - todos complaint
- * */
 @SuppressWarnings({"java:S1118", "java:S125", "java:S6126", "java:S1135"})
 public class SecurityConfig {
     @Value("${auth.introspect-uri}")

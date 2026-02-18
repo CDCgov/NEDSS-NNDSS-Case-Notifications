@@ -27,3 +27,5 @@ build
 /non-std-processor-service/.gradle
 /non-std-processor-service/.idea
 /non-std-processor-service/.vscode.DS_Store
+
+.env

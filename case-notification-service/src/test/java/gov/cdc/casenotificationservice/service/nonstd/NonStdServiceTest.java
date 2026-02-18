@@ -1,5 +1,7 @@
 package gov.cdc.casenotificationservice.service.nonstd;
 
+import static org.mockito.Mockito.*;
+
 import gov.cdc.casenotificationservice.model.MessageAfterStdChecker;
 import gov.cdc.casenotificationservice.model.PHINMSProperties;
 import gov.cdc.casenotificationservice.repository.msg.CaseNotificationConfigRepository;
@@ -16,8 +18,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
-import static org.mockito.Mockito.*;
 
 class NonStdServiceTest {
 

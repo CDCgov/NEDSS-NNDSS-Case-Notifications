@@ -1,22 +1,21 @@
 package gov.cdc.casenotificationservice.service.std;
 
-import gov.cdc.casenotificationservice.model.Netss;
-import gov.cdc.casenotificationservice.model.generated.jaxb.NBSNNDIntermediaryMessage;
-import gov.cdc.casenotificationservice.service.std.interfaces.IStdMapperService;
-import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.Unmarshaller;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-
-import java.io.InputStream;
-import java.io.StringReader;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
+
+import gov.cdc.casenotificationservice.model.Netss;
+import gov.cdc.casenotificationservice.model.generated.jaxb.NBSNNDIntermediaryMessage;
+import gov.cdc.casenotificationservice.service.std.interfaces.IStdMapperService;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.Unmarshaller;
+import java.io.InputStream;
+import java.io.StringReader;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 class StdMapperServiceTest {
 

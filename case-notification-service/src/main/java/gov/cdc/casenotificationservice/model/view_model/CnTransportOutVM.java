@@ -1,10 +1,9 @@
 package gov.cdc.casenotificationservice.model.view_model;
 
 import gov.cdc.casenotificationservice.repository.odse.model.CNTransportqOut;
+import java.sql.Timestamp;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.sql.Timestamp;
 
 @Getter
 @Setter

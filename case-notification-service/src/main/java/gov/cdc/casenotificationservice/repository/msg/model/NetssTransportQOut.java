@@ -3,11 +3,10 @@ package gov.cdc.casenotificationservice.repository.msg.model;
 import gov.cdc.casenotificationservice.model.NetssPersistModel;
 import gov.cdc.casenotificationservice.repository.odse.model.CNTransportqOut;
 import jakarta.persistence.*;
+import java.sql.Timestamp;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.sql.Timestamp;
 
 @Data
 @NoArgsConstructor

@@ -1,13 +1,13 @@
 package gov.cdc.casenotificationservice.service.std;
 
+import static gov.cdc.casenotificationservice.constant.StdConstantValue.*;
+import static gov.cdc.casenotificationservice.util.StringHelper.strNumbers;
+import static gov.cdc.casenotificationservice.util.StringHelper.strRight;
+
 import gov.cdc.casenotificationservice.model.Netss;
 import gov.cdc.casenotificationservice.model.generated.jaxb.NBSNNDIntermediaryMessage;
 import gov.cdc.casenotificationservice.service.std.interfaces.IStdMapperService;
 import org.springframework.stereotype.Service;
-
-import static gov.cdc.casenotificationservice.constant.StdConstantValue.*;
-import static gov.cdc.casenotificationservice.util.StringHelper.strNumbers;
-import static gov.cdc.casenotificationservice.util.StringHelper.strRight;
 
 @Service
 public class StdMapperService implements IStdMapperService {

@@ -4,11 +4,10 @@ import gov.cdc.casenotificationservice.model.dto.CaseNotificationConfigDto;
 import gov.cdc.casenotificationservice.repository.msg.CaseNotificationConfigRepository;
 import gov.cdc.casenotificationservice.repository.msg.model.CaseNotificationConfig;
 import gov.cdc.casenotificationservice.service.common.interfaces.IConfigurationService;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ConfigurationService implements IConfigurationService {

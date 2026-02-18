@@ -1,5 +1,8 @@
 package gov.cdc.casenotificationservice.kafka.consumer;
 
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.Mockito.*;
+
 import com.google.gson.Gson;
 import gov.cdc.casenotificationservice.model.MessageAfterStdChecker;
 import gov.cdc.casenotificationservice.service.common.interfaces.IConfigurationService;
@@ -9,9 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
-import static org.mockito.ArgumentMatchers.anyBoolean;
-import static org.mockito.Mockito.*;
 
 class NonStdEventConsumerTest {
 

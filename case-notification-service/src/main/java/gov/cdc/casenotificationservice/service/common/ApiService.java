@@ -2,6 +2,7 @@ package gov.cdc.casenotificationservice.service.common;
 
 import gov.cdc.casenotificationservice.exception.APIException;
 import gov.cdc.casenotificationservice.service.common.interfaces.IApiService;
+import java.net.URI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,25 +14,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.net.URI;
-
 @Service
 public class ApiService implements IApiService {
   private static final Logger logger = LoggerFactory.getLogger(ApiService.class);
-
-  @Value("${api.clientId}")
-  private String clientId;
-
-  @Value("${api.secret}")
-  private String clientSecret;
-
+  private final RestTemplate restTemplate = new RestTemplate();
   @Value("${api.endpoint_hl7}")
   protected String hl7Endpoint;
-
+  @Value("${api.clientId}")
+  private String clientId;
+  @Value("${api.secret}")
+  private String clientSecret;
   @Value("${api.endpoint_token}")
   private String tokenEndpoint;
-
-  private final RestTemplate restTemplate = new RestTemplate();
 
   public String callToken() {
     HttpHeaders headers = new HttpHeaders();

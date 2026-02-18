@@ -4,11 +4,10 @@ import gov.cdc.casenotificationservice.model.view_model.CaseNotificationDltVM;
 import gov.cdc.casenotificationservice.model.view_model.CnTransportOutVM;
 import gov.cdc.casenotificationservice.model.view_model.NetssTransportQOutVM;
 import gov.cdc.casenotificationservice.model.view_model.TransportOutVM;
-import lombok.Getter;
-import lombok.Setter;
-
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter

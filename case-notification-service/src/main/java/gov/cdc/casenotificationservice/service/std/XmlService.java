@@ -1,5 +1,8 @@
 package gov.cdc.casenotificationservice.service.std;
 
+import static gov.cdc.casenotificationservice.util.StringHelper.buildNetssSummary;
+import static gov.cdc.casenotificationservice.util.TimeStampHelper.getCurrentTimeStamp;
+
 import gov.cdc.casenotificationservice.exception.NonRetryableException;
 import gov.cdc.casenotificationservice.exception.StdProcessorServiceException;
 import gov.cdc.casenotificationservice.model.MessageAfterStdChecker;
@@ -13,13 +16,9 @@ import gov.cdc.casenotificationservice.service.std.interfaces.IStdMapperService;
 import gov.cdc.casenotificationservice.service.std.interfaces.IXmlService;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Unmarshaller;
+import java.io.StringReader;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
-import java.io.StringReader;
-
-import static gov.cdc.casenotificationservice.util.StringHelper.buildNetssSummary;
-import static gov.cdc.casenotificationservice.util.TimeStampHelper.getCurrentTimeStamp;
 
 @Service
 public class XmlService implements IXmlService {

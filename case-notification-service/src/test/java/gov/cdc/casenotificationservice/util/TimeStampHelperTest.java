@@ -1,13 +1,12 @@
 package gov.cdc.casenotificationservice.util;
 
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 import java.sql.Timestamp;
 import java.time.ZoneId;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 class TimeStampHelperTest {
 

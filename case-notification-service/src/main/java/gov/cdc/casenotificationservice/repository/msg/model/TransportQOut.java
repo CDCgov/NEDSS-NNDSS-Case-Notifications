@@ -1,13 +1,12 @@
 package gov.cdc.casenotificationservice.repository.msg.model;
 
+import static gov.cdc.casenotificationservice.util.TimeStampHelper.getCurrentTimeStamp;
+
 import gov.cdc.casenotificationservice.model.PHINMSProperties;
 import jakarta.persistence.*;
-import lombok.Data;
-
 import java.sql.Blob;
 import java.time.format.DateTimeFormatter;
-
-import static gov.cdc.casenotificationservice.util.TimeStampHelper.getCurrentTimeStamp;
+import lombok.Data;
 
 @Entity
 @Table(name = "TransportQ_out", schema = "dbo")

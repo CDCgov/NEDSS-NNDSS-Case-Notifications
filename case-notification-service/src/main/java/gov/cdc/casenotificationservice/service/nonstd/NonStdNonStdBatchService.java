@@ -1,14 +1,13 @@
 package gov.cdc.casenotificationservice.service.nonstd;
 
+import static gov.cdc.casenotificationservice.constant.NonStdConstantValue.*;
+
 import gov.cdc.casenotificationservice.cache.NonStdQueue;
 import gov.cdc.casenotificationservice.model.PHINMSProperties;
 import gov.cdc.casenotificationservice.repository.msg.model.CaseNotificationConfig;
 import gov.cdc.casenotificationservice.service.nonstd.interfaces.INonStdBatchService;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
-
-import static gov.cdc.casenotificationservice.constant.NonStdConstantValue.*;
+import org.springframework.stereotype.Service;
 
 @Service
 public class NonStdNonStdBatchService implements INonStdBatchService {

@@ -1,5 +1,8 @@
 package gov.cdc.casenotificationservice.service.nonstd;
 
+import static gov.cdc.casenotificationservice.constant.NonStdConstantValue.*;
+import static gov.cdc.casenotificationservice.util.TimeStampHelper.getCurrentTimeStamp;
+
 import gov.cdc.casenotificationservice.model.PHINMSProperties;
 import gov.cdc.casenotificationservice.repository.msg.ServiceActionPairRepository;
 import gov.cdc.casenotificationservice.repository.msg.model.CaseNotificationConfig;
@@ -8,21 +11,16 @@ import gov.cdc.dataingestion.hl7.helper.HL7Helper;
 import gov.cdc.dataingestion.hl7.helper.model.HL7ParsedMessage;
 import gov.cdc.dataingestion.hl7.helper.model.hl7.message_data_type.Hd;
 import gov.cdc.dataingestion.hl7.helper.model.hl7.message_type.OruR1;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-
-import static gov.cdc.casenotificationservice.constant.NonStdConstantValue.*;
-import static gov.cdc.casenotificationservice.util.TimeStampHelper.getCurrentTimeStamp;
-
 @Service
 public class PHINMSService implements IPHINMSService {
+  private final ServiceActionPairRepository serviceActionPairRepository;
   @Value("${service.timezone}")
   private String tz = "UTC";
-
-  private final ServiceActionPairRepository serviceActionPairRepository;
 
   public PHINMSService(ServiceActionPairRepository serviceActionPairRepository) {
     this.serviceActionPairRepository = serviceActionPairRepository;

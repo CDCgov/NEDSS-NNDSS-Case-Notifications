@@ -1,12 +1,11 @@
 package gov.cdc.casenotificationservice.util;
 
-import gov.cdc.casenotificationservice.model.Netss;
-import org.junit.jupiter.api.Test;
-
-import java.lang.reflect.Field;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+
+import gov.cdc.casenotificationservice.model.Netss;
+import java.lang.reflect.Field;
+import org.junit.jupiter.api.Test;
 
 class StringHelperTest {
 

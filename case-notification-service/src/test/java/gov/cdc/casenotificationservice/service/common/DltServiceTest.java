@@ -1,13 +1,17 @@
 package gov.cdc.casenotificationservice.service.common;
 
+import static org.mockito.Mockito.*;
+
 import gov.cdc.casenotificationservice.exception.DltServiceException;
 import gov.cdc.casenotificationservice.kafka.producer.CaseNotificationProducer;
-import gov.cdc.casenotificationservice.model.ApiDltResponseModel;
-import gov.cdc.casenotificationservice.model.MessageAfterStdChecker;
 import gov.cdc.casenotificationservice.repository.msg.CaseNotificationDltRepository;
 import gov.cdc.casenotificationservice.repository.msg.model.CaseNotificationDlt;
 import gov.cdc.casenotificationservice.repository.odse.CNTraportqOutRepository;
 import gov.cdc.casenotificationservice.repository.odse.model.CNTransportqOut;
+import java.sql.Timestamp;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -17,25 +21,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
-import java.sql.Timestamp;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
-import static org.mockito.Mockito.*;
-
 public class DltServiceTest {
-
-  @Mock private CaseNotificationDltRepository dltRepository;
-
-  @Mock private CNTraportqOutRepository cnTraportqOutRepository;
-
-  @Mock private CaseNotificationProducer producer;
-
-  @InjectMocks private DltService dltService;
 
   private final String jsonPayload = "{\"cnTransportqOutUid\":12345}";
   private final String uuid = UUID.randomUUID().toString();
+  @Mock private CaseNotificationDltRepository dltRepository;
+  @Mock private CNTraportqOutRepository cnTraportqOutRepository;
+  @Mock private CaseNotificationProducer producer;
+  @InjectMocks private DltService dltService;
 
   @BeforeEach
   public void setUp() {

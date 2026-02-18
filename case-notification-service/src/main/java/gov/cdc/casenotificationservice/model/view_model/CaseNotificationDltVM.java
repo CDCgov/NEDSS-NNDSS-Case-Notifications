@@ -1,11 +1,10 @@
 package gov.cdc.casenotificationservice.model.view_model;
 
 import gov.cdc.casenotificationservice.repository.msg.model.CaseNotificationDlt;
-import lombok.Getter;
-import lombok.Setter;
-
 import java.sql.Timestamp;
 import java.util.UUID;
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter

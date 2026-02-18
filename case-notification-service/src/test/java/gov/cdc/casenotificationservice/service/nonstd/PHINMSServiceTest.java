@@ -1,21 +1,20 @@
 package gov.cdc.casenotificationservice.service.nonstd;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
+
 import gov.cdc.casenotificationservice.model.PHINMSProperties;
 import gov.cdc.casenotificationservice.repository.msg.ServiceActionPairRepository;
 import gov.cdc.casenotificationservice.repository.msg.model.CaseNotificationConfig;
 import gov.cdc.casenotificationservice.repository.msg.model.ServiceActionPair;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Scanner;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 class PHINMSServiceTest {
 

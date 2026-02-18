@@ -3,9 +3,8 @@ package gov.cdc.casenotificationservice.service.common.interfaces;
 import gov.cdc.casenotificationservice.exception.DltServiceException;
 import gov.cdc.casenotificationservice.model.ApiDltResponseModel;
 import gov.cdc.casenotificationservice.repository.msg.model.CaseNotificationDlt;
-import org.springframework.data.domain.Page;
-
 import java.sql.Timestamp;
+import org.springframework.data.domain.Page;
 
 public interface IDltService {
   void creatingDlt(String message, String topic, String stacktrace, String origin);

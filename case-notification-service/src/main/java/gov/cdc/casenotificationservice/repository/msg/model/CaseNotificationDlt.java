@@ -1,12 +1,11 @@
 package gov.cdc.casenotificationservice.repository.msg.model;
 
 import jakarta.persistence.*;
+import java.sql.Timestamp;
+import java.util.UUID;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-
-import java.sql.Timestamp;
-import java.util.UUID;
 
 @Data
 @Entity

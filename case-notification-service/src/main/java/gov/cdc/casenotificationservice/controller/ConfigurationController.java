@@ -1,5 +1,7 @@
 package gov.cdc.casenotificationservice.controller;
 
+import static gov.cdc.casenotificationservice.util.ErrorResponseBuilder.buildErrorResponse;
+
 import gov.cdc.casenotificationservice.model.dto.CaseNotificationConfigDto;
 import gov.cdc.casenotificationservice.repository.msg.model.CaseNotificationConfig;
 import gov.cdc.casenotificationservice.service.common.ConfigurationService;
@@ -16,8 +18,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import static gov.cdc.casenotificationservice.util.ErrorResponseBuilder.buildErrorResponse;
 
 @RestController
 @SecurityRequirement(name = "bearer-key")

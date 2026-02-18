@@ -20,16 +20,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class NonStdService implements INonStdService {
   private static final Logger logger = LoggerFactory.getLogger(NonStdService.class); // NOSONAR
-
-  @Value("${service.timezone}")
-  private String tz = "UTC";
-
   private final IPHINMSService phinmsService;
   private final INonStdBatchService batchService;
   private final TransportQOutRepository transportQOutRepository;
   private final CNTraportqOutRepository cnTraportqOutRepository;
   private final CaseNotificationConfigRepository caseNotificationConfigRepository;
   private final IApiService apiService;
+  @Value("${service.timezone}")
+  private String tz = "UTC";
 
   public NonStdService(
       IPHINMSService phinmsService,

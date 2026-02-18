@@ -10,7 +10,7 @@ import java.util.List;
 
 @Repository
 public interface NetssTransportQOutRepository extends JpaRepository<NetssTransportQOut, Long> {
-    @Query(value = "select * from NETSS_TransportQ_out where notification_local_id = :notificationLocalId ",
-        nativeQuery = true)
-    List<NetssTransportQOut> findByNotificationLocalUid(@Param("notificationLocalId") String notificationLocalId);
+  @Query(value = "select * from NETSS_TransportQ_out where notification_local_id = :notificationLocalId ",
+    nativeQuery = true)
+  List<NetssTransportQOut> findByNotificationLocalUid(@Param("notificationLocalId") String notificationLocalId);
 }

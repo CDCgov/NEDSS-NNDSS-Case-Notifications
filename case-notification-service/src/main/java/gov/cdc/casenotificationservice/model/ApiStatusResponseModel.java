@@ -13,8 +13,8 @@ import java.util.List;
 @Getter
 @Setter
 public class ApiStatusResponseModel {
-    private CnTransportOutVM cnTransportqOut;
-    private List<TransportOutVM> transportQOut = new ArrayList<>();
-    private List<NetssTransportQOutVM> netssTransportQOut = new ArrayList<>();
-    private List<CaseNotificationDltVM> caseNotificationDlt = new ArrayList<>();
+  private CnTransportOutVM cnTransportqOut;
+  private List<TransportOutVM> transportQOut = new ArrayList<>();
+  private List<NetssTransportQOutVM> netssTransportQOut = new ArrayList<>();
+  private List<CaseNotificationDltVM> caseNotificationDlt = new ArrayList<>();
 }

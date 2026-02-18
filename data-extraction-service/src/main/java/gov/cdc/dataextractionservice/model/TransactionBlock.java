@@ -6,7 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class TransactionBlock {
-    public String id;
-    public long total_order;
-    public long data_collection_order;
+  public String id;
+  public long total_order;
+  public long data_collection_order;
 }

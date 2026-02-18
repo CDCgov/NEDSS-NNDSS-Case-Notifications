@@ -15,18 +15,18 @@ import java.util.UUID;
 
 @Repository
 public interface CaseNotificationDltRepository extends JpaRepository<CaseNotificationDlt, UUID> {
-    Page<CaseNotificationDlt> findByCreatedOnBetween(Timestamp start, Timestamp end, Pageable pageable);
+  Page<CaseNotificationDlt> findByCreatedOnBetween(Timestamp start, Timestamp end, Pageable pageable);
 
-    @Query(value = "select * from case_notification_dlt where cn_tranportq_out_uid = :uid ", nativeQuery = true)
-    List<CaseNotificationDlt> findDltByCnTranportqOutUid(@Param("uid") Long uid);
-    //
-    //
-    //    @Transactional
-    //    @Modifying
-    //    @Query(value = """
-    //    UPDATE dbo.case_notification_dlt
-    //    SET dlt_status = 'REPROCESSED'
-    //    WHERE id  = :id
-    //    """, nativeQuery = true)
-    //    int updateStatusToQueued(@Param("id") Long id);
+  @Query(value = "select * from case_notification_dlt where cn_tranportq_out_uid = :uid ", nativeQuery = true)
+  List<CaseNotificationDlt> findDltByCnTranportqOutUid(@Param("uid") Long uid);
+  //
+  //
+  //    @Transactional
+  //    @Modifying
+  //    @Query(value = """
+  //    UPDATE dbo.case_notification_dlt
+  //    SET dlt_status = 'REPROCESSED'
+  //    WHERE id  = :id
+  //    """, nativeQuery = true)
+  //    int updateStatusToQueued(@Param("id") Long id);
 }

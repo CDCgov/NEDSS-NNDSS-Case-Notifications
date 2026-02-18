@@ -17,28 +17,29 @@ import org.springframework.stereotype.Component;
  *     <li>6126 - String block complaint</li>
  *     <li>1135 - todos complaint</li>
  * </ul>
- * */
+ *
+ */
 @Component
 @SuppressWarnings({"java:S1118", "java:S125", "java:S6126", "java:S1135"})
 public class CustomAuthenticationManagerResolver implements AuthenticationManagerResolver<HttpServletRequest> {
-    @Value("${auth.introspect-uri}")
-    String introspectionUri;
+  @Value("${auth.introspect-uri}")
+  String introspectionUri;
 
-    @Override
-    public AuthenticationManager resolve(HttpServletRequest request) {
-        String clientId = request.getHeader("clientid");
-        String clientSecret = request.getHeader("clientsecret");
-        if (introspectionUri == null || introspectionUri.isEmpty()) {
-            throw new CustomAuthenticationException("Introspection URI is required");
-        }
-        if (clientId == null || clientId.isEmpty() || clientSecret == null || clientSecret.isEmpty()) {
-            throw new CustomAuthenticationException("Client ID and Client Secret are required");
-        }
-        OpaqueTokenIntrospector opaquetokenintrospector;
-        opaquetokenintrospector = new NimbusOpaqueTokenIntrospector(
-            introspectionUri,
-            clientId,
-            clientSecret);
-        return new OpaqueTokenAuthenticationProvider(opaquetokenintrospector)::authenticate;
+  @Override
+  public AuthenticationManager resolve(HttpServletRequest request) {
+    String clientId = request.getHeader("clientid");
+    String clientSecret = request.getHeader("clientsecret");
+    if (introspectionUri == null || introspectionUri.isEmpty()) {
+      throw new CustomAuthenticationException("Introspection URI is required");
     }
+    if (clientId == null || clientId.isEmpty() || clientSecret == null || clientSecret.isEmpty()) {
+      throw new CustomAuthenticationException("Client ID and Client Secret are required");
+    }
+    OpaqueTokenIntrospector opaquetokenintrospector;
+    opaquetokenintrospector = new NimbusOpaqueTokenIntrospector(
+      introspectionUri,
+      clientId,
+      clientSecret);
+    return new OpaqueTokenAuthenticationProvider(opaquetokenintrospector)::authenticate;
+  }
 }

@@ -21,103 +21,103 @@ import static org.mockito.Mockito.*;
 
 class NonStdServiceTest {
 
-    @InjectMocks
-    private NonStdService nonStdService;
+  @InjectMocks
+  private NonStdService nonStdService;
 
-    @Mock
-    private IPHINMSService phinmsService;
+  @Mock
+  private IPHINMSService phinmsService;
 
-    @Mock
-    private INonStdBatchService batchService;
+  @Mock
+  private INonStdBatchService batchService;
 
-    @Mock
-    private TransportQOutRepository transportQOutRepository;
+  @Mock
+  private TransportQOutRepository transportQOutRepository;
 
-    @Mock
-    private CNTraportqOutRepository cnTraportqOutRepository;
+  @Mock
+  private CNTraportqOutRepository cnTraportqOutRepository;
 
-    @Mock
-    private CaseNotificationConfigRepository caseNotificationConfigRepository;
+  @Mock
+  private CaseNotificationConfigRepository caseNotificationConfigRepository;
 
-    @Mock
-    private IApiService apiService;
+  @Mock
+  private IApiService apiService;
 
 
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
+  @BeforeEach
+  void setUp() {
+    MockitoAnnotations.openMocks(this);
+  }
 
-    @Test
-    void testNonStdProcessor_BatchConditionTrue() throws Exception {
-        MessageAfterStdChecker checker = new MessageAfterStdChecker();
-        checker.setCnTransportqOutUid(123L);
+  @Test
+  void testNonStdProcessor_BatchConditionTrue() throws Exception {
+    MessageAfterStdChecker checker = new MessageAfterStdChecker();
+    checker.setCnTransportqOutUid(123L);
 
-        CaseNotificationConfig config = new CaseNotificationConfig();
-        config.setBatchMesageProfileId("TEST_PROFILE");
+    CaseNotificationConfig config = new CaseNotificationConfig();
+    config.setBatchMesageProfileId("TEST_PROFILE");
 
-        PHINMSProperties props = new PHINMSProperties();
-        props.setPMessageUid("123L");
-        props.setPNotificationId("456");
-        props.setPPublicHealthCaseLocalId("PHC123");
-        props.setPReportStatusCd("COMPLETE");
+    PHINMSProperties props = new PHINMSProperties();
+    props.setPMessageUid("123L");
+    props.setPNotificationId("456");
+    props.setPPublicHealthCaseLocalId("PHC123");
+    props.setPReportStatusCd("COMPLETE");
 
-        CNTransportqOut mockTransport = new CNTransportqOut();
-        mockTransport.setCnTransportqOutUid(123L);
+    CNTransportqOut mockTransport = new CNTransportqOut();
+    mockTransport.setCnTransportqOutUid(123L);
 
-        when(apiService.callToken()).thenReturn("TEST");
-        when(apiService.callHl7Endpoint("TEST", "123", true)).thenReturn("TEST");
+    when(apiService.callToken()).thenReturn("TEST");
+    when(apiService.callHl7Endpoint("TEST", "123", true)).thenReturn("TEST");
 
-        when(caseNotificationConfigRepository.findNonStdConfig()).thenReturn(config);
-        when(cnTraportqOutRepository.findTopByRecordUid(123L)).thenReturn(mockTransport);
-        when(phinmsService.gettingPHIMNSProperties(any(), any(), any())).thenReturn(props);
-        when(batchService.isBatchConditionApplied(props, config)).thenReturn(true);
+    when(caseNotificationConfigRepository.findNonStdConfig()).thenReturn(config);
+    when(cnTraportqOutRepository.findTopByRecordUid(123L)).thenReturn(mockTransport);
+    when(phinmsService.gettingPHIMNSProperties(any(), any(), any())).thenReturn(props);
+    when(batchService.isBatchConditionApplied(props, config)).thenReturn(true);
 
-        nonStdService.nonStdProcessor(checker, true);
+    nonStdService.nonStdProcessor(checker, true);
 
-        verify(batchService).holdQueue(props);
-    }
+    verify(batchService).holdQueue(props);
+  }
 
-    @Test
-    void testNonStdProcessor_BatchConditionFalse() throws Exception {
-        MessageAfterStdChecker checker = new MessageAfterStdChecker();
-        checker.setCnTransportqOutUid(124L);
+  @Test
+  void testNonStdProcessor_BatchConditionFalse() throws Exception {
+    MessageAfterStdChecker checker = new MessageAfterStdChecker();
+    checker.setCnTransportqOutUid(124L);
 
-        CaseNotificationConfig config = new CaseNotificationConfig();
-        config.setBatchMesageProfileId("OTHER_PROFILE");
+    CaseNotificationConfig config = new CaseNotificationConfig();
+    config.setBatchMesageProfileId("OTHER_PROFILE");
 
-        PHINMSProperties props = new PHINMSProperties();
-        props.setPMessageUid("124L");
-        props.setPNotificationId("789");
-        props.setPPublicHealthCaseLocalId("PHC999");
-        props.setPReportStatusCd("NEW");
+    PHINMSProperties props = new PHINMSProperties();
+    props.setPMessageUid("124L");
+    props.setPNotificationId("789");
+    props.setPPublicHealthCaseLocalId("PHC999");
+    props.setPReportStatusCd("NEW");
 
-        CNTransportqOut mockTransport = new CNTransportqOut();
-        mockTransport.setCnTransportqOutUid(123L);
+    CNTransportqOut mockTransport = new CNTransportqOut();
+    mockTransport.setCnTransportqOutUid(123L);
 
-        when(apiService.callToken()).thenReturn("TEST");
-        when(apiService.callHl7Endpoint("TEST", "123", true)).thenReturn("TEST");
-        when(caseNotificationConfigRepository.findNonStdConfig()).thenReturn(config);
-        when(cnTraportqOutRepository.findTopByRecordUid(124L)).thenReturn(mockTransport);
-        when(phinmsService.gettingPHIMNSProperties(any(), any(), any())).thenReturn(props);
-        when(batchService.isBatchConditionApplied(props, config)).thenReturn(false);
+    when(apiService.callToken()).thenReturn("TEST");
+    when(apiService.callHl7Endpoint("TEST", "123", true)).thenReturn("TEST");
+    when(caseNotificationConfigRepository.findNonStdConfig()).thenReturn(config);
+    when(cnTraportqOutRepository.findTopByRecordUid(124L)).thenReturn(mockTransport);
+    when(phinmsService.gettingPHIMNSProperties(any(), any(), any())).thenReturn(props);
+    when(batchService.isBatchConditionApplied(props, config)).thenReturn(false);
 
-        nonStdService.nonStdProcessor(checker, true);
+    nonStdService.nonStdProcessor(checker, true);
 
-        verify(transportQOutRepository).save(any(TransportQOut.class));
-        verify(cnTraportqOutRepository).updateStatusToQueued(null);
-    }
+    verify(transportQOutRepository).save(any(TransportQOut.class));
+    verify(cnTraportqOutRepository).updateStatusToQueued(null);
+  }
 
-    @Test
-    void testReleaseHoldQueueAndProcessBatchNonStd() throws Exception {
-        PHINMSProperties mockProps = new PHINMSProperties();
-        mockProps.setPMessageUid("333L");
+  @Test
+  void testReleaseHoldQueueAndProcessBatchNonStd() throws Exception {
+    PHINMSProperties mockProps = new PHINMSProperties();
+    mockProps.setPMessageUid("333L");
 
-        when(batchService.ReleaseQueuePopulateBatchFooterProperties()).thenReturn(mockProps);
+    when(batchService.ReleaseQueuePopulateBatchFooterProperties()).thenReturn(mockProps);
 
-        nonStdService.releaseHoldQueueAndProcessBatchNonStd();
+    nonStdService.releaseHoldQueueAndProcessBatchNonStd();
 
-        verify(transportQOutRepository).save(any(TransportQOut.class));
-        verify(cnTraportqOutRepository).updateStatusToQueued(null);
-    }
+    verify(transportQOutRepository).save(any(TransportQOut.class));
+    verify(cnTraportqOutRepository).updateStatusToQueued(null);
+  }
 }

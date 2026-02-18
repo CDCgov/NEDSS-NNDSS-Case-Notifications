@@ -8,5 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface IServiceActionPairRepository extends JpaRepository<ServiceActionPairModel, String> {
-    Optional<ServiceActionPairModel> findByMessageProfileId(String messageType);
+  Optional<ServiceActionPairModel> findByMessageProfileId(String messageType);
 }

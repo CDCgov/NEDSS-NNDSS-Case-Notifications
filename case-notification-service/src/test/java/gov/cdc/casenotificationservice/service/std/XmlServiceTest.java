@@ -24,89 +24,89 @@ import static org.mockito.Mockito.*;
 
 class XmlServiceTest {
 
-    private CNTraportqOutRepository cnTraportqOutRepository;
-    private IStdMapperService stdMapperService;
-    private NetssTransportQOutRepository netssTransportQOutRepository;
-    private XmlService xmlService;
+  private CNTraportqOutRepository cnTraportqOutRepository;
+  private IStdMapperService stdMapperService;
+  private NetssTransportQOutRepository netssTransportQOutRepository;
+  private XmlService xmlService;
 
-    @BeforeEach
-    void setUp() {
-        cnTraportqOutRepository = mock(CNTraportqOutRepository.class);
-        stdMapperService = mock(IStdMapperService.class);
-        netssTransportQOutRepository = mock(NetssTransportQOutRepository.class);
-        xmlService = new XmlService(cnTraportqOutRepository, stdMapperService, netssTransportQOutRepository);
-    }
+  @BeforeEach
+  void setUp() {
+    cnTraportqOutRepository = mock(CNTraportqOutRepository.class);
+    stdMapperService = mock(IStdMapperService.class);
+    netssTransportQOutRepository = mock(NetssTransportQOutRepository.class);
+    xmlService = new XmlService(cnTraportqOutRepository, stdMapperService, netssTransportQOutRepository);
+  }
 
-    @Test
-    void testMappingXmlStringToObject_whenActiveRecord() throws Exception {
-        // Arrange
-        MessageAfterStdChecker checker = new MessageAfterStdChecker();
-        checker.setCnTransportqOutUid(123L);
+  @Test
+  void testMappingXmlStringToObject_whenActiveRecord() throws Exception {
+    // Arrange
+    MessageAfterStdChecker checker = new MessageAfterStdChecker();
+    checker.setCnTransportqOutUid(123L);
 
-        CNTransportqOut cnTransportqOut = new CNTransportqOut();
-        cnTransportqOut.setMessagePayload(readFileFromResources("std_test.txt"));
-        cnTransportqOut.setRecordStatusCd("A");
+    CNTransportqOut cnTransportqOut = new CNTransportqOut();
+    cnTransportqOut.setMessagePayload(readFileFromResources("std_test.txt"));
+    cnTransportqOut.setRecordStatusCd("A");
 
-        when(cnTraportqOutRepository.findTopByRecordUid(123L)).thenReturn(cnTransportqOut);
+    when(cnTraportqOutRepository.findTopByRecordUid(123L)).thenReturn(cnTransportqOut);
 
-        Netss mappedNetss = new Netss();
-        mappedNetss.setCaseReportId("CASE123");
-        mappedNetss.setYear("2025");
-        mappedNetss.setWeek("16");
+    Netss mappedNetss = new Netss();
+    mappedNetss.setCaseReportId("CASE123");
+    mappedNetss.setYear("2025");
+    mappedNetss.setWeek("16");
 
-        when(stdMapperService.stdMapping(any())).thenReturn(mappedNetss);
+    when(stdMapperService.stdMapping(any())).thenReturn(mappedNetss);
 
-        // Act
-        xmlService.mappingXmlStringToObject(checker);
+    // Act
+    xmlService.mappingXmlStringToObject(checker);
 
-        // Assert
-        ArgumentCaptor<NetssTransportQOut> captor = ArgumentCaptor.forClass(NetssTransportQOut.class);
-        verify(netssTransportQOutRepository, times(1)).save(captor.capture());
+    // Assert
+    ArgumentCaptor<NetssTransportQOut> captor = ArgumentCaptor.forClass(NetssTransportQOut.class);
+    verify(netssTransportQOutRepository, times(1)).save(captor.capture());
 
-        NetssTransportQOut savedObject = captor.getValue();
-        assertEquals("CASE123", savedObject.getNetssCaseId());
-        assertEquals("2025", savedObject.getMmwrYear().toString());
-        assertEquals("16", savedObject.getMmwrWeek().toString());
-        assertEquals("ACTIVE", savedObject.getRecordStatusCd());
-    }
+    NetssTransportQOut savedObject = captor.getValue();
+    assertEquals("CASE123", savedObject.getNetssCaseId());
+    assertEquals("2025", savedObject.getMmwrYear().toString());
+    assertEquals("16", savedObject.getMmwrWeek().toString());
+    assertEquals("ACTIVE", savedObject.getRecordStatusCd());
+  }
 
-    @Test
-    void testMappingXmlStringToObject_whenDeletedRecord() throws Exception {
-        // Arrange
-        MessageAfterStdChecker checker = new MessageAfterStdChecker();
-        checker.setCnTransportqOutUid(456L);
+  @Test
+  void testMappingXmlStringToObject_whenDeletedRecord() throws Exception {
+    // Arrange
+    MessageAfterStdChecker checker = new MessageAfterStdChecker();
+    checker.setCnTransportqOutUid(456L);
 
-        CNTransportqOut cnTransportqOut = new CNTransportqOut();
-        cnTransportqOut.setMessagePayload(readFileFromResources("std_test.txt"));
-        cnTransportqOut.setRecordStatusCd("X");
+    CNTransportqOut cnTransportqOut = new CNTransportqOut();
+    cnTransportqOut.setMessagePayload(readFileFromResources("std_test.txt"));
+    cnTransportqOut.setRecordStatusCd("X");
 
-        when(cnTraportqOutRepository.findTopByRecordUid(456L)).thenReturn(cnTransportqOut);
+    when(cnTraportqOutRepository.findTopByRecordUid(456L)).thenReturn(cnTransportqOut);
 
-        Netss mappedNetss = new Netss();
-        mappedNetss.setCaseReportId("CASE456");
-        mappedNetss.setYear("2024");
-        mappedNetss.setWeek("10");
+    Netss mappedNetss = new Netss();
+    mappedNetss.setCaseReportId("CASE456");
+    mappedNetss.setYear("2024");
+    mappedNetss.setWeek("10");
 
-        when(stdMapperService.stdMapping(any())).thenReturn(mappedNetss);
+    when(stdMapperService.stdMapping(any())).thenReturn(mappedNetss);
 
-        // Act
-        xmlService.mappingXmlStringToObject(checker);
+    // Act
+    xmlService.mappingXmlStringToObject(checker);
 
-        // Assert
-        ArgumentCaptor<NetssTransportQOut> captor = ArgumentCaptor.forClass(NetssTransportQOut.class);
-        verify(netssTransportQOutRepository, times(1)).save(captor.capture());
+    // Assert
+    ArgumentCaptor<NetssTransportQOut> captor = ArgumentCaptor.forClass(NetssTransportQOut.class);
+    verify(netssTransportQOutRepository, times(1)).save(captor.capture());
 
-        NetssTransportQOut savedObject = captor.getValue();
-        assertEquals("CASE456", savedObject.getNetssCaseId());
-        assertEquals("2024", savedObject.getMmwrYear().toString());
-        assertEquals("10", savedObject.getMmwrWeek().toString());
-        assertEquals("LOG_DEL", savedObject.getRecordStatusCd());
-    }
+    NetssTransportQOut savedObject = captor.getValue();
+    assertEquals("CASE456", savedObject.getNetssCaseId());
+    assertEquals("2024", savedObject.getMmwrYear().toString());
+    assertEquals("10", savedObject.getMmwrWeek().toString());
+    assertEquals("LOG_DEL", savedObject.getRecordStatusCd());
+  }
 
-    private String readFileFromResources(String filename) throws IOException, URISyntaxException {
-        Path path = Path.of(Objects.requireNonNull(
-            getClass().getClassLoader().getResource(filename)).toURI()
-        );
-        return Files.readString(path);
-    }
+  private String readFileFromResources(String filename) throws IOException, URISyntaxException {
+    Path path = Path.of(Objects.requireNonNull(
+      getClass().getClassLoader().getResource(filename)).toURI()
+    );
+    return Files.readString(path);
+  }
 }

@@ -8,8 +8,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 public class CaseNotificationServiceApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(CaseNotificationServiceApplication.class, args);
-    }
+  public static void main(String[] args) {
+    SpringApplication.run(CaseNotificationServiceApplication.class, args);
+  }
 
 }

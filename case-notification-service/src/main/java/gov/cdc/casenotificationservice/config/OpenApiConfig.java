@@ -19,48 +19,48 @@ import java.util.List;
 @Configuration
 @Profile("dev")
 public class OpenApiConfig {
-    @Value("${cnserver.host}")
-    private String serverhost;
+  @Value("${cnserver.host}")
+  private String serverhost;
 
-    @Value("${server.servlet.context-path}")
-    private String contextPath;
+  @Value("${server.servlet.context-path}")
+  private String contextPath;
 
-    @Bean
-    public OpenAPI myOpenAPI() throws Exception {
-        String serverUrl = "";
-        String scheme = "";
-        if (serverhost != null && !serverhost.contains("localhost")) {
-            scheme = "https";
-        } else {
-            scheme = "http";
-        }
-        URI uriBuilder = new URIBuilder()
-            .setScheme(scheme)
-            .setHost(serverhost)
-            .setPath(contextPath)
-            .build();
-        serverUrl = uriBuilder.toString();
-
-        Server server = new Server();
-        server.setUrl(serverUrl);
-        server.setDescription("Server URL");
-
-        Contact contact = new Contact();
-        contact.setEmail("nndservice@cdc.com");
-        contact.setName("Case Notification Service");
-
-        Info info = new Info()
-            .title("Case Notification Service API")
-            .version("1.0")
-            .contact(contact)
-            .description("This API exposes endpoints to manage Case Notification Service.");
-
-        Components components = new Components().
-            addSecuritySchemes("bearer-key",
-                new SecurityScheme().type(SecurityScheme.Type.HTTP).
-                    scheme("bearer").bearerFormat("JWT").
-                    description("JWT Token"));
-
-        return new OpenAPI().info(info).servers(List.of(server)).components(components);
+  @Bean
+  public OpenAPI myOpenAPI() throws Exception {
+    String serverUrl = "";
+    String scheme = "";
+    if (serverhost != null && !serverhost.contains("localhost")) {
+      scheme = "https";
+    } else {
+      scheme = "http";
     }
+    URI uriBuilder = new URIBuilder()
+      .setScheme(scheme)
+      .setHost(serverhost)
+      .setPath(contextPath)
+      .build();
+    serverUrl = uriBuilder.toString();
+
+    Server server = new Server();
+    server.setUrl(serverUrl);
+    server.setDescription("Server URL");
+
+    Contact contact = new Contact();
+    contact.setEmail("nndservice@cdc.com");
+    contact.setName("Case Notification Service");
+
+    Info info = new Info()
+      .title("Case Notification Service API")
+      .version("1.0")
+      .contact(contact)
+      .description("This API exposes endpoints to manage Case Notification Service.");
+
+    Components components = new Components().
+      addSecuritySchemes("bearer-key",
+        new SecurityScheme().type(SecurityScheme.Type.HTTP).
+          scheme("bearer").bearerFormat("JWT").
+          description("JWT Token"));
+
+    return new OpenAPI().info(info).servers(List.of(server)).components(components);
+  }
 }

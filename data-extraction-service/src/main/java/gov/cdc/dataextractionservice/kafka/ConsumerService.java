@@ -20,73 +20,73 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class ConsumerService {
 
-    private static final Logger logger = LoggerFactory.getLogger(ConsumerService.class);
+  private static final Logger logger = LoggerFactory.getLogger(ConsumerService.class);
 
-    @Value("${kafka.topic.cn-tranport-out-topic:}")
-    private String transportOutQTopic = "nbs_CN_transportq_out";
+  @Value("${kafka.topic.cn-tranport-out-topic:}")
+  private String transportOutQTopic = "nbs_CN_transportq_out";
 
-    @Autowired
-    private StdCheckerTransformerService transformerService;
+  @Autowired
+  private StdCheckerTransformerService transformerService;
 
-    @Autowired
-    private ProducerService producerService;
+  @Autowired
+  private ProducerService producerService;
 
-    @Autowired
-    private CnTransportQOutUpdateService updateService;
+  @Autowired
+  private CnTransportQOutUpdateService updateService;
 
-    private final CaseNotificationConfigRepository caseNotificationConfigRepository;
+  private final CaseNotificationConfigRepository caseNotificationConfigRepository;
 
-    public ConsumerService(CaseNotificationConfigRepository caseNotificationConfigRepository) {
-        this.caseNotificationConfigRepository = caseNotificationConfigRepository;
-    }
+  public ConsumerService(CaseNotificationConfigRepository caseNotificationConfigRepository) {
+    this.caseNotificationConfigRepository = caseNotificationConfigRepository;
+  }
 
-    @KafkaListener(
-        topics = "${kafka.topic.cn-tranport-out-topic}",
-        containerFactory = "kafkaListenerContainerFactoryDebeziumConsumer"
-    )
-    public void handleMessage(String messages) {
-        try {
-            var config = caseNotificationConfigRepository.findNonStdConfig();
-            if (config != null && config.getConfigApplied()) {
-                logger.info("Raw message: {}", messages);
-                Gson gson = new Gson();
-                CnTransportqOutMessage message = gson.fromJson(messages, CnTransportqOutMessage.class);
+  @KafkaListener(
+    topics = "${kafka.topic.cn-tranport-out-topic}",
+    containerFactory = "kafkaListenerContainerFactoryDebeziumConsumer"
+  )
+  public void handleMessage(String messages) {
+    try {
+      var config = caseNotificationConfigRepository.findNonStdConfig();
+      if (config != null && config.getConfigApplied()) {
+        logger.info("Raw message: {}", messages);
+        Gson gson = new Gson();
+        CnTransportqOutMessage message = gson.fromJson(messages, CnTransportqOutMessage.class);
 
-                CnTransportqOutValue after = message.getPayload().getAfter();
-                if (after != null) {
-                    MessageAfterStdChecker transformed = transformerService.transform(after);
+        CnTransportqOutValue after = message.getPayload().getAfter();
+        if (after != null) {
+          MessageAfterStdChecker transformed = transformerService.transform(after);
 
-                    if (transformed != null) {
-                        logger.info("Transformed message ready: {}", transformed);
+          if (transformed != null) {
+            logger.info("Transformed message ready: {}", transformed);
 
-                        // Send to downstream Kafka
-                        producerService.sendMessage(transformed);
+            // Send to downstream Kafka
+            producerService.sendMessage(transformed);
 
-                        // Update database record_status_cd
-                        if (transformed.isStdMessageDetected() && ("NETSS_MESSAGE_ONLY".equals(
-                            transformed.getNetssMessageOnly())
-                            || "BOTH".equals(transformed.getNetssMessageOnly()))) {
-                            updateService.updateRecordStatus(
-                                transformed.getCnTransportqOutUid(),
-                                "STD_PROCESSING"
-                            );
-                        } else {
-                            updateService.updateRecordStatus(
-                                transformed.getCnTransportqOutUid(),
-                                "NON_STD_PROCESSING"
-                            );
-                        }
-                    } else {
-                        logger.info("Message skipped - did not meet the criteria");
-                    }
-                } else {
-                    logger.info("Change Data Capture event ignored (no 'after' state)");
-                }
+            // Update database record_status_cd
+            if (transformed.isStdMessageDetected() && ("NETSS_MESSAGE_ONLY".equals(
+              transformed.getNetssMessageOnly())
+              || "BOTH".equals(transformed.getNetssMessageOnly()))) {
+              updateService.updateRecordStatus(
+                transformed.getCnTransportqOutUid(),
+                "STD_PROCESSING"
+              );
+            } else {
+              updateService.updateRecordStatus(
+                transformed.getCnTransportqOutUid(),
+                "NON_STD_PROCESSING"
+              );
             }
-
-
-        } catch (Exception e) {
-            logger.error("ConsumerService.handleMessage: {}", e.getMessage(), e);
+          } else {
+            logger.info("Message skipped - did not meet the criteria");
+          }
+        } else {
+          logger.info("Change Data Capture event ignored (no 'after' state)");
         }
+      }
+
+
+    } catch (Exception e) {
+      logger.error("ConsumerService.handleMessage: {}", e.getMessage(), e);
     }
+  }
 }

@@ -16,7 +16,7 @@ import lombok.Setter;
 @Setter
 @SuppressWarnings({"java:S1118", "java:S125", "java:S6126", "java:S1135"})
 public class ErrorResponse {
-    private int statusCode;
-    private String message;
-    private String details;
+  private int statusCode;
+  private String message;
+  private String details;
 }

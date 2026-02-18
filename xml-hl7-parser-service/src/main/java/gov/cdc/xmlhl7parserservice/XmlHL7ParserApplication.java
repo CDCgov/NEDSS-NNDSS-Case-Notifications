@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class XmlHL7ParserApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(XmlHL7ParserApplication.class, args);
-    }
+  public static void main(String[] args) {
+    SpringApplication.run(XmlHL7ParserApplication.class, args);
+  }
 
 }

@@ -16,13 +16,13 @@ import java.sql.Date;
 @Entity
 @Table(name = "LOOKUP_MMWR")
 public class LookupMmwr {
-    @Id
-    @Column(name = "WEEK_ENDING", nullable = false)
-    private Date weekEnding;
+  @Id
+  @Column(name = "WEEK_ENDING", nullable = false)
+  private Date weekEnding;
 
-    @Column(name = "MMWR_WEEK", nullable = false)
-    private Integer mmwrWeek;
+  @Column(name = "MMWR_WEEK", nullable = false)
+  private Integer mmwrWeek;
 
-    @Column(name = "MMWR_YEAR", nullable = false)
-    private Integer mmwrYear;
+  @Column(name = "MMWR_YEAR", nullable = false)
+  private Integer mmwrYear;
 }

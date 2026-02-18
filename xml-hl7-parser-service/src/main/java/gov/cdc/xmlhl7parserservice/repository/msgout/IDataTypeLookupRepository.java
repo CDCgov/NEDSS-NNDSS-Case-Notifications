@@ -8,5 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface IDataTypeLookupRepository extends JpaRepository<DataTypeModel, Integer> {
-    Optional<DataTypeModel> findByMmgVersionAndDataType(String mmgVersion, String dataType);
+  Optional<DataTypeModel> findByMmgVersionAndDataType(String mmgVersion, String dataType);
 }

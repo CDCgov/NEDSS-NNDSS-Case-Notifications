@@ -9,41 +9,41 @@ import java.sql.Timestamp;
 @Getter
 @Setter
 public class NetssTransportQOutVM {
-    private Long netssTransportQOutUid;
+  private Long netssTransportQOutUid;
 
-    private String recordTypeCd;
+  private String recordTypeCd;
 
-    private Short mmwrYear;
+  private Short mmwrYear;
 
-    private Short mmwrWeek;
+  private Short mmwrWeek;
 
-    private String netssCaseId;
+  private String netssCaseId;
 
-    private String phcLocalId;
+  private String phcLocalId;
 
-    private String notificationLocalId;
+  private String notificationLocalId;
 
-    private Timestamp addTime;
+  private Timestamp addTime;
 
-    private String payload;
+  private String payload;
 
-    private String recordStatusCd;
+  private String recordStatusCd;
 
-    public NetssTransportQOutVM() {
+  public NetssTransportQOutVM() {
 
-    }
+  }
 
-    public NetssTransportQOutVM(NetssTransportQOut netssTransportQOut) {
-        this.netssTransportQOutUid = netssTransportQOut.getNetssTransportQOutUid();
-        this.recordTypeCd = netssTransportQOut.getRecordTypeCd();
-        this.mmwrYear = netssTransportQOut.getMmwrYear();
-        this.mmwrWeek = netssTransportQOut.getMmwrWeek();
-        this.netssCaseId = netssTransportQOut.getNetssCaseId();
-        this.phcLocalId = netssTransportQOut.getPhcLocalId();
-        this.notificationLocalId = netssTransportQOut.getNotificationLocalId();
-        this.addTime = netssTransportQOut.getAddTime();
-        this.payload = netssTransportQOut.getPayload();
-        this.recordStatusCd = netssTransportQOut.getRecordStatusCd();
-    }
+  public NetssTransportQOutVM(NetssTransportQOut netssTransportQOut) {
+    this.netssTransportQOutUid = netssTransportQOut.getNetssTransportQOutUid();
+    this.recordTypeCd = netssTransportQOut.getRecordTypeCd();
+    this.mmwrYear = netssTransportQOut.getMmwrYear();
+    this.mmwrWeek = netssTransportQOut.getMmwrWeek();
+    this.netssCaseId = netssTransportQOut.getNetssCaseId();
+    this.phcLocalId = netssTransportQOut.getPhcLocalId();
+    this.notificationLocalId = netssTransportQOut.getNotificationLocalId();
+    this.addTime = netssTransportQOut.getAddTime();
+    this.payload = netssTransportQOut.getPayload();
+    this.recordStatusCd = netssTransportQOut.getRecordStatusCd();
+  }
 
 }

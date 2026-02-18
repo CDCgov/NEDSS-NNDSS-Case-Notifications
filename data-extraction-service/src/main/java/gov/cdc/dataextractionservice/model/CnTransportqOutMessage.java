@@ -6,6 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CnTransportqOutMessage {
-    public EnvelopePayload payload;
+  public EnvelopePayload payload;
 
 }

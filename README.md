@@ -1,10 +1,13 @@
-# CDC Case Notification System - Technical Documentation
+# CDC Case Notification System
 
-This document outlines how the CDC Case Notification system operates end-to-end.
+## Development
 
----
+### Guidelines
+- [Code Formatting](docs/Code-Formatting.md)
 
-## Input
+## Process Description
+
+### Input
 
 The pipeline begins with a **Debezium source connector** configured on the `ODSE..CNTransportQOut` table.
 
@@ -19,7 +22,7 @@ The **Case Notification** process depends on predefined configurations stored in
 
 ---
 
-## Output
+### Output
 
 - Processed data is stored in either:
     - `MSGOUTE..TransportQOut`
@@ -31,7 +34,7 @@ The **Case Notification** process depends on predefined configurations stored in
 
 ---
 
-## Service Requirements
+### Service Requirements
 
 To function correctly, **all three services** must be available:
 
@@ -41,12 +44,12 @@ To function correctly, **all three services** must be available:
 
 ---
 
-## Data Extraction
+### Data Extraction
 
 - Continuously extracts and categorizes data.
 - Sends data downstream using Debezium and Kafka.
 
-### Requirements:
+#### Requirements:
 
 - Source connector must be set up **before launching** the service.
 - Source connector on `CNTransportQOut` is maintained by the **RTR Data Team**.
@@ -54,13 +57,13 @@ To function correctly, **all three services** must be available:
 
 ---
 
-## Case Notification
+### Case Notification
 
-### Components:
+#### Components:
 
 - Microservice and APIs
 
-### Responsibilities:
+#### Responsibilities:
 
 - Listens for events from the Data Extraction module.
 - Processes valid event types:
@@ -73,11 +76,11 @@ To function correctly, **all three services** must be available:
 - Faulty MMG or STD events are pushed to:
     - `Case_Notification_DLT`
 
-### Dependencies:
+#### Dependencies:
 
 - Requires a **constant connection to the HL7 server** to transform NND XML into HL7.
 
-### API Capabilities:
+#### API Capabilities:
 
 - Update configurations
 - Check data status
@@ -86,13 +89,13 @@ To function correctly, **all three services** must be available:
 
 👉 [Explore the APIs via Swagger](https://dataingestion.dts1.nbspreview.com/case-notification/swagger-ui/index.html#/)
 
-### Database Management:
+#### Database Management:
 
 - Includes **Liquibase integration** for auto-managing schema changes.
 
 ---
 
-## HL7 Service
+### HL7 Service
 
 - Helper service used by Case Notification.
 - Transforms **NND XML** into **HL7 2.5.1** format.
@@ -103,21 +106,21 @@ To function correctly, **all three services** must be available:
 
 ---
 
-## 🛠 Liquibase Info
+### 🛠 Liquibase Info
 
 - [Liquibase DB Scripts](https://github.com/CDCgov/NEDSS-NNDSS-Case-Notifications/tree/main/case-notification-service/src/main/resources/db)
 
 ---
 
-## 🌐 Project Repository
+### 🌐 Project Repository
 
 - [CDC Case Notification GitHub Repo](https://github.com/CDCgov/NEDSS-NNDSS-Case-Notifications/tree/main)
 
 ---
 
-## ⚙️ Required Environment Variables
+### ⚙️ Required Environment Variables
 
-### Data Extraction
+#### Data Extraction
 
 | Variable              | Description              |
 |-----------------------|--------------------------|
@@ -128,7 +131,7 @@ To function correctly, **all three services** must be available:
 
 ---
 
-### Case Notification
+#### Case Notification
 
 | Variable              | Description                                                      |
 |-----------------------|------------------------------------------------------------------|
@@ -145,7 +148,7 @@ To function correctly, **all three services** must be available:
 
 ---
 
-### HL7 Parser
+#### HL7 Parser
 
 | Variable              | Description                                                  |
 |-----------------------|--------------------------------------------------------------|

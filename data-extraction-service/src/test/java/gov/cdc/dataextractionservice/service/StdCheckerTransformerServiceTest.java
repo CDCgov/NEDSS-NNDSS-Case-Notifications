@@ -44,7 +44,8 @@ class StdCheckerTransformerServiceTest {
 
   @Test
   void testTransform_STDTrigger_NETSS_MESSAGE_ONLY() {
-    ReflectionTestUtils.setField(transformerService, "netssMessageOnlyConfig", "NETSS_MESSAGE_ONLY");
+    ReflectionTestUtils.setField(
+        transformerService, "netssMessageOnlyConfig", "NETSS_MESSAGE_ONLY");
 
     var input = new CnTransportqOutValue();
     input.setRecord_status_cd("UNPROCESSED");
@@ -94,7 +95,8 @@ class StdCheckerTransformerServiceTest {
 
   @Test
   void testTransform_ReplacesSpecialCharacters() {
-    ReflectionTestUtils.setField(transformerService, "netssMessageOnlyConfig", "NETSS_MESSAGE_ONLY");
+    ReflectionTestUtils.setField(
+        transformerService, "netssMessageOnlyConfig", "NETSS_MESSAGE_ONLY");
     var input = new CnTransportqOutValue();
     input.setRecord_status_cd("UNPROCESSED");
     input.setMessage_payload("Don't use â€™ or ' characters<stringData>STD_MMG_V1.0</stringData>");

@@ -33,7 +33,4 @@ public class KafkaProducerConfig {
     // set factory for both producer and consumer
     return new KafkaTemplate<>(producerFactory());
   }
-
-
-
 }

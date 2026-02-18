@@ -7,5 +7,4 @@ import lombok.Setter;
 @Setter
 public class CnTransportqOutMessage {
   public EnvelopePayload payload;
-
 }

@@ -1,15 +1,13 @@
 package gov.cdc.casenotificationservice.repository.msg.model;
 
-
 import lombok.Data;
 
 @Data
-//@NoArgsConstructor
-//@AllArgsConstructor
-//@Entity
-//@Table(name = "SERVICE_ACTION_PAIR")
+// @NoArgsConstructor
+// @AllArgsConstructor
+// @Entity
+// @Table(name = "SERVICE_ACTION_PAIR")
 public class ServiceActionPair {
-
 
   //    @Column(name = "SERVICE", length = 50)
   private String service;

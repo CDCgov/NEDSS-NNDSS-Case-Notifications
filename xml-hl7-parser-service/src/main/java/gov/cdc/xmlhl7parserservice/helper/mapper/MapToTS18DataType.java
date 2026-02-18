@@ -57,5 +57,4 @@ public class MapToTS18DataType {
 
     output.getTime().setDateSecondPrecision(year, month, day, hours, minutes, seconds);
   }
-
 }

@@ -1,6 +1,5 @@
 package gov.cdc.casenotificationservice.cache;
 
-
 import gov.cdc.casenotificationservice.model.PHINMSProperties;
 
 import java.util.ArrayList;
@@ -18,7 +17,6 @@ public class NonStdQueue {
     return INSTANCE;
   }
 
-
   public void addPHINMSProperties(PHINMSProperties phinmsProperties) {
     phinmsPropertiesList.add(phinmsProperties);
   }
@@ -26,7 +24,6 @@ public class NonStdQueue {
   public void clearPHINMSProperties() {
     phinmsPropertiesList.clear();
   }
-
 
   public List<PHINMSProperties> getPhinmsPropertiesList() {
     return new ArrayList<>(phinmsPropertiesList); // defensive copy

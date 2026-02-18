@@ -11,20 +11,28 @@ public class DataTypeModel {
   @Id
   @Column(name = "serial_number", columnDefinition = "uniqueidentifier")
   private int serialNum;
+
   @Column(name = "question_identifier")
   private String questionId;
+
   @Column(name = "hl7_segment_field")
   private String hl7SegmentField;
+
   @Column(name = "mmg_version")
   private String mmgVersion;
+
   @Column(name = "data_type")
   private String dataType;
+
   @Column(name = "core_data_type")
   private String coreDataType;
+
   @Column(name = "mask")
   private String mask;
+
   @Column(name = "width")
   private int width;
+
   @Column(name = "note")
   private String note;
 

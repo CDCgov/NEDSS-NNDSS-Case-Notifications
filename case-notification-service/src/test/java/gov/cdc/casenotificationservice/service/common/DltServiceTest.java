@@ -26,17 +26,13 @@ import static org.mockito.Mockito.*;
 
 public class DltServiceTest {
 
-  @Mock
-  private CaseNotificationDltRepository dltRepository;
+  @Mock private CaseNotificationDltRepository dltRepository;
 
-  @Mock
-  private CNTraportqOutRepository cnTraportqOutRepository;
+  @Mock private CNTraportqOutRepository cnTraportqOutRepository;
 
-  @Mock
-  private CaseNotificationProducer producer;
+  @Mock private CaseNotificationProducer producer;
 
-  @InjectMocks
-  private DltService dltService;
+  @InjectMocks private DltService dltService;
 
   private final String jsonPayload = "{\"cnTransportqOutUid\":12345}";
   private final String uuid = UUID.randomUUID().toString();
@@ -64,7 +60,8 @@ public class DltServiceTest {
     Timestamp to = Timestamp.valueOf("2025-05-02 00:00:00");
     Page<CaseNotificationDlt> page = new PageImpl<>(List.of(new CaseNotificationDlt()));
 
-    when(dltRepository.findByCreatedOnBetween(eq(from), eq(to), any(Pageable.class))).thenReturn(page);
+    when(dltRepository.findByCreatedOnBetween(eq(from), eq(to), any(Pageable.class)))
+        .thenReturn(page);
 
     Page<CaseNotificationDlt> result = dltService.getDltsBetweenWithPagination(from, to, 0, 10);
 

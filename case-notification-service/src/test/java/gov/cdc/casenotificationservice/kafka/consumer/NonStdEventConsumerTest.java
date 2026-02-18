@@ -15,13 +15,10 @@ import static org.mockito.Mockito.*;
 
 class NonStdEventConsumerTest {
 
-  @Mock
-  private NonStdService nonStdService;
+  @Mock private NonStdService nonStdService;
 
-  @Mock
-  private IConfigurationService configurationService;
-  @InjectMocks
-  private NonStdEventConsumer consumer;
+  @Mock private IConfigurationService configurationService;
+  @InjectMocks private NonStdEventConsumer consumer;
 
   @BeforeEach
   void setUp() {
@@ -42,7 +39,8 @@ class NonStdEventConsumerTest {
     consumer.handleMessage(json);
 
     // Assert
-    verify(nonStdService).nonStdProcessor(argThat(m -> m.getCnTransportqOutUid() == 123L), anyBoolean());
+    verify(nonStdService)
+        .nonStdProcessor(argThat(m -> m.getCnTransportqOutUid() == 123L), anyBoolean());
   }
 
   //    @Test

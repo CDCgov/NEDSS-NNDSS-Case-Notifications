@@ -25,15 +25,11 @@ public class ApiService implements IApiService {
   @Value("${api.secret}")
   private String clientSecret;
 
-
   @Value("${api.endpoint_hl7}")
   protected String hl7Endpoint;
 
-
   @Value("${api.endpoint_token}")
   private String tokenEndpoint;
-
-
 
   private final RestTemplate restTemplate = new RestTemplate();
 
@@ -44,14 +40,14 @@ public class ApiService implements IApiService {
 
     HttpEntity<String> entity = new HttpEntity<>(headers);
 
-    URI uri = UriComponentsBuilder.fromHttpUrl(tokenEndpoint)
-      .build()
-      .toUri();
-    ResponseEntity<String> response = restTemplate.exchange(uri, HttpMethod.POST, entity, String.class);
+    URI uri = UriComponentsBuilder.fromHttpUrl(tokenEndpoint).build().toUri();
+    ResponseEntity<String> response =
+        restTemplate.exchange(uri, HttpMethod.POST, entity, String.class);
     return response.getBody();
   }
 
-  public String callHl7Endpoint(String token, String recordId, boolean hl7ValidationEnabled) throws APIException {
+  public String callHl7Endpoint(String token, String recordId, boolean hl7ValidationEnabled)
+      throws APIException {
     try {
       HttpHeaders headers = new HttpHeaders();
       headers.setBearerAuth(token);
@@ -60,19 +56,20 @@ public class ApiService implements IApiService {
 
       HttpEntity<String> entity = new HttpEntity<>(headers);
 
-      URI uri = UriComponentsBuilder.fromHttpUrl(hl7Endpoint)
-        .pathSegment(recordId)
-        .queryParam("validationEnabled", hl7ValidationEnabled)
-        .build()
-        .toUri();
+      URI uri =
+          UriComponentsBuilder.fromHttpUrl(hl7Endpoint)
+              .pathSegment(recordId)
+              .queryParam("validationEnabled", hl7ValidationEnabled)
+              .build()
+              .toUri();
 
       logger.info("API POST Request to HL7 endpoint: {}", uri);
 
-      ResponseEntity<String> response = restTemplate.exchange(uri, HttpMethod.POST, entity, String.class);
+      ResponseEntity<String> response =
+          restTemplate.exchange(uri, HttpMethod.POST, entity, String.class);
       return response.getBody();
     } catch (Exception e) {
       throw new APIException("Error calling HL7 endpoint: " + e.getMessage());
     }
   }
-
 }

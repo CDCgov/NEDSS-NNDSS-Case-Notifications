@@ -23,7 +23,6 @@ public class LiquibaseConfig {
   @Value("${spring.liquibase.password}")
   private String dbUserPassword;
 
-
   @Bean
   @ConfigurationProperties(prefix = "spring.liquibase.msgoute")
   public LiquibaseProperties msgouteLiquibaseProperties() {
@@ -31,19 +30,20 @@ public class LiquibaseConfig {
   }
 
   @Bean
-  public DataSource msgouteDataSource(@Qualifier("msgouteLiquibaseProperties") LiquibaseProperties props) {
+  public DataSource msgouteDataSource(
+      @Qualifier("msgouteLiquibaseProperties") LiquibaseProperties props) {
     return DataSourceBuilder.create()
-      .url(props.getUrl())
-      .username(dbUserName)
-      .password(dbUserPassword)
-      .driverClassName(driverClassName)
-      .build();
+        .url(props.getUrl())
+        .username(dbUserName)
+        .password(dbUserPassword)
+        .driverClassName(driverClassName)
+        .build();
   }
 
   @Bean(name = "msgouteLiquibase")
   public SpringLiquibase msgouteLiquibase(
-    @Qualifier("msgouteDataSource") DataSource dataSource,
-    @Qualifier("msgouteLiquibaseProperties") LiquibaseProperties props) {
+      @Qualifier("msgouteDataSource") DataSource dataSource,
+      @Qualifier("msgouteLiquibaseProperties") LiquibaseProperties props) {
     SpringLiquibase liquibase = new SpringLiquibase();
     liquibase.setDataSource(dataSource);
     liquibase.setChangeLog(props.getChangeLog());

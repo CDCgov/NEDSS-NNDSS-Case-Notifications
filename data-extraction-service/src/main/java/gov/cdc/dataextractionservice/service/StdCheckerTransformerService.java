@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
-
 public class StdCheckerTransformerService {
 
   @Value("${app.transformer.netss-message-only}")
@@ -33,9 +32,7 @@ public class StdCheckerTransformerService {
     }
 
     // Replace problematic characters
-    String cleanedPayload = body
-      .replaceAll("'", "&apos;")
-      .replaceAll("â€™", "&apos;");
+    String cleanedPayload = body.replaceAll("'", "&apos;").replaceAll("â€™", "&apos;");
 
     // Check if body contains <stringData>STD_MMG_V1.0</stringData>
     boolean containsTrigger = cleanedPayload.contains("<stringData>STD_MMG_V1.0</stringData>");
@@ -55,14 +52,14 @@ public class StdCheckerTransformerService {
     }
 
     return MessageAfterStdChecker.builder()
-      .cnTransportqOutUid(value.getCn_transportq_out_uid())
-      //                .messagePayload(cleanedPayload)
-      .notificationLocalId(value.getNotification_local_id())
-      .publicHealthCaseLocalId(value.getPublic_health_case_local_id())
-      .reportStatusCd(value.getReport_status_cd())
-      .recordStatusCd(value.getRecord_status_cd())
-      .netssMessageOnly(netssStatus)
-      .stdMessageDetected(containsTrigger) // setting STD, Non-STD flag here
-      .build();
+        .cnTransportqOutUid(value.getCn_transportq_out_uid())
+        //                .messagePayload(cleanedPayload)
+        .notificationLocalId(value.getNotification_local_id())
+        .publicHealthCaseLocalId(value.getPublic_health_case_local_id())
+        .reportStatusCd(value.getReport_status_cd())
+        .recordStatusCd(value.getRecord_status_cd())
+        .netssMessageOnly(netssStatus)
+        .stdMessageDetected(containsTrigger) // setting STD, Non-STD flag here
+        .build();
   }
 }

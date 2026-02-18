@@ -1,6 +1,5 @@
 package gov.cdc.casenotificationservice.service.std;
 
-
 import gov.cdc.casenotificationservice.model.Netss;
 import gov.cdc.casenotificationservice.model.generated.jaxb.NBSNNDIntermediaryMessage;
 import gov.cdc.casenotificationservice.service.std.interfaces.IStdMapperService;
@@ -34,8 +33,9 @@ class StdMapperServiceTest {
     when(mapperUtilService.mapToCodedAnswer(anyString(), anyString())).thenReturn("1");
     when(mapperUtilService.mapToCodedAnswer(anyString(), any())).thenReturn("1");
     when(mapperUtilService.mapToTsType(anyString(), anyString())).thenReturn("20240101");
-    when(mapperUtilService.mapToMultiCodedAnswer(anyString(), anyString(), anyString(), anyString())).thenReturn(
-      "Y");
+    when(mapperUtilService.mapToMultiCodedAnswer(
+            anyString(), anyString(), anyString(), anyString()))
+        .thenReturn("Y");
     when(mapperUtilService.mapToDate(anyString(), anyString(), anyString())).thenReturn("20240101");
   }
 
@@ -48,7 +48,8 @@ class StdMapperServiceTest {
     String xml = new String(is.readAllBytes());
     JAXBContext context = JAXBContext.newInstance(NBSNNDIntermediaryMessage.class);
     Unmarshaller unmarshaller = context.createUnmarshaller();
-    NBSNNDIntermediaryMessage message = (NBSNNDIntermediaryMessage) unmarshaller.unmarshal(new StringReader(xml));
+    NBSNNDIntermediaryMessage message =
+        (NBSNNDIntermediaryMessage) unmarshaller.unmarshal(new StringReader(xml));
 
     // Act
     Netss netss = stdMapperService.stdMapping(message);

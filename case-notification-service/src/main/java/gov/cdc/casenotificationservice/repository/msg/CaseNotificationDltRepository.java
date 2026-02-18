@@ -1,6 +1,5 @@
 package gov.cdc.casenotificationservice.repository.msg;
 
-
 import gov.cdc.casenotificationservice.repository.msg.model.CaseNotificationDlt;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,9 +14,12 @@ import java.util.UUID;
 
 @Repository
 public interface CaseNotificationDltRepository extends JpaRepository<CaseNotificationDlt, UUID> {
-  Page<CaseNotificationDlt> findByCreatedOnBetween(Timestamp start, Timestamp end, Pageable pageable);
+  Page<CaseNotificationDlt> findByCreatedOnBetween(
+      Timestamp start, Timestamp end, Pageable pageable);
 
-  @Query(value = "select * from case_notification_dlt where cn_tranportq_out_uid = :uid ", nativeQuery = true)
+  @Query(
+      value = "select * from case_notification_dlt where cn_tranportq_out_uid = :uid ",
+      nativeQuery = true)
   List<CaseNotificationDlt> findDltByCnTranportqOutUid(@Param("uid") Long uid);
   //
   //

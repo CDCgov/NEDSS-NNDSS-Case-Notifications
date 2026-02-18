@@ -21,27 +21,19 @@ import static org.mockito.Mockito.*;
 
 class NonStdServiceTest {
 
-  @InjectMocks
-  private NonStdService nonStdService;
+  @InjectMocks private NonStdService nonStdService;
 
-  @Mock
-  private IPHINMSService phinmsService;
+  @Mock private IPHINMSService phinmsService;
 
-  @Mock
-  private INonStdBatchService batchService;
+  @Mock private INonStdBatchService batchService;
 
-  @Mock
-  private TransportQOutRepository transportQOutRepository;
+  @Mock private TransportQOutRepository transportQOutRepository;
 
-  @Mock
-  private CNTraportqOutRepository cnTraportqOutRepository;
+  @Mock private CNTraportqOutRepository cnTraportqOutRepository;
 
-  @Mock
-  private CaseNotificationConfigRepository caseNotificationConfigRepository;
+  @Mock private CaseNotificationConfigRepository caseNotificationConfigRepository;
 
-  @Mock
-  private IApiService apiService;
-
+  @Mock private IApiService apiService;
 
   @BeforeEach
   void setUp() {

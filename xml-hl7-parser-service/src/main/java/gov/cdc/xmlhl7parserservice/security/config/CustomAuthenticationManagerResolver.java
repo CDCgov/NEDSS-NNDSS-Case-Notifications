@@ -11,17 +11,19 @@ import org.springframework.security.oauth2.server.resource.introspection.OpaqueT
 import org.springframework.stereotype.Component;
 
 /**
- * <ul>
- *     <li>1118 - require constructor complaint</li>
- *     <li>125 - comment complaint</li>
- *     <li>6126 - String block complaint</li>
- *     <li>1135 - todos complaint</li>
- * </ul>
  *
+ *
+ * <ul>
+ *   <li>1118 - require constructor complaint
+ *   <li>125 - comment complaint
+ *   <li>6126 - String block complaint
+ *   <li>1135 - todos complaint
+ * </ul>
  */
 @Component
 @SuppressWarnings({"java:S1118", "java:S125", "java:S6126", "java:S1135"})
-public class CustomAuthenticationManagerResolver implements AuthenticationManagerResolver<HttpServletRequest> {
+public class CustomAuthenticationManagerResolver
+    implements AuthenticationManagerResolver<HttpServletRequest> {
   @Value("${auth.introspect-uri}")
   String introspectionUri;
 
@@ -36,10 +38,8 @@ public class CustomAuthenticationManagerResolver implements AuthenticationManage
       throw new CustomAuthenticationException("Client ID and Client Secret are required");
     }
     OpaqueTokenIntrospector opaquetokenintrospector;
-    opaquetokenintrospector = new NimbusOpaqueTokenIntrospector(
-      introspectionUri,
-      clientId,
-      clientSecret);
+    opaquetokenintrospector =
+        new NimbusOpaqueTokenIntrospector(introspectionUri, clientId, clientSecret);
     return new OpaqueTokenAuthenticationProvider(opaquetokenintrospector)::authenticate;
   }
 }

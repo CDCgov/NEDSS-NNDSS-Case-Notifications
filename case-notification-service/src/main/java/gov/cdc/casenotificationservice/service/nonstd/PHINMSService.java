@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import static gov.cdc.casenotificationservice.constant.NonStdConstantValue.*;
 import static gov.cdc.casenotificationservice.util.TimeStampHelper.getCurrentTimeStamp;
 
-
 @Service
 public class PHINMSService implements IPHINMSService {
   @Value("${service.timezone}")
@@ -30,9 +29,10 @@ public class PHINMSService implements IPHINMSService {
   }
 
   public PHINMSProperties gettingPHIMNSProperties(
-    String payload,
-    PHINMSProperties PHINMSProperties,
-    CaseNotificationConfig caseNotificationConfig) throws Exception {
+      String payload,
+      PHINMSProperties PHINMSProperties,
+      CaseNotificationConfig caseNotificationConfig)
+      throws Exception {
     Hd sendingFacility;
     Hd sendingApplication;
     var counterInt = 0;
@@ -49,7 +49,6 @@ public class PHINMSService implements IPHINMSService {
     var mappedOnce = false;
     var SAPConcatenated = "";
 
-
     HL7Helper hl7Helper = new HL7Helper();
     payload = payload.replaceAll("\n", "\r");
     HL7ParsedMessage<OruR1> parsedMessage = hl7Helper.hl7StringParser(payload);
@@ -59,23 +58,39 @@ public class PHINMSService implements IPHINMSService {
 
     for (var patResult : parsedMessage.getParsedMessage().getPatientResult()) {
       conditionCode.add(
-        patResult.getOrderObservation().getFirst().getObservationRequest().getReasonForStudy().getFirst()
-          .getIdentifier());
+          patResult
+              .getOrderObservation()
+              .getFirst()
+              .getObservationRequest()
+              .getReasonForStudy()
+              .getFirst()
+              .getIdentifier());
     }
 
-    if (parsedMessage.getParsedMessage().getMessageHeader().getMessageProfileIdentifier().size() > 1) {
+    if (parsedMessage.getParsedMessage().getMessageHeader().getMessageProfileIdentifier().size()
+        > 1) {
       // In original code, this was get value at INDEX 2
-      messageControlID1 = parsedMessage.getParsedMessage().getMessageHeader().getMessageProfileIdentifier().get(1)
-        .getEntityIdentifier();
+      messageControlID1 =
+          parsedMessage
+              .getParsedMessage()
+              .getMessageHeader()
+              .getMessageProfileIdentifier()
+              .get(1)
+              .getEntityIdentifier();
     }
-    sendingApplication = parsedMessage.getParsedMessage().getMessageHeader().getSendingApplication();
+    sendingApplication =
+        parsedMessage.getParsedMessage().getMessageHeader().getSendingApplication();
     sendingFacility = parsedMessage.getParsedMessage().getMessageHeader().getSendingFacility();
 
     if (messageControlID1 == null || messageControlID1.isEmpty()) {
       // In original code, this was get value at INDEX 1
       messageControlID1 =
-        parsedMessage.getParsedMessage().getMessageHeader().getMessageProfileIdentifier().getFirst()
-          .getEntityIdentifier();
+          parsedMessage
+              .getParsedMessage()
+              .getMessageHeader()
+              .getMessageProfileIdentifier()
+              .getFirst()
+              .getEntityIdentifier();
     }
 
     var mappingERROR = PHINMSProperties.getMappingERROR();
@@ -83,7 +98,6 @@ public class PHINMSService implements IPHINMSService {
     if (conditionCode.isEmpty() && (mappingERROR != null && !mappingERROR.isEmpty())) {
       throw new Exception();
     }
-
 
     var pNotificationID = PHINMSProperties.getPNotificationId();
     var reportStatusCd = PHINMSProperties.getPReportStatusCd();
@@ -112,14 +126,22 @@ public class PHINMSService implements IPHINMSService {
     String minuteStr = String.format(TS_FORMAT_CHARACTER, currentMinute);
     String secondStr = String.format(TS_FORMAT_CHARACTER, currentSecond);
 
-    String vFormattedTimestamp = currentYear + TS_DASH + monthStr + TS_DASH +
-      dateStr + TS_T + hourStr + TS_COLON +
-      minuteStr + TS_COLON + secondStr;
+    String vFormattedTimestamp =
+        currentYear
+            + TS_DASH
+            + monthStr
+            + TS_DASH
+            + dateStr
+            + TS_T
+            + hourStr
+            + TS_COLON
+            + minuteStr
+            + TS_COLON
+            + secondStr;
 
     String vCurrentTimestamp = currentYear + monthStr + dateStr + hourStr + minuteStr + secondStr;
 
     PHINMSProperties.setPPHINMessageContent2(payload);
-
 
     PHINMSProperties.setPPHINEncryption(caseNotificationConfig.getPhinEncryption());
     PHINMSProperties.setPPHINRoute(caseNotificationConfig.getPhinRoute()); // CDC Production
@@ -137,10 +159,18 @@ public class PHINMSService implements IPHINMSService {
     PHINMSProperties.setMessageControlID1(messageControlID1);
 
     // TODO: DOUBLE CHECK VALUE FOR THESE 2 HD OBJECT
-    var sendApplicationStr = sendingApplication.getNameSpaceId() + CARET +
-      sendingApplication.getUniversalId() + CARET + sendingApplication.getUniversalIdType();
-    var sendFacilityStr = sendingFacility.getNameSpaceId() + CARET +
-      sendingFacility.getUniversalId() + CARET + sendingFacility.getUniversalIdType();
+    var sendApplicationStr =
+        sendingApplication.getNameSpaceId()
+            + CARET
+            + sendingApplication.getUniversalId()
+            + CARET
+            + sendingApplication.getUniversalIdType();
+    var sendFacilityStr =
+        sendingFacility.getNameSpaceId()
+            + CARET
+            + sendingFacility.getUniversalId()
+            + CARET
+            + sendingFacility.getUniversalIdType();
 
     PHINMSProperties.setSENDING_APPLICATION(sendApplicationStr);
     PHINMSProperties.setSENDING_FACILITY(sendFacilityStr);

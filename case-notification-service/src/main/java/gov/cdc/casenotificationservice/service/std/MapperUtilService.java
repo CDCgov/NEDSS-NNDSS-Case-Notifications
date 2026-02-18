@@ -11,14 +11,16 @@ public class MapperUtilService implements IMapperUtilService {
   private final LookupNNDLookupRepository lookupNNDLookupRepository;
   private final LookupMmwrRepository lookupMmwrRepository;
 
-  public MapperUtilService(LookupNNDLookupRepository lookupNNDLookupRepository,
-    LookupMmwrRepository lookupMmwrRepository) {
+  public MapperUtilService(
+      LookupNNDLookupRepository lookupNNDLookupRepository,
+      LookupMmwrRepository lookupMmwrRepository) {
     this.lookupNNDLookupRepository = lookupNNDLookupRepository;
     this.lookupMmwrRepository = lookupMmwrRepository;
   }
 
   public String mapToCodedAnswer(String intput, String questionCode) {
-    // RHAPSODY LOOK UP: output, tablename, result col name, default value, query col X, query value X
+    // RHAPSODY LOOK UP: output, tablename, result col name, default value, query col X, query value
+    // X
     return lookupNNDLookupRepository.findToCodeByFromUniqueIdAndConceptCd(questionCode, intput);
   }
 
@@ -52,10 +54,15 @@ public class MapperUtilService implements IMapperUtilService {
   }
 
   public String mapToDate(String week, String year, String output) {
-    //  boolean result1 =true; //= RhapsodyTableLookup(output,"MMWR","WEEK_ENDING","NOT_MAPPED","MMWR_WEEK",week, "MMWR_YEAR", StrToUpper(year) );
-    output = String.valueOf(lookupMmwrRepository.findTopWeekEndingByMmwrWeekAndMmwrYear(Integer.parseInt(week),
-      Integer.parseInt(year)));
-    if (output.trim().isEmpty() || (week.equalsIgnoreCase("NULL") && year.equalsIgnoreCase("NULL"))) {
+    //  boolean result1 =true; //=
+    // RhapsodyTableLookup(output,"MMWR","WEEK_ENDING","NOT_MAPPED","MMWR_WEEK",week, "MMWR_YEAR",
+    // StrToUpper(year) );
+    output =
+        String.valueOf(
+            lookupMmwrRepository.findTopWeekEndingByMmwrWeekAndMmwrYear(
+                Integer.parseInt(week), Integer.parseInt(year)));
+    if (output.trim().isEmpty()
+        || (week.equalsIgnoreCase("NULL") && year.equalsIgnoreCase("NULL"))) {
       output = "";
     }
 
@@ -69,8 +76,7 @@ public class MapperUtilService implements IMapperUtilService {
       String seperator = "^";
       String inputmodified = output;
 
-
-      //int checkerCode = StrFind(inputmodified, "/");
+      // int checkerCode = StrFind(inputmodified, "/");
       if (checkerCode > 0) {
         monthData = output.substring(0, checkerCode);
         if (monthData.length() == 1) {
@@ -97,18 +103,21 @@ public class MapperUtilService implements IMapperUtilService {
     }
 
     return output;
-
   }
 
-  public String mapToMultiCodedAnswer(String input, String questionCode, String toUniqueId, String output) {
+  public String mapToMultiCodedAnswer(
+      String input, String questionCode, String toUniqueId, String output) {
     if (output.startsWith("CHECKER")) {
-      //            boolean result  = true; //RhapsodyTableLookup(output,"NNDLookup","TO_UNIQUE_ID","NOT_MAPPED","FROM_UNIQUE_ID",questionCode, "CONCEPT_CD", StrToUpper(input) );
+      //            boolean result  = true;
+      // //RhapsodyTableLookup(output,"NNDLookup","TO_UNIQUE_ID","NOT_MAPPED","FROM_UNIQUE_ID",questionCode, "CONCEPT_CD", StrToUpper(input) );
       output = lookupNNDLookupRepository.findToCodeByFromUniqueIdAndConceptCd(questionCode, input);
     } else {
 
-      // boolean result1  = true; //RhapsodyTableLookup(output,"NNDLookup","TO_CODE","NOT_MAPPED","FROM_UNIQUE_ID",questionCode, "TO_UNIQUE_ID", toUniqueId, "CONCEPT_CD", StrToUpper(input) );
-      output = lookupNNDLookupRepository.findToCodeByFromUniqueIdToUniqueIdAndConceptCd(questionCode, toUniqueId,
-        input);
+      // boolean result1  = true;
+      // //RhapsodyTableLookup(output,"NNDLookup","TO_CODE","NOT_MAPPED","FROM_UNIQUE_ID",questionCode, "TO_UNIQUE_ID", toUniqueId, "CONCEPT_CD", StrToUpper(input) );
+      output =
+          lookupNNDLookupRepository.findToCodeByFromUniqueIdToUniqueIdAndConceptCd(
+              questionCode, toUniqueId, input);
       if (output.trim().isEmpty() || input.startsWith("NULL")) {
         output = "";
       }
@@ -205,5 +214,4 @@ public class MapperUtilService implements IMapperUtilService {
 
     return output;
   }
-
 }

@@ -10,21 +10,29 @@ import jakarta.persistence.Entity;
 public class ServiceActionPairModel {
   @Column(name = "service")
   private String service;
+
   @Column(name = "action")
   private String action;
+
   @Column(name = "total_service_action_pairs")
   private int totalServiceActionPairs;
+
   @Id
   @Column(name = "serial_number")
   private int serialNumber;
+
   @Column(name = "message_profile_id")
   private String messageProfileId;
+
   @Column(name = "condition_code")
   private String conditionCode;
+
   @Column(name = "status_code")
   private String statusCode;
+
   @Column(name = "notes")
   private String notes;
+
   @Column(name = "concept_code")
   private String conceptCode;
 

@@ -17,11 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 /**
+ *
+ *
  * <ul>
- *     <li>1118 - require constructor complaint</li>
- *     <li>125 - comment complaint</li>
- *     <li>6126 - String block complaint</li>
- *     <li>1135 - todos complaint</li>
+ *   <li>1118 - require constructor complaint
+ *   <li>125 - comment complaint
+ *   <li>6126 - String block complaint
+ *   <li>1135 - todos complaint
  * </ul>
  */
 @Tag(name = "Token API", description = "Token API to create the JWT Token")
@@ -31,6 +33,7 @@ import org.springframework.web.client.RestTemplate;
 public class TokenController {
   @Value("${auth.token-uri}")
   String authTokenUri;
+
   private RestTemplate restTemplate;
 
   public TokenController(@Qualifier("restTemplate") RestTemplate restTemplate) {
@@ -43,27 +46,26 @@ public class TokenController {
   }
 
   @Operation(
-    summary = "Create JWT Token",
-    description = "Create JWT Token using Keycloak Client Id and Client Secret."
-  )
+      summary = "Create JWT Token",
+      description = "Create JWT Token using Keycloak Client Id and Client Secret.")
   @PostMapping("/api/auth/token")
-  public ResponseEntity<String> token(@RequestHeader("clientid") String clientId,
-    @RequestHeader("clientsecret") String clientSecret) {
+  public ResponseEntity<String> token(
+      @RequestHeader("clientid") String clientId,
+      @RequestHeader("clientsecret") String clientSecret) {
     log.debug("Token URL : " + authTokenUri);
     String accessToken = null;
-    String postBody = "grant_type=client_credentials" +
-      "&client_id=" + clientId
-      + "&client_secret=" + clientSecret;
+    String postBody =
+        "grant_type=client_credentials"
+            + "&client_id="
+            + clientId
+            + "&client_secret="
+            + clientSecret;
     HttpHeaders headers = new HttpHeaders();
     headers.add("Content-Type", "application/x-www-form-urlencoded");
     HttpEntity<String> request = new HttpEntity<>(postBody, headers);
     try {
       ResponseEntity<String> exchange =
-        restTemplate.exchange(
-          authTokenUri,
-          HttpMethod.POST,
-          request,
-          String.class);
+          restTemplate.exchange(authTokenUri, HttpMethod.POST, request, String.class);
       String response = exchange.getBody();
       JsonElement jsonElement = JsonParser.parseString(response);
       JsonObject jsonObject = jsonElement.getAsJsonObject();

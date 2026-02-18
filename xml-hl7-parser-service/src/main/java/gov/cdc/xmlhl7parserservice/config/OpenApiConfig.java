@@ -1,6 +1,5 @@
 package gov.cdc.xmlhl7parserservice.config;
 
-
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
@@ -34,11 +33,8 @@ public class OpenApiConfig {
     } else {
       scheme = "http";
     }
-    URI uriBuilder = new URIBuilder()
-      .setScheme(scheme)
-      .setHost(serverhost)
-      .setPath(contextPath)
-      .build();
+    URI uriBuilder =
+        new URIBuilder().setScheme(scheme).setHost(serverhost).setPath(contextPath).build();
     serverUrl = uriBuilder.toString();
 
     Server server = new Server();
@@ -49,17 +45,22 @@ public class OpenApiConfig {
     contact.setEmail("nndservice@cdc.com");
     contact.setName("HL7 Parser Service");
 
-    Info info = new Info()
-      .title("HL7 Parser (CNS) API")
-      .version("1.0")
-      .contact(contact)
-      .description("This API exposes endpoints to manage HL7 Parser Service.");
+    Info info =
+        new Info()
+            .title("HL7 Parser (CNS) API")
+            .version("1.0")
+            .contact(contact)
+            .description("This API exposes endpoints to manage HL7 Parser Service.");
 
-    Components components = new Components().
-      addSecuritySchemes("bearer-key",
-        new SecurityScheme().type(SecurityScheme.Type.HTTP).
-          scheme("bearer").bearerFormat("JWT").
-          description("JWT Token"));
+    Components components =
+        new Components()
+            .addSecuritySchemes(
+                "bearer-key",
+                new SecurityScheme()
+                    .type(SecurityScheme.Type.HTTP)
+                    .scheme("bearer")
+                    .bearerFormat("JWT")
+                    .description("JWT Token"));
 
     return new OpenAPI().info(info).servers(List.of(server)).components(components);
   }

@@ -1,6 +1,5 @@
 package gov.cdc.casenotificationservice.kafka.consumer;
 
-
 import com.google.gson.Gson;
 import gov.cdc.casenotificationservice.model.MessageAfterStdChecker;
 import gov.cdc.casenotificationservice.service.common.interfaces.IConfigurationService;
@@ -15,12 +14,9 @@ import static org.mockito.Mockito.*;
 
 class StdEventConsumerTest {
 
-  @Mock
-  private IXmlService xmlService;
-  @Mock
-  private IConfigurationService configurationService;
-  @InjectMocks
-  private StdEventConsumer consumer;
+  @Mock private IXmlService xmlService;
+  @Mock private IConfigurationService configurationService;
+  @InjectMocks private StdEventConsumer consumer;
 
   @BeforeEach
   void setup() {

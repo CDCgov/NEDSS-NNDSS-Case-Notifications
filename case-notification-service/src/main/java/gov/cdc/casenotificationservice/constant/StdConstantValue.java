@@ -13,8 +13,6 @@ public class StdConstantValue {
   public static final String WHITE = "White?";
   public static final String UNKNOWN = "Unknown race";
 
-
-
   public static final String NOT_MAPPED = "NOT_MAPPED";
   public static final String NETSS_RECORD_TYPE = "M";
   public static final String NETSS_RECORD_UPDATE = "9";
@@ -42,7 +40,6 @@ public class StdConstantValue {
   public static final String NETSS_DEM165 = "DEM165";
   public static final String NETSS_DEM115 = "DEM115";
   public static final String NETSS_INV2001 = "INV2001";
-
 
   public static final String NETSS_INV2002 = "INV2002";
   public static final String NETSS_DEM113 = "DEM113";
@@ -93,5 +90,4 @@ public class StdConstantValue {
   public static final String NETSS_INV111 = "INV111";
   public static final String NETSS_INV120 = "INV120";
   public static final String NETSS_INV121 = "INV121";
-
 }

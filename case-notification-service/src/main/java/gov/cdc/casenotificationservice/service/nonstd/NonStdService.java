@@ -17,13 +17,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-
 @Service
 public class NonStdService implements INonStdService {
-  private static final Logger logger = LoggerFactory.getLogger(NonStdService.class); //NOSONAR
+  private static final Logger logger = LoggerFactory.getLogger(NonStdService.class); // NOSONAR
 
   @Value("${service.timezone}")
   private String tz = "UTC";
+
   private final IPHINMSService phinmsService;
   private final INonStdBatchService batchService;
   private final TransportQOutRepository transportQOutRepository;
@@ -31,12 +31,13 @@ public class NonStdService implements INonStdService {
   private final CaseNotificationConfigRepository caseNotificationConfigRepository;
   private final IApiService apiService;
 
-  public NonStdService(IPHINMSService phinmsService,
-    INonStdBatchService batchService,
-    TransportQOutRepository transportQOutRepository,
-    CNTraportqOutRepository cnTraportqOutRepository,
-    CaseNotificationConfigRepository caseNotificationConfigRepository,
-    IApiService apiService) {
+  public NonStdService(
+      IPHINMSService phinmsService,
+      INonStdBatchService batchService,
+      TransportQOutRepository transportQOutRepository,
+      CNTraportqOutRepository cnTraportqOutRepository,
+      CaseNotificationConfigRepository caseNotificationConfigRepository,
+      IApiService apiService) {
     this.phinmsService = phinmsService;
     this.batchService = batchService;
     this.transportQOutRepository = transportQOutRepository;
@@ -45,18 +46,24 @@ public class NonStdService implements INonStdService {
     this.apiService = apiService;
   }
 
-  public void nonStdProcessor(MessageAfterStdChecker messageAfterStdChecker, boolean hl7ValidationEnabled)
-    throws IgnorableException, NonStdProcessorServiceException, NonStdBatchProcessorServiceException, APIException {
+  public void nonStdProcessor(
+      MessageAfterStdChecker messageAfterStdChecker, boolean hl7ValidationEnabled)
+      throws IgnorableException,
+          NonStdProcessorServiceException,
+          NonStdBatchProcessorServiceException,
+          APIException {
     PHINMSProperties phinmsProperties = new PHINMSProperties();
     CaseNotificationConfig stdConfig = caseNotificationConfigRepository.findNonStdConfig();
-    var cnTranport = cnTraportqOutRepository.findTopByRecordUid(messageAfterStdChecker.getCnTransportqOutUid());
+    var cnTranport =
+        cnTraportqOutRepository.findTopByRecordUid(messageAfterStdChecker.getCnTransportqOutUid());
 
     var token = apiService.callToken();
     if (token == null || token.isEmpty()) {
       throw new IgnorableException("Token is Invalid");
     }
     var tranformedData =
-      apiService.callHl7Endpoint(token, String.valueOf(cnTranport.getCnTransportqOutUid()), hl7ValidationEnabled);
+        apiService.callHl7Endpoint(
+            token, String.valueOf(cnTranport.getCnTransportqOutUid()), hl7ValidationEnabled);
     String payload = tranformedData;
     if (payload.isEmpty()) {
       throw new IgnorableException("Payload is empty");
@@ -73,7 +80,8 @@ public class NonStdService implements INonStdService {
     PHINMSProperties updatedPhinmsProperties;
 
     try {
-      updatedPhinmsProperties = phinmsService.gettingPHIMNSProperties(payload, phinmsProperties, stdConfig);
+      updatedPhinmsProperties =
+          phinmsService.gettingPHIMNSProperties(payload, phinmsProperties, stdConfig);
     } catch (Exception e) {
       throw new NonStdProcessorServiceException("Failure at PHINMS processor", e);
     }
@@ -89,11 +97,8 @@ public class NonStdService implements INonStdService {
         nonStdProcessor(updatedPhinmsProperties);
       } catch (Exception e) {
         throw new NonStdProcessorServiceException("Failure at Non Std DB Logic", e);
-
       }
-
     }
-
   }
 
   public void releaseHoldQueueAndProcessBatchNonStd() throws NonRetryableException {
@@ -107,7 +112,7 @@ public class NonStdService implements INonStdService {
 
     try {
       cnTraportqOutRepository.updateStatusToQueued(
-        PHINMSProperties.getCnTransportUid()); // "WHERE IS THIS ID COME FROM"
+          PHINMSProperties.getCnTransportUid()); // "WHERE IS THIS ID COME FROM"
     } catch (Exception e) {
       throw new NonRetryableException(e.getMessage(), e);
     }

@@ -26,7 +26,6 @@ public class ConfigurationService implements IConfigurationService {
     return caseNotificationConfigRepository.isHl7ValidationApplied();
   }
 
-
   @Transactional(transactionManager = "msgTransactionManager")
   public void updateConfiguration(Integer id, boolean configApplied) {
     try {
@@ -44,16 +43,15 @@ public class ConfigurationService implements IConfigurationService {
       e.printStackTrace();
       throw new RuntimeException(e);
     }
-
   }
 
   public CaseNotificationConfig getAppliedCaseNotificationConfig() {
     return caseNotificationConfigRepository.findNonStdConfig();
   }
 
-
   public CaseNotificationConfig saveConfig(CaseNotificationConfigDto configDto) {
-    CaseNotificationConfig config = caseNotificationConfigRepository.findConfigByName(configDto.getConfigName());
+    CaseNotificationConfig config =
+        caseNotificationConfigRepository.findConfigByName(configDto.getConfigName());
 
     if (config != null) {
       config.setConfigApplied(configDto.getConfigApplied());
@@ -77,7 +75,6 @@ public class ConfigurationService implements IConfigurationService {
     return configReturn;
   }
 
-
   public List<CaseNotificationConfig> getConfigs(String configName) {
     List<CaseNotificationConfig> dataViewConfigList = new ArrayList<>();
     if (configName != null && !configName.isEmpty()) {
@@ -89,6 +86,4 @@ public class ConfigurationService implements IConfigurationService {
 
     return dataViewConfigList;
   }
-
-
 }

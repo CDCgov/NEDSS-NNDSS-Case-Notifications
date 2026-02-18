@@ -35,9 +35,10 @@ public class DltService implements IDltService {
   private final CNTraportqOutRepository cnTraportqOutRepository;
   private final CaseNotificationProducer caseNotificationProducer;
 
-  public DltService(CaseNotificationDltRepository caseNotificationDltRepository,
-    CNTraportqOutRepository cnTraportqOutRepository,
-    CaseNotificationProducer caseNotificationProducer) {
+  public DltService(
+      CaseNotificationDltRepository caseNotificationDltRepository,
+      CNTraportqOutRepository cnTraportqOutRepository,
+      CaseNotificationProducer caseNotificationProducer) {
     this.caseNotificationDltRepository = caseNotificationDltRepository;
     this.cnTraportqOutRepository = cnTraportqOutRepository;
     this.caseNotificationProducer = caseNotificationProducer;
@@ -71,9 +72,10 @@ public class DltService implements IDltService {
       status = "INVALID_ERR";
     }
 
-    var cnTransportqOut = (data != null && data.getCnTransportqOutUid() != null)
-      ? cnTraportqOutRepository.findTopByRecordUid(data.getCnTransportqOutUid())
-      : null;
+    var cnTransportqOut =
+        (data != null && data.getCnTransportqOutUid() != null)
+            ? cnTraportqOutRepository.findTopByRecordUid(data.getCnTransportqOutUid())
+            : null;
 
     CaseNotificationDlt caseNotificationDlt = new CaseNotificationDlt();
     if (data != null) {
@@ -96,18 +98,19 @@ public class DltService implements IDltService {
     }
   }
 
-  public Page<CaseNotificationDlt> getDltsBetweenWithPagination(Timestamp from, Timestamp to, int page, int size) {
+  public Page<CaseNotificationDlt> getDltsBetweenWithPagination(
+      Timestamp from, Timestamp to, int page, int size) {
     Pageable pageable = PageRequest.of(page, size); // page = 0-indexed
     return caseNotificationDltRepository.findByCreatedOnBetween(from, to, pageable);
   }
 
-  public ApiDltResponseModel<CaseNotificationDlt> getDltByUid(String uuid) throws DltServiceException {
+  public ApiDltResponseModel<CaseNotificationDlt> getDltByUid(String uuid)
+      throws DltServiceException {
     var dltResult = caseNotificationDltRepository.findById(UUID.fromString(uuid));
     if (dltResult.isEmpty()) {
       throw new DltServiceException("No DLT Found for Id " + uuid);
     }
     CaseNotificationDlt dlt = dltResult.get();
-
 
     var apiResponse = new ApiDltResponseModel<CaseNotificationDlt>();
     apiResponse.setPayload(dlt);
@@ -116,7 +119,7 @@ public class DltService implements IDltService {
   }
 
   public void reprocessingCaseNotification(String payload, String uuid) throws DltServiceException {
-    //push message back to queue and let it process then update this specific record to injected
+    // push message back to queue and let it process then update this specific record to injected
     var dltResult = caseNotificationDltRepository.findById(UUID.fromString(uuid));
     if (dltResult.isEmpty()) {
       throw new DltServiceException("No DLT Found for Id " + uuid);
@@ -126,7 +129,8 @@ public class DltService implements IDltService {
     caseNotificationDlt.setUpdatedOn(getCurrentTimeStamp(tz));
     caseNotificationDltRepository.save(caseNotificationDlt);
 
-    var cnTransportqOut = cnTraportqOutRepository.findTopByRecordUid(dltResult.get().getCnTranportqOutUid());
+    var cnTransportqOut =
+        cnTraportqOutRepository.findTopByRecordUid(dltResult.get().getCnTranportqOutUid());
     cnTransportqOut.setMessagePayload(payload); // UPDATE NEW PAYLOAD TO CN TRANSPORT
     cnTraportqOutRepository.save(cnTransportqOut);
 
@@ -137,6 +141,5 @@ public class DltService implements IDltService {
       topic = stdTopic;
     }
     caseNotificationProducer.sendMessage(uuid, topic);
-
   }
 }

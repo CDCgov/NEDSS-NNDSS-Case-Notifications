@@ -65,4 +65,3 @@ public class DiscreteRepeat {
     this.otherText = otherText;
   }
 }
-

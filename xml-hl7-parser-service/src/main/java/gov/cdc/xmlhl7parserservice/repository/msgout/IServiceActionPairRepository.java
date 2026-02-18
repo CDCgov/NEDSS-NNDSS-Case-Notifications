@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface IServiceActionPairRepository extends JpaRepository<ServiceActionPairModel, String> {
+public interface IServiceActionPairRepository
+    extends JpaRepository<ServiceActionPairModel, String> {
   Optional<ServiceActionPairModel> findByMessageProfileId(String messageType);
 }

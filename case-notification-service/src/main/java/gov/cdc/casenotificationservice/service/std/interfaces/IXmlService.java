@@ -6,5 +6,5 @@ import gov.cdc.casenotificationservice.model.MessageAfterStdChecker;
 
 public interface IXmlService {
   void mappingXmlStringToObject(MessageAfterStdChecker messageAfterStdChecker)
-    throws StdProcessorServiceException, NonRetryableException;
+      throws StdProcessorServiceException, NonRetryableException;
 }

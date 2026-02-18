@@ -28,9 +28,9 @@ public class KafkaConsumerConfig {
 
   @Value("${spring.kafka.group-id.std-group-id}")
   private String stdGroupId;
+
   @Value("${spring.kafka.group-id.non-std-group-id}")
   private String nonStdGroupId;
-
 
   private Map<String, Object> baseConsumerConfigs(String groupId) {
     Map<String, Object> config = new HashMap<>();
@@ -38,12 +38,17 @@ public class KafkaConsumerConfig {
     config.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
     config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
     config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-    config.put(ConsumerConfig.PARTITION_ASSIGNMENT_STRATEGY_CONFIG, CooperativeStickyAssignor.class.getName());
+    config.put(
+        ConsumerConfig.PARTITION_ASSIGNMENT_STRATEGY_CONFIG,
+        CooperativeStickyAssignor.class.getName());
     config.put(ConsumerConfig.FETCH_MIN_BYTES_CONFIG, 1024 * 1024); // Fetch at least 1MB of data
     config.put(ConsumerConfig.FETCH_MAX_WAIT_MS_CONFIG, 500); // Wait up to 500ms for data
-    config.put(ConsumerConfig.MAX_PARTITION_FETCH_BYTES_CONFIG, 10 * 1024 * 1024); // Fetch up to 10MB per partition
+    config.put(
+        ConsumerConfig.MAX_PARTITION_FETCH_BYTES_CONFIG,
+        10 * 1024 * 1024); // Fetch up to 10MB per partition
     config.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 500); // Max 500 records per poll
-    config.put(ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG, 600000); // Allow 5 minutes for processing
+    config.put(
+        ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG, 600000); // Allow 5 minutes for processing
     config.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, 30000); // 30-second session timeout
     config.put(ConsumerConfig.HEARTBEAT_INTERVAL_MS_CONFIG, 10000); // Heartbeat every 10 seconds
     config.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, true); // Manual commit
@@ -54,27 +59,26 @@ public class KafkaConsumerConfig {
     return new DefaultKafkaConsumerFactory<>(baseConsumerConfigs(groupId));
   }
 
-  private ConcurrentKafkaListenerContainerFactory<String, String> createContainerFactory(String groupId) {
+  private ConcurrentKafkaListenerContainerFactory<String, String> createContainerFactory(
+      String groupId) {
     ConcurrentKafkaListenerContainerFactory<String, String> factory =
-      new ConcurrentKafkaListenerContainerFactory<>();
+        new ConcurrentKafkaListenerContainerFactory<>();
     factory.setConsumerFactory(createConsumerFactory(groupId));
     factory.setConcurrency(thread);
     //        factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL);
-
 
     return factory;
   }
 
   @Bean
-  public ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerFactoryConsumerForStd() {
+  public ConcurrentKafkaListenerContainerFactory<String, String>
+      kafkaListenerContainerFactoryConsumerForStd() {
     return createContainerFactory(stdGroupId);
   }
 
   @Bean
-  public ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerFactoryConsumerForNonStd() {
+  public ConcurrentKafkaListenerContainerFactory<String, String>
+      kafkaListenerContainerFactoryConsumerForNonStd() {
     return createContainerFactory(nonStdGroupId);
   }
-
-
-
 }

@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 @Table(name = "NBS_Case_Notification_Config")
 public class CaseNotificationConfig {
 
-
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;

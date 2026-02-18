@@ -38,4 +38,3 @@ public class DynamicRepeatMulti {
     this.repeating = repeating;
   }
 }
-

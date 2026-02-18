@@ -1,6 +1,5 @@
 package gov.cdc.dataextractionservice.repository.odse.model;
 
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -63,5 +62,4 @@ public class CNTransportqOut {
 
   @Column(name = "version_ctrl_nbr")
   private Short versionCtrlNbr;
-
 }

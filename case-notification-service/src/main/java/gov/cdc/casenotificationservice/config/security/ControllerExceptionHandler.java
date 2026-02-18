@@ -1,6 +1,5 @@
 package gov.cdc.casenotificationservice.config.security;
 
-
 import gov.cdc.casenotificationservice.config.security.model.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +26,4 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
     return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
   }
-
-
 }

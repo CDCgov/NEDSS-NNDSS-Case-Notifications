@@ -1,6 +1,5 @@
 package gov.cdc.casenotificationservice.util;
 
-
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,12 +14,11 @@ public class ErrorResponseBuilder {
   private static Logger logger = LoggerFactory.getLogger(ErrorResponseBuilder.class);
 
   private ErrorResponseBuilder() {
-    //SONARQ
+    // SONARQ
   }
 
-  public static ResponseEntity<Map<String, Object>> buildErrorResponse(Exception e,
-    HttpStatus status,
-    HttpServletRequest request) {
+  public static ResponseEntity<Map<String, Object>> buildErrorResponse(
+      Exception e, HttpStatus status, HttpServletRequest request) {
     Map<String, Object> errorResponse = new HashMap<>();
     errorResponse.put("timestamp", LocalDateTime.now().toString());
     errorResponse.put("status", status.value());
@@ -31,7 +29,9 @@ public class ErrorResponseBuilder {
     // Include stack trace
     StackTraceElement[] stackTrace = e.getStackTrace();
     StringBuilder stackTraceString = new StringBuilder();
-    for (int i = 0; i < Math.min(stackTrace.length, 5); i++) { // Limit stack trace size for readability
+    for (int i = 0;
+        i < Math.min(stackTrace.length, 5);
+        i++) { // Limit stack trace size for readability
       stackTraceString.append(stackTrace[i].toString()).append("\n");
     }
     errorResponse.put("stackTrace", stackTraceString.toString());

@@ -1,6 +1,5 @@
 package gov.cdc.dataextractionservice.service;
 
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -12,11 +11,9 @@ import static org.mockito.Mockito.*;
 
 class CnTransportQOutUpdateServiceTest {
 
-  @Mock
-  private JdbcTemplate jdbcTemplate;
+  @Mock private JdbcTemplate jdbcTemplate;
 
-  @InjectMocks
-  private CnTransportQOutUpdateService service;
+  @InjectMocks private CnTransportQOutUpdateService service;
 
   @BeforeEach
   void setUp() {

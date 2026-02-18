@@ -14,13 +14,14 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 
 /**
- * <ul>
- *     <li>1118 - require constructor complaint</li>
- *     <li>125 - comment complaint</li>
- *     <li>6126 - String block complaint</li>
- *     <li>1135 - todos complaint</li>
- * </ul>
  *
+ *
+ * <ul>
+ *   <li>1118 - require constructor complaint
+ *   <li>125 - comment complaint
+ *   <li>6126 - String block complaint
+ *   <li>1135 - todos complaint
+ * </ul>
  */
 @RequiredArgsConstructor
 @Configuration
@@ -29,6 +30,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
   @Value("${auth.introspect-uri}")
   String introspectionUri;
+
   private static final String[] AUTH_WHITELIST_DEV = {
     "/v2/api-docs",
     "/swagger-resources",
@@ -53,24 +55,24 @@ public class SecurityConfig {
     "/actuator/info"
   };
 
-  @Autowired
-  private CustomAuthenticationManagerResolver customauthenticationmanagerresolver;
+  @Autowired private CustomAuthenticationManagerResolver customauthenticationmanagerresolver;
 
   @Bean
   @Profile("dev")
   public SecurityFilterChain devSecurityFilterChain(HttpSecurity http) throws Exception {
-    http
-      .csrf(AbstractHttpConfigurer::disable)
-      .authorizeHttpRequests(auth -> auth
-        .requestMatchers(AUTH_WHITELIST_DEV).permitAll()
-        .anyRequest().authenticated())
-      .sessionManagement(session -> session
-        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-      .oauth2ResourceServer(oauth2 -> oauth2
-        .authenticationManagerResolver(customauthenticationmanagerresolver)
-        .authenticationEntryPoint(new CustomAuthenticationEntryPoint()))
-      .exceptionHandling(exception -> exception
-        .authenticationEntryPoint(new CustomAuthenticationEntryPoint()));
+    http.csrf(AbstractHttpConfigurer::disable)
+        .authorizeHttpRequests(
+            auth ->
+                auth.requestMatchers(AUTH_WHITELIST_DEV).permitAll().anyRequest().authenticated())
+        .sessionManagement(
+            session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .oauth2ResourceServer(
+            oauth2 ->
+                oauth2
+                    .authenticationManagerResolver(customauthenticationmanagerresolver)
+                    .authenticationEntryPoint(new CustomAuthenticationEntryPoint()))
+        .exceptionHandling(
+            exception -> exception.authenticationEntryPoint(new CustomAuthenticationEntryPoint()));
 
     return http.build();
   }
@@ -78,18 +80,19 @@ public class SecurityConfig {
   @Bean
   @Profile("!dev")
   public SecurityFilterChain prodSecurityFilterChain(HttpSecurity http) throws Exception {
-    http
-      .csrf(AbstractHttpConfigurer::disable)
-      .authorizeHttpRequests(auth -> auth
-        .requestMatchers(AUTH_WHITELIST_PROD).permitAll()
-        .anyRequest().authenticated())
-      .sessionManagement(session -> session
-        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-      .oauth2ResourceServer(oauth2 -> oauth2
-        .authenticationManagerResolver(customauthenticationmanagerresolver)
-        .authenticationEntryPoint(new CustomAuthenticationEntryPoint()))
-      .exceptionHandling(exception -> exception
-        .authenticationEntryPoint(new CustomAuthenticationEntryPoint()));
+    http.csrf(AbstractHttpConfigurer::disable)
+        .authorizeHttpRequests(
+            auth ->
+                auth.requestMatchers(AUTH_WHITELIST_PROD).permitAll().anyRequest().authenticated())
+        .sessionManagement(
+            session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .oauth2ResourceServer(
+            oauth2 ->
+                oauth2
+                    .authenticationManagerResolver(customauthenticationmanagerresolver)
+                    .authenticationEntryPoint(new CustomAuthenticationEntryPoint()))
+        .exceptionHandling(
+            exception -> exception.authenticationEntryPoint(new CustomAuthenticationEntryPoint()));
 
     return http.build();
   }

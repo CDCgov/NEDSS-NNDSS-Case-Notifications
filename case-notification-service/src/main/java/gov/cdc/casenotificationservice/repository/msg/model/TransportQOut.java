@@ -1,6 +1,5 @@
 package gov.cdc.casenotificationservice.repository.msg.model;
 
-
 import gov.cdc.casenotificationservice.model.PHINMSProperties;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -22,8 +21,7 @@ public class TransportQOut {
   private String messageId;
   private String payloadFile;
 
-  @Lob
-  private Blob payloadContent;
+  @Lob private Blob payloadContent;
 
   private String destinationFilename;
   private String routeInfo;
@@ -56,20 +54,18 @@ public class TransportQOut {
   private String responseLocalFile;
   private String responseFilename;
 
-  @Lob
-  private Blob responseContent;
+  @Lob private Blob responseContent;
 
   private String responseMessageOrigin;
   private String responseMessageSignature;
   private Integer priority;
 
-  public TransportQOut() {
-
-  }
+  public TransportQOut() {}
 
   public TransportQOut(PHINMSProperties props, String tz) {
     var ts = getCurrentTimeStamp(tz);
-    String formatted = ts.toLocalDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
+    String formatted =
+        ts.toLocalDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
     messageCreationTime = formatted;
 
     this.messageId = props.getPMessageUid();
@@ -91,10 +87,10 @@ public class TransportQOut {
   }
 
   private Blob stringToBlob(String data) {
-    if (data == null)
-      return null;
+    if (data == null) return null;
     try {
-      return new javax.sql.rowset.serial.SerialBlob(data.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+      return new javax.sql.rowset.serial.SerialBlob(
+          data.getBytes(java.nio.charset.StandardCharsets.UTF_8));
     } catch (Exception e) {
       throw new RuntimeException("Failed to convert string to Blob", e);
     }

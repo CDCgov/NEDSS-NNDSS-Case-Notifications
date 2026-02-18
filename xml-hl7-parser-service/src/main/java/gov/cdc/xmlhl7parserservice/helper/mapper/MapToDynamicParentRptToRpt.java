@@ -20,15 +20,21 @@ public class MapToDynamicParentRptToRpt {
   private final List<DynamicRepeatMulti> dynamicRepeatMultiArray;
   private final MapToRemoveSpecialCharacters mapToRemoveSpecialCharacters;
 
-  public MapToDynamicParentRptToRpt(List<ObxRepeatingElement> obxRepeatingElementArrayList,
-    List<DynamicRepeatMulti> dynamicRepeatMultiArray, MapToRemoveSpecialCharacters mapToRemoveSpecialCharacters) {
+  public MapToDynamicParentRptToRpt(
+      List<ObxRepeatingElement> obxRepeatingElementArrayList,
+      List<DynamicRepeatMulti> dynamicRepeatMultiArray,
+      MapToRemoveSpecialCharacters mapToRemoveSpecialCharacters) {
     this.obxRepeatingElementArrayList = obxRepeatingElementArrayList;
     this.dynamicRepeatMultiArray = dynamicRepeatMultiArray;
     this.mapToRemoveSpecialCharacters = mapToRemoveSpecialCharacters;
   }
 
-  public void mapToDynamicParentRptToRpt(MessageElement messageElement, int obx2Inc, String messageType,
-    ORU_R01_ORDER_OBSERVATION orderObservation) throws DataTypeException {
+  public void mapToDynamicParentRptToRpt(
+      MessageElement messageElement,
+      int obx2Inc,
+      String messageType,
+      ORU_R01_ORDER_OBSERVATION orderObservation)
+      throws DataTypeException {
     String parentCode = messageElement.getIndicatorCd();
     int intStart = parentCode.indexOf("|ParentRepeatBlock");
 
@@ -41,12 +47,11 @@ public class MapToDynamicParentRptToRpt {
     int maxObxCounter = 0;
     int counter = 0;
 
-
     for (int x = 0; x < dynamicRepeatMultiArray.size(); x++) {
       DynamicRepeatMulti entry = dynamicRepeatMultiArray.get(x);
 
-      if (entry.getParentCode().equals(parentQuestionIdentifier) &&
-        entry.getPartIndicator().equals(obsSubIdCounter)) {
+      if (entry.getParentCode().equals(parentQuestionIdentifier)
+          && entry.getPartIndicator().equals(obsSubIdCounter)) {
         counter = entry.getObx4counter();
       } else if (entry.getParentCode().equals(parentQuestionIdentifier) && counter == 0) {
         if (maxObxCounter < entry.getObx4counter()) {
@@ -75,11 +80,17 @@ public class MapToDynamicParentRptToRpt {
     obx.getValueType().setValue(messageElement.getDataElement().getQuestionDataTypeNND());
     obx.getSetIDOBX().setValue(String.valueOf(obx2Inc + 1));
 
-    obx.getObservationIdentifier().getIdentifier().setValue(messageElement.getQuestionIdentifierNND());
+    obx.getObservationIdentifier()
+        .getIdentifier()
+        .setValue(messageElement.getQuestionIdentifierNND());
     obx.getObservationIdentifier().getText().setValue(messageElement.getQuestionLabelNND());
-    obx.getObservationIdentifier().getNameOfCodingSystem().setValue(messageElement.getQuestionOID());
+    obx.getObservationIdentifier()
+        .getNameOfCodingSystem()
+        .setValue(messageElement.getQuestionOID());
 
-    obx.getObservationIdentifier().getAlternateIdentifier().setValue(messageElement.getQuestionIdentifier());
+    obx.getObservationIdentifier()
+        .getAlternateIdentifier()
+        .setValue(messageElement.getQuestionIdentifier());
     obx.getObservationIdentifier().getAlternateText().setValue(messageElement.getQuestionLabel());
     obx.getObservationIdentifier().getNameOfAlternateCodingSystem().setValue("L");
 
@@ -99,13 +110,14 @@ public class MapToDynamicParentRptToRpt {
 
       String codedValueDescription = "";
       if (messageElement.getDataElement().getCweDataType().getCweCodedValueDescription() != null) {
-        codedValueDescription = messageElement.getDataElement().getCweDataType().getCweCodedValueDescription();
+        codedValueDescription =
+            messageElement.getDataElement().getCweDataType().getCweCodedValueDescription();
       }
 
       String codedValueCodingSystem = "";
       if (messageElement.getDataElement().getCweDataType().getCweCodedValueCodingSystem() != null) {
         codedValueCodingSystem =
-          messageElement.getDataElement().getCweDataType().getCweCodedValueCodingSystem();
+            messageElement.getDataElement().getCweDataType().getCweCodedValueCodingSystem();
       }
 
       String localCodedValue = "";
@@ -114,15 +126,17 @@ public class MapToDynamicParentRptToRpt {
       }
 
       String localCodedValueDescription = "";
-      if (messageElement.getDataElement().getCweDataType().getCweLocalCodedValueDescription() != null) {
+      if (messageElement.getDataElement().getCweDataType().getCweLocalCodedValueDescription()
+          != null) {
         localCodedValueDescription =
-          messageElement.getDataElement().getCweDataType().getCweLocalCodedValueDescription();
+            messageElement.getDataElement().getCweDataType().getCweLocalCodedValueDescription();
       }
 
       String localCodedValueCodingSystem = "";
-      if (messageElement.getDataElement().getCweDataType().getCweLocalCodedValueCodingSystem() != null) {
+      if (messageElement.getDataElement().getCweDataType().getCweLocalCodedValueCodingSystem()
+          != null) {
         localCodedValueCodingSystem =
-          messageElement.getDataElement().getCweDataType().getCweLocalCodedValueCodingSystem();
+            messageElement.getDataElement().getCweDataType().getCweLocalCodedValueCodingSystem();
       }
 
       String originalOtherText = "";
@@ -132,15 +146,16 @@ public class MapToDynamicParentRptToRpt {
         originalOtherText = "^^^" + textData;
       }
 
-      String finalValue = String.join("^",
-        codedValue,
-        codedValueDescription,
-        codedValueCodingSystem,
-        localCodedValue,
-        localCodedValueDescription,
-        localCodedValueCodingSystem
-      ) + originalOtherText;
-
+      String finalValue =
+          String.join(
+                  "^",
+                  codedValue,
+                  codedValueDescription,
+                  codedValueCodingSystem,
+                  localCodedValue,
+                  localCodedValueDescription,
+                  localCodedValueCodingSystem)
+              + originalOtherText;
 
       Type obxValue = obx.getObservationValue(0).getData();
       ST stData;
@@ -150,7 +165,6 @@ public class MapToDynamicParentRptToRpt {
       } else {
         stData = new ST(obx.getMessage());
       }
-
 
       stData.setValue(finalValue);
       obx.getObservationValue(0).setData(stData);
@@ -169,7 +183,7 @@ public class MapToDynamicParentRptToRpt {
 
       String timeOut = year + month + day + hour + minute + second + separator + milli;
 
-      //TODO - Check how to set value
+      // TODO - Check how to set value
       Type obxValue = obx.getObservationValue(0).getData();
       TS tsType;
 
@@ -178,7 +192,6 @@ public class MapToDynamicParentRptToRpt {
       } else {
         tsType = new TS(obx.getMessage());
       }
-
 
       tsType.getTime().setValue(timeOut);
       obx.getObservationValue(0).setData(tsType);
@@ -199,7 +212,6 @@ public class MapToDynamicParentRptToRpt {
         stDataType = new ST(obx.getMessage());
       }
 
-
       stDataType.setValue(textData);
       obx.getObservationValue(0).setData(stDataType);
     }
@@ -217,11 +229,9 @@ public class MapToDynamicParentRptToRpt {
         stDataType = new ST(obx.getMessage());
       }
 
-
       stDataType.setValue(textData);
       obx.getObservationValue(0).setData(stDataType);
     }
     obx2Inc = obx2Inc + 1;
   }
-
 }

@@ -1,6 +1,5 @@
 package gov.cdc.casenotificationservice.service.nonstd;
 
-
 import gov.cdc.casenotificationservice.model.PHINMSProperties;
 import gov.cdc.casenotificationservice.repository.msg.ServiceActionPairRepository;
 import gov.cdc.casenotificationservice.repository.msg.model.CaseNotificationConfig;
@@ -32,7 +31,8 @@ class PHINMSServiceTest {
   @Test
   void testGettingPHIMNSProperties_success() throws Exception {
     // Arrange
-    String payload = readFileFromResources("payload_1.txt"); // You will create a simple sample HL7 string
+    String payload =
+        readFileFromResources("payload_1.txt"); // You will create a simple sample HL7 string
 
     PHINMSProperties phinmsProperties = new PHINMSProperties();
     phinmsProperties.setPNotificationId("NOTIF-123");
@@ -55,10 +55,12 @@ class PHINMSServiceTest {
     ServiceActionPair serviceActionPair = new ServiceActionPair();
     serviceActionPair.setTotalServiceActionPairs(1);
 
-    when(serviceActionPairRepository.findTotal()).thenReturn(Collections.singletonList(serviceActionPair));
+    when(serviceActionPairRepository.findTotal())
+        .thenReturn(Collections.singletonList(serviceActionPair));
 
     // Act
-    PHINMSProperties result = phinmsService.gettingPHIMNSProperties(payload, phinmsProperties, config);
+    PHINMSProperties result =
+        phinmsService.gettingPHIMNSProperties(payload, phinmsProperties, config);
 
     // Assert
     assertThat(result.getPPHINEncryption()).isEqualTo("encrypt");
@@ -89,18 +91,21 @@ class PHINMSServiceTest {
     ServiceActionPair serviceActionPair = new ServiceActionPair();
     serviceActionPair.setTotalServiceActionPairs(1);
 
-    when(serviceActionPairRepository.findTotal()).thenReturn(Collections.singletonList(serviceActionPair));
+    when(serviceActionPairRepository.findTotal())
+        .thenReturn(Collections.singletonList(serviceActionPair));
 
     // Act + Assert
-    assertThrows(Exception.class, () -> {
-      phinmsService.gettingPHIMNSProperties(payload, phinmsProperties, config);
-    });
+    assertThrows(
+        Exception.class,
+        () -> {
+          phinmsService.gettingPHIMNSProperties(payload, phinmsProperties, config);
+        });
   }
 
   private String readFileFromResources(String filename) throws IOException {
     String payload = "";
     try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(filename);
-      Scanner scanner = new Scanner(inputStream, StandardCharsets.UTF_8.name())) {
+        Scanner scanner = new Scanner(inputStream, StandardCharsets.UTF_8.name())) {
       scanner.useDelimiter("\\A"); // Read entire file
       payload = scanner.hasNext() ? scanner.next() : "";
     }

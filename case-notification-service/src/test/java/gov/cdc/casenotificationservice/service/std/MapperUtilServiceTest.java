@@ -23,14 +23,11 @@ import static org.mockito.Mockito.when;
 
 class MapperUtilServiceTest {
 
-  @Mock
-  private LookupNNDLookupRepository lookupNNDLookupRepository;
+  @Mock private LookupNNDLookupRepository lookupNNDLookupRepository;
 
-  @Mock
-  private LookupMmwrRepository lookupMmwrRepository;
+  @Mock private LookupMmwrRepository lookupMmwrRepository;
 
-  @InjectMocks
-  private MapperUtilService mapperUtilService;
+  @InjectMocks private MapperUtilService mapperUtilService;
 
   @BeforeEach
   void setUp() {
@@ -40,7 +37,7 @@ class MapperUtilServiceTest {
   @Test
   void testMapToCodedAnswer() {
     when(lookupNNDLookupRepository.findToCodeByFromUniqueIdAndConceptCd("QCODE", "input"))
-      .thenReturn("mappedValue");
+        .thenReturn("mappedValue");
     String result = mapperUtilService.mapToCodedAnswer("input", "QCODE");
     assertEquals("mappedValue", result);
   }
@@ -72,7 +69,7 @@ class MapperUtilServiceTest {
     ZoneId zone = ZoneId.of("America/New_York");
     GregorianCalendar gregorianCalendar = GregorianCalendar.from(ldt.atZone(zone));
     XMLGregorianCalendar xmlGregorianCalendar =
-      DatatypeFactory.newInstance().newXMLGregorianCalendar(gregorianCalendar);
+        DatatypeFactory.newInstance().newXMLGregorianCalendar(gregorianCalendar);
 
     ts.setTime(xmlGregorianCalendar);
     tsElement.setTsDataType(ts);
@@ -90,7 +87,7 @@ class MapperUtilServiceTest {
   @Test
   void testMapToDate() {
     when(lookupMmwrRepository.findTopWeekEndingByMmwrWeekAndMmwrYear(10, 2024))
-      .thenReturn(Date.valueOf(LocalDate.of(2024, 1, 1)));
+        .thenReturn(Date.valueOf(LocalDate.of(2024, 1, 1)));
     String result = mapperUtilService.mapToDate("10", "2024", "");
     assertEquals("2024-01-01", result);
   }
@@ -98,27 +95,33 @@ class MapperUtilServiceTest {
   @Test
   void testMapToMultiCodedAnswer_Checker() {
     when(lookupNNDLookupRepository.findToCodeByFromUniqueIdAndConceptCd("QCODE", "input"))
-      .thenReturn("mappedChecker");
-    String result = mapperUtilService.mapToMultiCodedAnswer("input", "QCODE", "toUniqueId", "CHECKER");
+        .thenReturn("mappedChecker");
+    String result =
+        mapperUtilService.mapToMultiCodedAnswer("input", "QCODE", "toUniqueId", "CHECKER");
     assertEquals("mappedChecker", result);
   }
 
   @Test
   void testMapToMultiCodedAnswer_Normal() {
-    when(lookupNNDLookupRepository.findToCodeByFromUniqueIdToUniqueIdAndConceptCd("QCODE", "toUniqueId", "input"))
-      .thenReturn("mappedMulti");
-    String result = mapperUtilService.mapToMultiCodedAnswer("input", "QCODE", "toUniqueId", "nonChecker");
+    when(lookupNNDLookupRepository.findToCodeByFromUniqueIdToUniqueIdAndConceptCd(
+            "QCODE", "toUniqueId", "input"))
+        .thenReturn("mappedMulti");
+    String result =
+        mapperUtilService.mapToMultiCodedAnswer("input", "QCODE", "toUniqueId", "nonChecker");
     assertEquals("mappedMulti", result);
   }
 
   @Test
   void testMapToStringValue() {
     assertEquals("ceValue", mapperUtilService.mapToStringValue(createDataElement("CE", "ceValue")));
-    assertEquals("cweValue", mapperUtilService.mapToStringValue(createDataElement("CWE", "cweValue")));
+    assertEquals(
+        "cweValue", mapperUtilService.mapToStringValue(createDataElement("CWE", "cweValue")));
     assertEquals("cxData", mapperUtilService.mapToStringValue(createDataElement("CX", "cxData")));
     assertEquals("isValue", mapperUtilService.mapToStringValue(createDataElement("IS", "isValue")));
-    assertEquals("textData", mapperUtilService.mapToStringValue(createDataElement("TX", "textData")));
-    assertEquals("stringData", mapperUtilService.mapToStringValue(createDataElement("ST", "stringData")));
+    assertEquals(
+        "textData", mapperUtilService.mapToStringValue(createDataElement("TX", "textData")));
+    assertEquals(
+        "stringData", mapperUtilService.mapToStringValue(createDataElement("ST", "stringData")));
   }
 
   @Test

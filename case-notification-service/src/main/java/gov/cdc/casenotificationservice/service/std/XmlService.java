@@ -27,12 +27,14 @@ public class XmlService implements IXmlService {
   private final CNTraportqOutRepository cnTraportqOutRepository;
   private final IStdMapperService stdMapperService;
   private final NetssTransportQOutRepository netssTransportQOutRepository;
+
   @Value("${service.timezone}")
   private String tz = "UTC";
 
-  public XmlService(CNTraportqOutRepository cnTraportqOutRepository,
-    IStdMapperService stdMapperService,
-    NetssTransportQOutRepository netssTransportQOutRepository) {
+  public XmlService(
+      CNTraportqOutRepository cnTraportqOutRepository,
+      IStdMapperService stdMapperService,
+      NetssTransportQOutRepository netssTransportQOutRepository) {
     this.cnTraportqOutRepository = cnTraportqOutRepository;
     this.stdMapperService = stdMapperService;
     this.netssTransportQOutRepository = netssTransportQOutRepository;
@@ -40,9 +42,9 @@ public class XmlService implements IXmlService {
 
   // pRecordStatus can be retrieved from DB
   public void mappingXmlStringToObject(MessageAfterStdChecker messageAfterStdChecker)
-    throws StdProcessorServiceException, NonRetryableException {
+      throws StdProcessorServiceException, NonRetryableException {
     var cnTransportqOut =
-      cnTraportqOutRepository.findTopByRecordUid(messageAfterStdChecker.getCnTransportqOutUid());
+        cnTraportqOutRepository.findTopByRecordUid(messageAfterStdChecker.getCnTransportqOutUid());
     String netssSummary;
     NetssPersistModel netssPersistModel = new NetssPersistModel();
 
@@ -59,8 +61,8 @@ public class XmlService implements IXmlService {
       netssPersistModel.setVCaseReptId(netss.getCaseReportId());
       netssPersistModel.setVMessageWeek(netss.getWeek());
 
-      if (cnTransportqOut.getRecordStatusCd().equalsIgnoreCase("X") || netss.getCaseStatus()
-        .equalsIgnoreCase("X")) {
+      if (cnTransportqOut.getRecordStatusCd().equalsIgnoreCase("X")
+          || netss.getCaseStatus().equalsIgnoreCase("X")) {
         netssPersistModel.setRecordStatusCd("LOG_DEL");
       } else {
         netssPersistModel.setRecordStatusCd("ACTIVE");

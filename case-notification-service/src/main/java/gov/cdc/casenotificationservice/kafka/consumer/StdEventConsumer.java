@@ -23,38 +23,37 @@ import org.springframework.stereotype.Service;
 @Service
 public class StdEventConsumer {
 
-  private static final Logger logger = LoggerFactory.getLogger(StdEventConsumer.class); //NOSONAR
+  private static final Logger logger = LoggerFactory.getLogger(StdEventConsumer.class); // NOSONAR
   private final IXmlService xmlService;
   private final IDltService dltService;
   private final IConfigurationService configurationService;
+
   @Value("${spring.kafka.topic.std-topic}")
   public String topic;
 
-  public StdEventConsumer(IXmlService xmlService, IDltService dltService,
-    IConfigurationService configurationService) {
+  public StdEventConsumer(
+      IXmlService xmlService, IDltService dltService, IConfigurationService configurationService) {
     this.xmlService = xmlService;
     this.dltService = dltService;
     this.configurationService = configurationService;
   }
 
   @RetryableTopic(
-    attempts = "${spring.kafka.retry.max-retry}",
-    autoCreateTopics = "false",
-    dltStrategy = DltStrategy.FAIL_ON_ERROR,
-    retryTopicSuffix = "${spring.kafka.retry.suffix}",
-    dltTopicSuffix = "${spring.kafka.dlt.suffix}",
-    // retry topic name, such as topic-retry-1, topic-retry-2, etc
-    topicSuffixingStrategy = TopicSuffixingStrategy.SUFFIX_WITH_INDEX_VALUE,
-    // time to wait before attempting to retry
-    backoff = @Backoff(delay = 1000, multiplier = 2.0),
-    exclude = {NonRetryableException.class}
-
-  )
+      attempts = "${spring.kafka.retry.max-retry}",
+      autoCreateTopics = "false",
+      dltStrategy = DltStrategy.FAIL_ON_ERROR,
+      retryTopicSuffix = "${spring.kafka.retry.suffix}",
+      dltTopicSuffix = "${spring.kafka.dlt.suffix}",
+      // retry topic name, such as topic-retry-1, topic-retry-2, etc
+      topicSuffixingStrategy = TopicSuffixingStrategy.SUFFIX_WITH_INDEX_VALUE,
+      // time to wait before attempting to retry
+      backoff = @Backoff(delay = 1000, multiplier = 2.0),
+      exclude = {NonRetryableException.class})
   @KafkaListener(
-    topics = "${spring.kafka.topic.std-topic}",
-    containerFactory = "kafkaListenerContainerFactoryConsumerForStd"
-  )
-  public void handleMessage(String message) throws StdProcessorServiceException, NonRetryableException {
+      topics = "${spring.kafka.topic.std-topic}",
+      containerFactory = "kafkaListenerContainerFactoryConsumerForStd")
+  public void handleMessage(String message)
+      throws StdProcessorServiceException, NonRetryableException {
     logger.info("Received std message");
     if (configurationService.checkConfigurationAvailable()) {
       var gson = new Gson();
@@ -78,10 +77,9 @@ public class StdEventConsumer {
 
   @DltHandler()
   public void handleDlt(
-    String message,
-    @Header(KafkaHeaders.RECEIVED_TOPIC) String topic,
-    @Header(KafkaHeaders.EXCEPTION_STACKTRACE) String stacktrace
-  ) {
+      String message,
+      @Header(KafkaHeaders.RECEIVED_TOPIC) String topic,
+      @Header(KafkaHeaders.EXCEPTION_STACKTRACE) String stacktrace) {
     logger.info("Received DLT message: {}", message);
     dltService.creatingDlt(message, topic, stacktrace, topic);
   }

@@ -121,8 +121,9 @@ public class HL7Validator {
     return true;
   }
 
-  public void validateField(String fieldName, String value, boolean required, int minLen, int maxLen)
-    throws HL7Exception {
+  public void validateField(
+      String fieldName, String value, boolean required, int minLen, int maxLen)
+      throws HL7Exception {
     if (required && (value == null || value.trim().isEmpty())) {
       throw new HL7Exception(fieldName + " is required but missing");
     }
@@ -130,7 +131,7 @@ public class HL7Validator {
       int len = value.length();
       if (len < minLen || len > maxLen) {
         throw new HL7Exception(
-          fieldName + " length must be between " + minLen + " and " + maxLen + " but was " + len);
+            fieldName + " length must be between " + minLen + " and " + maxLen + " but was " + len);
       }
     }
   }

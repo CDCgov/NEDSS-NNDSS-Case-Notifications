@@ -1,6 +1,5 @@
 package gov.cdc.casenotificationservice.repository.msg.model;
 
-
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -30,7 +29,6 @@ public class CaseNotificationDlt {
 
   @Column(name = "error_stack_trace", columnDefinition = "NVARCHAR(MAX)")
   private String errorStackTrace;
-
 
   @Column(name = "dlt_status", length = 10)
   private String dltStatus;

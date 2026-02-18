@@ -21,13 +21,13 @@ public class MapToQuestionMap {
   List<DiscreteRepeat> discreteRepeatSNTypeArray = new ArrayList<>();
   List<DiscreteRepeat> discreteRepeatArray = new ArrayList<>();
 
-
   int obx2Inc = messageState.getObx2Inc();
 
-
-  public void mapToQuestionMap(MessageElement messageElement, int counter, ORU_R01_ORDER_OBSERVATION orderObservation)
-    throws HL7Exception {
-    OBX obxUpdate = orderObservation.getOBSERVATION(orderObservation.getOBSERVATIONAll().size()).getOBX();
+  public void mapToQuestionMap(
+      MessageElement messageElement, int counter, ORU_R01_ORDER_OBSERVATION orderObservation)
+      throws HL7Exception {
+    OBX obxUpdate =
+        orderObservation.getOBSERVATION(orderObservation.getOBSERVATIONAll().size()).getOBX();
 
     String indPartMain = "";
     String indPart1 = "";
@@ -61,7 +61,7 @@ public class MapToQuestionMap {
     String indicatorCdRaw = messageElement.getIndicatorCd();
     String indicatorCode = (indicatorCdRaw != null) ? indicatorCdRaw.trim() : "";
     String mappedIndicatorCode = (indicatorCdRaw != null) ? indicatorCdRaw.trim() : "";
-    //we need to find index positions of the characters below
+    // we need to find index positions of the characters below
 
     int startInd = indicatorCode.indexOf("|");
     int checkPoint = indicatorCode.indexOf(":>");
@@ -97,10 +97,11 @@ public class MapToQuestionMap {
     }
 
     // For parts related to "^" symbol
-    //indPartMain = "^" + indicatorCode.substring(0, startInd) + "^";
+    // indPartMain = "^" + indicatorCode.substring(0, startInd) + "^";
 
     int endInd = indicatorCode.indexOf("|");
-    String subStringLeftInd = (startInd != -1) ? indicatorCode.substring(0, startInd) : indicatorCode;
+    String subStringLeftInd =
+        (startInd != -1) ? indicatorCode.substring(0, startInd) : indicatorCode;
     indPartMain = "^" + subStringLeftInd + "^";
 
     if (subStringRightInd.contains("^")) {
@@ -126,7 +127,8 @@ public class MapToQuestionMap {
       indPart6 = RemainingPart4.substring(startPartInt5 + 1);
     }
 
-    String questionMap = (messageElement.getQuestionMap() != null) ? messageElement.getQuestionMap().trim() : "";
+    String questionMap =
+        (messageElement.getQuestionMap() != null) ? messageElement.getQuestionMap().trim() : "";
     //        int start = questionMap.indexOf("|");
     String subStringRight = "";
     //        int end = questionMap.indexOf("|");
@@ -199,30 +201,39 @@ public class MapToQuestionMap {
       obx.getSetIDOBX().setValue(String.valueOf(obx2Inc + 1));
       obx.getValueType().setValue("SN");
 
-      CE observationIdentifier = orderObservation.getOBSERVATION(1).getOBX().getObservationIdentifier();
+      CE observationIdentifier =
+          orderObservation.getOBSERVATION(1).getOBX().getObservationIdentifier();
       observationIdentifier.getIdentifier().setValue(questPart1);
       observationIdentifier.getText().setValue(questPart2);
       observationIdentifier.getNameOfCodingSystem().setValue(questPart3);
-      observationIdentifier.getAlternateIdentifier().setValue(messageElement.getQuestionIdentifierNND());
+      observationIdentifier
+          .getAlternateIdentifier()
+          .setValue(messageElement.getQuestionIdentifierNND());
       observationIdentifier.getAlternateText().setValue(messageElement.getQuestionLabelNND());
       observationIdentifier.getNameOfAlternateCodingSystem().setValue(questPart6);
 
       obx.getObservationSubID().setValue(String.valueOf(obx4Counter));
 
       String value = "^" + messageElement.getDataElement().getSnunitDataType().getNum1();
-      ST observationValueStType = (obx.getObservationValue(0).getData() instanceof ST)
-        ? (ST) obx.getObservationValue(0).getData()
-        : new ST(obx.getMessage());
+      ST observationValueStType =
+          (obx.getObservationValue(0).getData() instanceof ST)
+              ? (ST) obx.getObservationValue(0).getData()
+              : new ST(obx.getMessage());
 
       observationValueStType.setValue(value);
       obx.getObservationValue(0).setData(observationValueStType);
 
-      obx.getUnits().getIdentifier()
-        .setValue(messageElement.getDataElement().getSnunitDataType().getCeCodedValue());
-      obx.getUnits().getText()
-        .setValue(messageElement.getDataElement().getSnunitDataType().getCeCodedValueDescription());
-      obx.getUnits().getNameOfCodingSystem()
-        .setValue(messageElement.getDataElement().getSnunitDataType().getCeCodedValueCodingSystem());
+      obx.getUnits()
+          .getIdentifier()
+          .setValue(messageElement.getDataElement().getSnunitDataType().getCeCodedValue());
+      obx.getUnits()
+          .getText()
+          .setValue(
+              messageElement.getDataElement().getSnunitDataType().getCeCodedValueDescription());
+      obx.getUnits()
+          .getNameOfCodingSystem()
+          .setValue(
+              messageElement.getDataElement().getSnunitDataType().getCeCodedValueCodingSystem());
       obx.getObservationResultStatus().setValue("F");
 
       obx2Inc++;
@@ -245,12 +256,13 @@ public class MapToQuestionMap {
 
         OBX obx = orderObservation.getOBSERVATION(0).getOBX();
 
-        if (obx.getObservationIdentifier().getIdentifier().getValue().equals(questPart1) &&
-          obx.getObservationValue(0).getData().toString().startsWith("OTH^")) {
+        if (obx.getObservationIdentifier().getIdentifier().getValue().equals(questPart1)
+            && obx.getObservationValue(0).getData().toString().startsWith("OTH^")) {
           String updatedValue = obx.getObservationValue(0) + "^^^^^^" + originalText;
-          ST stTempType = (obx.getObservationValue(0).getData() instanceof ST)
-            ? (ST) obx.getObservationValue(0).getData()
-            : new ST(obx.getMessage());
+          ST stTempType =
+              (obx.getObservationValue(0).getData() instanceof ST)
+                  ? (ST) obx.getObservationValue(0).getData()
+                  : new ST(obx.getMessage());
 
           stTempType.setValue(updatedValue);
           obx.getObservationValue(0).setData(stTempType);
@@ -302,7 +314,7 @@ public class MapToQuestionMap {
         }
       }
     } else if (indPartMain.contains("^" + dataElementCodedValue + "^")
-      || (unkObx5 != null && !unkObx5.isEmpty())) {
+        || (unkObx5 != null && !unkObx5.isEmpty())) {
       int checkerNum = 0;
       String id = messageElement.getQuestionIdentifier();
 
@@ -342,9 +354,12 @@ public class MapToQuestionMap {
       }
 
       // Case 2
-      orderObservation.getOBSERVATION(0).getOBX().getSetIDOBX().setValue(String.valueOf(counter + 1));
+      orderObservation
+          .getOBSERVATION(0)
+          .getOBX()
+          .getSetIDOBX()
+          .setValue(String.valueOf(counter + 1));
       orderObservation.getOBSERVATION(0).getOBX().getValueType().setValue("CWE");
-
 
       OBX obx1 = orderObservation.getOBSERVATION(0).getOBX();
 
@@ -361,41 +376,47 @@ public class MapToQuestionMap {
       messageState.getObxRepeatingElementArrayList().add(obxRepeatingElement);
 
       if (checkPoint > 0) {
-        CWE cweObservationValue = (obx1.getObservationValue(0).getData() instanceof CWE)
-          ? (CWE) obx1.getObservationValue(0).getData()
-          : new CWE(obx1.getMessage());
+        CWE cweObservationValue =
+            (obx1.getObservationValue(0).getData() instanceof CWE)
+                ? (CWE) obx1.getObservationValue(0).getData()
+                : new CWE(obx1.getMessage());
 
-
-
-        cweObservationValue.getIdentifier()
-          .setValue(messageElement.getDataElement().getCweDataType().getCweCodedValue());
-        cweObservationValue.getText()
-          .setValue(messageElement.getDataElement().getCweDataType().getCweCodedValueDescription());
-        cweObservationValue.getNameOfCodingSystem()
-          .setValue(messageElement.getDataElement().getCweDataType().getCweCodedValueCodingSystem());
+        cweObservationValue
+            .getIdentifier()
+            .setValue(messageElement.getDataElement().getCweDataType().getCweCodedValue());
+        cweObservationValue
+            .getText()
+            .setValue(
+                messageElement.getDataElement().getCweDataType().getCweCodedValueDescription());
+        cweObservationValue
+            .getNameOfCodingSystem()
+            .setValue(
+                messageElement.getDataElement().getCweDataType().getCweCodedValueCodingSystem());
 
         obx1.getObservationValue(0).setData(cweObservationValue);
 
       } else {
-        CWE cweObservationValue = (obx1.getObservationValue(0).getData() instanceof CWE)
-          ? (CWE) obx1.getObservationValue(0).getData()
-          : new CWE(obx1.getMessage());
-
+        CWE cweObservationValue =
+            (obx1.getObservationValue(0).getData() instanceof CWE)
+                ? (CWE) obx1.getObservationValue(0).getData()
+                : new CWE(obx1.getMessage());
 
         cweObservationValue.getIdentifier().setValue(quest2Part1);
         cweObservationValue.getText().setValue(quest2Part2);
         cweObservationValue.getNameOfCodingSystem().setValue(quest2Part3);
 
         obx1.getObservationValue(0).setData(cweObservationValue);
-
       }
 
-      if (messageElement.getQuestionIdentifierNND().equals("OTH") && otherText != null && !otherText.isEmpty()) {
-        //TODO - Check value here
+      if (messageElement.getQuestionIdentifierNND().equals("OTH")
+          && otherText != null
+          && !otherText.isEmpty()) {
+        // TODO - Check value here
         String val = obx1.getObservationValue(0).toString() + "^^^^^^" + otherText;
-        ST stObservationValue = (obx1.getObservationValue(0).getData() instanceof ST)
-          ? (ST) obx1.getObservationValue(0).getData()
-          : new ST(obx1.getMessage());
+        ST stObservationValue =
+            (obx1.getObservationValue(0).getData() instanceof ST)
+                ? (ST) obx1.getObservationValue(0).getData()
+                : new ST(obx1.getMessage());
 
         stObservationValue.setValue(val);
         obx1.getObservationValue(0).setData(stObservationValue);
@@ -406,7 +427,11 @@ public class MapToQuestionMap {
 
       obx2Inc++;
 
-      orderObservation.getOBSERVATION(1).getOBX().getSetIDOBX().setValue(String.valueOf(obx2Inc + 1));
+      orderObservation
+          .getOBSERVATION(1)
+          .getOBX()
+          .getSetIDOBX()
+          .setValue(String.valueOf(obx2Inc + 1));
       orderObservation.getOBSERVATION(1).getOBX().getValueType().setValue("CWE");
 
       OBX obx2 = orderObservation.getOBSERVATION(1).getOBX();
@@ -423,28 +448,33 @@ public class MapToQuestionMap {
       obxRepeatingElement1.setObxInc(1);
       messageState.getObxRepeatingElementArrayList().add(obxRepeatingElement1);
 
-
       if (unkObx5 != null && !unkObx5.isEmpty()) {
-        ST stObservationValue = (obx2.getObservationValue(0).getData() instanceof ST)
-          ? (ST) obx2.getObservationValue(0).getData()
-          : new ST(obx2.getMessage());
+        ST stObservationValue =
+            (obx2.getObservationValue(0).getData() instanceof ST)
+                ? (ST) obx2.getObservationValue(0).getData()
+                : new ST(obx2.getMessage());
 
         stObservationValue.setValue(unkObx5);
         obx2.getObservationValue(0).setData(stObservationValue);
       } else {
-        CWE cweObservationValue = (obx2.getObservationValue(0).getData() instanceof CWE)
-          ? (CWE) obx2.getObservationValue(0).getData()
-          : new CWE(obx2.getMessage());
+        CWE cweObservationValue =
+            (obx2.getObservationValue(0).getData() instanceof CWE)
+                ? (CWE) obx2.getObservationValue(0).getData()
+                : new CWE(obx2.getMessage());
 
-        cweObservationValue.getIdentifier()
-          .setValue(messageElement.getDataElement().getCweDataType().getCweCodedValue());
-        cweObservationValue.getText()
-          .setValue(messageElement.getDataElement().getCweDataType().getCweCodedValueDescription());
-        cweObservationValue.getNameOfCodingSystem()
-          .setValue(messageElement.getDataElement().getCweDataType().getCweCodedValueCodingSystem());
+        cweObservationValue
+            .getIdentifier()
+            .setValue(messageElement.getDataElement().getCweDataType().getCweCodedValue());
+        cweObservationValue
+            .getText()
+            .setValue(
+                messageElement.getDataElement().getCweDataType().getCweCodedValueDescription());
+        cweObservationValue
+            .getNameOfCodingSystem()
+            .setValue(
+                messageElement.getDataElement().getCweDataType().getCweCodedValueCodingSystem());
 
         obx2.getObservationValue(0).setData(cweObservationValue);
-
       }
 
       obx2.getObservationSubID().setValue(String.valueOf(obx4Counter));
@@ -453,5 +483,4 @@ public class MapToQuestionMap {
       obx2Inc++;
     }
   }
-
 }

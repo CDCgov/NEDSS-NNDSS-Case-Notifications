@@ -20,11 +20,9 @@ import static org.mockito.Mockito.when;
 
 class CaseNotificationProducerTest {
 
-  @Mock
-  private KafkaTemplate<String, String> kafkaTemplate;
+  @Mock private KafkaTemplate<String, String> kafkaTemplate;
 
-  @InjectMocks
-  private CaseNotificationProducer producer;
+  @InjectMocks private CaseNotificationProducer producer;
 
   private ProducerRecord<String, String> record;
 
@@ -66,14 +64,16 @@ class CaseNotificationProducerTest {
     CompletableFuture<SendResult<String, String>> future = mock(CompletableFuture.class);
 
     when(kafkaTemplate.send(record)).thenReturn(future);
-    when(future.get(3, TimeUnit.SECONDS)).thenThrow(new ExecutionException(new RuntimeException("fail")));
+    when(future.get(3, TimeUnit.SECONDS))
+        .thenThrow(new ExecutionException(new RuntimeException("fail")));
 
     assertThrows(NoSuchMethodException.class, () -> invokeSendMessage(record));
   }
 
   // Use reflection to invoke private method for full coverage
   private void invokeSendMessage(ProducerRecord<String, String> prodRecord) throws Exception {
-    var method = CaseNotificationProducer.class.getDeclaredMethod("sendMessage", ProducerRecord.class);
+    var method =
+        CaseNotificationProducer.class.getDeclaredMethod("sendMessage", ProducerRecord.class);
     method.setAccessible(true);
     method.invoke(producer, prodRecord);
   }

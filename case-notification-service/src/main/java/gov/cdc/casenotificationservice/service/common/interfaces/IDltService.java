@@ -10,7 +10,8 @@ import java.sql.Timestamp;
 public interface IDltService {
   void creatingDlt(String message, String topic, String stacktrace, String origin);
 
-  Page<CaseNotificationDlt> getDltsBetweenWithPagination(Timestamp from, Timestamp to, int page, int size);
+  Page<CaseNotificationDlt> getDltsBetweenWithPagination(
+      Timestamp from, Timestamp to, int page, int size);
 
   void reprocessingCaseNotification(String payload, String uuid) throws DltServiceException;
 

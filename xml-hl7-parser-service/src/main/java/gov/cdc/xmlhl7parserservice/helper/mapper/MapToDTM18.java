@@ -56,5 +56,4 @@ public class MapToDTM18 {
 
     output.setDateSecondPrecision(year, month, day, hours, minutes, seconds);
   }
-
 }

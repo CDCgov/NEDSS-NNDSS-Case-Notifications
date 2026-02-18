@@ -16,7 +16,8 @@ public class SPMHelper {
     validator.validateField("SPM-6", spm.getSpecimenAdditives(0).toString(), false, 0, 250);
     validator.validateField("SPM-7", spm.getSpecimenCollectionMethod().toString(), false, 0, 250);
     validator.validateField("SPM-8", spm.getSpecimenSourceSite().toString(), false, 0, 250);
-    validator.validateField("SPM-9", spm.getSpecimenSourceSiteModifier(0).toString(), false, 0, 250);
+    validator.validateField(
+        "SPM-9", spm.getSpecimenSourceSiteModifier(0).toString(), false, 0, 250);
     validator.validateField("SPM-10", spm.getSpecimenCollectionSite().toString(), false, 0, 250);
     validator.validateField("SPM-11", spm.getSpecimenRole(0).toString(), false, 0, 250);
     validator.validateField("SPM-12", spm.getSpecimenCollectionAmount().toString(), false, 0, 20);
@@ -25,8 +26,10 @@ public class SPMHelper {
     validator.validateField("SPM-15", spm.getSpecimenHandlingCode(0).toString(), false, 0, 250);
     validator.validateField("SPM-16", spm.getSpecimenRiskCode(0).toString(), false, 0, 250);
     validator.validateField("SPM-17", spm.getSpecimenCollectionDateTime().toString(), false, 0, 26);
-    validator.validateField("SPM-18", spm.getSpecimenReceivedDateTime().getTime().getValue(), false, 0, 26);
-    validator.validateField("SPM-19", spm.getSpecimenExpirationDateTime().getTime().getValue(), false, 0, 26);
+    validator.validateField(
+        "SPM-18", spm.getSpecimenReceivedDateTime().getTime().getValue(), false, 0, 26);
+    validator.validateField(
+        "SPM-19", spm.getSpecimenExpirationDateTime().getTime().getValue(), false, 0, 26);
     validator.validateField("SPM-20", spm.getSpecimenAvailability().getValue(), false, 0, 1);
     validator.validateField("SPM-21", spm.getSpecimenRejectReason(0).toString(), false, 0, 250);
     validator.validateField("SPM-22", spm.getSpecimenQuality().toString(), false, 0, 250);

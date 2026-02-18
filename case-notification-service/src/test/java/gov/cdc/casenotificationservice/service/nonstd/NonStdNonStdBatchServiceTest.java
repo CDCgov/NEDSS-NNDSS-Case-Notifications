@@ -89,7 +89,8 @@ class NonStdNonStdBatchServiceTest {
     assertEquals("", result);
   }
 
-  private PHINMSProperties createPhinmsProps(String content, String timestamp, String senderApp, String facility) {
+  private PHINMSProperties createPhinmsProps(
+      String content, String timestamp, String senderApp, String facility) {
     var props = new PHINMSProperties();
     props.setPPHINMessageContent2(content);
     props.setPCurrentTimestamp(timestamp);

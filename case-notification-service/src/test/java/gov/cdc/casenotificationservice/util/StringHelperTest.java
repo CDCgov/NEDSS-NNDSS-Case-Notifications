@@ -1,6 +1,5 @@
 package gov.cdc.casenotificationservice.util;
 
-
 import gov.cdc.casenotificationservice.model.Netss;
 import org.junit.jupiter.api.Test;
 
@@ -72,5 +71,4 @@ class StringHelperTest {
     // Expect only spaces (based on constants), trimmed to empty string
     assertEquals("", result);
   }
-
 }

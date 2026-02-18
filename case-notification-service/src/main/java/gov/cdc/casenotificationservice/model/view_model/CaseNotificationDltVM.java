@@ -19,8 +19,7 @@ public class CaseNotificationDltVM {
   private Timestamp createdOn;
   private Timestamp updatedOn;
 
-  public CaseNotificationDltVM() {
-  }
+  public CaseNotificationDltVM() {}
 
   public CaseNotificationDltVM(CaseNotificationDlt caseNotificationDlt) {
     this.id = caseNotificationDlt.getId();
@@ -32,5 +31,4 @@ public class CaseNotificationDltVM {
     this.createdOn = caseNotificationDlt.getCreatedOn();
     this.updatedOn = caseNotificationDlt.getUpdatedOn();
   }
-
 }

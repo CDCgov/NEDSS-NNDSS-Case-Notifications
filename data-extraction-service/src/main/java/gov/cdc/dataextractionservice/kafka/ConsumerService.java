@@ -25,14 +25,11 @@ public class ConsumerService {
   @Value("${kafka.topic.cn-tranport-out-topic:}")
   private String transportOutQTopic = "nbs_CN_transportq_out";
 
-  @Autowired
-  private StdCheckerTransformerService transformerService;
+  @Autowired private StdCheckerTransformerService transformerService;
 
-  @Autowired
-  private ProducerService producerService;
+  @Autowired private ProducerService producerService;
 
-  @Autowired
-  private CnTransportQOutUpdateService updateService;
+  @Autowired private CnTransportQOutUpdateService updateService;
 
   private final CaseNotificationConfigRepository caseNotificationConfigRepository;
 
@@ -41,9 +38,8 @@ public class ConsumerService {
   }
 
   @KafkaListener(
-    topics = "${kafka.topic.cn-tranport-out-topic}",
-    containerFactory = "kafkaListenerContainerFactoryDebeziumConsumer"
-  )
+      topics = "${kafka.topic.cn-tranport-out-topic}",
+      containerFactory = "kafkaListenerContainerFactoryDebeziumConsumer")
   public void handleMessage(String messages) {
     try {
       var config = caseNotificationConfigRepository.findNonStdConfig();
@@ -63,18 +59,14 @@ public class ConsumerService {
             producerService.sendMessage(transformed);
 
             // Update database record_status_cd
-            if (transformed.isStdMessageDetected() && ("NETSS_MESSAGE_ONLY".equals(
-              transformed.getNetssMessageOnly())
-              || "BOTH".equals(transformed.getNetssMessageOnly()))) {
+            if (transformed.isStdMessageDetected()
+                && ("NETSS_MESSAGE_ONLY".equals(transformed.getNetssMessageOnly())
+                    || "BOTH".equals(transformed.getNetssMessageOnly()))) {
               updateService.updateRecordStatus(
-                transformed.getCnTransportqOutUid(),
-                "STD_PROCESSING"
-              );
+                  transformed.getCnTransportqOutUid(), "STD_PROCESSING");
             } else {
               updateService.updateRecordStatus(
-                transformed.getCnTransportqOutUid(),
-                "NON_STD_PROCESSING"
-              );
+                  transformed.getCnTransportqOutUid(), "NON_STD_PROCESSING");
             }
           } else {
             logger.info("Message skipped - did not meet the criteria");
@@ -83,7 +75,6 @@ public class ConsumerService {
           logger.info("Change Data Capture event ignored (no 'after' state)");
         }
       }
-
 
     } catch (Exception e) {
       logger.error("ConsumerService.handleMessage: {}", e.getMessage(), e);

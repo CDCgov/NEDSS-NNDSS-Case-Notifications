@@ -11,7 +11,6 @@ import lombok.Data;
 @Table(name = "NBS_Case_Notification_Config")
 public class CaseNotificationConfig {
 
-
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
@@ -55,9 +54,7 @@ public class CaseNotificationConfig {
   @Column(name = "hl7_validation_enabled")
   private Boolean hl7ValidationEnabled;
 
-  public CaseNotificationConfig() {
-
-  }
+  public CaseNotificationConfig() {}
 
   public CaseNotificationConfig(CaseNotificationConfigDto dto) {
     this.configName = dto.getConfigName();
@@ -74,6 +71,4 @@ public class CaseNotificationConfig {
     this.phinPriority = dto.getPhinPriority();
     this.hl7ValidationEnabled = dto.getHl7ValidationEnabled();
   }
-
-
 }

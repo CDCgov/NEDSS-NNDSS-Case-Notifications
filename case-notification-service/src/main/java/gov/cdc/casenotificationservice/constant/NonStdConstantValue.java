@@ -12,8 +12,8 @@ public class NonStdConstantValue {
   public static final String CARET = "^";
 
   public static final String HL7_BATCH_HEADER_TEMPLATE =
-    "FHS|^~\\&|%s|PHINCDS^2.16.840.1.114222.4.3.2.10^ISO|PHIN^2.16.840.1.114222^ISO|%s|||||\r" +
-      "BHS|^~\\&|%s|PHINCDS^2.16.840.1.114222.4.3.2.10^ISO|PHIN^2.16.840.1.114222^ISO|%s|||||\r";
+      "FHS|^~\\&|%s|PHINCDS^2.16.840.1.114222.4.3.2.10^ISO|PHIN^2.16.840.1.114222^ISO|%s|||||\r"
+          + "BHS|^~\\&|%s|PHINCDS^2.16.840.1.114222.4.3.2.10^ISO|PHIN^2.16.840.1.114222^ISO|%s|||||\r";
   public static final String HL7_BATCH_FOOTER_BTS = "\rBTS|";
   public static final String HL7_BATCH_FOOTER_FTS = "|\rFTS|1|";
   public static final String HL7_PIPE = "|";

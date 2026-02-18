@@ -60,7 +60,6 @@ public class StringHelper {
             }
           } else {
             sb.append(str);
-
           }
         }
       }

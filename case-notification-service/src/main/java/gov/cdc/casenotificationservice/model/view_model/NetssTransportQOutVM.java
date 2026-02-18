@@ -29,9 +29,7 @@ public class NetssTransportQOutVM {
 
   private String recordStatusCd;
 
-  public NetssTransportQOutVM() {
-
-  }
+  public NetssTransportQOutVM() {}
 
   public NetssTransportQOutVM(NetssTransportQOut netssTransportQOut) {
     this.netssTransportQOutUid = netssTransportQOut.getNetssTransportQOutUid();
@@ -45,5 +43,4 @@ public class NetssTransportQOutVM {
     this.payload = netssTransportQOut.getPayload();
     this.recordStatusCd = netssTransportQOut.getRecordStatusCd();
   }
-
 }

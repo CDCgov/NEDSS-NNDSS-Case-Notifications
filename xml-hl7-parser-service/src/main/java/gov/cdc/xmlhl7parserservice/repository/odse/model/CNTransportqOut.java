@@ -62,5 +62,4 @@ public class CNTransportqOut {
 
   @Column(name = "version_ctrl_nbr")
   private Short versionCtrlNbr;
-
 }

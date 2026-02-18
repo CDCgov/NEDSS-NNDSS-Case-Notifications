@@ -10,8 +10,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CNTraportqOutRepository extends JpaRepository<CNTransportqOut, Long> {
-  @Query(value = "SELECT TOP 1 * FROM dbo.CN_transportq_out WHERE cn_transportq_out_uid = :cnUid", nativeQuery = true)
+  @Query(
+      value = "SELECT TOP 1 * FROM dbo.CN_transportq_out WHERE cn_transportq_out_uid = :cnUid",
+      nativeQuery = true)
   CNTransportqOut findTopByRecordUid(@Param("cnUid") Long cnUid);
-
-
 }

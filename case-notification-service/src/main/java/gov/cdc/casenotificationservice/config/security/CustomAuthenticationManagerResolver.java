@@ -1,6 +1,5 @@
 package gov.cdc.casenotificationservice.config.security;
 
-
 import gov.cdc.casenotificationservice.exception.CustomAuthenticationException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,7 +11,8 @@ import org.springframework.security.oauth2.server.resource.introspection.OpaqueT
 import org.springframework.stereotype.Component;
 
 @Component
-public class CustomAuthenticationManagerResolver implements AuthenticationManagerResolver<HttpServletRequest> {
+public class CustomAuthenticationManagerResolver
+    implements AuthenticationManagerResolver<HttpServletRequest> {
   @Value("${auth.introspect-uri}")
   String introspectionUri;
 
@@ -27,10 +27,8 @@ public class CustomAuthenticationManagerResolver implements AuthenticationManage
       throw new CustomAuthenticationException("Client ID and Client Secret are required");
     }
     OpaqueTokenIntrospector opaquetokenintrospector;
-    opaquetokenintrospector = new NimbusOpaqueTokenIntrospector(
-      introspectionUri,
-      clientId,
-      clientSecret);
+    opaquetokenintrospector =
+        new NimbusOpaqueTokenIntrospector(introspectionUri, clientId, clientSecret);
     return new OpaqueTokenAuthenticationProvider(opaquetokenintrospector)::authenticate;
   }
 }

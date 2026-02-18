@@ -24,9 +24,7 @@ public class CnTransportOutVM {
   private Timestamp recordStatusTime;
   private Short versionCtrlNbr;
 
-  public CnTransportOutVM() {
-
-  }
+  public CnTransportOutVM() {}
 
   public CnTransportOutVM(CNTransportqOut cnTransportqOut) {
     this.cnTransportqOutUid = cnTransportqOut.getCnTransportqOutUid();
@@ -44,5 +42,4 @@ public class CnTransportOutVM {
     this.recordStatusTime = cnTransportqOut.getRecordStatusTime();
     this.versionCtrlNbr = cnTransportqOut.getVersionCtrlNbr();
   }
-
 }

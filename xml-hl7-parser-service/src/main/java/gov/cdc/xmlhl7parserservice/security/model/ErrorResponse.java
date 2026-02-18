@@ -3,13 +3,14 @@ package gov.cdc.xmlhl7parserservice.security.model;
 import lombok.Getter;
 import lombok.Setter;
 
-
 /**
+ *
+ *
  * <ul>
- *     <li>1118 - require constructor complaint</li>
- *     <li>125 - comment complaint</li>
- *     <li>6126 - String block complaint</li>
- *     <li>1135 - todos complaint</li>
+ *   <li>1118 - require constructor complaint
+ *   <li>125 - comment complaint
+ *   <li>6126 - String block complaint
+ *   <li>1135 - todos complaint
  * </ul>
  */
 @Getter

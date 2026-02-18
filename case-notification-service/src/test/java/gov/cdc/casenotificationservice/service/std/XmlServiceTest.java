@@ -1,6 +1,5 @@
 package gov.cdc.casenotificationservice.service.std;
 
-
 import gov.cdc.casenotificationservice.model.MessageAfterStdChecker;
 import gov.cdc.casenotificationservice.model.Netss;
 import gov.cdc.casenotificationservice.repository.msg.NetssTransportQOutRepository;
@@ -34,7 +33,8 @@ class XmlServiceTest {
     cnTraportqOutRepository = mock(CNTraportqOutRepository.class);
     stdMapperService = mock(IStdMapperService.class);
     netssTransportQOutRepository = mock(NetssTransportQOutRepository.class);
-    xmlService = new XmlService(cnTraportqOutRepository, stdMapperService, netssTransportQOutRepository);
+    xmlService =
+        new XmlService(cnTraportqOutRepository, stdMapperService, netssTransportQOutRepository);
   }
 
   @Test
@@ -104,9 +104,8 @@ class XmlServiceTest {
   }
 
   private String readFileFromResources(String filename) throws IOException, URISyntaxException {
-    Path path = Path.of(Objects.requireNonNull(
-      getClass().getClassLoader().getResource(filename)).toURI()
-    );
+    Path path =
+        Path.of(Objects.requireNonNull(getClass().getClassLoader().getResource(filename)).toURI());
     return Files.readString(path);
   }
 }

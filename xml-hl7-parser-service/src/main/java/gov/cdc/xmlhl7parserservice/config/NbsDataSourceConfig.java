@@ -22,12 +22,9 @@ import java.util.HashMap;
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(
-  entityManagerFactoryRef = "nbsEntityManagerFactory",
-  transactionManagerRef = "nbsTransactionManager",
-  basePackages = {
-    "gov.cdc.xmlhl7parserservice.repository.msgout"
-  }
-)
+    entityManagerFactoryRef = "nbsEntityManagerFactory",
+    transactionManagerRef = "nbsTransactionManager",
+    basePackages = {"gov.cdc.xmlhl7parserservice.repository.msgout"})
 public class NbsDataSourceConfig {
   @Value("${spring.datasource.driverClassName}")
   private String driverClassName;
@@ -67,7 +64,6 @@ public class NbsDataSourceConfig {
     hikariConfig.setUsername(dbUserName);
     hikariConfig.setPassword(dbUserPassword);
 
-
     // HikariCP-specific settings
     hikariConfig.setMaximumPoolSize(maximumPoolSize);
     hikariConfig.setMinimumIdle(minimumIdle);
@@ -80,7 +76,8 @@ public class NbsDataSourceConfig {
   }
 
   @Bean(name = "nbsTemplate")
-  public NamedParameterJdbcTemplate nbsTemplate(@Qualifier("nbsDataSource") DataSource nbsDataSource) {
+  public NamedParameterJdbcTemplate nbsTemplate(
+      @Qualifier("nbsDataSource") DataSource nbsDataSource) {
     return new NamedParameterJdbcTemplate(nbsDataSource);
   }
 
@@ -91,18 +88,18 @@ public class NbsDataSourceConfig {
 
   @Bean(name = "nbsEntityManagerFactory")
   public LocalContainerEntityManagerFactoryBean nbsEntityManagerFactory(
-    EntityManagerFactoryBuilder nbsEntityManagerFactoryBuilder,
-    @Qualifier("nbsDataSource") DataSource nbsDataSource) {
+      EntityManagerFactoryBuilder nbsEntityManagerFactoryBuilder,
+      @Qualifier("nbsDataSource") DataSource nbsDataSource) {
     return nbsEntityManagerFactoryBuilder
-      .dataSource(nbsDataSource)
-      .packages("gov.cdc.xmlhl7parserservice.repository.msgout.model")
-      .persistenceUnit("nbs")
-      .build();
+        .dataSource(nbsDataSource)
+        .packages("gov.cdc.xmlhl7parserservice.repository.msgout.model")
+        .persistenceUnit("nbs")
+        .build();
   }
 
   @Bean(name = "nbsTransactionManager")
   public PlatformTransactionManager nbsTransactionManager(
-    @Qualifier("nbsEntityManagerFactory") EntityManagerFactory nbsEntityManagerFactory) {
+      @Qualifier("nbsEntityManagerFactory") EntityManagerFactory nbsEntityManagerFactory) {
     return new JpaTransactionManager(nbsEntityManagerFactory);
   }
 }

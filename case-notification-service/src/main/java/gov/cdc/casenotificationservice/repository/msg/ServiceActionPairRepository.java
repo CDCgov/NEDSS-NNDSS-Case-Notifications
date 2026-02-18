@@ -24,9 +24,8 @@ public class ServiceActionPairRepository {
 
   public List<ServiceActionPair> findTotal() {
     String sql = "SELECT * FROM SERVICE_ACTION_PAIR WHERE SERVICE = 'TOTAL'";
-    List<ServiceActionPair> tableList = msgJdbcTemplate.query(
-      sql,
-      new BeanPropertyRowMapper<>(ServiceActionPair.class));
+    List<ServiceActionPair> tableList =
+        msgJdbcTemplate.query(sql, new BeanPropertyRowMapper<>(ServiceActionPair.class));
     return tableList;
   }
 }

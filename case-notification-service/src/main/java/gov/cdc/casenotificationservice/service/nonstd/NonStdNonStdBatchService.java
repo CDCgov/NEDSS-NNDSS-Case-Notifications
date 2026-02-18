@@ -13,8 +13,11 @@ import static gov.cdc.casenotificationservice.constant.NonStdConstantValue.*;
 @Service
 public class NonStdNonStdBatchService implements INonStdBatchService {
 
-  public boolean isBatchConditionApplied(PHINMSProperties phinmsProperties, CaseNotificationConfig stdConfig) {
-    return phinmsProperties.getMessageControlID1().equalsIgnoreCase(stdConfig.getBatchMesageProfileId());
+  public boolean isBatchConditionApplied(
+      PHINMSProperties phinmsProperties, CaseNotificationConfig stdConfig) {
+    return phinmsProperties
+        .getMessageControlID1()
+        .equalsIgnoreCase(stdConfig.getBatchMesageProfileId());
   }
 
   public PHINMSProperties ReleaseQueuePopulateBatchFooterProperties() {
@@ -26,13 +29,17 @@ public class NonStdNonStdBatchService implements INonStdBatchService {
 
     var currentTime = phinmsProperties.getPCurrentTimestamp();
     var SENDING_FACILITY_AND_NAME =
-      phinmsProperties.getSENDING_APPLICATION() + HL7_PIPE + phinmsProperties.getSENDING_FACILITY();
+        phinmsProperties.getSENDING_APPLICATION()
+            + HL7_PIPE
+            + phinmsProperties.getSENDING_FACILITY();
 
-    String header = String.format(HL7_BATCH_HEADER_TEMPLATE,
-      SENDING_FACILITY_AND_NAME,
-      currentTime,
-      SENDING_FACILITY_AND_NAME,
-      currentTime);
+    String header =
+        String.format(
+            HL7_BATCH_HEADER_TEMPLATE,
+            SENDING_FACILITY_AND_NAME,
+            currentTime,
+            SENDING_FACILITY_AND_NAME,
+            currentTime);
 
     var body = header + batchHL7Msg;
     phinmsProperties.setPPHINMessageContent2(body);
@@ -44,7 +51,6 @@ public class NonStdNonStdBatchService implements INonStdBatchService {
   public void holdQueue(PHINMSProperties phinmsProperties) {
     // message need to be hold in the queue whenever HOLD QUEUE is activated
     NonStdQueue.getInstance().addPHINMSProperties(phinmsProperties);
-
   }
 
   // this to batch the message after hold queue is release
@@ -65,8 +71,6 @@ public class NonStdNonStdBatchService implements INonStdBatchService {
       stringBuilder.append(counter);
       stringBuilder.append(HL7_BATCH_FOOTER_FTS);
     }
-
-
 
     return stringBuilder.toString();
   }

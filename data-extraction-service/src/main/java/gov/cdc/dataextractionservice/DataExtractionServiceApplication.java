@@ -9,5 +9,4 @@ public class DataExtractionServiceApplication {
   public static void main(String[] args) {
     SpringApplication.run(DataExtractionServiceApplication.class, args);
   }
-
 }

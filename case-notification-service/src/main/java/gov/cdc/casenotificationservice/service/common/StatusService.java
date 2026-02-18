@@ -20,10 +20,11 @@ public class StatusService implements IStatusService {
   private final NetssTransportQOutRepository netssTransportQOutRepository;
   private final CaseNotificationDltRepository caseNotificationDltRepository;
 
-  public StatusService(CNTraportqOutRepository cnTraportqOutRepository,
-    TransportQOutRepository transportQOutRepository,
-    NetssTransportQOutRepository netssTransportQOutRepository,
-    CaseNotificationDltRepository caseNotificationDltRepository) {
+  public StatusService(
+      CNTraportqOutRepository cnTraportqOutRepository,
+      TransportQOutRepository transportQOutRepository,
+      NetssTransportQOutRepository netssTransportQOutRepository,
+      CaseNotificationDltRepository caseNotificationDltRepository) {
     this.cnTraportqOutRepository = cnTraportqOutRepository;
     this.transportQOutRepository = transportQOutRepository;
     this.netssTransportQOutRepository = netssTransportQOutRepository;
@@ -42,32 +43,33 @@ public class StatusService implements IStatusService {
 
       // Convert TransportQOut list to VM list
       var transportOpt =
-        transportQOutRepository.findByNotificationLocalUid(cnTraportqOut.getNotificationLocalId());
+          transportQOutRepository.findByNotificationLocalUid(
+              cnTraportqOut.getNotificationLocalId());
       if (transportOpt != null) {
         transportOpt.stream()
-          .map(TransportOutVM::new)
-          .forEach(aStatusResponseModel.getTransportQOut()::add);
+            .map(TransportOutVM::new)
+            .forEach(aStatusResponseModel.getTransportQOut()::add);
       }
 
       // Convert NetssTransportQOut list to VM list
       var netssOpt =
-        netssTransportQOutRepository.findByNotificationLocalUid(cnTraportqOut.getNotificationLocalId());
+          netssTransportQOutRepository.findByNotificationLocalUid(
+              cnTraportqOut.getNotificationLocalId());
       if (netssOpt != null) {
         netssOpt.stream()
-          .map(NetssTransportQOutVM::new)
-          .forEach(aStatusResponseModel.getNetssTransportQOut()::add);
+            .map(NetssTransportQOutVM::new)
+            .forEach(aStatusResponseModel.getNetssTransportQOut()::add);
       }
 
       // Convert CaseNotificationDlt list to VM list
       var dlt = caseNotificationDltRepository.findDltByCnTranportqOutUid(cnTraportqOutId);
       if (dlt != null) {
         dlt.stream()
-          .map(CaseNotificationDltVM::new)
-          .forEach(aStatusResponseModel.getCaseNotificationDlt()::add);
+            .map(CaseNotificationDltVM::new)
+            .forEach(aStatusResponseModel.getCaseNotificationDlt()::add);
       }
     }
 
     return aStatusResponseModel;
   }
-
 }

@@ -20,8 +20,9 @@ public class MapToRepeatToMultiNND {
   List<DiscreteMulti> repeatMultiArray = new ArrayList<>();
   MessageState messageState = new MessageState();
 
-  public void mapToRepeatToMultiNND(MessageElement messageElement, int obx2Inc,
-    ORU_R01_ORDER_OBSERVATION orderObservation) throws DataTypeException {
+  public void mapToRepeatToMultiNND(
+      MessageElement messageElement, int obx2Inc, ORU_R01_ORDER_OBSERVATION orderObservation)
+      throws DataTypeException {
     ObxRepeatingElement obxRepeatingElement = null;
     String indPartMain = "";
     String indPart1 = "";
@@ -167,8 +168,8 @@ public class MapToRepeatToMultiNND {
       output = localComplex.getNmDataType().getNum();
     }
 
-
-    Type obxValue = orderObservation.getOBSERVATION(1).getOBX().getObservationValue(obsCounter).getData();
+    Type obxValue =
+        orderObservation.getOBSERVATION(1).getOBX().getObservationValue(obsCounter).getData();
     ST stType;
 
     if (obxValue instanceof ST) {
@@ -187,14 +188,10 @@ public class MapToRepeatToMultiNND {
       messageState.getObxRepeatingElementArrayList().add(obxRepeatingElement);
     }
 
-
     //        out.OBSERVATION[1].OBX[counter].ObservationValue[obsCounter] = output;
-
 
     if (checkerNum == 0) {
       obx2Inc++;
     }
-
   }
-
 }

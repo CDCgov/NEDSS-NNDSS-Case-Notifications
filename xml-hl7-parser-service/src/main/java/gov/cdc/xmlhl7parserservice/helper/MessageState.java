@@ -161,4 +161,4 @@ public class MessageState {
     obx2Inc = 0;
     INV162RepeatIndicator = false;
   }
-} 
+}

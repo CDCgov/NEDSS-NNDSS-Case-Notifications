@@ -1,6 +1,5 @@
 package gov.cdc.dataextractionservice.config;
 
-
 import jakarta.persistence.EntityManagerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,12 +22,11 @@ import java.util.HashMap;
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(
-  entityManagerFactoryRef = "msgEntityManagerFactory",
-  transactionManagerRef = "msgTransactionManager",
-  basePackages = {
-    "gov.cdc.dataextractionservice.repository.msg",
-  }
-)
+    entityManagerFactoryRef = "msgEntityManagerFactory",
+    transactionManagerRef = "msgTransactionManager",
+    basePackages = {
+      "gov.cdc.dataextractionservice.repository.msg",
+    })
 public class MsgDataSourceConfig {
   @Value("${spring.datasource.driverClassName}")
   private String driverClassName;
@@ -61,19 +59,19 @@ public class MsgDataSourceConfig {
 
   @Bean(name = "msgEntityManagerFactory")
   public LocalContainerEntityManagerFactoryBean msgEntityManagerFactory(
-    EntityManagerFactoryBuilder msgEntityManagerFactoryBuilder,
-    @Qualifier("msgDataSource") DataSource msgDataSource) {
+      EntityManagerFactoryBuilder msgEntityManagerFactoryBuilder,
+      @Qualifier("msgDataSource") DataSource msgDataSource) {
     return msgEntityManagerFactoryBuilder
-      .dataSource(msgDataSource)
-      .packages("gov.cdc.dataextractionservice.repository.msg")
-      .persistenceUnit("msg")
-      .build();
+        .dataSource(msgDataSource)
+        .packages("gov.cdc.dataextractionservice.repository.msg")
+        .persistenceUnit("msg")
+        .build();
   }
 
   @Primary
   @Bean(name = "msgTransactionManager")
   public PlatformTransactionManager msgTransactionManager(
-    @Qualifier("msgEntityManagerFactory") EntityManagerFactory msgEntityManagerFactory) {
+      @Qualifier("msgEntityManagerFactory") EntityManagerFactory msgEntityManagerFactory) {
     return new JpaTransactionManager(msgEntityManagerFactory);
   }
 
@@ -81,6 +79,4 @@ public class MsgDataSourceConfig {
   public JdbcTemplate msgJdbcTemplate(@Qualifier("msgDataSource") DataSource dataSource) {
     return new JdbcTemplate(dataSource);
   }
-
-
 }

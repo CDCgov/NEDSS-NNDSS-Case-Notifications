@@ -39,9 +39,7 @@ public class TransportOutVM {
   private String responseMessageSignature;
   private Integer priority;
 
-  public TransportOutVM() {
-
-  }
+  public TransportOutVM() {}
 
   public TransportOutVM(TransportQOut transportQOut) {
     this.recordId = transportQOut.getRecordId();
@@ -76,5 +74,4 @@ public class TransportOutVM {
     this.responseMessageSignature = transportQOut.getResponseMessageSignature();
     this.priority = transportQOut.getPriority();
   }
-
 }

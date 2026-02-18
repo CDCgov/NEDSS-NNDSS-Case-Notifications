@@ -22,11 +22,14 @@ public class OBXHelper {
     validator.validateField("OBX-11", obx.getObservationResultStatus().getValue(), false, 0, 1);
     //        validator.validateField("OBX-12", obx.getnormal().toString(), false, 0, 26);
     validator.validateField("OBX-13", obx.getUserDefinedAccessChecks().getValue(), false, 0, 20);
-    validator.validateField("OBX-14", obx.getDateTimeOfTheObservation().getTime().getValue(), false, 0, 26);
+    validator.validateField(
+        "OBX-14", obx.getDateTimeOfTheObservation().getTime().getValue(), false, 0, 26);
     validator.validateField("OBX-15", obx.getProducerSID().toString(), false, 0, 250);
     validator.validateField("OBX-16", obx.getResponsibleObserver(0).toString(), false, 0, 250);
     validator.validateField("OBX-17", obx.getObservationMethod(0).toString(), false, 0, 250);
-    validator.validateField("OBX-18", obx.getEquipmentInstanceIdentifier(0).toString(), false, 0, 22);
-    validator.validateField("OBX-19", obx.getDateTimeOfTheAnalysis().getTime().getValue(), false, 0, 26);
+    validator.validateField(
+        "OBX-18", obx.getEquipmentInstanceIdentifier(0).toString(), false, 0, 22);
+    validator.validateField(
+        "OBX-19", obx.getDateTimeOfTheAnalysis().getTime().getValue(), false, 0, 26);
   }
 }

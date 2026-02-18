@@ -10,27 +10,35 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import java.io.IOException;
 
 /**
- * <ul>
- *     <li>1118 - require constructor complaint</li>
- *     <li>125 - comment complaint</li>
- *     <li>6126 - String block complaint</li>
- *     <li>1135 - todos complaint</li>
- * </ul>
  *
+ *
+ * <ul>
+ *   <li>1118 - require constructor complaint
+ *   <li>125 - comment complaint
+ *   <li>6126 - String block complaint
+ *   <li>1135 - todos complaint
+ * </ul>
  */
 @SuppressWarnings({"java:S1118", "java:S125", "java:S6126", "java:S1135"})
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
   @Override
-  public void commence(HttpServletRequest request, HttpServletResponse response,
-    AuthenticationException authException) throws IOException {
+  public void commence(
+      HttpServletRequest request,
+      HttpServletResponse response,
+      AuthenticationException authException)
+      throws IOException {
     String expMessage = authException.getMessage();
-    //The following code block is for providing the custom message for the invalid client id and client secrets.
-    if (expMessage != null && expMessage.contains("Full authentication is required to access this resource")) {
+    // The following code block is for providing the custom message for the invalid client id and
+    // client secrets.
+    if (expMessage != null
+        && expMessage.contains("Full authentication is required to access this resource")) {
       String clientId = request.getHeader("clientid");
       String clientSecret = request.getHeader("clientsecret");
       String authorizationType = request.getHeader("authorization");
-      if (authorizationType != null && authorizationType.startsWith("Bearer")
-        && clientId != null && clientSecret != null) {
+      if (authorizationType != null
+          && authorizationType.startsWith("Bearer")
+          && clientId != null
+          && clientSecret != null) {
         expMessage = "Invalid client or Invalid client credentials";
       }
     }

@@ -24,5 +24,4 @@ public class MapToEIType {
       output.getUniversalIDType().setValue(eiDataType.getUniversalIdType());
     }
   }
-
 }

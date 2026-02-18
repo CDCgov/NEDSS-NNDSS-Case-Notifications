@@ -25,7 +25,5 @@ public class MapToCWEType {
     } else {
       output.getText().setValue("MISSING");
     }
-
   }
-
 }

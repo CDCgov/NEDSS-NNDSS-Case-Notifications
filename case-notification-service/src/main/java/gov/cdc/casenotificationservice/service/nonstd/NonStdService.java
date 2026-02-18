@@ -32,11 +32,11 @@ public class NonStdService implements INonStdService {
     private final IApiService apiService;
 
     public NonStdService(IPHINMSService phinmsService,
-                         INonStdBatchService batchService,
-                         TransportQOutRepository transportQOutRepository,
-                         CNTraportqOutRepository cnTraportqOutRepository,
-                         CaseNotificationConfigRepository caseNotificationConfigRepository,
-                         IApiService apiService) {
+        INonStdBatchService batchService,
+        TransportQOutRepository transportQOutRepository,
+        CNTraportqOutRepository cnTraportqOutRepository,
+        CaseNotificationConfigRepository caseNotificationConfigRepository,
+        IApiService apiService) {
         this.phinmsService = phinmsService;
         this.batchService = batchService;
         this.transportQOutRepository = transportQOutRepository;
@@ -45,54 +45,54 @@ public class NonStdService implements INonStdService {
         this.apiService = apiService;
     }
 
-    public void nonStdProcessor(MessageAfterStdChecker messageAfterStdChecker, boolean hl7ValidationEnabled) throws IgnorableException, NonStdProcessorServiceException, NonStdBatchProcessorServiceException, APIException {
-            PHINMSProperties phinmsProperties = new PHINMSProperties();
-            CaseNotificationConfig stdConfig = caseNotificationConfigRepository.findNonStdConfig();
-            var cnTranport = cnTraportqOutRepository.findTopByRecordUid(messageAfterStdChecker.getCnTransportqOutUid());
+    public void nonStdProcessor(MessageAfterStdChecker messageAfterStdChecker, boolean hl7ValidationEnabled)
+        throws IgnorableException, NonStdProcessorServiceException, NonStdBatchProcessorServiceException, APIException {
+        PHINMSProperties phinmsProperties = new PHINMSProperties();
+        CaseNotificationConfig stdConfig = caseNotificationConfigRepository.findNonStdConfig();
+        var cnTranport = cnTraportqOutRepository.findTopByRecordUid(messageAfterStdChecker.getCnTransportqOutUid());
 
-            var token = apiService.callToken();
-            if (token == null || token.isEmpty()) {
-                throw new IgnorableException("Token is Invalid");
-            }
-            var tranformedData = apiService.callHl7Endpoint(token, String.valueOf(cnTranport.getCnTransportqOutUid()), hl7ValidationEnabled);
-            String payload = tranformedData;
-            if (payload.isEmpty()) {
-                throw new IgnorableException("Payload is empty");
-            }
+        var token = apiService.callToken();
+        if (token == null || token.isEmpty()) {
+            throw new IgnorableException("Token is Invalid");
+        }
+        var tranformedData =
+            apiService.callHl7Endpoint(token, String.valueOf(cnTranport.getCnTransportqOutUid()), hl7ValidationEnabled);
+        String payload = tranformedData;
+        if (payload.isEmpty()) {
+            throw new IgnorableException("Payload is empty");
+        }
 
-            phinmsProperties.setCnTransportUid(cnTranport.getCnTransportqOutUid());
-            phinmsProperties.setPMessageUid(cnTranport.getNotificationLocalId());
-            phinmsProperties.setPNotificationId(String.valueOf(cnTranport.getNotificationUid()));
-            phinmsProperties.setPPublicHealthCaseLocalId(cnTranport.getPublicHealthCaseLocalId());
-            phinmsProperties.setPReportStatusCd(cnTranport.getReportStatusCd());
-            phinmsProperties.setNETSS_MESSAGE_ONLY("queued");
-            phinmsProperties.setBATCH_MESSAGE_PROFILE_ID(stdConfig.getBatchMesageProfileId());
+        phinmsProperties.setCnTransportUid(cnTranport.getCnTransportqOutUid());
+        phinmsProperties.setPMessageUid(cnTranport.getNotificationLocalId());
+        phinmsProperties.setPNotificationId(String.valueOf(cnTranport.getNotificationUid()));
+        phinmsProperties.setPPublicHealthCaseLocalId(cnTranport.getPublicHealthCaseLocalId());
+        phinmsProperties.setPReportStatusCd(cnTranport.getReportStatusCd());
+        phinmsProperties.setNETSS_MESSAGE_ONLY("queued");
+        phinmsProperties.setBATCH_MESSAGE_PROFILE_ID(stdConfig.getBatchMesageProfileId());
 
-            PHINMSProperties updatedPhinmsProperties;
+        PHINMSProperties updatedPhinmsProperties;
 
+        try {
+            updatedPhinmsProperties = phinmsService.gettingPHIMNSProperties(payload, phinmsProperties, stdConfig);
+        } catch (Exception e) {
+            throw new NonStdProcessorServiceException("Failure at PHINMS processor", e);
+        }
+
+        if (batchService.isBatchConditionApplied(updatedPhinmsProperties, stdConfig)) {
             try {
-                updatedPhinmsProperties = phinmsService.gettingPHIMNSProperties(payload, phinmsProperties, stdConfig);
+                batchNonStdProcessor(updatedPhinmsProperties);
             } catch (Exception e) {
-                throw new NonStdProcessorServiceException("Failure at PHINMS processor", e);
+                throw new NonStdBatchProcessorServiceException("Failure at batch processor", e);
             }
-
-            if (batchService.isBatchConditionApplied(updatedPhinmsProperties, stdConfig)) {
-                try {
-                    batchNonStdProcessor(updatedPhinmsProperties);
-                } catch (Exception e) {
-                    throw new NonStdBatchProcessorServiceException("Failure at batch processor", e);
-                }
-            }
-            else
-            {
-                try {
-                    nonStdProcessor(updatedPhinmsProperties);
-                } catch (Exception e) {
-                    throw new NonStdProcessorServiceException("Failure at Non Std DB Logic", e);
-
-                }
+        } else {
+            try {
+                nonStdProcessor(updatedPhinmsProperties);
+            } catch (Exception e) {
+                throw new NonStdProcessorServiceException("Failure at Non Std DB Logic", e);
 
             }
+
+        }
 
     }
 
@@ -106,7 +106,8 @@ public class NonStdService implements INonStdService {
         transportQOutRepository.save(transportQOut);
 
         try {
-            cnTraportqOutRepository.updateStatusToQueued(PHINMSProperties.getCnTransportUid()); // "WHERE IS THIS ID COME FROM"
+            cnTraportqOutRepository.updateStatusToQueued(
+                PHINMSProperties.getCnTransportUid()); // "WHERE IS THIS ID COME FROM"
         } catch (Exception e) {
             throw new NonRetryableException(e.getMessage(), e);
         }

@@ -13,7 +13,7 @@ import static gov.cdc.casenotificationservice.constant.NonStdConstantValue.*;
 @Service
 public class NonStdNonStdBatchService implements INonStdBatchService {
 
-    public boolean isBatchConditionApplied(PHINMSProperties phinmsProperties,  CaseNotificationConfig stdConfig) {
+    public boolean isBatchConditionApplied(PHINMSProperties phinmsProperties, CaseNotificationConfig stdConfig) {
         return phinmsProperties.getMessageControlID1().equalsIgnoreCase(stdConfig.getBatchMesageProfileId());
     }
 
@@ -25,13 +25,14 @@ public class NonStdNonStdBatchService implements INonStdBatchService {
         NonStdQueue.getInstance().clearPHINMSProperties();
 
         var currentTime = phinmsProperties.getPCurrentTimestamp();
-        var SENDING_FACILITY_AND_NAME = phinmsProperties.getSENDING_APPLICATION() + HL7_PIPE + phinmsProperties.getSENDING_FACILITY();
+        var SENDING_FACILITY_AND_NAME =
+            phinmsProperties.getSENDING_APPLICATION() + HL7_PIPE + phinmsProperties.getSENDING_FACILITY();
 
         String header = String.format(HL7_BATCH_HEADER_TEMPLATE,
-                SENDING_FACILITY_AND_NAME,
-                currentTime,
-                SENDING_FACILITY_AND_NAME,
-                currentTime);
+            SENDING_FACILITY_AND_NAME,
+            currentTime,
+            SENDING_FACILITY_AND_NAME,
+            currentTime);
 
         var body = header + batchHL7Msg;
         phinmsProperties.setPPHINMessageContent2(body);
@@ -52,12 +53,10 @@ public class NonStdNonStdBatchService implements INonStdBatchService {
         if (!queue.isEmpty()) {
             int counter = 0;
             // Trailer - \rBTS|%c|\rFTS|1|
-            for(PHINMSProperties phinmsProperties : queue) {
+            for (PHINMSProperties phinmsProperties : queue) {
                 if (counter == 0) {
                     stringBuilder.append(phinmsProperties.getPPHINMessageContent2());
-                }
-                else
-                {
+                } else {
                     stringBuilder.append(HL7_NEWLINE).append(phinmsProperties.getPPHINMessageContent2());
                 }
                 ++counter;
@@ -66,7 +65,6 @@ public class NonStdNonStdBatchService implements INonStdBatchService {
             stringBuilder.append(counter);
             stringBuilder.append(HL7_BATCH_FOOTER_FTS);
         }
-
 
 
 

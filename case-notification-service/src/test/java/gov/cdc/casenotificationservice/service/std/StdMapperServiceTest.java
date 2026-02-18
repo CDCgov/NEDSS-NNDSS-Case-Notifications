@@ -34,7 +34,8 @@ class StdMapperServiceTest {
         when(mapperUtilService.mapToCodedAnswer(anyString(), anyString())).thenReturn("1");
         when(mapperUtilService.mapToCodedAnswer(anyString(), any())).thenReturn("1");
         when(mapperUtilService.mapToTsType(anyString(), anyString())).thenReturn("20240101");
-        when(mapperUtilService.mapToMultiCodedAnswer(anyString(), anyString(), anyString(), anyString())).thenReturn("Y");
+        when(mapperUtilService.mapToMultiCodedAnswer(anyString(), anyString(), anyString(), anyString())).thenReturn(
+            "Y");
         when(mapperUtilService.mapToDate(anyString(), anyString(), anyString())).thenReturn("20240101");
     }
 

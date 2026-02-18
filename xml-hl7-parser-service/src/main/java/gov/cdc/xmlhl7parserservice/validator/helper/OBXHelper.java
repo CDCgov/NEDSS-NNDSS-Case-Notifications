@@ -20,7 +20,7 @@ public class OBXHelper {
         validator.validateField("OBX-9", obx.getProbability().getValue(), false, 0, 5);
         validator.validateField("OBX-10", obx.getNatureOfAbnormalTest(0).getValue(), false, 0, 2);
         validator.validateField("OBX-11", obx.getObservationResultStatus().getValue(), false, 0, 1);
-//        validator.validateField("OBX-12", obx.getnormal().toString(), false, 0, 26);
+        //        validator.validateField("OBX-12", obx.getnormal().toString(), false, 0, 26);
         validator.validateField("OBX-13", obx.getUserDefinedAccessChecks().getValue(), false, 0, 20);
         validator.validateField("OBX-14", obx.getDateTimeOfTheObservation().getTime().getValue(), false, 0, 26);
         validator.validateField("OBX-15", obx.getProducerSID().toString(), false, 0, 250);

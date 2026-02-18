@@ -41,8 +41,8 @@ public class StringHelper {
                 String fieldName = field.getName();
 
                 // This strange setup is for RHAPSODY METSS specific
-                if (value instanceof String str ) {
-                    if (str.isEmpty() ) {
+                if (value instanceof String str) {
+                    if (str.isEmpty()) {
                         if (LENGTH_2.contains(fieldName)) {
                             sb.append("  "); // 2 spaces
                         } else if (LENGTH_3.contains(fieldName)) {
@@ -58,8 +58,7 @@ public class StringHelper {
                         } else {
                             sb.append(" "); // default 1 space
                         }
-                    }
-                    else {
+                    } else {
                         sb.append(str);
 
                     }

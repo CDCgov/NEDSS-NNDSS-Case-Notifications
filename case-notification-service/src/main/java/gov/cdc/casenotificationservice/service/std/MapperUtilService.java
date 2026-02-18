@@ -11,7 +11,8 @@ public class MapperUtilService implements IMapperUtilService {
     private final LookupNNDLookupRepository lookupNNDLookupRepository;
     private final LookupMmwrRepository lookupMmwrRepository;
 
-    public MapperUtilService(LookupNNDLookupRepository lookupNNDLookupRepository, LookupMmwrRepository lookupMmwrRepository) {
+    public MapperUtilService(LookupNNDLookupRepository lookupNNDLookupRepository,
+        LookupMmwrRepository lookupMmwrRepository) {
         this.lookupNNDLookupRepository = lookupNNDLookupRepository;
         this.lookupMmwrRepository = lookupMmwrRepository;
     }
@@ -23,67 +24,50 @@ public class MapperUtilService implements IMapperUtilService {
 
     public String mapToData(MessageElement.DataElement input) {
         String output = "";
-        if(input.getQuestionDataTypeNND().equalsIgnoreCase("CWE"))
-        {
-            output= input.getCweDataType().getCweCodedValue();
-        }
-        else if(input.getQuestionDataTypeNND().equalsIgnoreCase("CE"))
-        {
-            output= input.getCeDataType().getCeCodedValue();
-        }
-        else if(input.getQuestionDataTypeNND().equalsIgnoreCase("CX"))
-        {
-            output= input.getCxDataType().getCxData();
-        }
-        else if(input.getQuestionDataTypeNND().equalsIgnoreCase("IS"))
-        {
-            output= input.getIsDataType().getIsCodedValue();
-        }
-        else if(input.getQuestionDataTypeNND().equalsIgnoreCase("TX"))
-        {
-            output= input.getTxDataType().getTextData();
-        }
-        else if(input.getQuestionDataTypeNND().equalsIgnoreCase("ST"))
-        {
-            output= input.getStDataType().getStringData();
-        }
-        else if(input.getQuestionDataTypeNND().equalsIgnoreCase("SN"))
-        {
-            output= input.getSnDataType().getNum1();
-        }
-        else if(input.getQuestionDataTypeNND().equalsIgnoreCase("DT"))
-        {
+        if (input.getQuestionDataTypeNND().equalsIgnoreCase("CWE")) {
+            output = input.getCweDataType().getCweCodedValue();
+        } else if (input.getQuestionDataTypeNND().equalsIgnoreCase("CE")) {
+            output = input.getCeDataType().getCeCodedValue();
+        } else if (input.getQuestionDataTypeNND().equalsIgnoreCase("CX")) {
+            output = input.getCxDataType().getCxData();
+        } else if (input.getQuestionDataTypeNND().equalsIgnoreCase("IS")) {
+            output = input.getIsDataType().getIsCodedValue();
+        } else if (input.getQuestionDataTypeNND().equalsIgnoreCase("TX")) {
+            output = input.getTxDataType().getTextData();
+        } else if (input.getQuestionDataTypeNND().equalsIgnoreCase("ST")) {
+            output = input.getStDataType().getStringData();
+        } else if (input.getQuestionDataTypeNND().equalsIgnoreCase("SN")) {
+            output = input.getSnDataType().getNum1();
+        } else if (input.getQuestionDataTypeNND().equalsIgnoreCase("DT")) {
 
-            output= input.getDtDataType().getYear();
-            if(output == null || output.isEmpty())
-            {
-                output= input.getDtDataType().getDate().toString();
+            output = input.getDtDataType().getYear();
+            if (output == null || output.isEmpty()) {
+                output = input.getDtDataType().getDate().toString();
             }
+        } else if (input.getQuestionDataTypeNND().equalsIgnoreCase("TS")) {
+            output = input.getTsDataType().getTime().toString();
         }
-        else if(input.getQuestionDataTypeNND().equalsIgnoreCase("TS"))
-        {
-            output= input.getTsDataType().getTime().toString();
-        }
-        
-        return  output;
+
+        return output;
     }
 
     public String mapToDate(String week, String year, String output) {
         //  boolean result1 =true; //= RhapsodyTableLookup(output,"MMWR","WEEK_ENDING","NOT_MAPPED","MMWR_WEEK",week, "MMWR_YEAR", StrToUpper(year) );
-        output = String.valueOf(lookupMmwrRepository.findTopWeekEndingByMmwrWeekAndMmwrYear(Integer.parseInt(week), Integer.parseInt(year)));
+        output = String.valueOf(lookupMmwrRepository.findTopWeekEndingByMmwrWeekAndMmwrYear(Integer.parseInt(week),
+            Integer.parseInt(year)));
         if (output.trim().isEmpty() || (week.equalsIgnoreCase("NULL") && year.equalsIgnoreCase("NULL"))) {
             output = "";
         }
 
         int checkerCode = output.indexOf("/");
         if (checkerCode > 0 && output.length() > 0) {
-            String monthData= "";
+            String monthData = "";
             String dateData = "";
-            String yearData= "";
+            String yearData = "";
             String displayName = "";
 
-            String seperator= "^";
-            String inputmodified= output;
+            String seperator = "^";
+            String inputmodified = output;
 
 
             //int checkerCode = StrFind(inputmodified, "/");
@@ -117,15 +101,14 @@ public class MapperUtilService implements IMapperUtilService {
     }
 
     public String mapToMultiCodedAnswer(String input, String questionCode, String toUniqueId, String output) {
-        if(output.startsWith("CHECKER"))
-        {
-//            boolean result  = true; //RhapsodyTableLookup(output,"NNDLookup","TO_UNIQUE_ID","NOT_MAPPED","FROM_UNIQUE_ID",questionCode, "CONCEPT_CD", StrToUpper(input) );
+        if (output.startsWith("CHECKER")) {
+            //            boolean result  = true; //RhapsodyTableLookup(output,"NNDLookup","TO_UNIQUE_ID","NOT_MAPPED","FROM_UNIQUE_ID",questionCode, "CONCEPT_CD", StrToUpper(input) );
             output = lookupNNDLookupRepository.findToCodeByFromUniqueIdAndConceptCd(questionCode, input);
-        }
-        else{
+        } else {
 
-           // boolean result1  = true; //RhapsodyTableLookup(output,"NNDLookup","TO_CODE","NOT_MAPPED","FROM_UNIQUE_ID",questionCode, "TO_UNIQUE_ID", toUniqueId, "CONCEPT_CD", StrToUpper(input) );
-            output = lookupNNDLookupRepository.findToCodeByFromUniqueIdToUniqueIdAndConceptCd(questionCode, toUniqueId, input);
+            // boolean result1  = true; //RhapsodyTableLookup(output,"NNDLookup","TO_CODE","NOT_MAPPED","FROM_UNIQUE_ID",questionCode, "TO_UNIQUE_ID", toUniqueId, "CONCEPT_CD", StrToUpper(input) );
+            output = lookupNNDLookupRepository.findToCodeByFromUniqueIdToUniqueIdAndConceptCd(questionCode, toUniqueId,
+                input);
             if (output.trim().isEmpty() || input.startsWith("NULL")) {
                 output = "";
             }
@@ -136,29 +119,18 @@ public class MapperUtilService implements IMapperUtilService {
 
     public String mapToStringValue(MessageElement.DataElement input) {
         String output = "";
-        if(input.getQuestionDataTypeNND().equalsIgnoreCase("CWE"))
-        {
-            output= input.getCweDataType().getCweCodedValue();
-        }
-        else if(input.getQuestionDataTypeNND().equalsIgnoreCase("CE"))
-        {
-            output= input.getCeDataType().getCeCodedValue();
-        }
-        else if(input.getQuestionDataTypeNND().equalsIgnoreCase("CX"))
-        {
-            output= input.getCxDataType().getCxData();
-        }
-        else if(input.getQuestionDataTypeNND().equalsIgnoreCase("IS"))
-        {
-            output= input.getIsDataType().getIsCodedValue();
-        }
-        else if(input.getQuestionDataTypeNND().equalsIgnoreCase("TX"))
-        {
-            output= input.getTxDataType().getTextData();
-        }
-        else if(input.getQuestionDataTypeNND().equalsIgnoreCase("ST"))
-        {
-            output= input.getStDataType().getStringData();
+        if (input.getQuestionDataTypeNND().equalsIgnoreCase("CWE")) {
+            output = input.getCweDataType().getCweCodedValue();
+        } else if (input.getQuestionDataTypeNND().equalsIgnoreCase("CE")) {
+            output = input.getCeDataType().getCeCodedValue();
+        } else if (input.getQuestionDataTypeNND().equalsIgnoreCase("CX")) {
+            output = input.getCxDataType().getCxData();
+        } else if (input.getQuestionDataTypeNND().equalsIgnoreCase("IS")) {
+            output = input.getIsDataType().getIsCodedValue();
+        } else if (input.getQuestionDataTypeNND().equalsIgnoreCase("TX")) {
+            output = input.getTxDataType().getTextData();
+        } else if (input.getQuestionDataTypeNND().equalsIgnoreCase("ST")) {
+            output = input.getStDataType().getStringData();
         }
 
         return output;

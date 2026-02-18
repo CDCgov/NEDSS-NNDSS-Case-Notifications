@@ -14,21 +14,33 @@ public class MSHHelper {
         validator.validateField("MSH-1", msh.getFieldSeparator().getValue(), true, 1, 1);
         validator.validateField("MSH-2", msh.getEncodingCharacters().getValue(), true, 4, 4);
 
-        validator.validateField("MSH-3.NamespaceID", msh.getSendingApplication().getNamespaceID().getValue(), false, 0, 20);
-        validator.validateField("MSH-3.UniversalID", msh.getSendingApplication().getUniversalID().getValue(), true, 0, 199);
-        validator.validateField("MSH-3.UniversalIDType", msh.getSendingApplication().getUniversalIDType().getValue(), true, 0, 6);
+        validator.validateField("MSH-3.NamespaceID", msh.getSendingApplication().getNamespaceID().getValue(), false, 0,
+            20);
+        validator.validateField("MSH-3.UniversalID", msh.getSendingApplication().getUniversalID().getValue(), true, 0,
+            199);
+        validator.validateField("MSH-3.UniversalIDType", msh.getSendingApplication().getUniversalIDType().getValue(),
+            true, 0, 6);
 
-        validator.validateField("MSH-4.NamespaceID", msh.getSendingFacility().getNamespaceID().getValue(), false, 0, 20);
-        validator.validateField("MSH-4.UniversalID", msh.getSendingFacility().getUniversalID().getValue(), true, 0, 199);
-        validator.validateField("MSH-4.UniversalIDType", msh.getSendingFacility().getUniversalIDType().getValue(), true, 0, 6);
+        validator.validateField("MSH-4.NamespaceID", msh.getSendingFacility().getNamespaceID().getValue(), false, 0,
+            20);
+        validator.validateField("MSH-4.UniversalID", msh.getSendingFacility().getUniversalID().getValue(), true, 0,
+            199);
+        validator.validateField("MSH-4.UniversalIDType", msh.getSendingFacility().getUniversalIDType().getValue(), true,
+            0, 6);
 
-        validator.validateField("MSH-5.NamespaceID", msh.getReceivingApplication().getNamespaceID().getValue(), false, 0, 20);
-        validator.validateField("MSH-5.UniversalID", msh.getReceivingApplication().getUniversalID().getValue(), true, 0, 199);
-        validator.validateField("MSH-5.UniversalIDType", msh.getReceivingApplication().getUniversalIDType().getValue(), true, 0, 6);
+        validator.validateField("MSH-5.NamespaceID", msh.getReceivingApplication().getNamespaceID().getValue(), false,
+            0, 20);
+        validator.validateField("MSH-5.UniversalID", msh.getReceivingApplication().getUniversalID().getValue(), true, 0,
+            199);
+        validator.validateField("MSH-5.UniversalIDType", msh.getReceivingApplication().getUniversalIDType().getValue(),
+            true, 0, 6);
 
-        validator.validateField("MSH-6.NamespaceID", msh.getReceivingFacility().getNamespaceID().getValue(), false, 0, 20);
-        validator.validateField("MSH-6.UniversalID", msh.getReceivingFacility().getUniversalID().getValue(), true, 0, 199);
-        validator.validateField("MSH-6.UniversalIDType", msh.getReceivingFacility().getUniversalIDType().getValue(), true, 0, 6);
+        validator.validateField("MSH-6.NamespaceID", msh.getReceivingFacility().getNamespaceID().getValue(), false, 0,
+            20);
+        validator.validateField("MSH-6.UniversalID", msh.getReceivingFacility().getUniversalID().getValue(), true, 0,
+            199);
+        validator.validateField("MSH-6.UniversalIDType", msh.getReceivingFacility().getUniversalIDType().getValue(),
+            true, 0, 6);
 
 
         String dateTime = msh.getDateTimeOfMessage().getTime().getValue();
@@ -78,5 +90,5 @@ public class MSHHelper {
             validator.validateField("MSH-21[" + (i + 1) + "]", value, true, 1, 427);
         }
     }
-    
+
 }

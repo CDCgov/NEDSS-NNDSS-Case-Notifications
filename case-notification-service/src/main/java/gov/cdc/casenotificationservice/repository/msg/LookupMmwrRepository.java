@@ -12,11 +12,11 @@ import java.sql.Date;
 @Repository
 public interface LookupMmwrRepository extends JpaRepository<LookupMmwr, Date> {
     @Query(
-            value = "SELECT TOP 1 WEEK_ENDING FROM LOOKUP_MMWR WHERE MMWR_WEEK = :mmwrWeek AND MMWR_YEAR = :mmwrYear",
-            nativeQuery = true
+        value = "SELECT TOP 1 WEEK_ENDING FROM LOOKUP_MMWR WHERE MMWR_WEEK = :mmwrWeek AND MMWR_YEAR = :mmwrYear",
+        nativeQuery = true
     )
     Date findTopWeekEndingByMmwrWeekAndMmwrYear(
-            @Param("mmwrWeek") int mmwrWeek,
-            @Param("mmwrYear") int mmwrYear
+        @Param("mmwrWeek") int mmwrWeek,
+        @Param("mmwrYear") int mmwrYear
     );
 }

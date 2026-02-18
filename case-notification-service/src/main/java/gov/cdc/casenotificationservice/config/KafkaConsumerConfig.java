@@ -55,10 +55,11 @@ public class KafkaConsumerConfig {
     }
 
     private ConcurrentKafkaListenerContainerFactory<String, String> createContainerFactory(String groupId) {
-        ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        ConcurrentKafkaListenerContainerFactory<String, String> factory =
+            new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(createConsumerFactory(groupId));
         factory.setConcurrency(thread);
-//        factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL);
+        //        factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL);
 
 
         return factory;

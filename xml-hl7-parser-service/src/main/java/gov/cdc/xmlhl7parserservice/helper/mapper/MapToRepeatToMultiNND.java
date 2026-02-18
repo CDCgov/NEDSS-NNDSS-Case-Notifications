@@ -20,7 +20,8 @@ public class MapToRepeatToMultiNND {
     List<DiscreteMulti> repeatMultiArray = new ArrayList<>();
     MessageState messageState = new MessageState();
 
-    public void mapToRepeatToMultiNND(MessageElement messageElement, int obx2Inc, ORU_R01_ORDER_OBSERVATION orderObservation) throws DataTypeException {
+    public void mapToRepeatToMultiNND(MessageElement messageElement, int obx2Inc,
+        ORU_R01_ORDER_OBSERVATION orderObservation) throws DataTypeException {
         ObxRepeatingElement obxRepeatingElement = null;
         String indPartMain = "";
         String indPart1 = "";
@@ -187,7 +188,7 @@ public class MapToRepeatToMultiNND {
         }
 
 
-//        out.OBSERVATION[1].OBX[counter].ObservationValue[obsCounter] = output;
+        //        out.OBSERVATION[1].OBX[counter].ObservationValue[obsCounter] = output;
 
 
         if (checkerNum == 0) {

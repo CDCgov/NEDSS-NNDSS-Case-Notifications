@@ -10,20 +10,17 @@ public class MapToCWEType {
 
     void mapToCWEType(MessageElement input, CWE output) throws DataTypeException {
         MessageElement.DataElement.CweDataType cweDataType = input.getDataElement().getCweDataType();
-        if(cweDataType.getCweCodedValue() != null)
-        {
+        if (cweDataType.getCweCodedValue() != null) {
             output.getIdentifier().setValue(cweDataType.getCweCodedValue());
         } else {
             output.getIdentifier().setValue("MISSING");
         }
-        if(cweDataType.getCweCodedValueCodingSystem() != null)
-        {
+        if (cweDataType.getCweCodedValueCodingSystem() != null) {
             output.getNameOfCodingSystem().setValue(cweDataType.getCweCodedValueCodingSystem());
         } else {
             output.getNameOfCodingSystem().setValue("MISSING");
         }
-        if(cweDataType.getCweCodedValueDescription() != null)
-        {
+        if (cweDataType.getCweCodedValueDescription() != null) {
             output.getText().setValue(cweDataType.getCweCodedValueDescription());
         } else {
             output.getText().setValue("MISSING");

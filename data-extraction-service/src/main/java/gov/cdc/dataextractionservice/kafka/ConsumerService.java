@@ -41,8 +41,8 @@ public class ConsumerService {
     }
 
     @KafkaListener(
-            topics = "${kafka.topic.cn-tranport-out-topic}",
-            containerFactory = "kafkaListenerContainerFactoryDebeziumConsumer"
+        topics = "${kafka.topic.cn-tranport-out-topic}",
+        containerFactory = "kafkaListenerContainerFactoryDebeziumConsumer"
     )
     public void handleMessage(String messages) {
         try {
@@ -63,20 +63,20 @@ public class ConsumerService {
                         producerService.sendMessage(transformed);
 
                         // Update database record_status_cd
-                        if (transformed.isStdMessageDetected() && ("NETSS_MESSAGE_ONLY".equals(transformed.getNetssMessageOnly())
-                                || "BOTH".equals(transformed.getNetssMessageOnly()))) {
+                        if (transformed.isStdMessageDetected() && ("NETSS_MESSAGE_ONLY".equals(
+                            transformed.getNetssMessageOnly())
+                            || "BOTH".equals(transformed.getNetssMessageOnly()))) {
                             updateService.updateRecordStatus(
-                                    transformed.getCnTransportqOutUid(),
-                                    "STD_PROCESSING"
+                                transformed.getCnTransportqOutUid(),
+                                "STD_PROCESSING"
                             );
                         } else {
                             updateService.updateRecordStatus(
-                                    transformed.getCnTransportqOutUid(),
-                                    "NON_STD_PROCESSING"
+                                transformed.getCnTransportqOutUid(),
+                                "NON_STD_PROCESSING"
                             );
                         }
-                    }
-                    else {
+                    } else {
                         logger.info("Message skipped - did not meet the criteria");
                     }
                 } else {

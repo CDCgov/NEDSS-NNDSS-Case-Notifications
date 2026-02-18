@@ -28,40 +28,39 @@ public class StatusController {
     }
 
     @Operation(
-            summary = "Get a Status by CnTransportUid",
-            description = "Return pipeline status",
-            parameters = {
-                    @Parameter(in = ParameterIn.HEADER,
-                            name = "clientid",
-                            description = "The Client Id for authentication",
-                            required = true,
-                            schema = @Schema(type = "string")),
-                    @Parameter(in = ParameterIn.HEADER,
-                            name = "clientsecret",
-                            description = "The Client Secret for authentication",
-                            required = true,
-                            schema = @Schema(type = "string")),
-                    @Parameter(
-                            in = ParameterIn.QUERY,
-                            name = "cnTransportUid",
-                            description = "CnTransportUid",
-                            required = true,
-                            schema = @Schema(type = "long")
-                    )
-            },
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "Status found",
-                            content = @Content(schema = @Schema(implementation = ApiDltResponseModel.class))
-                    ),
-                    @ApiResponse(responseCode = "404", description = "Status not found"),
-                    @ApiResponse(responseCode = "500", description = "Internal server error")
-            }
+        summary = "Get a Status by CnTransportUid",
+        description = "Return pipeline status",
+        parameters = {
+            @Parameter(in = ParameterIn.HEADER,
+                name = "clientid",
+                description = "The Client Id for authentication",
+                required = true,
+                schema = @Schema(type = "string")),
+            @Parameter(in = ParameterIn.HEADER,
+                name = "clientsecret",
+                description = "The Client Secret for authentication",
+                required = true,
+                schema = @Schema(type = "string")),
+            @Parameter(
+                in = ParameterIn.QUERY,
+                name = "cnTransportUid",
+                description = "CnTransportUid",
+                required = true,
+                schema = @Schema(type = "long")
+            )
+        },
+        responses = {
+            @ApiResponse(
+                responseCode = "200",
+                description = "Status found",
+                content = @Content(schema = @Schema(implementation = ApiDltResponseModel.class))
+            ),
+            @ApiResponse(responseCode = "404", description = "Status not found"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+        }
     )
     @GetMapping("/message-status")
-    public ResponseEntity<ApiStatusResponseModel> getStatus (@RequestParam("cnTransportUid") long cnTransportUid)
-    {
+    public ResponseEntity<ApiStatusResponseModel> getStatus(@RequestParam("cnTransportUid") long cnTransportUid) {
         try {
             var response = statusService.getProcessedStatus(cnTransportUid);
             if (response == null) {

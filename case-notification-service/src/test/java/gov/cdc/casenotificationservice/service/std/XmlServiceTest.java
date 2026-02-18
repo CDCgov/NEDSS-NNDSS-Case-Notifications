@@ -105,7 +105,7 @@ class XmlServiceTest {
 
     private String readFileFromResources(String filename) throws IOException, URISyntaxException {
         Path path = Path.of(Objects.requireNonNull(
-                getClass().getClassLoader().getResource(filename)).toURI()
+            getClass().getClassLoader().getResource(filename)).toURI()
         );
         return Files.readString(path);
     }

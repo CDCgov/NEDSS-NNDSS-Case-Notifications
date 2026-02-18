@@ -17,7 +17,8 @@ public class MapToDisRepeat {
     MessageState messageState = new MessageState();
     DiscreteMulti discreteMulti = new DiscreteMulti();
 
-    public void mapToDisRepeat(MessageElement messageElement, int obx2Inc, ORU_R01_ORDER_OBSERVATION orderObservation) throws DataTypeException {
+    public void mapToDisRepeat(MessageElement messageElement, int obx2Inc, ORU_R01_ORDER_OBSERVATION orderObservation)
+        throws DataTypeException {
         ObxRepeatingElement obxRepeatingElement = null;
 
         String indicatorCode = messageElement.getIndicatorCd();
@@ -25,7 +26,8 @@ public class MapToDisRepeat {
 
         String mappedValue = indicatorCode.substring(0, indicatorCode.indexOf("DiscCdToMultiOBS") - 2);
 
-        if (mappedValue.equals("Y") && (messageElement.getDataElement().getCweDataType().getCweCodedValue()).equals("Y")) {
+        if (mappedValue.equals("Y") && (messageElement.getDataElement().getCweDataType().getCweCodedValue()).equals(
+            "Y")) {
             indicatorCode = indicatorCode.substring(startInd + 2);
 
             String questionMap = messageElement.getQuestionMap();
@@ -87,7 +89,9 @@ public class MapToDisRepeat {
             }
 
             //TODO - Verify this implementation everywhere in the code
-            Type obxValue = orderObservation.getOBSERVATION(1).getOBX().getObservationValue(discreteMulti.getObsValueCounter()).getData();
+            Type obxValue =
+                orderObservation.getOBSERVATION(1).getOBX().getObservationValue(discreteMulti.getObsValueCounter())
+                    .getData();
             ST stType;
 
             if (obxValue instanceof ST) {
@@ -98,7 +102,8 @@ public class MapToDisRepeat {
 
 
             stType.setValue(subStringRight);
-            orderObservation.getOBSERVATION(1).getOBX().getObservationValue(discreteMulti.getObsValueCounter()).setData(stType);
+            orderObservation.getOBSERVATION(1).getOBX().getObservationValue(discreteMulti.getObsValueCounter())
+                .setData(stType);
             if (obxRepeatingElement == null) {
                 obxRepeatingElement = new ObxRepeatingElement();
                 obxRepeatingElement.setElementUid("mapToDisRepeat");

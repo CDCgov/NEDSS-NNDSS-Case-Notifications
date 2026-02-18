@@ -20,13 +20,15 @@ public class MapToDynamicParentRptToRpt {
     private final List<DynamicRepeatMulti> dynamicRepeatMultiArray;
     private final MapToRemoveSpecialCharacters mapToRemoveSpecialCharacters;
 
-    public MapToDynamicParentRptToRpt(List<ObxRepeatingElement> obxRepeatingElementArrayList, List<DynamicRepeatMulti> dynamicRepeatMultiArray, MapToRemoveSpecialCharacters mapToRemoveSpecialCharacters) {
+    public MapToDynamicParentRptToRpt(List<ObxRepeatingElement> obxRepeatingElementArrayList,
+        List<DynamicRepeatMulti> dynamicRepeatMultiArray, MapToRemoveSpecialCharacters mapToRemoveSpecialCharacters) {
         this.obxRepeatingElementArrayList = obxRepeatingElementArrayList;
         this.dynamicRepeatMultiArray = dynamicRepeatMultiArray;
         this.mapToRemoveSpecialCharacters = mapToRemoveSpecialCharacters;
     }
 
-    public void mapToDynamicParentRptToRpt(MessageElement messageElement, int obx2Inc, String messageType, ORU_R01_ORDER_OBSERVATION orderObservation) throws DataTypeException {
+    public void mapToDynamicParentRptToRpt(MessageElement messageElement, int obx2Inc, String messageType,
+        ORU_R01_ORDER_OBSERVATION orderObservation) throws DataTypeException {
         String parentCode = messageElement.getIndicatorCd();
         int intStart = parentCode.indexOf("|ParentRepeatBlock");
 
@@ -44,10 +46,9 @@ public class MapToDynamicParentRptToRpt {
             DynamicRepeatMulti entry = dynamicRepeatMultiArray.get(x);
 
             if (entry.getParentCode().equals(parentQuestionIdentifier) &&
-                    entry.getPartIndicator().equals(obsSubIdCounter)) {
+                entry.getPartIndicator().equals(obsSubIdCounter)) {
                 counter = entry.getObx4counter();
-            }
-            else if (entry.getParentCode().equals(parentQuestionIdentifier) && counter == 0) {
+            } else if (entry.getParentCode().equals(parentQuestionIdentifier) && counter == 0) {
                 if (maxObxCounter < entry.getObx4counter()) {
                     maxObxCounter = entry.getObx4counter();
                 }
@@ -103,7 +104,8 @@ public class MapToDynamicParentRptToRpt {
 
             String codedValueCodingSystem = "";
             if (messageElement.getDataElement().getCweDataType().getCweCodedValueCodingSystem() != null) {
-                codedValueCodingSystem = messageElement.getDataElement().getCweDataType().getCweCodedValueCodingSystem();
+                codedValueCodingSystem =
+                    messageElement.getDataElement().getCweDataType().getCweCodedValueCodingSystem();
             }
 
             String localCodedValue = "";
@@ -113,12 +115,14 @@ public class MapToDynamicParentRptToRpt {
 
             String localCodedValueDescription = "";
             if (messageElement.getDataElement().getCweDataType().getCweLocalCodedValueDescription() != null) {
-                localCodedValueDescription = messageElement.getDataElement().getCweDataType().getCweLocalCodedValueDescription();
+                localCodedValueDescription =
+                    messageElement.getDataElement().getCweDataType().getCweLocalCodedValueDescription();
             }
 
             String localCodedValueCodingSystem = "";
             if (messageElement.getDataElement().getCweDataType().getCweLocalCodedValueCodingSystem() != null) {
-                localCodedValueCodingSystem = messageElement.getDataElement().getCweDataType().getCweLocalCodedValueCodingSystem();
+                localCodedValueCodingSystem =
+                    messageElement.getDataElement().getCweDataType().getCweLocalCodedValueCodingSystem();
             }
 
             String originalOtherText = "";
@@ -129,12 +133,12 @@ public class MapToDynamicParentRptToRpt {
             }
 
             String finalValue = String.join("^",
-                    codedValue,
-                    codedValueDescription,
-                    codedValueCodingSystem,
-                    localCodedValue,
-                    localCodedValueDescription,
-                    localCodedValueCodingSystem
+                codedValue,
+                codedValueDescription,
+                codedValueCodingSystem,
+                localCodedValue,
+                localCodedValueDescription,
+                localCodedValueCodingSystem
             ) + originalOtherText;
 
 

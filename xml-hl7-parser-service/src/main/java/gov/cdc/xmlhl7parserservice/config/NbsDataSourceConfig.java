@@ -22,7 +22,7 @@ import java.util.HashMap;
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(
-    entityManagerFactoryRef = "nbsEntityManagerFactory", 
+    entityManagerFactoryRef = "nbsEntityManagerFactory",
     transactionManagerRef = "nbsTransactionManager",
     basePackages = {
         "gov.cdc.xmlhl7parserservice.repository.msgout"
@@ -91,18 +91,18 @@ public class NbsDataSourceConfig {
 
     @Bean(name = "nbsEntityManagerFactory")
     public LocalContainerEntityManagerFactoryBean nbsEntityManagerFactory(
-            EntityManagerFactoryBuilder nbsEntityManagerFactoryBuilder,
-            @Qualifier("nbsDataSource") DataSource nbsDataSource) {
+        EntityManagerFactoryBuilder nbsEntityManagerFactoryBuilder,
+        @Qualifier("nbsDataSource") DataSource nbsDataSource) {
         return nbsEntityManagerFactoryBuilder
-                .dataSource(nbsDataSource)
-                .packages("gov.cdc.xmlhl7parserservice.repository.msgout.model")
-                .persistenceUnit("nbs")
-                .build();
+            .dataSource(nbsDataSource)
+            .packages("gov.cdc.xmlhl7parserservice.repository.msgout.model")
+            .persistenceUnit("nbs")
+            .build();
     }
 
     @Bean(name = "nbsTransactionManager")
     public PlatformTransactionManager nbsTransactionManager(
-            @Qualifier("nbsEntityManagerFactory") EntityManagerFactory nbsEntityManagerFactory) {
+        @Qualifier("nbsEntityManagerFactory") EntityManagerFactory nbsEntityManagerFactory) {
         return new JpaTransactionManager(nbsEntityManagerFactory);
     }
 }

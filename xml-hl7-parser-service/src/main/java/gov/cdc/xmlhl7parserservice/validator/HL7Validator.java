@@ -37,8 +37,7 @@ public class HL7Validator {
         if (patientResult.getPATIENT() == null) {
             log.info("Patient Result getPATIENT() is null.");
             throw new XmlHL7ParserException("Patient Result getPATIENT() is null.");
-        }
-        else {
+        } else {
             PID pid = patientResult.getPATIENT().getPID();
             if (pid == null) {
                 throw new HL7Exception("Missing PID segment in PATIENT group");
@@ -52,8 +51,7 @@ public class HL7Validator {
                 NK1 nk1 = patientResult.getPATIENT().getNK1(i);
                 if (nk1 == null) {
                     log.info("NK1 segment not available.");
-                }
-                else {
+                } else {
                     NK1Helper nk1Helper = new NK1Helper();
                     nk1Helper.validateNK1Fields(nk1);
                 }
@@ -70,8 +68,7 @@ public class HL7Validator {
             OBR obr = orderObx.getOBR();
             if (obr == null) {
                 throw new HL7Exception("Missing OBR Segment");
-            }
-            else {
+            } else {
                 OBRHelper obrHelper = new OBRHelper();
                 obrHelper.validateOBRFields(obr);
             }
@@ -79,8 +76,7 @@ public class HL7Validator {
             NTE nte = orderObx.getNTE();
             if (nte == null) {
                 log.info("Missing NTE Segment");
-            }
-            else {
+            } else {
                 NTEHelper nteHelper = new NTEHelper();
                 nteHelper.validateNTEFields(nte);
             }
@@ -90,16 +86,14 @@ public class HL7Validator {
                 OBX obx = observation.getOBX();
                 if (obx == null) {
                     throw new HL7Exception("Missing OBX Segment.");
-                }
-                else {
+                } else {
                     OBXHelper obxHelper = new OBXHelper();
                     obxHelper.validateOBXFields(obx);
                 }
                 NTE nteObx = observation.getNTE();
                 if (nteObx == null) {
-                   log.info("Missing NTE Segment in OBSERVATION.");
-                }
-                else {
+                    log.info("Missing NTE Segment in OBSERVATION.");
+                } else {
                     NTEHelper nteHelper = new NTEHelper();
                     nteHelper.validateNTEFields(nteObx);
                 }
@@ -110,8 +104,7 @@ public class HL7Validator {
                 SPM spm = specimen.getSPM();
                 if (spm == null) {
                     throw new HL7Exception("Missing OBX Segment");
-                }
-                else {
+                } else {
                     SPMHelper spmHelper = new SPMHelper();
                     spmHelper.validateSPMFields(spm);
                 }
@@ -119,8 +112,7 @@ public class HL7Validator {
                 OBX spmObx = specimen.getOBX();
                 if (spmObx == null) {
                     log.info("Missing NTE Segment in SPECIMEN.");
-                }
-                else {
+                } else {
                     OBXHelper obxHelper = new OBXHelper();
                     obxHelper.validateOBXFields(spmObx);
                 }
@@ -129,14 +121,16 @@ public class HL7Validator {
         return true;
     }
 
-    public void validateField(String fieldName, String value, boolean required, int minLen, int maxLen) throws HL7Exception {
+    public void validateField(String fieldName, String value, boolean required, int minLen, int maxLen)
+        throws HL7Exception {
         if (required && (value == null || value.trim().isEmpty())) {
             throw new HL7Exception(fieldName + " is required but missing");
         }
         if (value != null) {
             int len = value.length();
             if (len < minLen || len > maxLen) {
-                throw new HL7Exception(fieldName + " length must be between " + minLen + " and " + maxLen + " but was " + len);
+                throw new HL7Exception(
+                    fieldName + " length must be between " + minLen + " and " + maxLen + " but was " + len);
             }
         }
     }

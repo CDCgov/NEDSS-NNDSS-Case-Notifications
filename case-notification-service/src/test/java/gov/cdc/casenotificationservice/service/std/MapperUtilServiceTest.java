@@ -40,7 +40,7 @@ class MapperUtilServiceTest {
     @Test
     void testMapToCodedAnswer() {
         when(lookupNNDLookupRepository.findToCodeByFromUniqueIdAndConceptCd("QCODE", "input"))
-                .thenReturn("mappedValue");
+            .thenReturn("mappedValue");
         String result = mapperUtilService.mapToCodedAnswer("input", "QCODE");
         assertEquals("mappedValue", result);
     }
@@ -71,7 +71,8 @@ class MapperUtilServiceTest {
         LocalDateTime ldt = LocalDateTime.of(2024, 4, 28, 12, 0);
         ZoneId zone = ZoneId.of("America/New_York");
         GregorianCalendar gregorianCalendar = GregorianCalendar.from(ldt.atZone(zone));
-        XMLGregorianCalendar xmlGregorianCalendar = DatatypeFactory.newInstance().newXMLGregorianCalendar(gregorianCalendar);
+        XMLGregorianCalendar xmlGregorianCalendar =
+            DatatypeFactory.newInstance().newXMLGregorianCalendar(gregorianCalendar);
 
         ts.setTime(xmlGregorianCalendar);
         tsElement.setTsDataType(ts);
@@ -89,7 +90,7 @@ class MapperUtilServiceTest {
     @Test
     void testMapToDate() {
         when(lookupMmwrRepository.findTopWeekEndingByMmwrWeekAndMmwrYear(10, 2024))
-                .thenReturn(Date.valueOf(LocalDate.of(2024, 1, 1)));
+            .thenReturn(Date.valueOf(LocalDate.of(2024, 1, 1)));
         String result = mapperUtilService.mapToDate("10", "2024", "");
         assertEquals("2024-01-01", result);
     }
@@ -97,7 +98,7 @@ class MapperUtilServiceTest {
     @Test
     void testMapToMultiCodedAnswer_Checker() {
         when(lookupNNDLookupRepository.findToCodeByFromUniqueIdAndConceptCd("QCODE", "input"))
-                .thenReturn("mappedChecker");
+            .thenReturn("mappedChecker");
         String result = mapperUtilService.mapToMultiCodedAnswer("input", "QCODE", "toUniqueId", "CHECKER");
         assertEquals("mappedChecker", result);
     }
@@ -105,7 +106,7 @@ class MapperUtilServiceTest {
     @Test
     void testMapToMultiCodedAnswer_Normal() {
         when(lookupNNDLookupRepository.findToCodeByFromUniqueIdToUniqueIdAndConceptCd("QCODE", "toUniqueId", "input"))
-                .thenReturn("mappedMulti");
+            .thenReturn("mappedMulti");
         String result = mapperUtilService.mapToMultiCodedAnswer("input", "QCODE", "toUniqueId", "nonChecker");
         assertEquals("mappedMulti", result);
     }

@@ -100,7 +100,7 @@ class PHINMSServiceTest {
     private String readFileFromResources(String filename) throws IOException {
         String payload = "";
         try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(filename);
-             Scanner scanner = new Scanner(inputStream, StandardCharsets.UTF_8.name())) {
+            Scanner scanner = new Scanner(inputStream, StandardCharsets.UTF_8.name())) {
             scanner.useDelimiter("\\A"); // Read entire file
             payload = scanner.hasNext() ? scanner.next() : "";
         }

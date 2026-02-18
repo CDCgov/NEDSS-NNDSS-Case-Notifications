@@ -33,11 +33,7 @@
 //        this.xmlService = xmlService;
 //        this.inonStdService = inonStdService;
 //    }
-////
-////    @PostConstruct
-////    public void init() throws Exception {
-////        initNonStd();
-////    }
+/// / /    @PostConstruct /    public void init() throws Exception { /        initNonStd(); /    }
 //
 ////    @Scheduled(cron = "0 */1 * * * *", zone = "UTC")
 //    public void initStd() throws JAXBException, StdProcessorServiceException {

@@ -6,7 +6,7 @@ import gov.cdc.casenotificationservice.repository.msg.model.CaseNotificationConf
 
 public interface IPHINMSService {
     PHINMSProperties gettingPHIMNSProperties(
-            String payload,
-            PHINMSProperties PHINMSProperties,
-            CaseNotificationConfig caseNotificationConfig) throws Exception;
+        String payload,
+        PHINMSProperties PHINMSProperties,
+        CaseNotificationConfig caseNotificationConfig) throws Exception;
 }

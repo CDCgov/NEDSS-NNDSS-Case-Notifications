@@ -56,7 +56,8 @@ public class OBRHelper {
         validator.validateField("OBR-45", obr.getProcedureCodeModifier(0).toString(), true, 0, 250);
         validator.validateField("OBR-46", obr.getPlacerSupplementalServiceInformation(0).toString(), false, 0, 250);
         validator.validateField("OBR-47", obr.getFillerSupplementalServiceInformation(0).toString(), false, 0, 250);
-        validator.validateField("OBR-48", obr.getMedicallyNecessaryDuplicateProcedureReason().toString(), false, 0, 250);
+        validator.validateField("OBR-48", obr.getMedicallyNecessaryDuplicateProcedureReason().toString(), false, 0,
+            250);
         validator.validateField("OBR-49", obr.getResultHandling().toString(), false, 0, 2);
 
     }

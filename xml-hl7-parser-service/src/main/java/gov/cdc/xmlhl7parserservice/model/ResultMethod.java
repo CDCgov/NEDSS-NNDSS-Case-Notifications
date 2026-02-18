@@ -5,7 +5,8 @@ public class ResultMethod {
     private String nameOfCodingSystem;
     private String text;
 
-    public ResultMethod() {}
+    public ResultMethod() {
+    }
 
     public ResultMethod(String code, String nameOfCodingSystem, String text) {
         this.code = code;

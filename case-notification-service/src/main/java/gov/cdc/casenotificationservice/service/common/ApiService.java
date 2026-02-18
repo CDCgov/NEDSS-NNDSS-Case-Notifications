@@ -45,8 +45,8 @@ public class ApiService implements IApiService {
         HttpEntity<String> entity = new HttpEntity<>(headers);
 
         URI uri = UriComponentsBuilder.fromHttpUrl(tokenEndpoint)
-                .build()
-                .toUri();
+            .build()
+            .toUri();
         ResponseEntity<String> response = restTemplate.exchange(uri, HttpMethod.POST, entity, String.class);
         return response.getBody();
     }
@@ -61,10 +61,10 @@ public class ApiService implements IApiService {
             HttpEntity<String> entity = new HttpEntity<>(headers);
 
             URI uri = UriComponentsBuilder.fromHttpUrl(hl7Endpoint)
-                    .pathSegment(recordId)
-                    .queryParam("validationEnabled", hl7ValidationEnabled)
-                    .build()
-                    .toUri();
+                .pathSegment(recordId)
+                .queryParam("validationEnabled", hl7ValidationEnabled)
+                .build()
+                .toUri();
 
             logger.info("API POST Request to HL7 endpoint: {}", uri);
 

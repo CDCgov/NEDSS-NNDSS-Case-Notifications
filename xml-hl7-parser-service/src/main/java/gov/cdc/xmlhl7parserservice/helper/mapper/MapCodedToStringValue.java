@@ -11,7 +11,7 @@ public class MapCodedToStringValue {
     String mapCodedToStringValue(MessageElement messageElement, String obxResult, ParentLink parentLink) {
         if (messageElement.getDataElement().getCeDataType() != null) {
             if (messageElement.getDataElement().getCeDataType().getCeCodedValue() != null
-                    && !messageElement.getDataElement().getCeDataType().getCeCodedValue().isEmpty()) {
+                && !messageElement.getDataElement().getCeDataType().getCeCodedValue().isEmpty()) {
                 String ceCodedValue = messageElement.getDataElement().getCeDataType().getCeCodedValue();
                 obxResult = ceCodedValue;
                 parentLink.setIdentifier(ceCodedValue);
@@ -19,8 +19,9 @@ public class MapCodedToStringValue {
                 obxResult = "MISSING";
             }
             if (messageElement.getDataElement().getCeDataType().getCeCodedValueCodingSystem() != null
-                    && !messageElement.getDataElement().getCeDataType().getCeCodedValueCodingSystem().isEmpty()) {
-                String ceCodedValueCodingSystem = messageElement.getDataElement().getCeDataType().getCeCodedValueCodingSystem();
+                && !messageElement.getDataElement().getCeDataType().getCeCodedValueCodingSystem().isEmpty()) {
+                String ceCodedValueCodingSystem =
+                    messageElement.getDataElement().getCeDataType().getCeCodedValueCodingSystem();
                 parentLink.setNameOfCodingSystem(ceCodedValueCodingSystem);
                 obxResult = obxResult + "^" + ceCodedValueCodingSystem;
             } else {
@@ -28,8 +29,9 @@ public class MapCodedToStringValue {
             }
 
             if (messageElement.getDataElement().getCeDataType().getCeCodedValueDescription() != null
-                    && !messageElement.getDataElement().getCeDataType().getCeCodedValueDescription().isEmpty()) {
-                String ceCodedValueDescription = messageElement.getDataElement().getCeDataType().getCeCodedValueDescription();
+                && !messageElement.getDataElement().getCeDataType().getCeCodedValueDescription().isEmpty()) {
+                String ceCodedValueDescription =
+                    messageElement.getDataElement().getCeDataType().getCeCodedValueDescription();
                 parentLink.setText(ceCodedValueDescription);
                 obxResult = obxResult + "^" + ceCodedValueDescription;
             } else {
@@ -38,7 +40,7 @@ public class MapCodedToStringValue {
         }
         if (messageElement.getDataElement().getCweDataType() != null) {
             if (messageElement.getDataElement().getCweDataType().getCweCodedValue() != null
-                    && !messageElement.getDataElement().getCweDataType().getCweCodedValue().isEmpty()) {
+                && !messageElement.getDataElement().getCweDataType().getCweCodedValue().isEmpty()) {
                 String cweCodedValue = messageElement.getDataElement().getCweDataType().getCweCodedValue();
                 obxResult = cweCodedValue;
                 parentLink.setIdentifier(cweCodedValue);
@@ -47,8 +49,9 @@ public class MapCodedToStringValue {
             }
 
             if (messageElement.getDataElement().getCweDataType().getCweCodedValueCodingSystem() != null
-                    && !messageElement.getDataElement().getCweDataType().getCweCodedValueCodingSystem().isEmpty()) {
-                String cweCodedValueCodingSystem = messageElement.getDataElement().getCweDataType().getCweCodedValueCodingSystem();
+                && !messageElement.getDataElement().getCweDataType().getCweCodedValueCodingSystem().isEmpty()) {
+                String cweCodedValueCodingSystem =
+                    messageElement.getDataElement().getCweDataType().getCweCodedValueCodingSystem();
                 parentLink.setNameOfCodingSystem(cweCodedValueCodingSystem);
                 obxResult = obxResult + "^" + cweCodedValueCodingSystem;
             } else {
@@ -56,8 +59,9 @@ public class MapCodedToStringValue {
             }
 
             if (messageElement.getDataElement().getCweDataType().getCweCodedValueDescription() != null
-                    && !messageElement.getDataElement().getCweDataType().getCweCodedValueDescription().isEmpty()) {
-                String cweCodedValueDescription = messageElement.getDataElement().getCweDataType().getCweCodedValueDescription();
+                && !messageElement.getDataElement().getCweDataType().getCweCodedValueDescription().isEmpty()) {
+                String cweCodedValueDescription =
+                    messageElement.getDataElement().getCweDataType().getCweCodedValueDescription();
                 parentLink.setText(cweCodedValueDescription);
                 obxResult = obxResult + "^" + cweCodedValueDescription;
             } else {

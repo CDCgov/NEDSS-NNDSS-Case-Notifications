@@ -6,7 +6,8 @@ public class EIElement {
     private String universalID;
     private String universalIDType;
 
-    public EIElement() {}
+    public EIElement() {
+    }
 
     public EIElement(String entityIdentifier, String namespaceID, String universalID, String universalIDType) {
         this.entityIdentifier = entityIdentifier;

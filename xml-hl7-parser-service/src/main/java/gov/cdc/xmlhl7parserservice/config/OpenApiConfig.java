@@ -26,20 +26,20 @@ public class OpenApiConfig {
     private String contextPath;
 
     @Bean
-    public OpenAPI myOpenAPI() throws Exception{
+    public OpenAPI myOpenAPI() throws Exception {
         String serverUrl = "";
-        String scheme="";
-        if(serverhost!=null && !serverhost.contains("localhost")){
-            scheme="https";
-        }else{
-            scheme="http";
+        String scheme = "";
+        if (serverhost != null && !serverhost.contains("localhost")) {
+            scheme = "https";
+        } else {
+            scheme = "http";
         }
         URI uriBuilder = new URIBuilder()
-                .setScheme(scheme)
-                .setHost(serverhost)
-                .setPath(contextPath)
-                .build();
-        serverUrl=uriBuilder.toString();
+            .setScheme(scheme)
+            .setHost(serverhost)
+            .setPath(contextPath)
+            .build();
+        serverUrl = uriBuilder.toString();
 
         Server server = new Server();
         server.setUrl(serverUrl);
@@ -50,16 +50,16 @@ public class OpenApiConfig {
         contact.setName("HL7 Parser Service");
 
         Info info = new Info()
-                .title("HL7 Parser (CNS) API")
-                .version("1.0")
-                .contact(contact)
-                .description("This API exposes endpoints to manage HL7 Parser Service.");
+            .title("HL7 Parser (CNS) API")
+            .version("1.0")
+            .contact(contact)
+            .description("This API exposes endpoints to manage HL7 Parser Service.");
 
-        Components components=new Components().
-                addSecuritySchemes("bearer-key",
-                        new SecurityScheme().type(SecurityScheme.Type.HTTP).
-                                scheme("bearer").bearerFormat("JWT").
-                                description("JWT Token"));
+        Components components = new Components().
+            addSecuritySchemes("bearer-key",
+                new SecurityScheme().type(SecurityScheme.Type.HTTP).
+                    scheme("bearer").bearerFormat("JWT").
+                    description("JWT Token"));
 
         return new OpenAPI().info(info).servers(List.of(server)).components(components);
     }

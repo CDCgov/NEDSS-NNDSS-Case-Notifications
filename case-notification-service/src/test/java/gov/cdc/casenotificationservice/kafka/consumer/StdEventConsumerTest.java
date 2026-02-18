@@ -45,23 +45,23 @@ class StdEventConsumerTest {
         verify(xmlService).mappingXmlStringToObject(argThat(m -> m.getCnTransportqOutUid() == 100L));
     }
 
-//    @Test
-//    void testHandleMessage_ExceptionHandled() throws Exception {
-//        // Arrange
-//        MessageAfterStdChecker checker = new MessageAfterStdChecker();
-//        checker.setCnTransportqOutUid(200L);
-//        checker.setMessagePayload("org.apache.kafka.connect.data");
-//        String json = new Gson().toJson(checker);
-//
-//        doThrow(new RuntimeException("Simulated failure"))
-//                .when(xmlService).mappingXmlStringToObject(any());
-//
-//        // Act & Assert: exception should be caught and logged (not thrown)
-//        assertDoesNotThrow(() -> consumer.handleMessage(json));
-//    }
+    //    @Test
+    //    void testHandleMessage_ExceptionHandled() throws Exception {
+    //        // Arrange
+    //        MessageAfterStdChecker checker = new MessageAfterStdChecker();
+    //        checker.setCnTransportqOutUid(200L);
+    //        checker.setMessagePayload("org.apache.kafka.connect.data");
+    //        String json = new Gson().toJson(checker);
+    //
+    //        doThrow(new RuntimeException("Simulated failure"))
+    //                .when(xmlService).mappingXmlStringToObject(any());
+    //
+    //        // Act & Assert: exception should be caught and logged (not thrown)
+    //        assertDoesNotThrow(() -> consumer.handleMessage(json));
+    //    }
 
-//    @Test
-//    void testHandleDlt() {
-//        assertDoesNotThrow(() -> consumer.handleDlt("dead-letter-message", "std-topic-dlt"));
-//    }
+    //    @Test
+    //    void testHandleDlt() {
+    //        assertDoesNotThrow(() -> consumer.handleDlt("dead-letter-message", "std-topic-dlt"));
+    //    }
 }

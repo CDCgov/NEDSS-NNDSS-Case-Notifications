@@ -22,11 +22,11 @@ import java.util.HashMap;
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(
-        entityManagerFactoryRef = "odseEntityManagerFactory",
-        transactionManagerRef = "odseTransactionManager",
-        basePackages = {
-                "gov.cdc.casenotificationservice.repository.odse",
-        }
+    entityManagerFactoryRef = "odseEntityManagerFactory",
+    transactionManagerRef = "odseTransactionManager",
+    basePackages = {
+        "gov.cdc.casenotificationservice.repository.odse",
+    }
 )
 public class OdseDataSourceConfig {
     @Value("${spring.datasource.driverClassName}")
@@ -60,19 +60,19 @@ public class OdseDataSourceConfig {
 
     @Bean(name = "odseEntityManagerFactory")
     public LocalContainerEntityManagerFactoryBean odseEntityManagerFactory(
-            EntityManagerFactoryBuilder odseEntityManagerFactoryBuilder,
-            @Qualifier("odseDataSource") DataSource odseDataSource) {
+        EntityManagerFactoryBuilder odseEntityManagerFactoryBuilder,
+        @Qualifier("odseDataSource") DataSource odseDataSource) {
         return odseEntityManagerFactoryBuilder
-                .dataSource(odseDataSource)
-                .packages("gov.cdc.casenotificationservice.repository.odse")
-                .persistenceUnit("odse")
-                .build();
+            .dataSource(odseDataSource)
+            .packages("gov.cdc.casenotificationservice.repository.odse")
+            .persistenceUnit("odse")
+            .build();
     }
 
     @Primary
     @Bean(name = "odseTransactionManager")
     public PlatformTransactionManager odseTransactionManager(
-            @Qualifier("odseEntityManagerFactory") EntityManagerFactory odseEntityManagerFactory) {
+        @Qualifier("odseEntityManagerFactory") EntityManagerFactory odseEntityManagerFactory) {
         return new JpaTransactionManager(odseEntityManagerFactory);
     }
 }

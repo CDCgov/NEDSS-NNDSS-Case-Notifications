@@ -1,4 +1,5 @@
 package gov.cdc.casenotificationservice.model.dto;
+
 import gov.cdc.casenotificationservice.repository.msg.model.CaseNotificationConfig;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,20 +29,20 @@ public class CaseNotificationConfigDto {
 
     public static CaseNotificationConfigDto fromEntity(CaseNotificationConfig entity) {
         return CaseNotificationConfigDto.builder()
-                .id(entity.getId())
-                .configName(entity.getConfigName())
-                .configApplied(entity.getConfigApplied())
-                .batchMesageProfileId(entity.getBatchMesageProfileId())
-                .nbsCertificateUrl(entity.getNbsCertificateUrl())
-                .phinEncryption(entity.getPhinEncryption())
-                .phinRoute(entity.getPhinRoute())
-                .phinSignature(entity.getPhinSignature())
-                .phinPublicKeyAddress(entity.getPhinPublicKeyAddress())
-                .phinPublicKeyBaseDn(entity.getPhinPublicKeyBaseDn())
-                .phinPublicKeyDn(entity.getPhinPublicKeyDn())
-                .phinRecipient(entity.getPhinRecipient())
-                .phinPriority(entity.getPhinPriority())
-                .hl7ValidationEnabled(entity.getHl7ValidationEnabled())
-                .build();
+            .id(entity.getId())
+            .configName(entity.getConfigName())
+            .configApplied(entity.getConfigApplied())
+            .batchMesageProfileId(entity.getBatchMesageProfileId())
+            .nbsCertificateUrl(entity.getNbsCertificateUrl())
+            .phinEncryption(entity.getPhinEncryption())
+            .phinRoute(entity.getPhinRoute())
+            .phinSignature(entity.getPhinSignature())
+            .phinPublicKeyAddress(entity.getPhinPublicKeyAddress())
+            .phinPublicKeyBaseDn(entity.getPhinPublicKeyBaseDn())
+            .phinPublicKeyDn(entity.getPhinPublicKeyDn())
+            .phinRecipient(entity.getPhinRecipient())
+            .phinPriority(entity.getPhinPriority())
+            .hl7ValidationEnabled(entity.getHl7ValidationEnabled())
+            .build();
     }
 }

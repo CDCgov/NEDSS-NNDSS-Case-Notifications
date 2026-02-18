@@ -32,6 +32,7 @@ public class NetssTransportQOutVM {
     public NetssTransportQOutVM() {
 
     }
+
     public NetssTransportQOutVM(NetssTransportQOut netssTransportQOut) {
         this.netssTransportQOutUid = netssTransportQOut.getNetssTransportQOutUid();
         this.recordTypeCd = netssTransportQOut.getRecordTypeCd();

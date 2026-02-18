@@ -49,13 +49,13 @@ public class NetssTransportQOut {
     private String recordStatusCd;
 
     public NetssTransportQOut(NetssPersistModel netssPersistModel, CNTransportqOut cnTransportqOut) {
-         recordTypeCd = "Individual Case";
-         mmwrYear = Short.valueOf(netssPersistModel.getVMessageYr());
-         mmwrWeek = Short.valueOf(netssPersistModel.getVMessageWeek());
-         netssCaseId = netssPersistModel.getVCaseReptId();
-         phcLocalId = cnTransportqOut.getPublicHealthCaseLocalId();
-         notificationLocalId = cnTransportqOut.getNotificationLocalId();
-         payload = netssPersistModel.getNetss();
-         recordStatusCd = netssPersistModel.getRecordStatusCd();
+        recordTypeCd = "Individual Case";
+        mmwrYear = Short.valueOf(netssPersistModel.getVMessageYr());
+        mmwrWeek = Short.valueOf(netssPersistModel.getVMessageWeek());
+        netssCaseId = netssPersistModel.getVCaseReptId();
+        phcLocalId = cnTransportqOut.getPublicHealthCaseLocalId();
+        notificationLocalId = cnTransportqOut.getNotificationLocalId();
+        payload = netssPersistModel.getNetss();
+        recordStatusCd = netssPersistModel.getRecordStatusCd();
     }
 }

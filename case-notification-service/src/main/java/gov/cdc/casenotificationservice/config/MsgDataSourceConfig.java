@@ -23,11 +23,11 @@ import java.util.HashMap;
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(
-        entityManagerFactoryRef = "msgEntityManagerFactory",
-        transactionManagerRef = "msgTransactionManager",
-        basePackages = {
-                "gov.cdc.casenotificationservice.repository.msg",
-        }
+    entityManagerFactoryRef = "msgEntityManagerFactory",
+    transactionManagerRef = "msgTransactionManager",
+    basePackages = {
+        "gov.cdc.casenotificationservice.repository.msg",
+    }
 )
 public class MsgDataSourceConfig {
     @Value("${spring.datasource.driverClassName}")
@@ -61,19 +61,19 @@ public class MsgDataSourceConfig {
 
     @Bean(name = "msgEntityManagerFactory")
     public LocalContainerEntityManagerFactoryBean msgEntityManagerFactory(
-            EntityManagerFactoryBuilder msgEntityManagerFactoryBuilder,
-            @Qualifier("msgDataSource") DataSource msgDataSource) {
+        EntityManagerFactoryBuilder msgEntityManagerFactoryBuilder,
+        @Qualifier("msgDataSource") DataSource msgDataSource) {
         return msgEntityManagerFactoryBuilder
-                .dataSource(msgDataSource)
-                .packages("gov.cdc.casenotificationservice.repository.msg")
-                .persistenceUnit("msg")
-                .build();
+            .dataSource(msgDataSource)
+            .packages("gov.cdc.casenotificationservice.repository.msg")
+            .persistenceUnit("msg")
+            .build();
     }
 
     @Primary
     @Bean(name = "msgTransactionManager")
     public PlatformTransactionManager msgTransactionManager(
-            @Qualifier("msgEntityManagerFactory") EntityManagerFactory msgEntityManagerFactory) {
+        @Qualifier("msgEntityManagerFactory") EntityManagerFactory msgEntityManagerFactory) {
         return new JpaTransactionManager(msgEntityManagerFactory);
     }
 

@@ -10,11 +10,12 @@ public class ParentLink {
     private String observationSubID;
     private String observationValue;
 
-    public ParentLink() {}
+    public ParentLink() {
+    }
 
     public ParentLink(String identifier, String nameOfCodingSystem, String text,
-                      String alternateIdentifier, String nameOfAlternateCodingSystem,
-                      String alternateText, String observationSubID, String observationValue) {
+        String alternateIdentifier, String nameOfAlternateCodingSystem,
+        String alternateText, String observationSubID, String observationValue) {
         this.identifier = identifier;
         this.nameOfCodingSystem = nameOfCodingSystem;
         this.text = text;

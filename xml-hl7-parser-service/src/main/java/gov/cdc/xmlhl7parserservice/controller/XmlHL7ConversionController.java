@@ -37,7 +37,7 @@ public class XmlHL7ConversionController {
     private final CNTraportqOutRepository cnTraportqOutRepository;
 
     public XmlHL7ConversionController(HL7MessageBuilder hl7MessageBuilder,
-                                      CNTraportqOutRepository cnTraportqOutRepository) {
+        CNTraportqOutRepository cnTraportqOutRepository) {
         this.hl7MessageBuilder = hl7MessageBuilder;
         this.cnTraportqOutRepository = cnTraportqOutRepository;
     }
@@ -51,59 +51,61 @@ public class XmlHL7ConversionController {
         try (InputStream is = getClass().getClassLoader().getResourceAsStream("sample_xml_dts1.xml")) {
 
             System.setProperty(
-                    "jakarta.xml.bind.context.factory",
-                    "org.glassfish.jaxb.runtime.v2.ContextFactory"
+                "jakarta.xml.bind.context.factory",
+                "org.glassfish.jaxb.runtime.v2.ContextFactory"
             );
             JAXBContext context = JAXBContext.newInstance(NBSNNDIntermediaryMessage.class);
             Unmarshaller unmarshaller = context.createUnmarshaller();
 
-            NBSNNDIntermediaryMessage nbsnndIntermediaryMessage = (NBSNNDIntermediaryMessage) unmarshaller.unmarshal(is);
+            NBSNNDIntermediaryMessage nbsnndIntermediaryMessage =
+                (NBSNNDIntermediaryMessage) unmarshaller.unmarshal(is);
 
             message = hl7MessageBuilder.parseXml(nbsnndIntermediaryMessage, validationEnabled);
 
         } catch (Exception e) {
             log.error("Exception occurred while parsing/processing NBSNNDMessage xml file", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Failed to convert XML to HL7: " + e.getMessage());
+                .body("Failed to convert XML to HL7: " + e.getMessage());
         }
 
         return ResponseEntity.ok(message);
     }
 
     @Operation(
-            summary = "Service class to convert the incoming XML into HL7",
-            parameters = {
-                    @Parameter(in = ParameterIn.HEADER,
-                            name = "clientid",
-                            description = "The Client Id",
-                            required = true,
-                            schema = @Schema(type = "string")),
-                    @Parameter(in = ParameterIn.HEADER,
-                            name = "clientsecret",
-                            description = "The Client Secret",
-                            required = true,
-                            schema = @Schema(type = "string")),
-                    @Parameter(in = ParameterIn.PATH,
-                            name = "recordId",
-                            description = "The Record ID to convert",
-                            required = true,
-                            schema = @Schema(type = "string")),
-                    @Parameter(in = ParameterIn.QUERY,
-                            name = "validationEnabled",
-                            description = "Flag to turn on/off validation for generated HL7",
-                            schema = @Schema(type = "boolean"))
-            }
+        summary = "Service class to convert the incoming XML into HL7",
+        parameters = {
+            @Parameter(in = ParameterIn.HEADER,
+                name = "clientid",
+                description = "The Client Id",
+                required = true,
+                schema = @Schema(type = "string")),
+            @Parameter(in = ParameterIn.HEADER,
+                name = "clientsecret",
+                description = "The Client Secret",
+                required = true,
+                schema = @Schema(type = "string")),
+            @Parameter(in = ParameterIn.PATH,
+                name = "recordId",
+                description = "The Record ID to convert",
+                required = true,
+                schema = @Schema(type = "string")),
+            @Parameter(in = ParameterIn.QUERY,
+                name = "validationEnabled",
+                description = "Flag to turn on/off validation for generated HL7",
+                schema = @Schema(type = "boolean"))
+        }
     )
     @PostMapping(value = "/xml-to-hl7/{recordId}", produces = MediaType.TEXT_PLAIN_VALUE)
-    public ResponseEntity<String> convertXmlToHl7ById(@PathVariable String recordId, @RequestParam(defaultValue = "true") boolean validationEnabled) {
+    public ResponseEntity<String> convertXmlToHl7ById(@PathVariable String recordId,
+        @RequestParam(defaultValue = "true") boolean validationEnabled) {
         try {
             String messagePayload = cnTraportqOutRepository
-                    .findTopByRecordUid(Long.valueOf(recordId))
-                    .getMessagePayload();
+                .findTopByRecordUid(Long.valueOf(recordId))
+                .getMessagePayload();
 
             System.setProperty(
-                    "jakarta.xml.bind.context.factory",
-                    "org.glassfish.jaxb.runtime.v2.ContextFactory"
+                "jakarta.xml.bind.context.factory",
+                "org.glassfish.jaxb.runtime.v2.ContextFactory"
             );
 
             JAXBContext context = JAXBContext.newInstance(NBSNNDIntermediaryMessage.class);
@@ -111,7 +113,7 @@ public class XmlHL7ConversionController {
 
             StringReader reader = new StringReader(messagePayload);
             NBSNNDIntermediaryMessage nbsnndIntermediaryMessage =
-                    (NBSNNDIntermediaryMessage) unmarshaller.unmarshal(reader);
+                (NBSNNDIntermediaryMessage) unmarshaller.unmarshal(reader);
 
             // Convert to HL7
             String response = hl7MessageBuilder.parseXml(nbsnndIntermediaryMessage, validationEnabled);
@@ -120,7 +122,7 @@ public class XmlHL7ConversionController {
         } catch (Exception e) {
             log.error("Error during XML to HL7 conversion for recordId {}: {}", recordId, e.getMessage(), e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Failed to convert XML to HL7: " + e.getMessage());
+                .body("Failed to convert XML to HL7: " + e.getMessage());
         }
     }
 

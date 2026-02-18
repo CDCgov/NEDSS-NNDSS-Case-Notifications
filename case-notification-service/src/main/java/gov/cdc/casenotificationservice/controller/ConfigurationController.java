@@ -30,59 +30,59 @@ public class ConfigurationController {
     }
 
     @Operation(
-            summary = "Create or Update Case Notification Configuration",
-            description = """
-        Adds a new or updates an existing case notification configuration.
-        
-        - If `configName` already exists, the configuration will be updated.
-        - Otherwise, a new configuration will be inserted.
-        
-        The request body must match the following model:
-        ```json
-        {
-          "configName": "string (required)",
-          "configApplied": true,
-          "batchMesageProfileId": "string",
-          "nbsCertificateUrl": "string",
-          "phinEncryption": "string",
-          "phinRoute": "string",
-          "phinSignature": "string",
-          "phinPublicKeyAddress": "string",
-          "phinPublicKeyBaseDn": "string",
-          "phinPublicKeyDn": "string",
-          "phinRecipient": "string",
-          "phinPriority": "string",
-          "hl7ValidationEnabled": true
-        }
-        ```
-        """,
-            parameters = {
-                    @Parameter(
-                            in = ParameterIn.HEADER,
-                            name = "clientid",
-                            description = "The Client ID for authentication",
-                            required = true,
-                            schema = @Schema(type = "string")
-                    ),
-                    @Parameter(
-                            in = ParameterIn.HEADER,
-                            name = "clientsecret",
-                            description = "The Client Secret for authentication",
-                            required = true,
-                            schema = @Schema(type = "string")
-                    )
-            },
-            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    required = true,
-                    description = "JSON representation of the CaseNotificationConfigDto object",
-                    content = @Content(
-                            schema = @Schema(implementation = CaseNotificationConfigDto.class)
-                    )
+        summary = "Create or Update Case Notification Configuration",
+        description = """
+            Adds a new or updates an existing case notification configuration.
+            
+            - If `configName` already exists, the configuration will be updated.
+            - Otherwise, a new configuration will be inserted.
+            
+            The request body must match the following model:
+            ```json
+            {
+              "configName": "string (required)",
+              "configApplied": true,
+              "batchMesageProfileId": "string",
+              "nbsCertificateUrl": "string",
+              "phinEncryption": "string",
+              "phinRoute": "string",
+              "phinSignature": "string",
+              "phinPublicKeyAddress": "string",
+              "phinPublicKeyBaseDn": "string",
+              "phinPublicKeyDn": "string",
+              "phinRecipient": "string",
+              "phinPriority": "string",
+              "hl7ValidationEnabled": true
+            }
+            ```
+            """,
+        parameters = {
+            @Parameter(
+                in = ParameterIn.HEADER,
+                name = "clientid",
+                description = "The Client ID for authentication",
+                required = true,
+                schema = @Schema(type = "string")
+            ),
+            @Parameter(
+                in = ParameterIn.HEADER,
+                name = "clientsecret",
+                description = "The Client Secret for authentication",
+                required = true,
+                schema = @Schema(type = "string")
             )
+        },
+        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            required = true,
+            description = "JSON representation of the CaseNotificationConfigDto object",
+            content = @Content(
+                schema = @Schema(implementation = CaseNotificationConfigDto.class)
+            )
+        )
     )
     @PostMapping("/api/notification-config")
     public ResponseEntity<?> saveNotificationConfig(@RequestBody CaseNotificationConfigDto dto,
-                                                  HttpServletRequest request)  {
+        HttpServletRequest request) {
 
         try {
             CaseNotificationConfig savedEntity = configurationService.saveConfig(dto);
@@ -93,40 +93,41 @@ public class ConfigurationController {
     }
 
     @Operation(
-            summary = "Get Case Notification Configuration",
-            description = """
-        Fetches one or more case notification configuration records.
-        
-        - If `configName` is provided, returns the specific matching configuration.
-        - If `configName` is omitted, returns all configurations.
-        """,
-            parameters = {
-                    @Parameter(
-                            in = ParameterIn.HEADER,
-                            name = "clientid",
-                            description = "The Client ID for authentication",
-                            required = true,
-                            schema = @Schema(type = "string")
-                    ),
-                    @Parameter(
-                            in = ParameterIn.HEADER,
-                            name = "clientsecret",
-                            description = "The Client Secret for authentication",
-                            required = true,
-                            schema = @Schema(type = "string")
-                    ),
-                    @Parameter(
-                            in = ParameterIn.QUERY,
-                            name = "configName",
-                            description = "Optional configuration name to retrieve a specific record",
-                            required = false,
-                            schema = @Schema(type = "string")
-                    )
-            }
+        summary = "Get Case Notification Configuration",
+        description = """
+            Fetches one or more case notification configuration records.
+            
+            - If `configName` is provided, returns the specific matching configuration.
+            - If `configName` is omitted, returns all configurations.
+            """,
+        parameters = {
+            @Parameter(
+                in = ParameterIn.HEADER,
+                name = "clientid",
+                description = "The Client ID for authentication",
+                required = true,
+                schema = @Schema(type = "string")
+            ),
+            @Parameter(
+                in = ParameterIn.HEADER,
+                name = "clientsecret",
+                description = "The Client Secret for authentication",
+                required = true,
+                schema = @Schema(type = "string")
+            ),
+            @Parameter(
+                in = ParameterIn.QUERY,
+                name = "configName",
+                description = "Optional configuration name to retrieve a specific record",
+                required = false,
+                schema = @Schema(type = "string")
+            )
+        }
     )
     @GetMapping("/api/notification-config")
-    public ResponseEntity<?> getNotificationConfig(@RequestParam(name = "configName", required = false) String configName,
-                                                    HttpServletRequest request)  {
+    public ResponseEntity<?> getNotificationConfig(
+        @RequestParam(name = "configName", required = false) String configName,
+        HttpServletRequest request) {
 
         try {
             var configs = configurationService.getConfigs(configName);
@@ -138,50 +139,48 @@ public class ConfigurationController {
 
 
 
-
-
-
-
     @Operation(
-            summary = "Update Case Notification config",
-            description = "If 'id' is not provided, updates the top config by name; otherwise updates by given id.",
-            parameters = {
-                    @Parameter(in = ParameterIn.HEADER, name = "clientid", required = true, schema = @Schema(type = "string")),
-                    @Parameter(in = ParameterIn.HEADER, name = "clientsecret", required = true, schema = @Schema(type = "string")),
-                    @Parameter(in = ParameterIn.QUERY, name = "id", required = false, schema = @Schema(type = "integer")),
-                    @Parameter(in = ParameterIn.QUERY, name = "enabled", required = true, schema = @Schema(type = "boolean"))
-            },
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Update success"),
-                    @ApiResponse(responseCode = "500", description = "Internal server error")
-            }
+        summary = "Update Case Notification config",
+        description = "If 'id' is not provided, updates the top config by name; otherwise updates by given id.",
+        parameters = {
+            @Parameter(in = ParameterIn.HEADER, name = "clientid", required = true, schema = @Schema(type = "string")),
+            @Parameter(in = ParameterIn.HEADER, name = "clientsecret", required = true,
+                schema = @Schema(type = "string")),
+            @Parameter(in = ParameterIn.QUERY, name = "id", required = false, schema = @Schema(type = "integer")),
+            @Parameter(in = ParameterIn.QUERY, name = "enabled", required = true, schema = @Schema(type = "boolean"))
+        },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Update success"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+        }
     )
     @PutMapping("config/update")
     public ResponseEntity<Void> updateConfiguration(@RequestParam(value = "id", required = false) Integer id,
-                                                    @RequestParam(value = "enabled", required = true) boolean enabled) {
+        @RequestParam(value = "enabled", required = true) boolean enabled) {
         configurationService.updateConfiguration(id, enabled);
         return ResponseEntity.ok().build();
     }
 
     @Operation(
-            summary = "Get the applied Case Notification config",
-            parameters = {
-                    @Parameter(in = ParameterIn.HEADER,
-                            name = "clientid",
-                            description = "The Client Id",
-                            required = true,
-                            schema = @Schema(type = "string")),
-                    @Parameter(in = ParameterIn.HEADER,
-                            name = "clientsecret",
-                            description = "The Client Secret",
-                            required = true,
-                            schema = @Schema(type = "string"))
-            },
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Returned config", content = @Content(schema = @Schema(implementation = CaseNotificationConfig.class))),
-                    @ApiResponse(responseCode = "404", description = "Config not found"),
-                    @ApiResponse(responseCode = "500", description = "Internal server error")
-            }
+        summary = "Get the applied Case Notification config",
+        parameters = {
+            @Parameter(in = ParameterIn.HEADER,
+                name = "clientid",
+                description = "The Client Id",
+                required = true,
+                schema = @Schema(type = "string")),
+            @Parameter(in = ParameterIn.HEADER,
+                name = "clientsecret",
+                description = "The Client Secret",
+                required = true,
+                schema = @Schema(type = "string"))
+        },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Returned config",
+                content = @Content(schema = @Schema(implementation = CaseNotificationConfig.class))),
+            @ApiResponse(responseCode = "404", description = "Config not found"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+        }
     )
     @GetMapping("config/check")
     public ResponseEntity<CaseNotificationConfig> getAppliedConfig() {

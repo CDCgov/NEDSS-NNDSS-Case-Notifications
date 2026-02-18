@@ -36,8 +36,8 @@ public class DltService implements IDltService {
     private final CaseNotificationProducer caseNotificationProducer;
 
     public DltService(CaseNotificationDltRepository caseNotificationDltRepository,
-                      CNTraportqOutRepository cnTraportqOutRepository,
-                      CaseNotificationProducer caseNotificationProducer) {
+        CNTraportqOutRepository cnTraportqOutRepository,
+        CaseNotificationProducer caseNotificationProducer) {
         this.caseNotificationDltRepository = caseNotificationDltRepository;
         this.cnTraportqOutRepository = cnTraportqOutRepository;
         this.caseNotificationProducer = caseNotificationProducer;
@@ -48,7 +48,7 @@ public class DltService implements IDltService {
         return res.orElse(null);
     }
 
-    public void creatingDlt( String message,String topic,String stacktrace, String origin) {
+    public void creatingDlt(String message, String topic, String stacktrace, String origin) {
         var gson = new Gson();
         String status;
         MessageAfterStdChecker data = null;
@@ -72,8 +72,8 @@ public class DltService implements IDltService {
         }
 
         var cnTransportqOut = (data != null && data.getCnTransportqOutUid() != null)
-                ? cnTraportqOutRepository.findTopByRecordUid(data.getCnTransportqOutUid())
-                : null;
+            ? cnTraportqOutRepository.findTopByRecordUid(data.getCnTransportqOutUid())
+            : null;
 
         CaseNotificationDlt caseNotificationDlt = new CaseNotificationDlt();
         if (data != null) {
@@ -133,9 +133,7 @@ public class DltService implements IDltService {
         String topic;
         if (caseNotificationDlt.getSource().equalsIgnoreCase(nonStdTopic)) {
             topic = nonStdTopic;
-        }
-        else
-        {
+        } else {
             topic = stdTopic;
         }
         caseNotificationProducer.sendMessage(uuid, topic);

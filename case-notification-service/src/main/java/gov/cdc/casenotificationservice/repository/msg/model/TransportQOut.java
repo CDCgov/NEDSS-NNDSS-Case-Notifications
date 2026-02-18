@@ -91,7 +91,8 @@ public class TransportQOut {
     }
 
     private Blob stringToBlob(String data) {
-        if (data == null) return null;
+        if (data == null)
+            return null;
         try {
             return new javax.sql.rowset.serial.SerialBlob(data.getBytes(java.nio.charset.StandardCharsets.UTF_8));
         } catch (Exception e) {

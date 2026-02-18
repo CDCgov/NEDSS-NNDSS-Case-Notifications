@@ -9,25 +9,24 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class ServiceActionPairRepository
-{
+public class ServiceActionPairRepository {
     private final JdbcTemplate msgJdbcTemplate;
 
-    public ServiceActionPairRepository( @Qualifier("msgJdbcTemplate") JdbcTemplate msgJdbcTemplate) {
+    public ServiceActionPairRepository(@Qualifier("msgJdbcTemplate") JdbcTemplate msgJdbcTemplate) {
         this.msgJdbcTemplate = msgJdbcTemplate;
     }
 
-//    @Query(
-//            value = "SELECT * FROM SERVICE_ACTION_PAIR WHERE SERVICE = 'TOTAL'",
-//            nativeQuery = true
-//    )
-//    ServiceActionPair findTotal();
+    //    @Query(
+    //            value = "SELECT * FROM SERVICE_ACTION_PAIR WHERE SERVICE = 'TOTAL'",
+    //            nativeQuery = true
+    //    )
+    //    ServiceActionPair findTotal();
 
     public List<ServiceActionPair> findTotal() {
         String sql = "SELECT * FROM SERVICE_ACTION_PAIR WHERE SERVICE = 'TOTAL'";
         List<ServiceActionPair> tableList = msgJdbcTemplate.query(
-                sql,
-                new BeanPropertyRowMapper<>(ServiceActionPair.class));
+            sql,
+            new BeanPropertyRowMapper<>(ServiceActionPair.class));
         return tableList;
     }
 }

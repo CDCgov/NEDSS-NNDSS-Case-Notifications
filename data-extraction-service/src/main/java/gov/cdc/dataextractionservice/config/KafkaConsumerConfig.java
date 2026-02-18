@@ -46,7 +46,7 @@ public class KafkaConsumerConfig {
         config.put(ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG, 600000); // Allow 5 minutes for processing
         config.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, 30000); // 30-second session timeout
         config.put(ConsumerConfig.HEARTBEAT_INTERVAL_MS_CONFIG, 10000); // Heartbeat every 10 seconds
-//        config.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, true); // Manual commit
+        //        config.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, true); // Manual commit
         return config;
     }
 
@@ -55,7 +55,8 @@ public class KafkaConsumerConfig {
     }
 
     private ConcurrentKafkaListenerContainerFactory<String, String> createContainerFactory(String groupId) {
-        ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        ConcurrentKafkaListenerContainerFactory<String, String> factory =
+            new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(createConsumerFactory(groupId));
         factory.setConcurrency(thread);
         factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL);

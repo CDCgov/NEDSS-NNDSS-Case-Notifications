@@ -14,7 +14,8 @@ public class MapToDynamicIndicatorToObx {
     MessageState messageState = new MessageState();
     MapToRemoveSpecialCharacters mapToRemoveSpecialCharacters = new MapToRemoveSpecialCharacters();
 
-     void mapToDynamicIndicatorToObx(MessageElement messageElement, String questionIdentifier, String mappedString, int countNum, int obx2Inc, ORU_R01_ORDER_OBSERVATION orderObservation) throws DataTypeException {
+    void mapToDynamicIndicatorToObx(MessageElement messageElement, String questionIdentifier, String mappedString,
+        int countNum, int obx2Inc, ORU_R01_ORDER_OBSERVATION orderObservation) throws DataTypeException {
         String separatorWOObx5 = "|:";
         int intIndicator = mappedString.indexOf(separatorWOObx5);
         ObxRepeatingElement obxRepeatingElement = null;
@@ -32,7 +33,7 @@ public class MapToDynamicIndicatorToObx {
         String obx3 = "";
         String partobx13 = "";
 
-        if(mappedString.contains("^")) {
+        if (mappedString.contains("^")) {
             int intStart1 = mappedString.indexOf("^");
             partIndicator1 = mappedString.substring(0, intStart1);
             String partRemaining1 = mappedString.substring(intStart1 + 1);
@@ -79,7 +80,7 @@ public class MapToDynamicIndicatorToObx {
             obxRepeatingElement.setObxInc(1);
             messageState.getObxRepeatingElementArrayList().add(obxRepeatingElement);
 
-            if(questionDataType.equals("CWE")) {
+            if (questionDataType.equals("CWE")) {
                 if (intIndicator > 2) {
                     String codedValue = "";
                     if (messageElement.getDataElement().getCweDataType().getCweCodedValue() != null) {
@@ -88,12 +89,14 @@ public class MapToDynamicIndicatorToObx {
 
                     String codedValueDescription = "";
                     if (messageElement.getDataElement().getCweDataType().getCweCodedValueDescription() != null) {
-                        codedValueDescription = messageElement.getDataElement().getCweDataType().getCweCodedValueDescription();
+                        codedValueDescription =
+                            messageElement.getDataElement().getCweDataType().getCweCodedValueDescription();
                     }
 
                     String codedValueCodingSystem = "";
                     if (messageElement.getDataElement().getCweDataType().getCweCodedValueCodingSystem() != null) {
-                        codedValueCodingSystem = messageElement.getDataElement().getCweDataType().getCweCodedValueCodingSystem();
+                        codedValueCodingSystem =
+                            messageElement.getDataElement().getCweDataType().getCweCodedValueCodingSystem();
                     }
 
                     String localCodedValue = "";
@@ -103,26 +106,29 @@ public class MapToDynamicIndicatorToObx {
 
                     String localCodedValueDescription = "";
                     if (messageElement.getDataElement().getCweDataType().getCweLocalCodedValueDescription() != null) {
-                        localCodedValueDescription = messageElement.getDataElement().getCweDataType().getCweLocalCodedValueDescription();
+                        localCodedValueDescription =
+                            messageElement.getDataElement().getCweDataType().getCweLocalCodedValueDescription();
                     }
 
                     String localCodedValueCodingSystem = "";
                     if (messageElement.getDataElement().getCweDataType().getCweLocalCodedValueCodingSystem() != null) {
-                        localCodedValueCodingSystem = messageElement.getDataElement().getCweDataType().getCweLocalCodedValueCodingSystem();
+                        localCodedValueCodingSystem =
+                            messageElement.getDataElement().getCweDataType().getCweLocalCodedValueCodingSystem();
                     }
 
                     String originalOtherText = "";
                     if (messageElement.getDataElement().getCweDataType().getCweOriginalText() != null) {
-                        originalOtherText = "^^^" + messageElement.getDataElement().getCweDataType().getCweOriginalText();
+                        originalOtherText =
+                            "^^^" + messageElement.getDataElement().getCweDataType().getCweOriginalText();
                     }
 
                     String observationValue = String.join("^",
-                            codedValue,
-                            codedValueDescription,
-                            codedValueCodingSystem,
-                            localCodedValue,
-                            localCodedValueDescription,
-                            localCodedValueCodingSystem
+                        codedValue,
+                        codedValueDescription,
+                        codedValueCodingSystem,
+                        localCodedValue,
+                        localCodedValueDescription,
+                        localCodedValueCodingSystem
                     ) + originalOtherText;
 
                     Type obxValue = obx.getObservationValue(0).getData();
@@ -168,13 +174,20 @@ public class MapToDynamicIndicatorToObx {
 
                 int stringSize = time.length();
 
-                if (stringSize >= 4) year = time.substring(0, 4);
-                if (stringSize >= 7) month = time.substring(4, 6);
-                if (stringSize >= 10) day = time.substring(6, 8);
-                if (stringSize >= 13) hour = time.substring(8, 10);
-                if (stringSize >= 16) minute = time.substring(10, 12);
-                if (stringSize >= 19) second = time.substring(12, 14);
-                if (stringSize >= 23) milli = time.substring(14, 17);
+                if (stringSize >= 4)
+                    year = time.substring(0, 4);
+                if (stringSize >= 7)
+                    month = time.substring(4, 6);
+                if (stringSize >= 10)
+                    day = time.substring(6, 8);
+                if (stringSize >= 13)
+                    hour = time.substring(8, 10);
+                if (stringSize >= 16)
+                    minute = time.substring(10, 12);
+                if (stringSize >= 19)
+                    second = time.substring(12, 14);
+                if (stringSize >= 23)
+                    milli = time.substring(14, 17);
 
                 String formattedTime = year + month + day + hour + minute + second + separator + milli;
                 Type obxValue = obx.getObservationValue(0).getData();
@@ -196,7 +209,7 @@ public class MapToDynamicIndicatorToObx {
 
                 String textData = "";
                 if (messageElement.getDataElement().getTxDataType() != null &&
-                        messageElement.getDataElement().getTxDataType().getTextData() != null) {
+                    messageElement.getDataElement().getTxDataType().getTextData() != null) {
 
                     textData = messageElement.getDataElement().getTxDataType().getTextData();
                     textData = textData.replace("\n", " ");
@@ -223,7 +236,7 @@ public class MapToDynamicIndicatorToObx {
 
                 String textData = "";
                 if (messageElement.getDataElement().getStDataType() != null &&
-                        messageElement.getDataElement().getStDataType().getStringData() != null) {
+                    messageElement.getDataElement().getStDataType().getStringData() != null) {
 
                     textData = messageElement.getDataElement().getStDataType().getStringData();
                     textData = mapToRemoveSpecialCharacters.mapToRemoveSpecialCharacters(textData);

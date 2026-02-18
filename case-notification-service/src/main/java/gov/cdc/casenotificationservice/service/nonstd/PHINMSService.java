@@ -1,4 +1,5 @@
 package gov.cdc.casenotificationservice.service.nonstd;
+
 import gov.cdc.casenotificationservice.model.PHINMSProperties;
 import gov.cdc.casenotificationservice.repository.msg.ServiceActionPairRepository;
 import gov.cdc.casenotificationservice.repository.msg.model.CaseNotificationConfig;
@@ -29,12 +30,12 @@ public class PHINMSService implements IPHINMSService {
     }
 
     public PHINMSProperties gettingPHIMNSProperties(
-            String payload,
-            PHINMSProperties PHINMSProperties,
-            CaseNotificationConfig caseNotificationConfig) throws Exception {
+        String payload,
+        PHINMSProperties PHINMSProperties,
+        CaseNotificationConfig caseNotificationConfig) throws Exception {
         Hd sendingFacility;
         Hd sendingApplication;
-        var counterInt =0;
+        var counterInt = 0;
 
         var serviceActionPairs = this.serviceActionPairRepository.findTotal();
         Integer counterString = serviceActionPairs.getFirst().getTotalServiceActionPairs();
@@ -42,11 +43,11 @@ public class PHINMSService implements IPHINMSService {
             counterString = 1;
         }
 
-        var statusCode="ACTIVE";
-        var messageControlID1 ="";
-        var conditionCode= new ArrayList<String>();
-        var mappedOnce= false;
-        var SAPConcatenated="";
+        var statusCode = "ACTIVE";
+        var messageControlID1 = "";
+        var conditionCode = new ArrayList<String>();
+        var mappedOnce = false;
+        var SAPConcatenated = "";
 
 
         HL7Helper hl7Helper = new HL7Helper();
@@ -56,37 +57,39 @@ public class PHINMSService implements IPHINMSService {
         var vMessageID = PHINMSProperties.getPNotificationId();
         var vPublicHealthCaseLocalId = PHINMSProperties.getPPublicHealthCaseLocalId();
 
-        for(var patResult : parsedMessage.getParsedMessage().getPatientResult()) {
-            conditionCode.add(patResult.getOrderObservation().getFirst().getObservationRequest().getReasonForStudy().getFirst().getIdentifier());
+        for (var patResult : parsedMessage.getParsedMessage().getPatientResult()) {
+            conditionCode.add(
+                patResult.getOrderObservation().getFirst().getObservationRequest().getReasonForStudy().getFirst()
+                    .getIdentifier());
         }
 
         if (parsedMessage.getParsedMessage().getMessageHeader().getMessageProfileIdentifier().size() > 1) {
             // In original code, this was get value at INDEX 2
-            messageControlID1 = parsedMessage.getParsedMessage().getMessageHeader().getMessageProfileIdentifier().get(1).getEntityIdentifier();
+            messageControlID1 = parsedMessage.getParsedMessage().getMessageHeader().getMessageProfileIdentifier().get(1)
+                .getEntityIdentifier();
         }
         sendingApplication = parsedMessage.getParsedMessage().getMessageHeader().getSendingApplication();
         sendingFacility = parsedMessage.getParsedMessage().getMessageHeader().getSendingFacility();
 
-        if(messageControlID1==null || messageControlID1.isEmpty()) {
+        if (messageControlID1 == null || messageControlID1.isEmpty()) {
             // In original code, this was get value at INDEX 1
-            messageControlID1 = parsedMessage.getParsedMessage().getMessageHeader().getMessageProfileIdentifier().getFirst().getEntityIdentifier();
+            messageControlID1 =
+                parsedMessage.getParsedMessage().getMessageHeader().getMessageProfileIdentifier().getFirst()
+                    .getEntityIdentifier();
         }
 
-        var mappingERROR= PHINMSProperties.getMappingERROR();
+        var mappingERROR = PHINMSProperties.getMappingERROR();
 
-        if(conditionCode.isEmpty() && (mappingERROR != null && !mappingERROR.isEmpty())){
+        if (conditionCode.isEmpty() && (mappingERROR != null && !mappingERROR.isEmpty())) {
             throw new Exception();
         }
 
 
         var pNotificationID = PHINMSProperties.getPNotificationId();
         var reportStatusCd = PHINMSProperties.getPReportStatusCd();
-        if(reportStatusCd.equalsIgnoreCase(REPORT_CD_F))
-        {
+        if (reportStatusCd.equalsIgnoreCase(REPORT_CD_F)) {
             PHINMSProperties.setReportStatusCd(REPORT_STATUS_CD_1 + pNotificationID);
-        }
-        else if(reportStatusCd.equalsIgnoreCase(REPORT_CD_C))
-        {
+        } else if (reportStatusCd.equalsIgnoreCase(REPORT_CD_C)) {
             PHINMSProperties.setReportStatusCd(REPORT_STATUS_CD_2 + pNotificationID);
         }
 
@@ -110,8 +113,8 @@ public class PHINMSService implements IPHINMSService {
         String secondStr = String.format(TS_FORMAT_CHARACTER, currentSecond);
 
         String vFormattedTimestamp = currentYear + TS_DASH + monthStr + TS_DASH +
-                dateStr + TS_T + hourStr + TS_COLON +
-                minuteStr + TS_COLON + secondStr;
+            dateStr + TS_T + hourStr + TS_COLON +
+            minuteStr + TS_COLON + secondStr;
 
         String vCurrentTimestamp = currentYear + monthStr + dateStr + hourStr + minuteStr + secondStr;
 
@@ -135,9 +138,9 @@ public class PHINMSService implements IPHINMSService {
 
         // TODO: DOUBLE CHECK VALUE FOR THESE 2 HD OBJECT
         var sendApplicationStr = sendingApplication.getNameSpaceId() + CARET +
-                sendingApplication.getUniversalId() + CARET + sendingApplication.getUniversalIdType();
+            sendingApplication.getUniversalId() + CARET + sendingApplication.getUniversalIdType();
         var sendFacilityStr = sendingFacility.getNameSpaceId() + CARET +
-                sendingFacility.getUniversalId() + CARET + sendingFacility.getUniversalIdType();
+            sendingFacility.getUniversalId() + CARET + sendingFacility.getUniversalIdType();
 
         PHINMSProperties.setSENDING_APPLICATION(sendApplicationStr);
         PHINMSProperties.setSENDING_FACILITY(sendFacilityStr);

@@ -16,7 +16,7 @@ public class CaseNotificationProducer {
     }
 
 
-    public void sendMessage(String payload, String topic)  {
+    public void sendMessage(String payload, String topic) {
         try {
             kafkaTemplate.send(topic, payload);
         } catch (Exception e) {

@@ -41,7 +41,7 @@ public class NK1Helper {
         validator.validateField("NK1-30", nk1.getContactPersonSName(0).toString(), false, 0, 250);
         validator.validateField("NK1-31", nk1.getContactPersonSTelephoneNumber(0).toString(), false, 0, 250);
         validator.validateField("NK1-32", nk1.getContactPersonSAddress(0).toString(), false, 0, 250);
-//        validator.validateField("NK1-33", nk1.getnextofkinassociatedpartiesI(0).toString(), false, 0, 250);
+        //        validator.validateField("NK1-33", nk1.getnextofkinassociatedpartiesI(0).toString(), false, 0, 250);
         validator.validateField("NK1-34", nk1.getJobStatus().getValue(), false, 0, 250);
         validator.validateField("NK1-35", nk1.getRace(0).toString(), true, 0, 250);
         validator.validateField("NK1-36", nk1.getHandicap().getValue(), false, 0, 250);

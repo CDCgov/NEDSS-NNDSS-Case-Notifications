@@ -7,9 +7,14 @@ import java.util.List;
 
 public interface IConfigurationService {
     boolean checkConfigurationAvailable();
+
     void updateConfiguration(Integer id, boolean configApplied);
+
     CaseNotificationConfig getAppliedCaseNotificationConfig();
+
     boolean checkHl7ValidationApplied();
+
     CaseNotificationConfig saveConfig(CaseNotificationConfigDto configDto);
+
     List<CaseNotificationConfig> getConfigs(String configName);
 }

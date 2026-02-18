@@ -37,11 +37,10 @@ public class ConfigurationService implements IConfigurationService {
 
             if (id == null) {
                 caseNotificationConfigRepository.updateTopNonStdConfigToApplied(status);
-            }
-            else {
+            } else {
                 caseNotificationConfigRepository.updateConfigAppliedById(id, status);
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
@@ -53,7 +52,7 @@ public class ConfigurationService implements IConfigurationService {
     }
 
 
-    public CaseNotificationConfig saveConfig(CaseNotificationConfigDto configDto)  {
+    public CaseNotificationConfig saveConfig(CaseNotificationConfigDto configDto) {
         CaseNotificationConfig config = caseNotificationConfigRepository.findConfigByName(configDto.getConfigName());
 
         if (config != null) {
@@ -70,8 +69,7 @@ public class ConfigurationService implements IConfigurationService {
             config.setPhinPriority(configDto.getPhinPriority());
             config.setHl7ValidationEnabled(configDto.getHl7ValidationEnabled());
 
-        }
-        else {
+        } else {
             config = new CaseNotificationConfig(configDto);
         }
 
@@ -85,8 +83,7 @@ public class ConfigurationService implements IConfigurationService {
         if (configName != null && !configName.isEmpty()) {
             var dataViewConfig = caseNotificationConfigRepository.findConfigByName(configName);
             dataViewConfigList.add(dataViewConfig);
-        }
-        else {
+        } else {
             dataViewConfigList = caseNotificationConfigRepository.findAll();
         }
 

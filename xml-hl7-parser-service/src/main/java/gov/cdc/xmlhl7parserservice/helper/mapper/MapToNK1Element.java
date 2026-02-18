@@ -19,11 +19,16 @@ public class MapToNK1Element {
             if (dataElement.startsWith("3.")) {
                 // Map to CE type for Relationship
                 String ceCodedValue = messageElement.getDataElement().getCeDataType().getCeCodedValue().trim();
-                String ceCodedValueDescription = messageElement.getDataElement().getCeDataType().getCeCodedValueDescription().trim();
-                String ceCodedValueCodingSystem = messageElement.getDataElement().getCeDataType().getCeCodedValueCodingSystem().trim();
-                String ceLocalCodedValue = messageElement.getDataElement().getCeDataType().getCeLocalCodedValue().trim();
-                String ceLocalCodedValueDescription = messageElement.getDataElement().getCeDataType().getCeLocalCodedValueDescription().trim();
-                String ceLocalCodedValueCodingSystem = messageElement.getDataElement().getCeDataType().getCeLocalCodedValueCodingSystem().trim();
+                String ceCodedValueDescription =
+                    messageElement.getDataElement().getCeDataType().getCeCodedValueDescription().trim();
+                String ceCodedValueCodingSystem =
+                    messageElement.getDataElement().getCeDataType().getCeCodedValueCodingSystem().trim();
+                String ceLocalCodedValue =
+                    messageElement.getDataElement().getCeDataType().getCeLocalCodedValue().trim();
+                String ceLocalCodedValueDescription =
+                    messageElement.getDataElement().getCeDataType().getCeLocalCodedValueDescription().trim();
+                String ceLocalCodedValueCodingSystem =
+                    messageElement.getDataElement().getCeDataType().getCeLocalCodedValueCodingSystem().trim();
 
                 nk1.getRelationship().getIdentifier().setValue(ceCodedValue);
                 nk1.getRelationship().getText().setValue(ceCodedValueDescription);
@@ -40,11 +45,16 @@ public class MapToNK1Element {
             } else if (dataElement.startsWith("14.")) {
                 // Map to CE type for MaritalStatus
                 String ceCodedValue = messageElement.getDataElement().getCeDataType().getCeCodedValue().trim();
-                String ceCodedValueDescription = messageElement.getDataElement().getCeDataType().getCeCodedValueDescription().trim();
-                String ceCodedValueCodingSystem = messageElement.getDataElement().getCeDataType().getCeCodedValueCodingSystem().trim();
-                String ceLocalCodedValue = messageElement.getDataElement().getCeDataType().getCeLocalCodedValue().trim();
-                String ceLocalCodedValueDescription = messageElement.getDataElement().getCeDataType().getCeLocalCodedValueDescription().trim();
-                String ceLocalCodedValueCodingSystem = messageElement.getDataElement().getCeDataType().getCeLocalCodedValueCodingSystem().trim();
+                String ceCodedValueDescription =
+                    messageElement.getDataElement().getCeDataType().getCeCodedValueDescription().trim();
+                String ceCodedValueCodingSystem =
+                    messageElement.getDataElement().getCeDataType().getCeCodedValueCodingSystem().trim();
+                String ceLocalCodedValue =
+                    messageElement.getDataElement().getCeDataType().getCeLocalCodedValue().trim();
+                String ceLocalCodedValueDescription =
+                    messageElement.getDataElement().getCeDataType().getCeLocalCodedValueDescription().trim();
+                String ceLocalCodedValueCodingSystem =
+                    messageElement.getDataElement().getCeDataType().getCeLocalCodedValueCodingSystem().trim();
 
                 nk1.getMaritalStatus().getIdentifier().setValue(ceCodedValue);
                 nk1.getMaritalStatus().getText().setValue(ceCodedValueDescription);
@@ -62,11 +72,16 @@ public class MapToNK1Element {
                 // Map to CE type for EthnicGroup
                 String dataLocator = dataElement.substring(2);
                 String ceCodedValue = messageElement.getDataElement().getCeDataType().getCeCodedValue().trim();
-                String ceCodedValueDescription = messageElement.getDataElement().getCeDataType().getCeCodedValueDescription().trim();
-                String ceCodedValueCodingSystem = messageElement.getDataElement().getCeDataType().getCeCodedValueCodingSystem().trim();
-                String ceLocalCodedValue = messageElement.getDataElement().getCeDataType().getCeLocalCodedValue().trim();
-                String ceLocalCodedValueDescription = messageElement.getDataElement().getCeDataType().getCeLocalCodedValueDescription().trim();
-                String ceLocalCodedValueCodingSystem = messageElement.getDataElement().getCeDataType().getCeLocalCodedValueCodingSystem().trim();
+                String ceCodedValueDescription =
+                    messageElement.getDataElement().getCeDataType().getCeCodedValueDescription().trim();
+                String ceCodedValueCodingSystem =
+                    messageElement.getDataElement().getCeDataType().getCeCodedValueCodingSystem().trim();
+                String ceLocalCodedValue =
+                    messageElement.getDataElement().getCeDataType().getCeLocalCodedValue().trim();
+                String ceLocalCodedValueDescription =
+                    messageElement.getDataElement().getCeDataType().getCeLocalCodedValueDescription().trim();
+                String ceLocalCodedValueCodingSystem =
+                    messageElement.getDataElement().getCeDataType().getCeLocalCodedValueCodingSystem().trim();
 
                 nk1.getEthnicGroup(0).getIdentifier().setValue(ceCodedValue);
                 nk1.getEthnicGroup(0).getText().setValue(ceCodedValueDescription);
@@ -79,11 +94,16 @@ public class MapToNK1Element {
                 // Map to CE type for Race
                 String dataLocator = dataElement.substring(2);
                 String ceCodedValue = messageElement.getDataElement().getCeDataType().getCeCodedValue().trim();
-                String ceCodedValueDescription = messageElement.getDataElement().getCeDataType().getCeCodedValueDescription().trim();
-                String ceCodedValueCodingSystem = messageElement.getDataElement().getCeDataType().getCeCodedValueCodingSystem().trim();
-                String ceLocalCodedValue = messageElement.getDataElement().getCeDataType().getCeLocalCodedValue().trim();
-                String ceLocalCodedValueDescription = messageElement.getDataElement().getCeDataType().getCeLocalCodedValueDescription().trim();
-                String ceLocalCodedValueCodingSystem = messageElement.getDataElement().getCeDataType().getCeLocalCodedValueCodingSystem().trim();
+                String ceCodedValueDescription =
+                    messageElement.getDataElement().getCeDataType().getCeCodedValueDescription().trim();
+                String ceCodedValueCodingSystem =
+                    messageElement.getDataElement().getCeDataType().getCeCodedValueCodingSystem().trim();
+                String ceLocalCodedValue =
+                    messageElement.getDataElement().getCeDataType().getCeLocalCodedValue().trim();
+                String ceLocalCodedValueDescription =
+                    messageElement.getDataElement().getCeDataType().getCeLocalCodedValueDescription().trim();
+                String ceLocalCodedValueCodingSystem =
+                    messageElement.getDataElement().getCeDataType().getCeLocalCodedValueCodingSystem().trim();
 
                 int nk1RaceInc = messageState.getNk1RaceIndex();
 

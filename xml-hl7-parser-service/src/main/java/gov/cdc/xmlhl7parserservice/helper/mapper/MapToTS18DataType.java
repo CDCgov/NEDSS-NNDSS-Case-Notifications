@@ -47,13 +47,13 @@ public class MapToTS18DataType {
             seconds = Integer.parseInt(input.substring(16, 18));
         }
 
-//        if(stringSize<23){
-//            out.Time.Millis =000;
-//            out.Time.seperator=".";
-//        }else{
-//            out.Time.seperator=".";
-//            out.Time.Millis  = StrToInt(StrMid(in,20,3));
-//        }
+        //        if(stringSize<23){
+        //            out.Time.Millis =000;
+        //            out.Time.seperator=".";
+        //        }else{
+        //            out.Time.seperator=".";
+        //            out.Time.Millis  = StrToInt(StrMid(in,20,3));
+        //        }
 
         output.getTime().setDateSecondPrecision(year, month, day, hours, minutes, seconds);
     }

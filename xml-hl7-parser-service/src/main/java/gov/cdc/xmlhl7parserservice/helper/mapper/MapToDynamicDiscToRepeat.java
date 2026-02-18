@@ -19,7 +19,9 @@ public class MapToDynamicDiscToRepeat {
     MessageState messageState = new MessageState();
     MapToRemoveSpecialCharacters mapToRemoveSpecialCharacters = new MapToRemoveSpecialCharacters();
 
-    void mapToDynamicDiscToRepeat(MessageElement messageElement, String mappedString, int splitPart, int obx2Inc, String questionIdentifier, int repeatCountNum, ORU_R01_ORDER_OBSERVATION orderObservation) throws DataTypeException {
+    void mapToDynamicDiscToRepeat(MessageElement messageElement, String mappedString, int splitPart, int obx2Inc,
+        String questionIdentifier, int repeatCountNum, ORU_R01_ORDER_OBSERVATION orderObservation)
+        throws DataTypeException {
         String separatorWOObx5 = "||||";
         int intIndicator = mappedString.indexOf(separatorWOObx5);
 
@@ -183,7 +185,7 @@ public class MapToDynamicDiscToRepeat {
             if (questionDataType.equals("CWE") || splitPart == 2) {
                 obx.getValueType().setValue("CWE");
 
-                if(intIndicator > 0) {
+                if (intIndicator > 0) {
                     String codedValue = "";
                     if (messageElement.getDataElement().getCweDataType().getCweCodedValue() != null) {
                         codedValue = messageElement.getDataElement().getCweDataType().getCweCodedValue();
@@ -191,12 +193,14 @@ public class MapToDynamicDiscToRepeat {
 
                     String codedValueDescription = "";
                     if (messageElement.getDataElement().getCweDataType().getCweCodedValueDescription() != null) {
-                        codedValueDescription = messageElement.getDataElement().getCweDataType().getCweCodedValueDescription();
+                        codedValueDescription =
+                            messageElement.getDataElement().getCweDataType().getCweCodedValueDescription();
                     }
 
                     String codedValueCodingSystem = "";
                     if (messageElement.getDataElement().getCweDataType().getCweCodedValueCodingSystem() != null) {
-                        codedValueCodingSystem = messageElement.getDataElement().getCweDataType().getCweCodedValueCodingSystem();
+                        codedValueCodingSystem =
+                            messageElement.getDataElement().getCweDataType().getCweCodedValueCodingSystem();
                     }
 
                     String localCodedValue = "";
@@ -206,12 +210,14 @@ public class MapToDynamicDiscToRepeat {
 
                     String localCodedValueDescription = "";
                     if (messageElement.getDataElement().getCweDataType().getCweLocalCodedValueDescription() != null) {
-                        localCodedValueDescription = messageElement.getDataElement().getCweDataType().getCweLocalCodedValueDescription();
+                        localCodedValueDescription =
+                            messageElement.getDataElement().getCweDataType().getCweLocalCodedValueDescription();
                     }
 
                     String localCodedValueCodingSystem = "";
                     if (messageElement.getDataElement().getCweDataType().getCweLocalCodedValueCodingSystem() != null) {
-                        localCodedValueCodingSystem = messageElement.getDataElement().getCweDataType().getCweLocalCodedValueCodingSystem();
+                        localCodedValueCodingSystem =
+                            messageElement.getDataElement().getCweDataType().getCweLocalCodedValueCodingSystem();
                     }
 
                     String originalOtherText = "";
@@ -222,12 +228,12 @@ public class MapToDynamicDiscToRepeat {
                     }
 
                     String observationValue = String.join("^",
-                            codedValue,
-                            codedValueDescription,
-                            codedValueCodingSystem,
-                            localCodedValue,
-                            localCodedValueDescription,
-                            localCodedValueCodingSystem
+                        codedValue,
+                        codedValueDescription,
+                        codedValueCodingSystem,
+                        localCodedValue,
+                        localCodedValueDescription,
+                        localCodedValueCodingSystem
                     ) + originalOtherText;
 
 
@@ -274,13 +280,20 @@ public class MapToDynamicDiscToRepeat {
 
                 int stringSize = time.length();
 
-                if (stringSize >= 4) year = time.substring(0, 4);
-                if (stringSize >= 7) month = time.substring(4, 6);
-                if (stringSize >= 10) day = time.substring(6, 8);
-                if (stringSize >= 13) hour = time.substring(8, 10);
-                if (stringSize >= 16) minute = time.substring(10, 12);
-                if (stringSize >= 19) second = time.substring(12, 14);
-                if (stringSize >= 23) milli = time.substring(14, 17);
+                if (stringSize >= 4)
+                    year = time.substring(0, 4);
+                if (stringSize >= 7)
+                    month = time.substring(4, 6);
+                if (stringSize >= 10)
+                    day = time.substring(6, 8);
+                if (stringSize >= 13)
+                    hour = time.substring(8, 10);
+                if (stringSize >= 16)
+                    minute = time.substring(10, 12);
+                if (stringSize >= 19)
+                    second = time.substring(12, 14);
+                if (stringSize >= 23)
+                    milli = time.substring(14, 17);
 
                 String formattedTime = year + month + day + hour + minute + second + separator + milli;
 
@@ -301,7 +314,7 @@ public class MapToDynamicDiscToRepeat {
 
                 String textData = "";
                 if (messageElement.getDataElement().getTxDataType() != null &&
-                        messageElement.getDataElement().getTxDataType().getTextData() != null) {
+                    messageElement.getDataElement().getTxDataType().getTextData() != null) {
 
                     textData = messageElement.getDataElement().getTxDataType().getTextData();
                     textData = textData.replace("\n", " ");
@@ -320,13 +333,12 @@ public class MapToDynamicDiscToRepeat {
 
                 stData.setValue(textData);
                 obx.getObservationValue(0).setData(stData);
-            }
-            else if (questionDataType.equals("ST")) {
+            } else if (questionDataType.equals("ST")) {
                 obx.getValueType().setValue("ST");
 
                 String textData = "";
                 if (messageElement.getDataElement().getStDataType() != null &&
-                        messageElement.getDataElement().getStDataType().getStringData() != null) {
+                    messageElement.getDataElement().getStDataType().getStringData() != null) {
 
                     textData = messageElement.getDataElement().getStDataType().getStringData();
                     textData = mapToRemoveSpecialCharacters.mapToRemoveSpecialCharacters(textData);

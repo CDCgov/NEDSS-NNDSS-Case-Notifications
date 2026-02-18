@@ -34,19 +34,19 @@ class CaseNotificationProducerTest {
         record = new ProducerRecord<>("test-topic", "test-key", "test-message");
     }
 
-//    @Test
-//    void testSendMessage_Success() throws Exception {
-//        CompletableFuture<SendResult<String, String>> future = mock(CompletableFuture.class);
-//        when(kafkaTemplate.send(record)).thenReturn(future);
-//
-//        assertDoesNotThrow(() -> invokeSendMessage(record));
-//    }
+    //    @Test
+    //    void testSendMessage_Success() throws Exception {
+    //        CompletableFuture<SendResult<String, String>> future = mock(CompletableFuture.class);
+    //        when(kafkaTemplate.send(record)).thenReturn(future);
+    //
+    //        assertDoesNotThrow(() -> invokeSendMessage(record));
+    //    }
 
     @Test
     void testSendMessage_InterruptedException() throws Exception {
         CompletableFuture<SendResult<String, String>> future = mock(CompletableFuture.class);
 
-        when(kafkaTemplate.send(record)).thenReturn( future);
+        when(kafkaTemplate.send(record)).thenReturn(future);
         when(future.get(3, TimeUnit.SECONDS)).thenThrow(new InterruptedException());
 
         assertThrows(NoSuchMethodException.class, () -> invokeSendMessage(record));

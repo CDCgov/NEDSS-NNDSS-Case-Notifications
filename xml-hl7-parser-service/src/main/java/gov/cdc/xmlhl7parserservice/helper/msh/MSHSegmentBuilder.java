@@ -17,6 +17,7 @@ public class MSHSegmentBuilder {
     public MSHSegmentBuilder(MessageState messageState) {
         this.messageState = messageState;
     }
+
     public static final String GENERIC_MMG_VERSION = "Generic_MMG_V2.0";
 
 
@@ -90,16 +91,19 @@ public class MSHSegmentBuilder {
 
     private void processMSH21Fields(MessageElement messageElement, MSH msh) throws DataTypeException {
         String mshField = messageElement.getHl7SegmentField().trim();
-        
+
         if (Objects.equals(messageElement.getOrderGroupId(), "1")) {
             switch (mshField) {
                 case "MSH-21.0" -> {
                     messageState.setIsSingleProfile(false);
-                    messageState.setEntityIdentifierGroup1(messageElement.getDataElement().getStDataType().getStringData().trim());
+                    messageState.setEntityIdentifierGroup1(
+                        messageElement.getDataElement().getStDataType().getStringData().trim());
                 }
                 case "MSH-21.1" -> {
-                    messageState.setNndMessageVersion(messageElement.getDataElement().getStDataType().getStringData().trim());
-                    msh.getMessageProfileIdentifier(0).getEntityIdentifier().setValue(messageElement.getDataElement().getStDataType().getStringData());
+                    messageState.setNndMessageVersion(
+                        messageElement.getDataElement().getStDataType().getStringData().trim());
+                    msh.getMessageProfileIdentifier(0).getEntityIdentifier()
+                        .setValue(messageElement.getDataElement().getStDataType().getStringData());
                 }
                 case "MSH-21.2" -> {
                     String nameSpaceID = messageElement.getDataElement().getIsDataType().getIsCodedValue().trim();
@@ -118,14 +122,18 @@ public class MSHSegmentBuilder {
             switch (mshField) {
                 case "MSH-21.0" -> {
                     messageState.setMessageType(messageElement.getDataElement().getStDataType().getStringData().trim());
-                    messageState.setEntityIdentifierGroup2(messageElement.getDataElement().getStDataType().getStringData().trim());
+                    messageState.setEntityIdentifierGroup2(
+                        messageElement.getDataElement().getStDataType().getStringData().trim());
                     if (messageState.getEntityIdentifierGroup2().equals(GENERIC_MMG_VERSION)) {
                         messageState.setGenericMMGv20(true);
                     }
                 }
-                case "MSH-21.2" -> messageState.setNameSpaceIDGroup2(messageElement.getDataElement().getIsDataType().getIsCodedValue().trim());
-                case "MSH-21.3" -> messageState.setUniversalIDGroup2(messageElement.getDataElement().getStDataType().getStringData().trim());
-                case "MSH-21.4" -> messageState.setUniversalIDTypeGroup2(messageElement.getDataElement().getIdDataType().getIdCodedValue().trim());
+                case "MSH-21.2" -> messageState.setNameSpaceIDGroup2(
+                    messageElement.getDataElement().getIsDataType().getIsCodedValue().trim());
+                case "MSH-21.3" -> messageState.setUniversalIDGroup2(
+                    messageElement.getDataElement().getStDataType().getStringData().trim());
+                case "MSH-21.4" -> messageState.setUniversalIDTypeGroup2(
+                    messageElement.getDataElement().getIdDataType().getIdCodedValue().trim());
             }
         }
     }

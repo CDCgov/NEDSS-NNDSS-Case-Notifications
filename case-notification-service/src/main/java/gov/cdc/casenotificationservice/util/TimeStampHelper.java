@@ -9,6 +9,7 @@ public class TimeStampHelper {
     private TimeStampHelper() {
 
     }
+
     public static Timestamp getCurrentTimeStamp(String timeZone) {
         ZoneId zoneId = ZoneId.of(timeZone);
         LocalDateTime ldt = LocalDateTime.now();

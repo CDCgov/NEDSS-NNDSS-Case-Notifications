@@ -31,16 +31,18 @@ public class XmlService implements IXmlService {
     private String tz = "UTC";
 
     public XmlService(CNTraportqOutRepository cnTraportqOutRepository,
-                      IStdMapperService stdMapperService,
-                      NetssTransportQOutRepository netssTransportQOutRepository) {
+        IStdMapperService stdMapperService,
+        NetssTransportQOutRepository netssTransportQOutRepository) {
         this.cnTraportqOutRepository = cnTraportqOutRepository;
         this.stdMapperService = stdMapperService;
         this.netssTransportQOutRepository = netssTransportQOutRepository;
     }
 
     // pRecordStatus can be retrieved from DB
-    public void mappingXmlStringToObject(MessageAfterStdChecker messageAfterStdChecker) throws StdProcessorServiceException, NonRetryableException {
-        var cnTransportqOut = cnTraportqOutRepository.findTopByRecordUid(messageAfterStdChecker.getCnTransportqOutUid());
+    public void mappingXmlStringToObject(MessageAfterStdChecker messageAfterStdChecker)
+        throws StdProcessorServiceException, NonRetryableException {
+        var cnTransportqOut =
+            cnTraportqOutRepository.findTopByRecordUid(messageAfterStdChecker.getCnTransportqOutUid());
         String netssSummary;
         NetssPersistModel netssPersistModel = new NetssPersistModel();
 
@@ -57,10 +59,10 @@ public class XmlService implements IXmlService {
             netssPersistModel.setVCaseReptId(netss.getCaseReportId());
             netssPersistModel.setVMessageWeek(netss.getWeek());
 
-            if (cnTransportqOut.getRecordStatusCd().equalsIgnoreCase("X") || netss.getCaseStatus().equalsIgnoreCase("X")) {
+            if (cnTransportqOut.getRecordStatusCd().equalsIgnoreCase("X") || netss.getCaseStatus()
+                .equalsIgnoreCase("X")) {
                 netssPersistModel.setRecordStatusCd("LOG_DEL");
-            }
-            else {
+            } else {
                 netssPersistModel.setRecordStatusCd("ACTIVE");
             }
 
@@ -81,12 +83,9 @@ public class XmlService implements IXmlService {
                 throw new NonRetryableException(e.getMessage(), e);
             }
         } catch (Exception e) {
-            if (e instanceof NonRetryableException)
-            {
+            if (e instanceof NonRetryableException) {
                 throw new NonRetryableException(e.getMessage(), e);
-            }
-            else
-            {
+            } else {
                 throw new StdProcessorServiceException("Error While Processing NETSS", e);
             }
         }

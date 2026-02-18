@@ -36,7 +36,8 @@ public class TokenController {
   @Operation(
       summary = "Get Access Token",
       description =
-          "Generates an access token using client credentials. The client ID and client secret must be provided in the request headers.",
+          "Generates an access token using client credentials. The client ID and client secret must"
+              + " be provided in the request headers.",
       parameters = {
         @Parameter(
             in = ParameterIn.HEADER,

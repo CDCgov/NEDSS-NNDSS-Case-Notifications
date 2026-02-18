@@ -17,7 +17,8 @@ public interface CNTraportqOutRepository extends JpaRepository<CNTransportqOut, 
 
   @Query(
       value =
-          "SELECT TOP 1 * FROM dbo.CN_transportq_out WHERE record_status_cd = :recordStatusCd AND cn_transportq_out_uid = :cnUid",
+          "SELECT TOP 1 * FROM dbo.CN_transportq_out WHERE record_status_cd = :recordStatusCd AND"
+              + " cn_transportq_out_uid = :cnUid",
       nativeQuery = true)
   CNTransportqOut findTopByRecordStatusCdAndUid(
       @Param("recordStatusCd") String recordStatusCd, @Param("cnUid") Long cnUid);
@@ -29,13 +30,15 @@ public interface CNTraportqOutRepository extends JpaRepository<CNTransportqOut, 
 
   @Query(
       value =
-          "SELECT TOP 1 * FROM dbo.CN_transportq_out WHERE message_payload NOT LIKE '%STD_MMG_V1.0%'   ORDER BY add_time DESC",
+          "SELECT TOP 1 * FROM dbo.CN_transportq_out WHERE message_payload NOT LIKE"
+              + " '%STD_MMG_V1.0%'   ORDER BY add_time DESC",
       nativeQuery = true)
   CNTransportqOut findTopNonStdForTesting();
 
   @Query(
       value =
-          "SELECT TOP 1 * FROM dbo.CN_transportq_out WHERE message_payload LIKE '%STD_MMG_V1.0%'   ORDER BY add_time DESC",
+          "SELECT TOP 1 * FROM dbo.CN_transportq_out WHERE message_payload LIKE '%STD_MMG_V1.0%'  "
+              + " ORDER BY add_time DESC",
       nativeQuery = true)
   CNTransportqOut findTopStdForTesting();
 
@@ -50,11 +53,11 @@ public interface CNTraportqOutRepository extends JpaRepository<CNTransportqOut, 
   @Query(
       value =
           """
-    UPDATE dbo.CN_transportq_out
-    SET record_status_cd = 'PHINMS_QUEUED',
-        record_status_time = GETDATE()
-    WHERE cn_transportq_out_uid  = :messageUid
-    """,
+          UPDATE dbo.CN_transportq_out
+          SET record_status_cd = 'PHINMS_QUEUED',
+              record_status_time = GETDATE()
+          WHERE cn_transportq_out_uid  = :messageUid
+          """,
       nativeQuery = true)
   int updateStatusToQueued(@Param("messageUid") Long messageUid);
 
@@ -63,11 +66,11 @@ public interface CNTraportqOutRepository extends JpaRepository<CNTransportqOut, 
   @Query(
       value =
           """
-    UPDATE dbo.CN_transportq_out
-    SET record_status_cd = :status,
-        record_status_time = GETDATE()
-    WHERE cn_transportq_out_uid  = :messageUid
-    """,
+          UPDATE dbo.CN_transportq_out
+          SET record_status_cd = :status,
+              record_status_time = GETDATE()
+          WHERE cn_transportq_out_uid  = :messageUid
+          """,
       nativeQuery = true)
   int updateStatus(@Param("messageUid") Long messageUid, @Param("status") String status);
 }

@@ -30,7 +30,8 @@ public class DeadLetterController {
   @Operation(
       summary = "Get Case Notification DLT entries by timestamp range",
       description =
-          "Returns a paginated list of CaseNotificationDlt records filtered by a timestamp range. Timestamps must be provided as strings in 'yyyy-MM-dd HH:mm:ss' format.",
+          "Returns a paginated list of CaseNotificationDlt records filtered by a timestamp range."
+              + " Timestamps must be provided as strings in 'yyyy-MM-dd HH:mm:ss' format.",
       parameters = {
         @Parameter(
             in = ParameterIn.HEADER,

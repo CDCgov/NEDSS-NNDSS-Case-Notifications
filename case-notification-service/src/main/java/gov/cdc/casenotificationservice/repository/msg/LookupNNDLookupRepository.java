@@ -10,14 +10,16 @@ import org.springframework.stereotype.Repository;
 public interface LookupNNDLookupRepository extends JpaRepository<LookupNNDLookup, String> {
   @Query(
       value =
-          "SELECT TOP 1 TO_CODE FROM LOOKUP_NNDLookup WHERE FROM_UNIQUE_ID = :fromUniqueId AND CONCEPT_CD = :conceptCd",
+          "SELECT TOP 1 TO_CODE FROM LOOKUP_NNDLookup WHERE FROM_UNIQUE_ID = :fromUniqueId AND"
+              + " CONCEPT_CD = :conceptCd",
       nativeQuery = true)
   String findToCodeByFromUniqueIdAndConceptCd(
       @Param("fromUniqueId") String fromUniqueId, @Param("conceptCd") String conceptCd);
 
   @Query(
       value =
-          "SELECT TOP 1 TO_CODE FROM LOOKUP_NNDLookup WHERE FROM_UNIQUE_ID = :fromUniqueId AND TO_UNIQUE_ID = :toUniqueId AND CONCEPT_CD = :conceptCd",
+          "SELECT TOP 1 TO_CODE FROM LOOKUP_NNDLookup WHERE FROM_UNIQUE_ID = :fromUniqueId AND"
+              + " TO_UNIQUE_ID = :toUniqueId AND CONCEPT_CD = :conceptCd",
       nativeQuery = true)
   String findToCodeByFromUniqueIdToUniqueIdAndConceptCd(
       @Param("fromUniqueId") String fromUniqueId,

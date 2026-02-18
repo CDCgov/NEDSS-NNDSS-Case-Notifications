@@ -11,7 +11,8 @@ import org.springframework.stereotype.Repository;
 public interface LookupMmwrRepository extends JpaRepository<LookupMmwr, Date> {
   @Query(
       value =
-          "SELECT TOP 1 WEEK_ENDING FROM LOOKUP_MMWR WHERE MMWR_WEEK = :mmwrWeek AND MMWR_YEAR = :mmwrYear",
+          "SELECT TOP 1 WEEK_ENDING FROM LOOKUP_MMWR WHERE MMWR_WEEK = :mmwrWeek AND MMWR_YEAR ="
+              + " :mmwrYear",
       nativeQuery = true)
   Date findTopWeekEndingByMmwrWeekAndMmwrYear(
       @Param("mmwrWeek") int mmwrWeek, @Param("mmwrYear") int mmwrYear);

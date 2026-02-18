@@ -12,7 +12,8 @@ public interface CaseNotificationConfigRepository
     extends JpaRepository<CaseNotificationConfig, Integer> {
   @Query(
       value =
-          "SELECT TOP 1 * FROM NBS_Case_Notification_Config WHERE config_applied = 1 AND config_name = 'NON_STD_CASE_NOTIFICATION';",
+          "SELECT TOP 1 * FROM NBS_Case_Notification_Config WHERE config_applied = 1 AND"
+              + " config_name = 'NON_STD_CASE_NOTIFICATION';",
       nativeQuery = true)
   CaseNotificationConfig findNonStdConfig();
 

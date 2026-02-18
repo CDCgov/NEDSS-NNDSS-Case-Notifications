@@ -33,30 +33,30 @@ public class ConfigurationController {
       summary = "Create or Update Case Notification Configuration",
       description =
           """
-      Adds a new or updates an existing case notification configuration.
+          Adds a new or updates an existing case notification configuration.
 
-      - If `configName` already exists, the configuration will be updated.
-      - Otherwise, a new configuration will be inserted.
+          - If `configName` already exists, the configuration will be updated.
+          - Otherwise, a new configuration will be inserted.
 
-      The request body must match the following model:
-      ```json
-      {
-        "configName": "string (required)",
-        "configApplied": true,
-        "batchMesageProfileId": "string",
-        "nbsCertificateUrl": "string",
-        "phinEncryption": "string",
-        "phinRoute": "string",
-        "phinSignature": "string",
-        "phinPublicKeyAddress": "string",
-        "phinPublicKeyBaseDn": "string",
-        "phinPublicKeyDn": "string",
-        "phinRecipient": "string",
-        "phinPriority": "string",
-        "hl7ValidationEnabled": true
-      }
-      ```
-      """,
+          The request body must match the following model:
+          ```json
+          {
+            "configName": "string (required)",
+            "configApplied": true,
+            "batchMesageProfileId": "string",
+            "nbsCertificateUrl": "string",
+            "phinEncryption": "string",
+            "phinRoute": "string",
+            "phinSignature": "string",
+            "phinPublicKeyAddress": "string",
+            "phinPublicKeyBaseDn": "string",
+            "phinPublicKeyDn": "string",
+            "phinRecipient": "string",
+            "phinPriority": "string",
+            "hl7ValidationEnabled": true
+          }
+          ```
+          """,
       parameters = {
         @Parameter(
             in = ParameterIn.HEADER,
@@ -94,11 +94,11 @@ public class ConfigurationController {
       summary = "Get Case Notification Configuration",
       description =
           """
-      Fetches one or more case notification configuration records.
+          Fetches one or more case notification configuration records.
 
-      - If `configName` is provided, returns the specific matching configuration.
-      - If `configName` is omitted, returns all configurations.
-      """,
+          - If `configName` is provided, returns the specific matching configuration.
+          - If `configName` is omitted, returns all configurations.
+          """,
       parameters = {
         @Parameter(
             in = ParameterIn.HEADER,

@@ -129,6 +129,18 @@ public class HL7MessageBuilder {
         OTH_SANDS_REPLACE = "\"\"";
     }
 
+    /**
+     * Builds an HL7 message from an NBS NND intermediary XML payload.
+     *
+     * <p>Unmarshalls the XML into an NBSNNDIntermediaryMessage, then
+     * calls parseXml to construct and populate the HL7 message segments
+     * and any associated lab report events.
+     *
+     * @param xmlPayload         the NBS NND intermediary XML string to parse
+     * @param validationEnabled  whether to run HL7 validation on the constructed message
+     * @return the fully constructed HL7 message as a string
+     * @throws RuntimeException if XML unmarshalling or HL7 message construction fails
+     */
     public String buildHl7Message(String xmlPayload, boolean validationEnabled) {
         try {
             JAXBContext context = JAXBContext.newInstance(NBSNNDIntermediaryMessage.class);

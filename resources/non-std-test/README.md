@@ -1,6 +1,6 @@
-# Non-Standard Performance Test Scripts
+# Non-STD Test Scripts
 
-Scripts for manually testing the non-standard case notification pipeline. They seed test data into `CN_transportq_out`, push Debezium-style messages to Kafka, and report throughput metrics.
+Scripts for manually testing the non-std case notification pipeline. They seed test data into `CN_transportq_out`, push Debezium-style messages to Kafka, and report throughput metrics.
 
 ## Usage
 

@@ -11,6 +11,7 @@ import gov.cdc.casenotificationservice.repository.odse.CNTraportqOutRepository;
 import gov.cdc.casenotificationservice.service.nonstd.interfaces.INonStdBatchService;
 import gov.cdc.casenotificationservice.service.nonstd.interfaces.INonStdService;
 import gov.cdc.casenotificationservice.service.nonstd.interfaces.IPHINMSService;
+import gov.cdc.xmlhl7parser.exception.XmlHL7ParserException;
 import gov.cdc.xmlhl7parser.helper.HL7MessageBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,6 +51,7 @@ public class NonStdService implements INonStdService {
             CaseNotificationConfig stdConfig = caseNotificationConfigRepository.findNonStdConfig();
             var cnTransport = cnTraportqOutRepository.findTopByRecordUid(messageAfterStdChecker.getCnTransportqOutUid());
 
+        try {
             var payload = hl7MessageBuilder.buildHl7Message(cnTransport.getMessagePayload(), hl7ValidationEnabled);
             if (payload.isEmpty()) {
                 throw new IgnorableException("Payload is empty");
@@ -88,7 +90,9 @@ public class NonStdService implements INonStdService {
                 }
 
             }
-
+        } catch (XmlHL7ParserException e) {
+            throw new NonStdProcessorServiceException("Failed to convert XML payload to HL7", e);
+        }
     }
 
     public void releaseHoldQueueAndProcessBatchNonStd() throws NonRetryableException {

@@ -18,6 +18,7 @@ import gov.cdc.xmlhl7parser.model.Obx.ObxRepeatingElement;
 import gov.cdc.xmlhl7parser.model.generated.jaxb.*;
 
 import gov.cdc.xmlhl7parser.validator.HL7Validator;
+import jakarta.xml.bind.JAXBException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -141,7 +142,7 @@ public class HL7MessageBuilder {
      * @return the fully constructed HL7 message as a string
      * @throws RuntimeException if XML unmarshalling or HL7 message construction fails
      */
-    public String buildHl7Message(String xmlPayload, boolean validationEnabled) {
+    public String buildHl7Message(String xmlPayload, boolean validationEnabled) throws XmlHL7ParserException {
         try {
             JAXBContext context = JAXBContext.newInstance(NBSNNDIntermediaryMessage.class);
             Unmarshaller unmarshaller = context.createUnmarshaller();
@@ -151,13 +152,14 @@ public class HL7MessageBuilder {
                     (NBSNNDIntermediaryMessage) unmarshaller.unmarshal(reader);
 
             return parseXml(nbsnndIntermediaryMessage, validationEnabled);
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
+        } catch (JAXBException e) {
+            throw new XmlHL7ParserException("Failed to construct NBSNNDIntermediaryMessage. ", e);
+        } catch (HL7Exception e) {
+            throw new XmlHL7ParserException("Failed to parse NBSNNDIntermediaryMessage to HL7", e);
         }
     }
 
-    public String parseXml(NBSNNDIntermediaryMessage nbsnndIntermediaryMessage, boolean validationEnabled) throws HL7Exception, IOException, XmlHL7ParserException {
+    public String parseXml(NBSNNDIntermediaryMessage nbsnndIntermediaryMessage, boolean validationEnabled) throws HL7Exception, XmlHL7ParserException {
         ORU_R01 oruMessage = new ORU_R01();
 
         MSH msh = oruMessage.getMSH();
@@ -169,19 +171,13 @@ public class HL7MessageBuilder {
 
         reset();
         //set static fields
-        try {
-            msh.getFieldSeparator().setValue(FIELD_SEPARATOR);
-            msh.getEncodingCharacters().setValue(ENCODING_CHARACTERS);
-            //msh.getMessageType().getMessageCode().setValue(MESSAGE_CODE);
-            //msh.getMessageType().getTriggerEvent().setValue(MESSAGE_TRIGGER_EVENT);
-            pid.getSetIDPID().setValue("1");
-            pid.getPatientName(0).getNameTypeCode().setValue("S");
-            obr.getObr1_SetIDOBR().setValue("1");
-        }
-        catch (DataTypeException e)
-        {
-            throw new RuntimeException(e);
-        }
+        msh.getFieldSeparator().setValue(FIELD_SEPARATOR);
+        msh.getEncodingCharacters().setValue(ENCODING_CHARACTERS);
+        //msh.getMessageType().getMessageCode().setValue(MESSAGE_CODE);
+        //msh.getMessageType().getTriggerEvent().setValue(MESSAGE_TRIGGER_EVENT);
+        pid.getSetIDPID().setValue("1");
+        pid.getPatientName(0).getNameTypeCode().setValue("S");
+        obr.getObr1_SetIDOBR().setValue("1");
 
         for (int z = 0; z < nbsnndIntermediaryMessage.getMessageElement().size(); z++){
             if (nbsnndIntermediaryMessage.getMessageElement().get(z).getQuestionIdentifierNND().equalsIgnoreCase("INV826") || nbsnndIntermediaryMessage.getMessageElement().get(z).getQuestionIdentifierNND().equalsIgnoreCase("INV827") ) {

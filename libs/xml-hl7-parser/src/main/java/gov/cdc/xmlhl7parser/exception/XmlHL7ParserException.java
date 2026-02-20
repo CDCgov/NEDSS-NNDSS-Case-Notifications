@@ -9,7 +9,11 @@ package gov.cdc.xmlhl7parser.exception;
 @SuppressWarnings({"java:S1118","java:S125", "java:S6126", "java:S1135"})
 public class XmlHL7ParserException extends Exception {
 
-    public XmlHL7ParserException(String message) {
-        super(message);
-    }
+  public XmlHL7ParserException(String message) {
+    super(message);
+  }
+
+  public XmlHL7ParserException(String message, Throwable cause) {
+    super(message, cause);
+  }
 }

@@ -26,3 +26,5 @@ build
 /non-std-processor-service/.vscode.DS_Store
 
 **/generated/jaxb/**
+
+.env

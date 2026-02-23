@@ -1,0 +1,76 @@
+server:
+  port: 8088
+  servlet:
+    context-path: /hl7-parser
+info:
+  app:
+    name: XML Parser
+management:
+  endpoint:
+    health:
+      show-details: always
+      roles: ADMIN
+  endpoints:
+    web:
+      base-path: /actuator
+      exposure:
+        include: "health,info"
+
+spring:
+  datasource:
+    username: ${NBS_DBUSER}
+    password: ${NBS_DBPASSWORD}
+    driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    hikari:
+      maximum-pool-size: ${HIKARI_POOL_SIZE:5}
+      connection-timeout: ${HIKARI_CON_TIMEOUT:30000}
+      minimum-idle: ${HIKARI_MINIMUM_IDLE:2}
+      idle-timeout: ${HIKARI_IDLE_TIMEOUT:12000}
+      max-lifetime: ${HIKARI_MAX_LIFETIME:120000}
+      pool-name: ${HIKARI_POOL_NAME:SQLServerHikariCP}
+      leak-detection-threshold: ${LEAK_DETECTION_THRESHOLD:30000}
+    odse:
+      url: jdbc:sqlserver://${NBS_DBSERVER};databaseName=NBS_ODSE;encrypt=true;trustServerCertificate=true;
+    msgoute:
+      url: jdbc:sqlserver://${NBS_DBSERVER};databaseName=NBS_MSGOUTE;encrypt=true;trustServerCertificate=true;
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${CN_AUTH_URI}
+          jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
+
+---
+spring:
+  config:
+    activate:
+      on-profile: default
+  springdoc:
+    api-docs:
+      enabled: false
+    swagger-ui:
+      enabled: false
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  springdoc:
+    api-docs:
+      enabled: true
+    swagger-ui:
+      enabled: true
+---
+
+auth:
+  token-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/token
+  introspect-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/token/introspect
+
+cnserver:
+  host: ${CN_SERVER_HOST:localhost:8088}

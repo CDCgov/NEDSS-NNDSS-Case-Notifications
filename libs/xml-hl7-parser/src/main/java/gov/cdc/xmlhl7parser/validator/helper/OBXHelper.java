@@ -2,11 +2,11 @@ package gov.cdc.xmlhl7parser.validator.helper;
 
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.v25.segment.OBX;
-import gov.cdc.xmlhl7parser.validator.HL7Validator;
+import gov.cdc.xmlhl7parser.validator.Hl7Validator;
 
 public class OBXHelper {
 
-    HL7Validator validator = new HL7Validator();
+    Hl7Validator validator = new Hl7Validator();
 
     public void validateOBXFields(OBX obx) throws HL7Exception {
         validator.validateField("OBX-1", obx.getSetIDOBX().getValue(), false, 0, 4);

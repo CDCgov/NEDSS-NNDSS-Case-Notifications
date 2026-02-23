@@ -9,7 +9,7 @@ import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.DataTypeException;
 import gov.cdc.xmlhl7parser.model.generated.jaxb.MessageElement;
 import gov.cdc.xmlhl7parser.helper.MessageState;
-import gov.cdc.xmlhl7parser.util.HL7DateFormatUtil;
+import gov.cdc.xmlhl7parser.util.Hl7DateFormatUtil;
 import gov.cdc.xmlhl7parser.model.Obx.ObxRepeatingElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,9 +29,9 @@ public class OBXSegmentBuilder {
     private static final Logger logger = LoggerFactory.getLogger(OBXSegmentBuilder.class);
 
     private final MessageState messageState;
-    private final HL7DateFormatUtil dateFormatUtil;
+    private final Hl7DateFormatUtil dateFormatUtil;
 
-    public OBXSegmentBuilder(MessageState messageState, HL7DateFormatUtil dateFormatUtil) {
+    public OBXSegmentBuilder(MessageState messageState, Hl7DateFormatUtil dateFormatUtil) {
         this.messageState = messageState;
         this.dateFormatUtil = dateFormatUtil;
     }

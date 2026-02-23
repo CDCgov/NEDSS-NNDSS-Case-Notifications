@@ -4,7 +4,7 @@ import ca.uhn.hl7v2.model.v25.segment.OBR;
 import ca.uhn.hl7v2.model.DataTypeException;
 import gov.cdc.xmlhl7parser.model.generated.jaxb.MessageElement;
 import gov.cdc.xmlhl7parser.helper.MessageState;
-import gov.cdc.xmlhl7parser.util.HL7DateFormatUtil;
+import gov.cdc.xmlhl7parser.util.Hl7DateFormatUtil;
 import gov.cdc.xmlhl7parser.repository.msgout.IServiceActionPairRepository;
 import gov.cdc.xmlhl7parser.repository.msgout.model.ServiceActionPairModel;
 import org.slf4j.Logger;
@@ -19,10 +19,10 @@ public class OBRSegmentBuilder {
     private static final Logger logger = LoggerFactory.getLogger(OBRSegmentBuilder.class);
     
     private final MessageState messageState;
-    private final HL7DateFormatUtil dateFormatUtil;
+    private final Hl7DateFormatUtil dateFormatUtil;
     private final IServiceActionPairRepository iServiceActionPairRepository;
 
-    public OBRSegmentBuilder(MessageState messageState, HL7DateFormatUtil dateFormatUtil, IServiceActionPairRepository iServiceActionPairRepository) {
+    public OBRSegmentBuilder(MessageState messageState, Hl7DateFormatUtil dateFormatUtil, IServiceActionPairRepository iServiceActionPairRepository) {
         this.messageState = messageState;
         this.dateFormatUtil = dateFormatUtil;
         this.iServiceActionPairRepository = iServiceActionPairRepository;

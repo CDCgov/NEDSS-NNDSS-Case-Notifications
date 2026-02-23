@@ -6,14 +6,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class HL7DateFormatUtil {
+public class Hl7DateFormatUtil {
     
     private final DataTypeProcessor dataTypeProcessor;
     private String messageType = "other"; // Default value
     public static final String HL_SEVEN_SEGMENT_FIELD = "hl7SegmentField";
 
 
-    public HL7DateFormatUtil(DataTypeProcessor dataTypeProcessor) {
+    public Hl7DateFormatUtil(DataTypeProcessor dataTypeProcessor) {
         this.dataTypeProcessor = dataTypeProcessor;
     }
 

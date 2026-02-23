@@ -2,11 +2,11 @@ package gov.cdc.xmlhl7parser.validator.helper;
 
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.v25.segment.PID;
-import gov.cdc.xmlhl7parser.validator.HL7Validator;
+import gov.cdc.xmlhl7parser.validator.Hl7Validator;
 
 public class PIDHelper {
 
-    HL7Validator validator = new HL7Validator();
+    Hl7Validator validator = new Hl7Validator();
 
     public void validatePIDFields(PID pid) throws HL7Exception {
         validator.validateField("PID-3.IDNumber", pid.getPatientIdentifierList(0).getIDNumber().getValue(), true, 1, 15);

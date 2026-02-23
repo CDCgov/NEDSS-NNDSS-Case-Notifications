@@ -2,10 +2,10 @@ package gov.cdc.xmlhl7parser.validator.helper;
 
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.v25.segment.SPM;
-import gov.cdc.xmlhl7parser.validator.HL7Validator;
+import gov.cdc.xmlhl7parser.validator.Hl7Validator;
 
 public class SPMHelper {
-    HL7Validator validator = new HL7Validator();
+    Hl7Validator validator = new Hl7Validator();
 
     public void validateSPMFields(SPM spm) throws HL7Exception {
         validator.validateField("SPM-1", spm.getSetIDSPM().getValue(), false, 0, 4);

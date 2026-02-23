@@ -2,6 +2,6 @@ package gov.cdc.xmlhl7parser.util.interfaces;
 
 import java.util.Map;
 
-public interface HL7FieldProcessor {
+public interface Hl7FieldProcessor {
     String  processFields(Map<String, String> inputFields);
 }

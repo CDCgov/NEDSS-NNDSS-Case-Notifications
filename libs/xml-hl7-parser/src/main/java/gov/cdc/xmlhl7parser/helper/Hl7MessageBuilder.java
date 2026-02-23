@@ -10,14 +10,14 @@ import ca.uhn.hl7v2.model.v25.group.ORU_R01_ORDER_OBSERVATION;
 import ca.uhn.hl7v2.model.v25.message.ORU_R01;
 import ca.uhn.hl7v2.model.v25.segment.*;
 
-import gov.cdc.xmlhl7parser.exception.XmlHL7ParserException;
+import gov.cdc.xmlhl7parser.exception.XmlHl7ParserException;
 import gov.cdc.xmlhl7parser.helper.mapper.*;
 import gov.cdc.xmlhl7parser.helper.obx.OBXSegmentBuilder;
 import gov.cdc.xmlhl7parser.model.*;
 import gov.cdc.xmlhl7parser.model.Obx.ObxRepeatingElement;
 import gov.cdc.xmlhl7parser.model.generated.jaxb.*;
 
-import gov.cdc.xmlhl7parser.validator.HL7Validator;
+import gov.cdc.xmlhl7parser.validator.Hl7Validator;
 import jakarta.xml.bind.JAXBException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,18 +26,18 @@ import org.springframework.stereotype.Service;
 
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Unmarshaller;
-import java.io.IOException;
+
 import java.io.StringReader;
 import java.util.*;
 
 import gov.cdc.xmlhl7parser.helper.msh.MSHSegmentBuilder;
 import gov.cdc.xmlhl7parser.helper.pid.PIDSegmentBuilder;
-import gov.cdc.xmlhl7parser.util.HL7DateFormatUtil;
+import gov.cdc.xmlhl7parser.util.Hl7DateFormatUtil;
 import gov.cdc.xmlhl7parser.helper.nk1.NK1SegmentBuilder;
 import gov.cdc.xmlhl7parser.helper.obr.OBRSegmentBuilder;
 
 @Service
-public class HL7MessageBuilder {
+public class Hl7MessageBuilder {
 
     private final MSHSegmentBuilder mshSegmentBuilder;
     private MessageState messageState = new MessageState();
@@ -45,7 +45,7 @@ public class HL7MessageBuilder {
     private final NK1SegmentBuilder nk1SegmentBuilder;
     private final OBRSegmentBuilder obrSegmentBuilder;
     private final OBXSegmentBuilder obxSegmentBuilder;
-    private final HL7DateFormatUtil dateFormatUtil;
+    private final Hl7DateFormatUtil dateFormatUtil;
     private final MapToDynamicParentRptToRpt mapToDynamicParentRptToRpt;
     private final MapToDynamicRootlDiscToRepeat mapToDynamicRootlDiscToRepeat;
     private final MapToDisRepeat mapToDisRepeat;
@@ -58,13 +58,13 @@ public class HL7MessageBuilder {
     public static final String ENCODING_CHARACTERS = "^~\\&";
 
     @Autowired
-    public HL7MessageBuilder(
+    public Hl7MessageBuilder(
             MSHSegmentBuilder mshSegmentBuilder,
             MessageState messageState,
             PIDSegmentBuilder pidSegmentBuilder,
             NK1SegmentBuilder nk1SegmentBuilder,
             OBRSegmentBuilder obrSegmentBuilder, OBXSegmentBuilder obxSegmentBuilder,
-            HL7DateFormatUtil dateFormatUtil,
+            Hl7DateFormatUtil dateFormatUtil,
             MapToDynamicParentRptToRpt mapToDynamicParentRptToRpt,
             MapToDynamicRootlDiscToRepeat mapToDynamicRootlDiscToRepeat,
             MapToDisRepeat mapToDisRepeat,
@@ -110,7 +110,7 @@ public class HL7MessageBuilder {
     String OTH_SANDS_TEXT = "\"\"";
     String OTH_SANDS_REPLACE = "\"\"";
 
-    private static final Logger logger = LoggerFactory.getLogger(HL7MessageBuilder.class);
+    private static final Logger logger = LoggerFactory.getLogger(Hl7MessageBuilder.class);
 
     // Reset the processor state
     public void reset() {
@@ -142,7 +142,7 @@ public class HL7MessageBuilder {
      * @return the fully constructed HL7 message as a string
      * @throws RuntimeException if XML unmarshalling or HL7 message construction fails
      */
-    public String buildHl7Message(String xmlPayload, boolean validationEnabled) throws XmlHL7ParserException {
+    public String buildHl7Message(String xmlPayload, boolean validationEnabled) throws XmlHl7ParserException {
         try {
             JAXBContext context = JAXBContext.newInstance(NBSNNDIntermediaryMessage.class);
             Unmarshaller unmarshaller = context.createUnmarshaller();
@@ -153,13 +153,13 @@ public class HL7MessageBuilder {
 
             return parseXml(nbsnndIntermediaryMessage, validationEnabled);
         } catch (JAXBException e) {
-            throw new XmlHL7ParserException("Failed to construct NBSNNDIntermediaryMessage. ", e);
+            throw new XmlHl7ParserException("Failed to construct NBSNNDIntermediaryMessage. ", e);
         } catch (HL7Exception e) {
-            throw new XmlHL7ParserException("Failed to parse NBSNNDIntermediaryMessage to HL7", e);
+            throw new XmlHl7ParserException("Failed to parse NBSNNDIntermediaryMessage to HL7", e);
         }
     }
 
-    public String parseXml(NBSNNDIntermediaryMessage nbsnndIntermediaryMessage, boolean validationEnabled) throws HL7Exception, XmlHL7ParserException {
+    public String parseXml(NBSNNDIntermediaryMessage nbsnndIntermediaryMessage, boolean validationEnabled) throws HL7Exception, XmlHl7ParserException {
         ORU_R01 oruMessage = new ORU_R01();
 
         MSH msh = oruMessage.getMSH();
@@ -644,7 +644,7 @@ public class HL7MessageBuilder {
         }
 
         if (validationEnabled) {
-            HL7Validator validator = new HL7Validator();
+            Hl7Validator validator = new Hl7Validator();
             boolean isHL7Valid = validator.nndOruR01Validator(oruMessage);
         }
 

@@ -7,16 +7,16 @@ import ca.uhn.hl7v2.model.v25.group.ORU_R01_PATIENT_RESULT;
 import ca.uhn.hl7v2.model.v25.group.ORU_R01_SPECIMEN;
 import ca.uhn.hl7v2.model.v25.message.ORU_R01;
 import ca.uhn.hl7v2.model.v25.segment.*;
-import gov.cdc.xmlhl7parser.exception.XmlHL7ParserException;
+import gov.cdc.xmlhl7parser.exception.XmlHl7ParserException;
 import gov.cdc.xmlhl7parser.validator.helper.*;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 
 @Slf4j
-public class HL7Validator {
+public class Hl7Validator {
 
-    public boolean nndOruR01Validator(ORU_R01 hl7Message) throws XmlHL7ParserException, HL7Exception {
+    public boolean nndOruR01Validator(ORU_R01 hl7Message) throws XmlHl7ParserException, HL7Exception {
         if (!(hl7Message instanceof ORU_R01 oruR01)) {
             throw new HL7Exception("Message is not ORU_R01");
         }
@@ -34,7 +34,7 @@ public class HL7Validator {
         }
         if (patientResult.getPATIENT() == null) {
             log.info("Patient Result getPATIENT() is null.");
-            throw new XmlHL7ParserException("Patient Result getPATIENT() is null.");
+            throw new XmlHl7ParserException("Patient Result getPATIENT() is null.");
         }
         else {
             PID pid = patientResult.getPATIENT().getPID();

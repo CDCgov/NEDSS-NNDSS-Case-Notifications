@@ -2,7 +2,7 @@ package gov.cdc.xmlhl7parser.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import gov.cdc.xmlhl7parser.util.interfaces.HL7FieldProcessor;
+import gov.cdc.xmlhl7parser.util.interfaces.Hl7FieldProcessor;
 import gov.cdc.xmlhl7parser.repository.msgout.model.DataTypeModel;
 import gov.cdc.xmlhl7parser.repository.msgout.IDataTypeLookupRepository;
 import org.slf4j.Logger;
@@ -14,11 +14,11 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * Implementation of HL7FieldProcessor that reads DataTypes.json from Resources
+ * Implementation of Hl7FieldProcessor that reads DataTypes.json from Resources
  * creates list of Java Objects.
  */
 @Component
-public class DataTypeProcessor implements HL7FieldProcessor {
+public class DataTypeProcessor implements Hl7FieldProcessor {
 
     private final ObjectMapper mapper = new ObjectMapper();
     private static final Logger logger = LoggerFactory.getLogger(DataTypeProcessor.class);

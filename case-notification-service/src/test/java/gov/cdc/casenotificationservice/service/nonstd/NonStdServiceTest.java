@@ -10,7 +10,7 @@ import gov.cdc.casenotificationservice.repository.odse.CNTraportqOutRepository;
 import gov.cdc.casenotificationservice.repository.odse.model.CNTransportqOut;
 import gov.cdc.casenotificationservice.service.nonstd.interfaces.INonStdBatchService;
 import gov.cdc.casenotificationservice.service.nonstd.interfaces.IPHINMSService;
-import gov.cdc.xmlhl7parser.helper.HL7MessageBuilder;
+import gov.cdc.xmlhl7parser.helper.Hl7MessageBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -40,7 +40,7 @@ class NonStdServiceTest {
     private CaseNotificationConfigRepository caseNotificationConfigRepository;
 
     @Mock
-    private HL7MessageBuilder hl7MessageBuilder;
+    private Hl7MessageBuilder hl7MessageBuilder;
 
 
     @BeforeEach

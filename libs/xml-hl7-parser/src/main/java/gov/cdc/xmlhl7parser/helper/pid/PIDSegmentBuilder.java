@@ -4,17 +4,15 @@ import ca.uhn.hl7v2.model.DataTypeException;
 import ca.uhn.hl7v2.model.v25.segment.PID;
 import gov.cdc.xmlhl7parser.helper.MessageState;
 import gov.cdc.xmlhl7parser.model.generated.jaxb.MessageElement;
-import gov.cdc.xmlhl7parser.util.HL7DateFormatUtil;
+import gov.cdc.xmlhl7parser.util.Hl7DateFormatUtil;
 import org.springframework.stereotype.Component;
-
-import java.util.Arrays;
 
 @Component
 public class PIDSegmentBuilder {
     private final MessageState messageState;
-    private final HL7DateFormatUtil dateFormatUtil;
+    private final Hl7DateFormatUtil dateFormatUtil;
 
-    public PIDSegmentBuilder(MessageState messageState, HL7DateFormatUtil dateFormatUtil) {
+    public PIDSegmentBuilder(MessageState messageState, Hl7DateFormatUtil dateFormatUtil) {
         this.messageState = messageState;
         this.dateFormatUtil = dateFormatUtil;
     }

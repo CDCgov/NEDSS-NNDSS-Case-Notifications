@@ -11,8 +11,8 @@ import gov.cdc.casenotificationservice.repository.odse.CNTraportqOutRepository;
 import gov.cdc.casenotificationservice.service.nonstd.interfaces.INonStdBatchService;
 import gov.cdc.casenotificationservice.service.nonstd.interfaces.INonStdService;
 import gov.cdc.casenotificationservice.service.nonstd.interfaces.IPHINMSService;
-import gov.cdc.xmlhl7parser.exception.XmlHL7ParserException;
-import gov.cdc.xmlhl7parser.helper.HL7MessageBuilder;
+import gov.cdc.xmlhl7parser.exception.XmlHl7ParserException;
+import gov.cdc.xmlhl7parser.helper.Hl7MessageBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,14 +30,14 @@ public class NonStdService implements INonStdService {
     private final TransportQOutRepository transportQOutRepository;
     private final CNTraportqOutRepository cnTraportqOutRepository;
     private final CaseNotificationConfigRepository caseNotificationConfigRepository;
-    private final HL7MessageBuilder hl7MessageBuilder;
+    private final Hl7MessageBuilder hl7MessageBuilder;
 
     public NonStdService(IPHINMSService phinmsService,
                          INonStdBatchService batchService,
                          TransportQOutRepository transportQOutRepository,
                          CNTraportqOutRepository cnTraportqOutRepository,
                          CaseNotificationConfigRepository caseNotificationConfigRepository,
-                         HL7MessageBuilder hl7MessageBuilder) {
+                         Hl7MessageBuilder hl7MessageBuilder) {
         this.phinmsService = phinmsService;
         this.batchService = batchService;
         this.transportQOutRepository = transportQOutRepository;
@@ -90,7 +90,7 @@ public class NonStdService implements INonStdService {
                 }
 
             }
-        } catch (XmlHL7ParserException e) {
+        } catch (XmlHl7ParserException e) {
             throw new NonStdProcessorServiceException("Failed to convert XML payload to HL7", e);
         }
     }

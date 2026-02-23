@@ -1,13 +1,12 @@
 package gov.cdc.xmlhl7parser.validator.helper;
 
 import ca.uhn.hl7v2.HL7Exception;
-import ca.uhn.hl7v2.model.v25.message.ORU_R01;
 import ca.uhn.hl7v2.model.v25.segment.MSH;
-import gov.cdc.xmlhl7parser.validator.HL7Validator;
+import gov.cdc.xmlhl7parser.validator.Hl7Validator;
 
 public class MSHHelper {
 
-    HL7Validator validator = new HL7Validator();
+    Hl7Validator validator = new Hl7Validator();
 
     public void validateMSHFields(MSH msh) throws HL7Exception {
 

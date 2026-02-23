@@ -121,9 +121,9 @@ To function correctly, **all three services** must be available:
 
 | Variable              | Description              |
 |-----------------------|--------------------------|
-| `DATABASE_HOST`        | Database URL             |
-| `DATABASE_USER`          | Database username        |
-| `DATABASE_PASSWORD`      | Database password        |
+| `NBS_DBSERVER`        | Database URL             |
+| `NBS_DBUSER`          | Database username        |
+| `NBS_DBPASSWORD`      | Database password        |
 | `KAFKA_BOOTSTRAP_SERVER` | Kafka URL              |
 
 ---
@@ -132,9 +132,9 @@ To function correctly, **all three services** must be available:
 
 | Variable              | Description                                                      |
 |-----------------------|------------------------------------------------------------------|
-| `DATABASE_HOST`        | Database URL                                                     |
-| `DATABASE_USER`          | Database username                                                |
-| `DATABASE_PASSWORD`      | Database password                                                |
+| `NBS_DBSERVER`        | Database URL                                                     |
+| `NBS_DBUSER`          | Database username                                                |
+| `NBS_DBPASSWORD`      | Database password                                                |
 | `KAFKA_BOOTSTRAP_SERVER` | Kafka URL                                                    |
 | `SERVICE_TZ`          | Timezone (default: `UTC`)                                       |
 | `CN_AUTH_URI`         | Keycloak host                                                   |
@@ -149,9 +149,9 @@ To function correctly, **all three services** must be available:
 
 | Variable              | Description                                                  |
 |-----------------------|--------------------------------------------------------------|
-| `DATABASE_HOST`        | Database URL                                                 |
-| `DATABASE_USER`          | Database username                                            |
-| `DATABASE_PASSWORD`      | Database password                                            |
+| `NBS_DBSERVER`        | Database URL                                                 |
+| `NBS_DBUSER`          | Database username                                            |
+| `NBS_DBPASSWORD`      | Database password                                            |
 | `CN_AUTH_URI`         | Keycloak host                                               |
 | `CN_SERVER_HOST`      | Server host used for Swagger UI (default: `localhost:8093`) |
 

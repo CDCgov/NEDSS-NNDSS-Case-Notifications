@@ -32,11 +32,13 @@ services:
       - "8093:8093"
     environment:
       SPRING_PROFILES_ACTIVE: local
-      DATABASE_HOST: host.docker.internal:1433
-      DATABASE_USER: ${DATABASE_USER}
-      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      NBS_DBSERVER: host.docker.internal:1433
+      NBS_DBUSER: ${NBS_DBUSER}
+      NBS_DBPASSWORD: ${NBS_DBPASSWORD}
       KAFKA_BOOTSTRAP_SERVER: kafka:9092
       CN_AUTH_URI: ${CN_AUTH_URI}
+      NND_DE_CLIENT_ID: ${NND_DE_CLIENT_ID}
+      NND_DE_SECRET: ${NND_DE_SECRET}
     depends_on:
       - kafka
 
@@ -47,9 +49,9 @@ services:
     ports:
       - "8090:8090"
     environment:
-      DATABASE_HOST: host.docker.internal:1433
-      DATABASE_USER: ${DATABASE_USER}
-      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      NBS_DBSERVER: host.docker.internal:1433
+      NBS_DBUSER: ${NBS_DBUSER}
+      NBS_DBPASSWORD: ${NBS_DBPASSWORD}
       KAFKA_BOOTSTRAP_SERVER: kafka:9092
     depends_on:
       - kafka

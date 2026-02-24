@@ -1,21 +1,3 @@
-server:
-  port: 8088
-  servlet:
-    context-path: /hl7-parser
-info:
-  app:
-    name: XML Parser
-management:
-  endpoint:
-    health:
-      show-details: always
-      roles: ADMIN
-  endpoints:
-    web:
-      base-path: /actuator
-      exposure:
-        include: "health,info"
-
 spring:
   datasource:
     username: ${NBS_DBUSER}
@@ -37,40 +19,3 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: none
-
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: ${CN_AUTH_URI}
-          jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
-
----
-spring:
-  config:
-    activate:
-      on-profile: default
-  springdoc:
-    api-docs:
-      enabled: false
-    swagger-ui:
-      enabled: false
-
----
-spring:
-  config:
-    activate:
-      on-profile: dev
-  springdoc:
-    api-docs:
-      enabled: true
-    swagger-ui:
-      enabled: true
----
-
-auth:
-  token-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/token
-  introspect-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/token/introspect
-
-cnserver:
-  host: ${CN_SERVER_HOST:localhost:8088}

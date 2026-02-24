@@ -40,7 +40,6 @@ import gov.cdc.xmlhl7parser.helper.obr.OBRSegmentBuilder;
 public class Hl7MessageBuilder {
 
     private final MSHSegmentBuilder mshSegmentBuilder;
-    private MessageState messageState = new MessageState();
     private final PIDSegmentBuilder pidSegmentBuilder;
     private final NK1SegmentBuilder nk1SegmentBuilder;
     private final OBRSegmentBuilder obrSegmentBuilder;
@@ -60,7 +59,6 @@ public class Hl7MessageBuilder {
     @Autowired
     public Hl7MessageBuilder(
             MSHSegmentBuilder mshSegmentBuilder,
-            MessageState messageState,
             PIDSegmentBuilder pidSegmentBuilder,
             NK1SegmentBuilder nk1SegmentBuilder,
             OBRSegmentBuilder obrSegmentBuilder, OBXSegmentBuilder obxSegmentBuilder,
@@ -73,7 +71,6 @@ public class Hl7MessageBuilder {
             MapLabReportEventToOBR mapLabReportEventToOBR
     ) {
         this.mshSegmentBuilder = mshSegmentBuilder;
-        this.messageState = messageState;
         this.pidSegmentBuilder = pidSegmentBuilder;
         this.nk1SegmentBuilder = nk1SegmentBuilder;
         this.obrSegmentBuilder = obrSegmentBuilder;
@@ -87,48 +84,7 @@ public class Hl7MessageBuilder {
         this.mapLabReportEventToOBR = mapLabReportEventToOBR;
     }
 
-    //initialize variables
-    private String stateLocalID = "";
-
-    private final List<ObxRepeatingElement> obxRepeatingElementArrayList = messageState.getObxRepeatingElementArrayList();
-
-    int inv290Inv291Counter1 = 0;
-    int inv290Inv291Counter2 = 0;
-    int std121ObxInc = -1;
-    int std121obxOrderGroupId = 0;
-    int std121ObsValue = -1;
-    String NBS246observationSubID = "";
-    String std300 = "";
-
-    //HCW Specific fields
-    boolean hcwTextBeforeCodedInd = messageState.isHcwTextBeforeCodedInd();
-    String hcw = messageState.getHcw();
-    int obx2Inc = messageState.getObx2Inc();
-    int obx1Inc = messageState.getObx1Inc();
-    String OTH_COMP_TEXT = "\"\"";
-    String OTH_COMP_REPLACE = "\"\"";
-    String OTH_SANDS_TEXT = "\"\"";
-    String OTH_SANDS_REPLACE = "\"\"";
-
     private static final Logger logger = LoggerFactory.getLogger(Hl7MessageBuilder.class);
-
-    // Reset the processor state
-    public void reset() {
-        messageState.reset();
-        stateLocalID = "";
-        obxRepeatingElementArrayList.clear();
-        inv290Inv291Counter1 = 0;
-        inv290Inv291Counter2 = 0;
-        std121ObxInc = -1;
-        std121obxOrderGroupId = 0;
-        std121ObsValue = -1;
-        NBS246observationSubID = "";
-        std300 = "";
-        OTH_COMP_TEXT = "\"\"";
-        OTH_COMP_REPLACE = "\"\"";
-        OTH_SANDS_TEXT = "\"\"";
-        OTH_SANDS_REPLACE = "\"\"";
-    }
 
     /**
      * Builds an HL7 message from an NBS NND intermediary XML payload.
@@ -169,7 +125,28 @@ public class Hl7MessageBuilder {
         oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(0);
         ORU_R01_ORDER_OBSERVATION obx = oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION();
 
-        reset();
+        // Fresh state for each invocation
+        MessageState messageState = new MessageState();
+
+        //initialize local variables
+        String stateLocalID = "";
+        List<ObxRepeatingElement> obxRepeatingElementArrayList = messageState.getObxRepeatingElementArrayList();
+        int inv290Inv291Counter1 = 0;
+        int inv290Inv291Counter2 = 0;
+        int std121ObxInc = -1;
+        int std121obxOrderGroupId = 0;
+        int std121ObsValue = -1;
+        String NBS246observationSubID = "";
+        String std300 = "";
+        boolean hcwTextBeforeCodedInd = false;
+        String hcw = "";
+        int obx2Inc = 0;
+        int obx1Inc = 0;
+        String OTH_COMP_TEXT = "\"\"";
+        String OTH_COMP_REPLACE = "\"\"";
+        String OTH_SANDS_TEXT = "\"\"";
+        String OTH_SANDS_REPLACE = "\"\"";
+
         //set static fields
         msh.getFieldSeparator().setValue(FIELD_SEPARATOR);
         msh.getEncodingCharacters().setValue(ENCODING_CHARACTERS);
@@ -186,17 +163,17 @@ public class Hl7MessageBuilder {
 
             String segmentField = nbsnndIntermediaryMessage.getMessageElement().get(z).getHl7SegmentField().trim();
             if (segmentField.startsWith("MSH")){
-                processMSHFields(nbsnndIntermediaryMessage.getMessageElement().get(z), msh);
+                processMSHFields(nbsnndIntermediaryMessage.getMessageElement().get(z), msh, messageState);
             }
             else if (segmentField.startsWith("PID"))
             {
-                processPIDFields(nbsnndIntermediaryMessage.getMessageElement().get(z), pid);
+                processPIDFields(nbsnndIntermediaryMessage.getMessageElement().get(z), pid, messageState);
             }else if (segmentField.startsWith("NK1"))
             {
-                processNK1Fields(nbsnndIntermediaryMessage.getMessageElement().get(z), nk1);
+                processNK1Fields(nbsnndIntermediaryMessage.getMessageElement().get(z), nk1, messageState);
             }else if (segmentField.startsWith("OBR"))
             {
-                processOBRFields(nbsnndIntermediaryMessage.getMessageElement().get(z), obr);
+                processOBRFields(nbsnndIntermediaryMessage.getMessageElement().get(z), obr, messageState);
             }
 
             if (nbsnndIntermediaryMessage.getMessageElement().get(z).getQuestionIdentifierNND().trim().equals("STD300"))
@@ -376,7 +353,7 @@ public class Hl7MessageBuilder {
             }
             else if (segmentField.startsWith("OBX"))
             {
-                processOBXFields(nbsnndIntermediaryMessage.getMessageElement().get(z),oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(0));
+                processOBXFields(nbsnndIntermediaryMessage.getMessageElement().get(z),oruMessage.getPATIENT_RESULT().getORDER_OBSERVATION(0), messageState);
             }
 
             if(messageState.getMessageType().contains("Arbo_Case_Map_v1.0") && messageState.isDefaultNull() && !stateLocalID.isEmpty())
@@ -511,9 +488,9 @@ public class Hl7MessageBuilder {
 
         // Process MSH21 field
         if (messageState.getIsSingleProfile()) {
-            mshSegmentBuilder.setSingleProfileMSH21(msh);
+            mshSegmentBuilder.setSingleProfileMSH21(msh, messageState);
         } else {
-            mshSegmentBuilder.setMultiProfileMSH21(msh);
+            mshSegmentBuilder.setMultiProfileMSH21(msh, messageState);
         }
 
         int	labObrCounter = 1;
@@ -669,10 +646,11 @@ public class Hl7MessageBuilder {
      *                       including its attributes and values.
      * @param msh The MSH object that is being built, which will be updated with
      *            data from the provided messageElement.
+     * @param messageState The per-invocation message state.
      */
 
-    private void processMSHFields(MessageElement messageElement, MSH msh) throws DataTypeException {
-        mshSegmentBuilder.processMSHFields(messageElement, msh);
+    private void processMSHFields(MessageElement messageElement, MSH msh, MessageState messageState) throws DataTypeException {
+        mshSegmentBuilder.processMSHFields(messageElement, msh, messageState);
     }
     /**
      * Processes each field of the PID segment found in the  XML file.
@@ -683,9 +661,10 @@ public class Hl7MessageBuilder {
      *                       including its attributes and values.
      * @param pid The PID object that is being built, which will be updated with
      *            data from the provided messageElement.
+     * @param messageState The per-invocation message state.
      */
-    private void processPIDFields(MessageElement messageElement, PID pid) throws DataTypeException {
-        pidSegmentBuilder.processPIDFields(messageElement, pid);
+    private void processPIDFields(MessageElement messageElement, PID pid, MessageState messageState) throws DataTypeException {
+        pidSegmentBuilder.processPIDFields(messageElement, pid, messageState);
     }
     /**
      * Processes each field of the NK1 segment found in the  XML file.
@@ -696,9 +675,10 @@ public class Hl7MessageBuilder {
      *                       including its attributes and values.
      * @param nk1 The NK1 object that is being built, which will be updated with
      *            data from the provided messageElement.
+     * @param messageState The per-invocation message state.
      */
-    private void processNK1Fields(MessageElement messageElement, NK1 nk1) throws DataTypeException {
-        nk1SegmentBuilder.processNK1Fields(messageElement, nk1);
+    private void processNK1Fields(MessageElement messageElement, NK1 nk1, MessageState messageState) throws DataTypeException {
+        nk1SegmentBuilder.processNK1Fields(messageElement, nk1, messageState);
     }
     /**
      * Processes each field of the OBR segment found in the  XML file.
@@ -709,9 +689,10 @@ public class Hl7MessageBuilder {
      *                       including its attributes and values.
      * @param obr The OBR object that is being built, which will be updated with
      *            data from the provided messageElement.
+     * @param messageState The per-invocation message state.
      */
-    private void processOBRFields(MessageElement messageElement, OBR obr) throws DataTypeException {
-        obrSegmentBuilder.processOBRFields(messageElement, obr);
+    private void processOBRFields(MessageElement messageElement, OBR obr, MessageState messageState) throws DataTypeException {
+        obrSegmentBuilder.processOBRFields(messageElement, obr, messageState);
     }
 
     /**
@@ -723,8 +704,9 @@ public class Hl7MessageBuilder {
      *                         including its attributes and values.
      * @param orderObservation The OBX object that is being built, which will be updated with
      *                         data from the provided messageElement.
+     * @param messageState The per-invocation message state.
      */
-    private void processOBXFields(MessageElement messageElement, ORU_R01_ORDER_OBSERVATION orderObservation) throws HL7Exception {
-        obxSegmentBuilder.processOBXFields(messageElement, orderObservation);
+    private void processOBXFields(MessageElement messageElement, ORU_R01_ORDER_OBSERVATION orderObservation, MessageState messageState) throws HL7Exception {
+        obxSegmentBuilder.processOBXFields(messageElement, orderObservation, messageState);
     }
 }

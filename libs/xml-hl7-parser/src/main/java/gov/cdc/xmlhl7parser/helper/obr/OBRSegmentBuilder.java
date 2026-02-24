@@ -17,18 +17,16 @@ import java.util.Optional;
 @Component
 public class OBRSegmentBuilder {
     private static final Logger logger = LoggerFactory.getLogger(OBRSegmentBuilder.class);
-    
-    private final MessageState messageState;
+
     private final Hl7DateFormatUtil dateFormatUtil;
     private final IServiceActionPairRepository iServiceActionPairRepository;
 
-    public OBRSegmentBuilder(MessageState messageState, Hl7DateFormatUtil dateFormatUtil, IServiceActionPairRepository iServiceActionPairRepository) {
-        this.messageState = messageState;
+    public OBRSegmentBuilder(Hl7DateFormatUtil dateFormatUtil, IServiceActionPairRepository iServiceActionPairRepository) {
         this.dateFormatUtil = dateFormatUtil;
         this.iServiceActionPairRepository = iServiceActionPairRepository;
     }
 
-    public void processOBRFields(MessageElement messageElement, OBR obr) throws DataTypeException {
+    public void processOBRFields(MessageElement messageElement, OBR obr, MessageState messageState) throws DataTypeException {
         String obrField = messageElement.getHl7SegmentField().trim();
         String orderGroupID = messageElement.getOrderGroupId();
         String questionDataTypeNND = messageElement.getDataElement().getQuestionDataTypeNND().trim();
@@ -121,4 +119,4 @@ public class OBRSegmentBuilder {
             messageState.setReasonForStudyNameOfAlternateCodingSystem2(messageElement.getDataElement().getCeDataType().getCeLocalCodedValueCodingSystem());
         }
     }
-} 
+}

@@ -8,13 +8,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class NK1SegmentBuilder {
-    private final MessageState messageState;
 
-    public NK1SegmentBuilder(MessageState messageState) {
-        this.messageState = messageState;
-    }
-
-    public void processNK1Fields(MessageElement messageElement, NK1 nk1) throws DataTypeException {
+    public void processNK1Fields(MessageElement messageElement, NK1 nk1, MessageState messageState) throws DataTypeException {
         String nk1Field = messageElement.getHl7SegmentField().trim();
         String ceCodedValue = messageElement.getDataElement().getCeDataType().getCeCodedValue().trim();
         String ceCodedValueDescription = messageElement.getDataElement().getCeDataType().getCeCodedValueDescription().trim();
@@ -42,4 +37,4 @@ public class NK1SegmentBuilder {
             messageState.setNk1RaceIndex(messageState.getNk1RaceIndex() + 1);
         }
     }
-} 
+}

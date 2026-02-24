@@ -28,15 +28,13 @@ import java.util.regex.Matcher;
 public class OBXSegmentBuilder {
     private static final Logger logger = LoggerFactory.getLogger(OBXSegmentBuilder.class);
 
-    private final MessageState messageState;
     private final Hl7DateFormatUtil dateFormatUtil;
 
-    public OBXSegmentBuilder(MessageState messageState, Hl7DateFormatUtil dateFormatUtil) {
-        this.messageState = messageState;
+    public OBXSegmentBuilder(Hl7DateFormatUtil dateFormatUtil) {
         this.dateFormatUtil = dateFormatUtil;
     }
 
-    public void processOBXFields(MessageElement messageElement, ORU_R01_ORDER_OBSERVATION orderObservation) throws HL7Exception, DataTypeException {
+    public void processOBXFields(MessageElement messageElement, ORU_R01_ORDER_OBSERVATION orderObservation, MessageState messageState) throws HL7Exception, DataTypeException {
         if (messageElement.getQuestionIdentifierNND().equalsIgnoreCase("INV826") || messageElement.getQuestionIdentifierNND().equalsIgnoreCase("INV827") ) {
             var test = "";
         }
@@ -1093,9 +1091,5 @@ public class OBXSegmentBuilder {
         messageState.setObx5ObservationSubID(obx5ObservationSubID);
         messageState.setObxFound(obxFound);
 
-    }
-
-    public void reset() {
-        // No need to reset state here as it's handled by MessageState
     }
 }

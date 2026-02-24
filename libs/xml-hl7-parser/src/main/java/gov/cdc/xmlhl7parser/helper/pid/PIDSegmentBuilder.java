@@ -9,15 +9,13 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class PIDSegmentBuilder {
-    private final MessageState messageState;
     private final Hl7DateFormatUtil dateFormatUtil;
 
-    public PIDSegmentBuilder(MessageState messageState, Hl7DateFormatUtil dateFormatUtil) {
-        this.messageState = messageState;
+    public PIDSegmentBuilder(Hl7DateFormatUtil dateFormatUtil) {
         this.dateFormatUtil = dateFormatUtil;
     }
 
-    public void processPIDFields(MessageElement messageElement, PID pid) throws DataTypeException {
+    public void processPIDFields(MessageElement messageElement, PID pid, MessageState messageState) throws DataTypeException {
         String pidField = messageElement.getHl7SegmentField().trim();
         String pidFieldValue = "";
         String questionDataTypeNND = messageElement.getDataElement().getQuestionDataTypeNND().trim();
@@ -175,4 +173,4 @@ public class PIDSegmentBuilder {
             pid.getPid38_ProductionClassCode().getNameOfAlternateCodingSystem().setValue(messageElement.getDataElement().getCeDataType().getCeLocalCodedValueCodingSystem());
         }
     }
-} 
+}

@@ -12,15 +12,10 @@ import java.util.Objects;
 
 @Component
 public class MSHSegmentBuilder {
-    private final MessageState messageState;
-
-    public MSHSegmentBuilder(MessageState messageState) {
-        this.messageState = messageState;
-    }
     public static final String GENERIC_MMG_VERSION = "Generic_MMG_V2.0";
 
 
-    public void processMSHFields(MessageElement messageElement, MSH msh) throws DataTypeException {
+    public void processMSHFields(MessageElement messageElement, MSH msh, MessageState messageState) throws DataTypeException {
         String mshField = messageElement.getHl7SegmentField().trim();
         String mshFieldValue = "";
 
@@ -78,7 +73,7 @@ public class MSHSegmentBuilder {
             mshFieldValue = messageElement.getDataElement().getIdDataType().getIdCodedValue().trim();
             msh.getVersionID().getVersionID().setValue(mshFieldValue);
         } else if (mshField.startsWith("MSH-21")) {
-            processMSH21Fields(messageElement, msh);
+            processMSH21Fields(messageElement, msh, messageState);
         }
 
         // Set message date/time - MSH-7
@@ -88,9 +83,9 @@ public class MSHSegmentBuilder {
         msh.getDateTimeOfMessage().getTime().setValue(currentTime);
     }
 
-    private void processMSH21Fields(MessageElement messageElement, MSH msh) throws DataTypeException {
+    private void processMSH21Fields(MessageElement messageElement, MSH msh, MessageState messageState) throws DataTypeException {
         String mshField = messageElement.getHl7SegmentField().trim();
-        
+
         if (Objects.equals(messageElement.getOrderGroupId(), "1")) {
             switch (mshField) {
                 case "MSH-21.0" -> {
@@ -130,14 +125,14 @@ public class MSHSegmentBuilder {
         }
     }
 
-    public void setSingleProfileMSH21(MSH msh) throws DataTypeException {
+    public void setSingleProfileMSH21(MSH msh, MessageState messageState) throws DataTypeException {
         msh.getMessageProfileIdentifier(1).getEntityIdentifier().setValue(messageState.getEntityIdentifierGroup2());
         msh.getMessageProfileIdentifier(1).getNamespaceID().setValue(messageState.getNameSpaceIDGroup2());
         msh.getMessageProfileIdentifier(1).getUniversalID().setValue(messageState.getUniversalIDGroup2());
         msh.getMessageProfileIdentifier(1).getUniversalIDType().setValue(messageState.getUniversalIDTypeGroup2());
     }
 
-    public void setMultiProfileMSH21(MSH msh) throws DataTypeException {
+    public void setMultiProfileMSH21(MSH msh, MessageState messageState) throws DataTypeException {
         msh.getMessageProfileIdentifier(1).getEntityIdentifier().setValue(messageState.getEntityIdentifierGroup1());
         msh.getMessageProfileIdentifier(1).getNamespaceID().setValue(messageState.getNameSpaceIDGroup2());
         msh.getMessageProfileIdentifier(1).getUniversalID().setValue(messageState.getUniversalIDGroup2());
@@ -148,4 +143,4 @@ public class MSHSegmentBuilder {
         msh.getMessageProfileIdentifier(2).getUniversalID().setValue(messageState.getUniversalIDGroup2());
         msh.getMessageProfileIdentifier(2).getUniversalIDType().setValue(messageState.getUniversalIDTypeGroup2());
     }
-} 
+}

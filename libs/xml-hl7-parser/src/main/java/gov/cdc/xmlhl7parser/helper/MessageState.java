@@ -3,12 +3,10 @@ package gov.cdc.xmlhl7parser.helper;
 import gov.cdc.xmlhl7parser.model.Obx.ObxRepeatingElement;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
 @Getter
 @Setter
 public class MessageState {

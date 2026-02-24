@@ -10,7 +10,7 @@ import ca.uhn.hl7v2.model.v25.group.ORU_R01_ORDER_OBSERVATION;
 import ca.uhn.hl7v2.model.v25.message.ORU_R01;
 import ca.uhn.hl7v2.model.v25.segment.*;
 
-import gov.cdc.xmlhl7parser.exception.XmlHl7ParserException;
+import gov.cdc.xmlhl7parser.exception.XmlHl7ParserExceptionOLD;
 import gov.cdc.xmlhl7parser.helper.mapper.*;
 import gov.cdc.xmlhl7parser.helper.obx.OBXSegmentBuilder;
 import gov.cdc.xmlhl7parser.model.*;
@@ -96,9 +96,9 @@ public class Hl7MessageBuilder {
      * @param xmlPayload         the NBS NND intermediary XML string to parse
      * @param validationEnabled  whether to run HL7 validation on the constructed message
      * @return the fully constructed HL7 message as a string
-     * @throws XmlHl7ParserException if XML unmarshalling or HL7 message construction fails
+     * @throws XmlHl7ParserExceptionOLD if XML unmarshalling or HL7 message construction fails
      */
-    public String buildHl7Message(String xmlPayload, boolean validationEnabled) throws XmlHl7ParserException {
+    public String buildHl7Message(String xmlPayload, boolean validationEnabled) throws XmlHl7ParserExceptionOLD {
         try {
             JAXBContext context = JAXBContext.newInstance(NBSNNDIntermediaryMessage.class);
             Unmarshaller unmarshaller = context.createUnmarshaller();
@@ -109,13 +109,13 @@ public class Hl7MessageBuilder {
 
             return parseXml(nbsnndIntermediaryMessage, validationEnabled);
         } catch (JAXBException e) {
-            throw new XmlHl7ParserException("Failed to construct NBSNNDIntermediaryMessage. ", e);
+            throw new XmlHl7ParserExceptionOLD("Failed to construct NBSNNDIntermediaryMessage. ", e);
         } catch (HL7Exception e) {
-            throw new XmlHl7ParserException("Failed to parse NBSNNDIntermediaryMessage to HL7", e);
+            throw new XmlHl7ParserExceptionOLD("Failed to parse NBSNNDIntermediaryMessage to HL7", e);
         }
     }
 
-    public String parseXml(NBSNNDIntermediaryMessage nbsnndIntermediaryMessage, boolean validationEnabled) throws HL7Exception, XmlHl7ParserException {
+    public String parseXml(NBSNNDIntermediaryMessage nbsnndIntermediaryMessage, boolean validationEnabled) throws HL7Exception, XmlHl7ParserExceptionOLD {
         ORU_R01 oruMessage = new ORU_R01();
 
         MSH msh = oruMessage.getMSH();

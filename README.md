@@ -73,10 +73,6 @@ To function correctly, **all three services** must be available:
 - Faulty MMG or STD events are pushed to:
     - `Case_Notification_DLT`
 
-### Dependencies:
-
-- Requires a **constant connection to the HL7 server** to transform NND XML into HL7.
-
 ### API Capabilities:
 
 - Update configurations
@@ -89,17 +85,6 @@ To function correctly, **all three services** must be available:
 ### Database Management:
 
 - Includes **Liquibase integration** for auto-managing schema changes.
-
----
-
-## HL7 Service
-
-- Helper service used by Case Notification.
-- Transforms **NND XML** into **HL7 2.5.1** format.
-- Validates output against HL7 standards.
-- Provides API endpoints for testing transformations.
-
-👉 [Explore HL7 API via Swagger](https://dataingestion.dts1.nbspreview.com/hl7-parser/swagger-ui/index.html#/)
 
 ---
 
@@ -139,13 +124,10 @@ To function correctly, **all three services** must be available:
 | `SERVICE_TZ`          | Timezone (default: `UTC`)                                       |
 | `CN_AUTH_URI`         | Keycloak host                                                   |
 | `CN_SERVER_HOST`      | Server host used for Swagger UI (default: `localhost:8093`)     |
-| `NND_DE_CLIENT_ID`    | Client ID for HL7 Parser API                                    |
-| `NND_DE_SECRET`       | Client secret for HL7 Parser API                                |
-| `NND_DE_URL`          | URL for HL7 Parser API (e.g., `https://dataingestion.dts1.nbspreview.com/hl7-parser`) |
 
 ---
 
-### HL7 Parser
+### XML HL7 Parser (library)
 
 | Variable              | Description                                                  |
 |-----------------------|--------------------------------------------------------------|

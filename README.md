@@ -134,9 +134,6 @@ To function correctly, **all three services** must be available:
 | `NBS_DBSERVER`        | Database URL                                                 |
 | `NBS_DBUSER`          | Database username                                            |
 | `NBS_DBPASSWORD`      | Database password                                            |
-| `CN_AUTH_URI`         | Keycloak host                                               |
-| `CN_SERVER_HOST`      | Server host used for Swagger UI (default: `localhost:8093`) |
-
 ---
 
 ## Running with Docker

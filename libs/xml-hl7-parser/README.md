@@ -46,7 +46,7 @@ This is a library module (`java-library` plugin). It is consumed as a project de
 implementation project(':xml-hl7-parser')
 ```
 
-The main entry point is `Hl7MessageBuilder`, a Spring `@Service` that accepts NND XML and returns an HL7 v2.5.1 message string.
+The main entry point is `Hl7MessageBuilder`, a Spring `@Component` that accepts NND XML and returns an HL7 v2.5.1 message string.
 
 ---
 

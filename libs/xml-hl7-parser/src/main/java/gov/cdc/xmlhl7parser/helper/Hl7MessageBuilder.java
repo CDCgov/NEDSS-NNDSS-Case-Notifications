@@ -22,7 +22,7 @@ import jakarta.xml.bind.JAXBException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Unmarshaller;
@@ -36,7 +36,7 @@ import gov.cdc.xmlhl7parser.util.Hl7DateFormatUtil;
 import gov.cdc.xmlhl7parser.helper.nk1.NK1SegmentBuilder;
 import gov.cdc.xmlhl7parser.helper.obr.OBRSegmentBuilder;
 
-@Service
+@Component
 public class Hl7MessageBuilder {
 
     private final MSHSegmentBuilder mshSegmentBuilder;

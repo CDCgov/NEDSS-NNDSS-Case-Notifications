@@ -140,7 +140,7 @@ public class Hl7MessageBuilder {
      * @param xmlPayload         the NBS NND intermediary XML string to parse
      * @param validationEnabled  whether to run HL7 validation on the constructed message
      * @return the fully constructed HL7 message as a string
-     * @throws RuntimeException if XML unmarshalling or HL7 message construction fails
+     * @throws XmlHL7ParserException if XML unmarshalling or HL7 message construction fails
      */
     public String buildHl7Message(String xmlPayload, boolean validationEnabled) throws XmlHl7ParserException {
         try {

@@ -7,13 +7,13 @@ package gov.cdc.xmlhl7parser.exception;
  1135 - todos complaint
  * */
 @SuppressWarnings({"java:S1118","java:S125", "java:S6126", "java:S1135"})
-public class XmlHl7ParserExceptionOLD extends Exception {
+public class XmlHl7ParserException extends Exception {
 
-  public XmlHl7ParserExceptionOLD(String message) {
+  public XmlHl7ParserException(String message) {
     super(message);
   }
 
-  public XmlHl7ParserExceptionOLD(String message, Throwable cause) {
+  public XmlHl7ParserException(String message, Throwable cause) {
     super(message, cause);
   }
 }

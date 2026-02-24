@@ -11,7 +11,7 @@ import gov.cdc.casenotificationservice.repository.odse.CNTraportqOutRepository;
 import gov.cdc.casenotificationservice.service.nonstd.interfaces.INonStdBatchService;
 import gov.cdc.casenotificationservice.service.nonstd.interfaces.INonStdService;
 import gov.cdc.casenotificationservice.service.nonstd.interfaces.IPHINMSService;
-import gov.cdc.xmlhl7parser.exception.XmlHl7ParserExceptionOLD;
+import gov.cdc.xmlhl7parser.exception.XmlHl7ParserException;
 import gov.cdc.xmlhl7parser.helper.Hl7MessageBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,7 +90,7 @@ public class NonStdService implements INonStdService {
                 }
 
             }
-        } catch (XmlHl7ParserExceptionOLD e) {
+        } catch (XmlHl7ParserException e) {
             throw new NonStdProcessorServiceException("Failed to convert XML payload to HL7", e);
         }
     }

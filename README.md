@@ -156,8 +156,6 @@ To function correctly, **all three services** must be available:
     | `NBS_DBUSER` | Database username |
     | `NBS_DBPASSWORD` | Database password |
     | `CN_AUTH_URI` | Keycloak realm URI (e.g. `http://host.docker.internal:8100/realms/NBS`) |
-    | `NND_DE_CLIENT_ID` | Client ID for HL7 Parser API |
-    | `NND_DE_SECRET` | Client secret for HL7 Parser API |
 
 2. Start all services:
 

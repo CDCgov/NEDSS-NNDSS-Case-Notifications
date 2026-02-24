@@ -33,9 +33,6 @@ JAXB classes are generated at compile time from `NBSNNDIntermediaryMessage.xsd` 
 | `NBS_DBSERVER` | SQL Server hostname |
 | `NBS_DBUSER` | Database username |
 | `NBS_DBPASSWORD` | Database password |
-| `CN_AUTH_URI` | Keycloak issuer URI (e.g. `http://localhost:8100/realms/NBS`) |
-| `CN_SERVER_HOST` | Server host for Swagger UI (default: `localhost:8088`) |
-
 ---
 
 ## Usage

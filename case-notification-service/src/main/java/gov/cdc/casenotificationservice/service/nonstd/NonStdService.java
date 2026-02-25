@@ -91,6 +91,7 @@ public class NonStdService implements INonStdService {
 
             }
         } catch (XmlHl7ParserException e) {
+            logger.error("NonStdService failed to convert XML payload to HL7", e);
             throw new NonStdProcessorServiceException("Failed to convert XML payload to HL7", e);
         }
     }

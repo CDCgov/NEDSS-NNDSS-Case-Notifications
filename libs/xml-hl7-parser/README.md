@@ -49,9 +49,6 @@ The main entry point is `Hl7MessageBuilder`, a Spring `@Component` that accepts 
 
 ## Database Access
 
-Connects to two SQL Server databases:
-
-- **NBS_ODSE** - Source data lookups
-- **NBS_MSGOUTE** - Message output and service/action pair lookups
+Connects to the **NBS_MSGOUTE** SQL Server database for service/action pair and data type lookups.
 
 > **Note:** The database dependency is a byproduct of this parser having originally been a standalone microservice. It loads mapping configuration (e.g. service/action pairs) directly from the database via `IServiceActionPairRepository`. Now that it is a library, consider removing the database interaction and instead having the consuming application pass this configuration in.

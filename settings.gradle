@@ -10,5 +10,5 @@ include 'data-extraction-service'
 
 include 'case-notification-service'
 
-include 'xml-hl7-parser-service'
-
+include ':xml-hl7-parser'
+project(':xml-hl7-parser').projectDir = mkdir('libs/xml-hl7-parser')

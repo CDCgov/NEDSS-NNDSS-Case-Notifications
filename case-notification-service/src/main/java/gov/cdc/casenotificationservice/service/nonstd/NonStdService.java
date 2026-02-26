@@ -8,10 +8,11 @@ import gov.cdc.casenotificationservice.repository.msg.TransportQOutRepository;
 import gov.cdc.casenotificationservice.repository.msg.model.CaseNotificationConfig;
 import gov.cdc.casenotificationservice.repository.msg.model.TransportQOut;
 import gov.cdc.casenotificationservice.repository.odse.CNTraportqOutRepository;
-import gov.cdc.casenotificationservice.service.common.interfaces.IApiService;
 import gov.cdc.casenotificationservice.service.nonstd.interfaces.INonStdBatchService;
 import gov.cdc.casenotificationservice.service.nonstd.interfaces.INonStdService;
 import gov.cdc.casenotificationservice.service.nonstd.interfaces.IPHINMSService;
+import gov.cdc.xmlhl7parser.exception.XmlHl7ParserException;
+import gov.cdc.xmlhl7parser.helper.Hl7MessageBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,42 +30,38 @@ public class NonStdService implements INonStdService {
     private final TransportQOutRepository transportQOutRepository;
     private final CNTraportqOutRepository cnTraportqOutRepository;
     private final CaseNotificationConfigRepository caseNotificationConfigRepository;
-    private final IApiService apiService;
+    private final Hl7MessageBuilder hl7MessageBuilder;
 
     public NonStdService(IPHINMSService phinmsService,
                          INonStdBatchService batchService,
                          TransportQOutRepository transportQOutRepository,
                          CNTraportqOutRepository cnTraportqOutRepository,
                          CaseNotificationConfigRepository caseNotificationConfigRepository,
-                         IApiService apiService) {
+                         Hl7MessageBuilder hl7MessageBuilder) {
         this.phinmsService = phinmsService;
         this.batchService = batchService;
         this.transportQOutRepository = transportQOutRepository;
         this.cnTraportqOutRepository = cnTraportqOutRepository;
         this.caseNotificationConfigRepository = caseNotificationConfigRepository;
-        this.apiService = apiService;
+        this.hl7MessageBuilder = hl7MessageBuilder;
     }
 
-    public void nonStdProcessor(MessageAfterStdChecker messageAfterStdChecker, boolean hl7ValidationEnabled) throws IgnorableException, NonStdProcessorServiceException, NonStdBatchProcessorServiceException, APIException {
+    public void nonStdProcessor(MessageAfterStdChecker messageAfterStdChecker, boolean hl7ValidationEnabled) throws IgnorableException, NonStdProcessorServiceException, NonStdBatchProcessorServiceException {
             PHINMSProperties phinmsProperties = new PHINMSProperties();
             CaseNotificationConfig stdConfig = caseNotificationConfigRepository.findNonStdConfig();
-            var cnTranport = cnTraportqOutRepository.findTopByRecordUid(messageAfterStdChecker.getCnTransportqOutUid());
+            var cnTransport = cnTraportqOutRepository.findTopByRecordUid(messageAfterStdChecker.getCnTransportqOutUid());
 
-            var token = apiService.callToken();
-            if (token == null || token.isEmpty()) {
-                throw new IgnorableException("Token is Invalid");
-            }
-            var tranformedData = apiService.callHl7Endpoint(token, String.valueOf(cnTranport.getCnTransportqOutUid()), hl7ValidationEnabled);
-            String payload = tranformedData;
+        try {
+            var payload = hl7MessageBuilder.buildHl7Message(cnTransport.getMessagePayload(), hl7ValidationEnabled);
             if (payload.isEmpty()) {
                 throw new IgnorableException("Payload is empty");
             }
 
-            phinmsProperties.setCnTransportUid(cnTranport.getCnTransportqOutUid());
-            phinmsProperties.setPMessageUid(cnTranport.getNotificationLocalId());
-            phinmsProperties.setPNotificationId(String.valueOf(cnTranport.getNotificationUid()));
-            phinmsProperties.setPPublicHealthCaseLocalId(cnTranport.getPublicHealthCaseLocalId());
-            phinmsProperties.setPReportStatusCd(cnTranport.getReportStatusCd());
+            phinmsProperties.setCnTransportUid(cnTransport.getCnTransportqOutUid());
+            phinmsProperties.setPMessageUid(cnTransport.getNotificationLocalId());
+            phinmsProperties.setPNotificationId(String.valueOf(cnTransport.getNotificationUid()));
+            phinmsProperties.setPPublicHealthCaseLocalId(cnTransport.getPublicHealthCaseLocalId());
+            phinmsProperties.setPReportStatusCd(cnTransport.getReportStatusCd());
             phinmsProperties.setNETSS_MESSAGE_ONLY("queued");
             phinmsProperties.setBATCH_MESSAGE_PROFILE_ID(stdConfig.getBatchMesageProfileId());
 
@@ -93,7 +90,10 @@ public class NonStdService implements INonStdService {
                 }
 
             }
-
+        } catch (XmlHl7ParserException e) {
+            logger.error("NonStdService failed to convert XML payload to HL7", e);
+            throw new NonStdProcessorServiceException("Failed to convert XML payload to HL7", e);
+        }
     }
 
     public void releaseHoldQueueAndProcessBatchNonStd() throws NonRetryableException {

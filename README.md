@@ -73,10 +73,6 @@ To function correctly, **all three services** must be available:
 - Faulty MMG or STD events are pushed to:
     - `Case_Notification_DLT`
 
-### Dependencies:
-
-- Requires a **constant connection to the HL7 server** to transform NND XML into HL7.
-
 ### API Capabilities:
 
 - Update configurations
@@ -89,17 +85,6 @@ To function correctly, **all three services** must be available:
 ### Database Management:
 
 - Includes **Liquibase integration** for auto-managing schema changes.
-
----
-
-## HL7 Service
-
-- Helper service used by Case Notification.
-- Transforms **NND XML** into **HL7 2.5.1** format.
-- Validates output against HL7 standards.
-- Provides API endpoints for testing transformations.
-
-👉 [Explore HL7 API via Swagger](https://dataingestion.dts1.nbspreview.com/hl7-parser/swagger-ui/index.html#/)
 
 ---
 
@@ -139,20 +124,60 @@ To function correctly, **all three services** must be available:
 | `SERVICE_TZ`          | Timezone (default: `UTC`)                                       |
 | `CN_AUTH_URI`         | Keycloak host                                                   |
 | `CN_SERVER_HOST`      | Server host used for Swagger UI (default: `localhost:8093`)     |
-| `NND_DE_CLIENT_ID`    | Client ID for HL7 Parser API                                    |
-| `NND_DE_SECRET`       | Client secret for HL7 Parser API                                |
-| `NND_DE_URL`          | URL for HL7 Parser API (e.g., `https://dataingestion.dts1.nbspreview.com/hl7-parser`) |
 
 ---
 
-### HL7 Parser
+### XML HL7 Parser (library)
 
 | Variable              | Description                                                  |
 |-----------------------|--------------------------------------------------------------|
 | `NBS_DBSERVER`        | Database URL                                                 |
 | `NBS_DBUSER`          | Database username                                            |
 | `NBS_DBPASSWORD`      | Database password                                            |
-| `CN_AUTH_URI`         | Keycloak host                                               |
-| `CN_SERVER_HOST`      | Server host used for Swagger UI (default: `localhost:8093`) |
+---
+
+## Running with Docker
+
+### Prerequisites
+- The NNDSS services use the NBS SQL Server database and Keycloak instances that are part of [cdc-sandbox](https://github.com/CDCgov/NEDSS-Modernization/tree/main/cdc-sandbox). Ensure `cdc-sandbox` is running locally in Docker before proceeding.
+
+### Setup
+
+1. Copy `sample.env` to `.env` and fill in your values:
+
+    ```bash
+    cp sample.env .env
+    ```
+
+    Required variables in `.env`:
+
+    | Variable | Description |
+    |---|---|
+    | `NBS_DBUSER` | Database username |
+    | `NBS_DBPASSWORD` | Database password |
+    | `CN_AUTH_URI` | Keycloak realm URI (e.g. `http://host.docker.internal:8100/realms/NBS`) |
+
+2. Start all services:
+
+    ```bash
+    docker compose up --build
+    ```
+
+    This starts:
+    - **Kafka** on port `9092`
+    - **Kafka UI** on port `8080`
+    - **Case Notification Service** on port `8093`
+    - **Data Extraction Service** on port `8090`
+
+3. To run in the background:
+
+    ```bash
+    docker compose up --build -d
+    ```
+
+### Notes
+
+- Kafka is included in the compose stack — no external Kafka cluster is needed for local development.
+- Kafka UI is available at `http://localhost:8080` for inspecting topics and consumer groups.
 
 ---

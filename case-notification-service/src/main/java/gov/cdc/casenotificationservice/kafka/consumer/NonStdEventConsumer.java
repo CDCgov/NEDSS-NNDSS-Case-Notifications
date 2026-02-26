@@ -52,7 +52,7 @@ public class NonStdEventConsumer {
             topics = "${spring.kafka.topic.non-std-topic}",
             containerFactory = "kafkaListenerContainerFactoryConsumerForNonStd"
     )
-    public void handleMessage(String message) throws IgnorableException, NonStdProcessorServiceException, NonStdBatchProcessorServiceException, APIException {
+    public void handleMessage(String message) throws IgnorableException, NonStdProcessorServiceException, NonStdBatchProcessorServiceException {
         logger.info("Received non std message");
         if(configurationService.checkConfigurationAvailable()) {
             var hl7Applied = configurationService.checkHl7ValidationApplied();

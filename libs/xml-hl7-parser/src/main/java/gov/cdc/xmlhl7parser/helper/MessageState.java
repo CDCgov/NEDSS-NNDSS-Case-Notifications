@@ -64,7 +64,7 @@ public class MessageState {
 
     // OBX-related state variables
     private int obxOrderGroupID = 0;
-    private int obxInc = 0;
+    private int obxInc = 1;
     private int obx5ValueInc = 0;
     private String obx5ObservationSubID = null;
     private boolean obxFound = false;
@@ -85,78 +85,4 @@ public class MessageState {
     private int obx1Inc = 0;
     private int obx2Inc = 0;
     private boolean INV162RepeatIndicator = false;
-
-    public void reset() {
-        isSingleProfile = false;
-        entityIdentifierGroup1 = "";
-        entityIdentifierGroup2 = "";
-        nndMessageVersion = "";
-        nameSpaceIDGroup1 = "";
-        universalIDGroup1 = "";
-        universalIDTypeGroup1 = "";
-        messageType = "other";
-        genericMMGv20 = false;
-        nameSpaceIDGroup2 = "";
-        universalIDGroup2 = "";
-        universalIDTypeGroup2 = "";
-
-        raceIndex = 0;
-        cityIndex = 0;
-        stateIndex = 0;
-        zipcodeIndex = 0;
-        countryIndex = 0;
-        addressTypeIndex = 0;
-        citizenshipTypeIndex = 0;
-        identityReliabilityCodeIndex = 0;
-        nk1RaceIndex = 0;
-
-        entityIdentifier2 = "";
-        obr7 = "";
-        obr7DataType = "";
-        obr7QuestionDataTypeNND = "";
-        reasonForStudyIdentifier2 = "";
-        reasonForStudyText2 = "";
-        reasonForStudyNameOfCodingSystem2 = "";
-        reasonForStudyAlternateIdentifier2 = "";
-        reasonForStudyAlternateText2 = "";
-        reasonForStudyNameOfAlternateCodingSystem2 = "";
-        fillerOrderNumberUniversalID2 = "";
-        fillerOrderNumberUniversalIDType2 = "";
-        obrEntityIdentifierGroup1 = "";
-        obrEntityIdentifierGroup2 = "";
-        fillerOrderNumberNameSpaceIDGroup1 = "";
-        fillerOrderNumberNameSpaceIDGroup2 = "";
-        universalServiceIdentifierGroup1 = "";
-        universalServiceIdentifierGroup2 = "";
-        universalServiceIDTextGroup1 = "";
-        universalServiceIDTextGroup2 = "";
-        universalServiceIDNameOfCodingSystemGroup1 = "";
-        universalServiceIDNameOfCodingSystemGroup2 = "";
-        observationDateTime = "";
-        resultStatusChgTime = "";
-
-        // Reset OBX variables
-        obxOrderGroupID = 0;
-        obxInc = 1;
-        obx5ValueInc = 0;
-        obx5ObservationSubID = null;
-        obxFound = false;
-        messageTypePattern = "CongenitalSyphilis_MMG_V1.0";
-        obxRepeatingElementArrayList = new ArrayList<>();
-        drugCounter = 0;
-        dupRepeatCongenitalCounter = 0;
-        inv290Inv291Counter = 0;
-        inv177Found = false;
-        newDate = "";
-        inv177Date = "";
-        isDefaultNull = true;
-        hcw = "";
-        hcwObxInc = -1;
-        hcwObxOrderGroupId = -1;
-        hcwObx5ValueInc = -1;
-        hcwTextBeforeCodedInd = false;
-        obx1Inc = 0;
-        obx2Inc = 0;
-        INV162RepeatIndicator = false;
-    }
 } 

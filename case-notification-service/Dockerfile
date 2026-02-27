@@ -1,4 +1,4 @@
-FROM amazoncorretto:21 as builder
+FROM amazoncorretto:25 as builder
 WORKDIR /usr/src/casenotificationservice
 #Copy project config
 COPY gradle gradle
@@ -17,7 +17,7 @@ WORKDIR /usr/src/casenotificationservice
 #Build report service along with any required libraries
 RUN ./gradlew :case-notification-service:buildNeeded -x test --no-daemon
 
-FROM amazoncorretto:21
+FROM amazoncorretto:25
 
 # Update system packages to patch known vulnerabilities
 RUN yum -y update && \

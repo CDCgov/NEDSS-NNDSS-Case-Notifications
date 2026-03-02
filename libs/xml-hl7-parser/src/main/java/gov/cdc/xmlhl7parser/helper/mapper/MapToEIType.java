@@ -9,20 +9,19 @@ import org.springframework.stereotype.Component;
 @Component
 public class MapToEIType {
 
-    void mapToEIType(MessageElement input, EI output) throws DataTypeException {
-        EiDataType eiDataType = input.getDataElement().getEiDataType();
-        if(eiDataType.getEntityIdentifier() != null) {
-            output.getEntityIdentifier().setValue(eiDataType.getEntityIdentifier());
-        }
-        if(eiDataType.getNamespaceId() != null) {
-            output.getNamespaceID().setValue(eiDataType.getNamespaceId());
-        }
-        if(eiDataType.getUniversalId() != null) {
-            output.getUniversalID().setValue(eiDataType.getUniversalId());
-        }
-        if(eiDataType.getUniversalIdType() != null) {
-            output.getUniversalIDType().setValue(eiDataType.getUniversalIdType());
-        }
+  void mapToEIType(MessageElement input, EI output) throws DataTypeException {
+    EiDataType eiDataType = input.getDataElement().getEiDataType();
+    if (eiDataType.getEntityIdentifier() != null) {
+      output.getEntityIdentifier().setValue(eiDataType.getEntityIdentifier());
     }
-
+    if (eiDataType.getNamespaceId() != null) {
+      output.getNamespaceID().setValue(eiDataType.getNamespaceId());
+    }
+    if (eiDataType.getUniversalId() != null) {
+      output.getUniversalID().setValue(eiDataType.getUniversalId());
+    }
+    if (eiDataType.getUniversalIdType() != null) {
+      output.getUniversalIDType().setValue(eiDataType.getUniversalIdType());
+    }
+  }
 }

@@ -1,6 +1,5 @@
 package gov.cdc.casenotificationservice.config.security;
 
-
 import gov.cdc.casenotificationservice.config.security.model.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,22 +10,20 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @ControllerAdvice
 public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
-    @ExceptionHandler({Exception.class, ResponseStatusException.class})
-    public ResponseEntity<ErrorResponse> handleException(Exception ex) {
-        ErrorResponse errorResponse = new ErrorResponse();
-        errorResponse.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
-        errorResponse.setMessage("An internal server error occurred.");
+  @ExceptionHandler({Exception.class, ResponseStatusException.class})
+  public ResponseEntity<ErrorResponse> handleException(Exception ex) {
+    ErrorResponse errorResponse = new ErrorResponse();
+    errorResponse.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+    errorResponse.setMessage("An internal server error occurred.");
 
-        String errMessage;
-        if (ex instanceof ResponseStatusException responseStatusException) {
-            errMessage = responseStatusException.getReason();
-        } else {
-            errMessage = ex.getMessage();
-        }
-        errorResponse.setDetails(errMessage);
-
-        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    String errMessage;
+    if (ex instanceof ResponseStatusException responseStatusException) {
+      errMessage = responseStatusException.getReason();
+    } else {
+      errMessage = ex.getMessage();
     }
+    errorResponse.setDetails(errMessage);
 
-
+    return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+  }
 }

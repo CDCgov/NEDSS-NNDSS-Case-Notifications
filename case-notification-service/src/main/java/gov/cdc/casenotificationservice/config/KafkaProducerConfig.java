@@ -1,5 +1,7 @@
 package gov.cdc.casenotificationservice.config;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,31 +11,25 @@ import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class KafkaProducerConfig {
-    @Value("${spring.kafka.bootstrap-servers}")
-    private String bootstrapServers = "";
+  @Value("${spring.kafka.bootstrap-servers}")
+  private String bootstrapServers = "";
 
-    @Bean
-    @Primary
-    public ProducerFactory<String, String> producerFactory() {
-        final Map<String, Object> config = new HashMap<>();
-        config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
-        config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+  @Bean
+  @Primary
+  public ProducerFactory<String, String> producerFactory() {
+    final Map<String, Object> config = new HashMap<>();
+    config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+    config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+    config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
 
-        return new DefaultKafkaProducerFactory<>(config);
-    }
+    return new DefaultKafkaProducerFactory<>(config);
+  }
 
-    @Bean
-    @Primary
-    public KafkaTemplate<String, String> kafkaTemplate() {
-        // set factory for both producer and consumer
-        return new KafkaTemplate<>(producerFactory());
-    }
-
-
-
+  @Bean
+  @Primary
+  public KafkaTemplate<String, String> kafkaTemplate() {
+    // set factory for both producer and consumer
+    return new KafkaTemplate<>(producerFactory());
+  }
 }

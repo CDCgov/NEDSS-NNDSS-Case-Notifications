@@ -136,6 +136,9 @@ To function correctly, **all three services** must be available:
 | `NBS_DBPASSWORD`      | Database password                                            |
 ---
 
+## Development
+- [Code Formatting](docs/Code-Formatting.md)
+
 ## Running with Docker
 
 ### Prerequisites

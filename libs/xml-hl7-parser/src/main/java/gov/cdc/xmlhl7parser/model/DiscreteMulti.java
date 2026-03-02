@@ -1,67 +1,67 @@
 package gov.cdc.xmlhl7parser.model;
 
 public class DiscreteMulti {
-    private String code;
-    private String indicatorCode;
-    private String cweQuestionIdentifier;
-    private String snuIndicatorCode;
-    private int counter;
-    private int obsValueCounter;
-    private String otherText;
+  private String code;
+  private String indicatorCode;
+  private String cweQuestionIdentifier;
+  private String snuIndicatorCode;
+  private int counter;
+  private int obsValueCounter;
+  private String otherText;
 
-    public String getCode() {
-        return code;
-    }
+  public String getCode() {
+    return code;
+  }
 
-    public void setCode(String code) {
-        this.code = code;
-    }
+  public void setCode(String code) {
+    this.code = code;
+  }
 
-    public String getIndicatorCode() {
-        return indicatorCode;
-    }
+  public String getIndicatorCode() {
+    return indicatorCode;
+  }
 
-    public void setIndicatorCode(String indicatorCode) {
-        this.indicatorCode = indicatorCode;
-    }
+  public void setIndicatorCode(String indicatorCode) {
+    this.indicatorCode = indicatorCode;
+  }
 
-    public String getCweQuestionIdentifier() {
-        return cweQuestionIdentifier;
-    }
+  public String getCweQuestionIdentifier() {
+    return cweQuestionIdentifier;
+  }
 
-    public void setCweQuestionIdentifier(String cweQuestionIdentifier) {
-        this.cweQuestionIdentifier = cweQuestionIdentifier;
-    }
+  public void setCweQuestionIdentifier(String cweQuestionIdentifier) {
+    this.cweQuestionIdentifier = cweQuestionIdentifier;
+  }
 
-    public String getSnuIndicatorCode() {
-        return snuIndicatorCode;
-    }
+  public String getSnuIndicatorCode() {
+    return snuIndicatorCode;
+  }
 
-    public void setSnuIndicatorCode(String snuIndicatorCode) {
-        this.snuIndicatorCode = snuIndicatorCode;
-    }
+  public void setSnuIndicatorCode(String snuIndicatorCode) {
+    this.snuIndicatorCode = snuIndicatorCode;
+  }
 
-    public int getCounter() {
-        return counter;
-    }
+  public int getCounter() {
+    return counter;
+  }
 
-    public void setCounter(int counter) {
-        this.counter = counter;
-    }
+  public void setCounter(int counter) {
+    this.counter = counter;
+  }
 
-    public int getObsValueCounter() {
-        return obsValueCounter;
-    }
+  public int getObsValueCounter() {
+    return obsValueCounter;
+  }
 
-    public void setObsValueCounter(int obsValueCounter) {
-        this.obsValueCounter = obsValueCounter;
-    }
+  public void setObsValueCounter(int obsValueCounter) {
+    this.obsValueCounter = obsValueCounter;
+  }
 
-    public String getOtherText() {
-        return otherText;
-    }
+  public String getOtherText() {
+    return otherText;
+  }
 
-    public void setOtherText(String otherText) {
-        this.otherText = otherText;
-    }
+  public void setOtherText(String otherText) {
+    this.otherText = otherText;
+  }
 }

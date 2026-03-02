@@ -19,27 +19,27 @@ import org.springframework.web.bind.annotation.RestController;
 @SecurityRequirement(name = "bearer-key")
 @Tag(name = "Non Std", description = "Non Std API")
 public class NonStdController {
-    private final NonStdService nonStdService;
+  private final NonStdService nonStdService;
 
-    @Operation(
-            summary = "Releasing Non Std Queue for Batch Processor",
-            parameters = {
-                    @Parameter(in = ParameterIn.HEADER,
-                            name = "clientid",
-                            description = "The Client Id",
-                            required = true,
-                            schema = @Schema(type = "string")),
-                    @Parameter(in = ParameterIn.HEADER,
-                            name = "clientsecret",
-                            description = "The Client Secret",
-                            required = true,
-                            schema = @Schema(type = "string"))
-            }
-    )
-    @PostMapping(path = "/non-std/release-queue")
-    public ResponseEntity<String> releaseQueue() throws NonRetryableException {
-        nonStdService.releaseHoldQueueAndProcessBatchNonStd();
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
+  @Operation(
+      summary = "Releasing Non Std Queue for Batch Processor",
+      parameters = {
+        @Parameter(
+            in = ParameterIn.HEADER,
+            name = "clientid",
+            description = "The Client Id",
+            required = true,
+            schema = @Schema(type = "string")),
+        @Parameter(
+            in = ParameterIn.HEADER,
+            name = "clientsecret",
+            description = "The Client Secret",
+            required = true,
+            schema = @Schema(type = "string"))
+      })
+  @PostMapping(path = "/non-std/release-queue")
+  public ResponseEntity<String> releaseQueue() throws NonRetryableException {
+    nonStdService.releaseHoldQueueAndProcessBatchNonStd();
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
 }

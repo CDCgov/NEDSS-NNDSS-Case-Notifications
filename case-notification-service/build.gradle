@@ -112,3 +112,7 @@ tasks.register('jaxb') {
 tasks.named('compileJava') {
     dependsOn jaxb
 }
+
+tasks.named('spotlessJava') {
+    dependsOn jaxb
+}

@@ -2,9 +2,9 @@ package gov.cdc.casenotificationservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableScheduling
@@ -16,8 +16,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 @EntityScan(basePackages = {"gov.cdc.casenotificationservice", "gov.cdc.xmlhl7parser"})
 public class CaseNotificationServiceApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(CaseNotificationServiceApplication.class, args);
-    }
-
+  public static void main(String[] args) {
+    SpringApplication.run(CaseNotificationServiceApplication.class, args);
+  }
 }

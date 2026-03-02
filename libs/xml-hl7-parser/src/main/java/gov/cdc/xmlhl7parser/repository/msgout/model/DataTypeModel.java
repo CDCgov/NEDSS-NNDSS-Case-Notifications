@@ -8,95 +8,103 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "NNDSS_DATA_TYPE_LOOKUP")
 public class DataTypeModel {
-    @Id
-    @Column(name = "serial_number" , columnDefinition="uniqueidentifier")
-    private int serialNum;
-    @Column(name = "question_identifier")
-    private String questionId;
-    @Column(name = "hl7_segment_field")
-    private String hl7SegmentField;
-    @Column(name = "mmg_version")
-    private String mmgVersion;
-    @Column(name = "data_type")
-    private String dataType;
-    @Column(name = "core_data_type")
-    private String coreDataType;
-    @Column(name = "mask")
-    private String mask;
-    @Column(name = "width")
-    private int width;
-    @Column(name = "note")
-    private String note;
+  @Id
+  @Column(name = "serial_number", columnDefinition = "uniqueidentifier")
+  private int serialNum;
 
-    public int getSerialNum() {
-        return serialNum;
-    }
+  @Column(name = "question_identifier")
+  private String questionId;
 
-    public void setSerialNum(int serialNum) {
-        this.serialNum = serialNum;
-    }
+  @Column(name = "hl7_segment_field")
+  private String hl7SegmentField;
 
-    public String getQuestionId() {
-        return questionId;
-    }
+  @Column(name = "mmg_version")
+  private String mmgVersion;
 
-    public void setQuestionId(String questionId) {
-        this.questionId = questionId;
-    }
+  @Column(name = "data_type")
+  private String dataType;
 
-    public String getHl7SegmentField() {
-        return hl7SegmentField;
-    }
+  @Column(name = "core_data_type")
+  private String coreDataType;
 
-    public void setHl7SegmentField(String hl7SegmentField) {
-        this.hl7SegmentField = hl7SegmentField;
-    }
+  @Column(name = "mask")
+  private String mask;
 
-    public String getMmgVersion() {
-        return mmgVersion;
-    }
+  @Column(name = "width")
+  private int width;
 
-    public void setMmgVersion(String mmgVersion) {
-        this.mmgVersion = mmgVersion;
-    }
+  @Column(name = "note")
+  private String note;
 
-    public String getDataType() {
-        return dataType;
-    }
+  public int getSerialNum() {
+    return serialNum;
+  }
 
-    public void setDataType(String dataType) {
-        this.dataType = dataType;
-    }
+  public void setSerialNum(int serialNum) {
+    this.serialNum = serialNum;
+  }
 
-    public String getCoreDataType() {
-        return coreDataType;
-    }
+  public String getQuestionId() {
+    return questionId;
+  }
 
-    public void setCoreDataType(String coreDataType) {
-        this.coreDataType = coreDataType;
-    }
+  public void setQuestionId(String questionId) {
+    this.questionId = questionId;
+  }
 
-    public String getMask() {
-        return mask;
-    }
+  public String getHl7SegmentField() {
+    return hl7SegmentField;
+  }
 
-    public void setMask(String mask) {
-        this.mask = mask;
-    }
+  public void setHl7SegmentField(String hl7SegmentField) {
+    this.hl7SegmentField = hl7SegmentField;
+  }
 
-    public int getWidth() {
-        return width;
-    }
+  public String getMmgVersion() {
+    return mmgVersion;
+  }
 
-    public void setWidth(int width) {
-        this.width = width;
-    }
+  public void setMmgVersion(String mmgVersion) {
+    this.mmgVersion = mmgVersion;
+  }
 
-    public String getNote() {
-        return note;
-    }
+  public String getDataType() {
+    return dataType;
+  }
 
-    public void setNote(String note) {
-        this.note = note;
-    }
+  public void setDataType(String dataType) {
+    this.dataType = dataType;
+  }
+
+  public String getCoreDataType() {
+    return coreDataType;
+  }
+
+  public void setCoreDataType(String coreDataType) {
+    this.coreDataType = coreDataType;
+  }
+
+  public String getMask() {
+    return mask;
+  }
+
+  public void setMask(String mask) {
+    this.mask = mask;
+  }
+
+  public int getWidth() {
+    return width;
+  }
+
+  public void setWidth(int width) {
+    this.width = width;
+  }
+
+  public String getNote() {
+    return note;
+  }
+
+  public void setNote(String note) {
+    this.note = note;
+  }
 }

@@ -1,34 +1,33 @@
 package gov.cdc.casenotificationservice.model.view_model;
 
 import gov.cdc.casenotificationservice.repository.msg.model.CaseNotificationDlt;
-import lombok.Getter;
-import lombok.Setter;
-
 import java.sql.Timestamp;
 import java.util.UUID;
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter
 public class CaseNotificationDltVM {
-    private UUID id;
-    private Long cnTranportqOutUid;
-    private String source;
-    private String errorStackTrace;
-    private String dltStatus;
-    private Integer dltOccurrence;
-    private Timestamp createdOn;
-    private Timestamp updatedOn;
+  private UUID id;
+  private Long cnTranportqOutUid;
+  private String source;
+  private String errorStackTrace;
+  private String dltStatus;
+  private Integer dltOccurrence;
+  private Timestamp createdOn;
+  private Timestamp updatedOn;
 
-    public CaseNotificationDltVM() {}
-    public CaseNotificationDltVM(CaseNotificationDlt caseNotificationDlt) {
-        this.id = caseNotificationDlt.getId();
-        this.cnTranportqOutUid = caseNotificationDlt.getCnTranportqOutUid();
-        this.source = caseNotificationDlt.getSource();
-        this.errorStackTrace = caseNotificationDlt.getErrorStackTrace();
-        this.dltStatus = caseNotificationDlt.getDltStatus();
-        this.dltOccurrence = caseNotificationDlt.getDltOccurrence();
-        this.createdOn = caseNotificationDlt.getCreatedOn();
-        this.updatedOn = caseNotificationDlt.getUpdatedOn();
-    }
+  public CaseNotificationDltVM() {}
 
+  public CaseNotificationDltVM(CaseNotificationDlt caseNotificationDlt) {
+    this.id = caseNotificationDlt.getId();
+    this.cnTranportqOutUid = caseNotificationDlt.getCnTranportqOutUid();
+    this.source = caseNotificationDlt.getSource();
+    this.errorStackTrace = caseNotificationDlt.getErrorStackTrace();
+    this.dltStatus = caseNotificationDlt.getDltStatus();
+    this.dltOccurrence = caseNotificationDlt.getDltOccurrence();
+    this.createdOn = caseNotificationDlt.getCreatedOn();
+    this.updatedOn = caseNotificationDlt.getUpdatedOn();
+  }
 }

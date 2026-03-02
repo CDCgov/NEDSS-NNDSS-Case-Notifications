@@ -1,102 +1,110 @@
 package gov.cdc.xmlhl7parser.repository.msgout.model;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.persistence.Entity;
 
 @Entity
 @Table(name = "NNDSS_SERVICE_ACTION_PAIR_LOOKUP")
 public class ServiceActionPairModel {
-    @Column(name = "service")
-    private String service;
-    @Column(name = "action")
-    private String action;
-    @Column(name = "total_service_action_pairs")
-    private int totalServiceActionPairs;
-    @Id
-    @Column(name = "serial_number")
-    private int serialNumber;
-    @Column(name = "message_profile_id")
-    private String messageProfileId;
-    @Column(name = "condition_code")
-    private String conditionCode;
-    @Column(name = "status_code")
-    private String statusCode;
-    @Column(name = "notes")
-    private String notes;
-    @Column(name = "concept_code")
-    private String conceptCode;
+  @Column(name = "service")
+  private String service;
 
-    public String getService() {
-        return service;
-    }
+  @Column(name = "action")
+  private String action;
 
-    public void setService(String service) {
-        this.service = service;
-    }
+  @Column(name = "total_service_action_pairs")
+  private int totalServiceActionPairs;
 
-    public String getAction() {
-        return action;
-    }
+  @Id
+  @Column(name = "serial_number")
+  private int serialNumber;
 
-    public void setAction(String action) {
-        this.action = action;
-    }
+  @Column(name = "message_profile_id")
+  private String messageProfileId;
 
-    public int getTotalServiceActionPairs() {
-        return totalServiceActionPairs;
-    }
+  @Column(name = "condition_code")
+  private String conditionCode;
 
-    public void setTotalServiceActionPairs(int totalServiceActionPairs) {
-        this.totalServiceActionPairs = totalServiceActionPairs;
-    }
+  @Column(name = "status_code")
+  private String statusCode;
 
-    public int getSerialNumber() {
-        return serialNumber;
-    }
+  @Column(name = "notes")
+  private String notes;
 
-    public void setSerialNumber(int serialNumber) {
-        this.serialNumber = serialNumber;
-    }
+  @Column(name = "concept_code")
+  private String conceptCode;
 
-    public String getMessageProfileId() {
-        return messageProfileId;
-    }
+  public String getService() {
+    return service;
+  }
 
-    public void setMessageProfileId(String messageProfileId) {
-        this.messageProfileId = messageProfileId;
-    }
+  public void setService(String service) {
+    this.service = service;
+  }
 
-    public String getConditionCode() {
-        return conditionCode;
-    }
+  public String getAction() {
+    return action;
+  }
 
-    public void setConditionCode(String conditionCode) {
-        this.conditionCode = conditionCode;
-    }
+  public void setAction(String action) {
+    this.action = action;
+  }
 
-    public String getStatusCode() {
-        return statusCode;
-    }
+  public int getTotalServiceActionPairs() {
+    return totalServiceActionPairs;
+  }
 
-    public void setStatusCode(String statusCode) {
-        this.statusCode = statusCode;
-    }
+  public void setTotalServiceActionPairs(int totalServiceActionPairs) {
+    this.totalServiceActionPairs = totalServiceActionPairs;
+  }
 
-    public String getNotes() {
-        return notes;
-    }
+  public int getSerialNumber() {
+    return serialNumber;
+  }
 
-    public void setNotes(String notes) {
-        this.notes = notes;
-    }
+  public void setSerialNumber(int serialNumber) {
+    this.serialNumber = serialNumber;
+  }
 
-    public String getConceptCode() {
-        return conceptCode;
-    }
+  public String getMessageProfileId() {
+    return messageProfileId;
+  }
 
-    public void setConceptCode(String conceptCode) {
-        this.conceptCode = conceptCode;
-    }
+  public void setMessageProfileId(String messageProfileId) {
+    this.messageProfileId = messageProfileId;
+  }
+
+  public String getConditionCode() {
+    return conditionCode;
+  }
+
+  public void setConditionCode(String conditionCode) {
+    this.conditionCode = conditionCode;
+  }
+
+  public String getStatusCode() {
+    return statusCode;
+  }
+
+  public void setStatusCode(String statusCode) {
+    this.statusCode = statusCode;
+  }
+
+  public String getNotes() {
+    return notes;
+  }
+
+  public void setNotes(String notes) {
+    this.notes = notes;
+  }
+
+  public String getConceptCode() {
+    return conceptCode;
+  }
+
+  public void setConceptCode(String conceptCode) {
+    this.conceptCode = conceptCode;
+  }
 }

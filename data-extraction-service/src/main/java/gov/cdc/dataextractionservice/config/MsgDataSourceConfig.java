@@ -1,7 +1,8 @@
 package gov.cdc.dataextractionservice.config;
 
-
 import jakarta.persistence.EntityManagerFactory;
+import java.util.HashMap;
+import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.jdbc.DataSourceBuilder;
@@ -17,70 +18,64 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import javax.sql.DataSource;
-import java.util.HashMap;
-
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(
-        entityManagerFactoryRef = "msgEntityManagerFactory",
-        transactionManagerRef = "msgTransactionManager",
-        basePackages = {
-                "gov.cdc.dataextractionservice.repository.msg",
-        }
-)
+    entityManagerFactoryRef = "msgEntityManagerFactory",
+    transactionManagerRef = "msgTransactionManager",
+    basePackages = {
+      "gov.cdc.dataextractionservice.repository.msg",
+    })
 public class MsgDataSourceConfig {
-    @Value("${spring.datasource.driverClassName}")
-    private String driverClassName;
+  @Value("${spring.datasource.driverClassName}")
+  private String driverClassName;
 
-    @Value("${spring.datasource.msg.url}")
-    private String dbUrl;
+  @Value("${spring.datasource.msg.url}")
+  private String dbUrl;
 
-    @Value("${spring.datasource.username}")
-    private String dbUserName;
+  @Value("${spring.datasource.username}")
+  private String dbUserName;
 
-    @Value("${spring.datasource.password}")
-    private String dbUserPassword;
+  @Value("${spring.datasource.password}")
+  private String dbUserPassword;
 
-    @Bean(name = "msgDataSource")
-    public DataSource msgDataSource() {
-        DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
+  @Bean(name = "msgDataSource")
+  public DataSource msgDataSource() {
+    DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
 
-        dataSourceBuilder.driverClassName(driverClassName);
-        dataSourceBuilder.url(dbUrl);
-        dataSourceBuilder.username(dbUserName);
-        dataSourceBuilder.password(dbUserPassword);
+    dataSourceBuilder.driverClassName(driverClassName);
+    dataSourceBuilder.url(dbUrl);
+    dataSourceBuilder.username(dbUserName);
+    dataSourceBuilder.password(dbUserPassword);
 
-        return dataSourceBuilder.build();
-    }
+    return dataSourceBuilder.build();
+  }
 
-    @Bean(name = "msgEntityManagerFactoryBuilder")
-    public EntityManagerFactoryBuilder msgEntityManagerFactoryBuilder() {
-        return new EntityManagerFactoryBuilder(new HibernateJpaVendorAdapter(), new HashMap<>(), null);
-    }
+  @Bean(name = "msgEntityManagerFactoryBuilder")
+  public EntityManagerFactoryBuilder msgEntityManagerFactoryBuilder() {
+    return new EntityManagerFactoryBuilder(new HibernateJpaVendorAdapter(), new HashMap<>(), null);
+  }
 
-    @Bean(name = "msgEntityManagerFactory")
-    public LocalContainerEntityManagerFactoryBean msgEntityManagerFactory(
-            EntityManagerFactoryBuilder msgEntityManagerFactoryBuilder,
-            @Qualifier("msgDataSource") DataSource msgDataSource) {
-        return msgEntityManagerFactoryBuilder
-                .dataSource(msgDataSource)
-                .packages("gov.cdc.dataextractionservice.repository.msg")
-                .persistenceUnit("msg")
-                .build();
-    }
+  @Bean(name = "msgEntityManagerFactory")
+  public LocalContainerEntityManagerFactoryBean msgEntityManagerFactory(
+      EntityManagerFactoryBuilder msgEntityManagerFactoryBuilder,
+      @Qualifier("msgDataSource") DataSource msgDataSource) {
+    return msgEntityManagerFactoryBuilder
+        .dataSource(msgDataSource)
+        .packages("gov.cdc.dataextractionservice.repository.msg")
+        .persistenceUnit("msg")
+        .build();
+  }
 
-    @Primary
-    @Bean(name = "msgTransactionManager")
-    public PlatformTransactionManager msgTransactionManager(
-            @Qualifier("msgEntityManagerFactory") EntityManagerFactory msgEntityManagerFactory) {
-        return new JpaTransactionManager(msgEntityManagerFactory);
-    }
+  @Primary
+  @Bean(name = "msgTransactionManager")
+  public PlatformTransactionManager msgTransactionManager(
+      @Qualifier("msgEntityManagerFactory") EntityManagerFactory msgEntityManagerFactory) {
+    return new JpaTransactionManager(msgEntityManagerFactory);
+  }
 
-    @Bean(name = "msgJdbcTemplate")
-    public JdbcTemplate msgJdbcTemplate(@Qualifier("msgDataSource") DataSource dataSource) {
-        return new JdbcTemplate(dataSource);
-    }
-
-
+  @Bean(name = "msgJdbcTemplate")
+  public JdbcTemplate msgJdbcTemplate(@Qualifier("msgDataSource") DataSource dataSource) {
+    return new JdbcTemplate(dataSource);
+  }
 }

@@ -1,34 +1,30 @@
 package gov.cdc.casenotificationservice.cache;
 
-
 import gov.cdc.casenotificationservice.model.PHINMSProperties;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class NonStdQueue {
-    public List<PHINMSProperties> phinmsPropertiesList = new ArrayList<>();
-    private static final NonStdQueue INSTANCE = new NonStdQueue();
+  public List<PHINMSProperties> phinmsPropertiesList = new ArrayList<>();
+  private static final NonStdQueue INSTANCE = new NonStdQueue();
 
-    private NonStdQueue() {
-        // private constructor to prevent instantiation
-    }
+  private NonStdQueue() {
+    // private constructor to prevent instantiation
+  }
 
-    public static NonStdQueue getInstance() {
-        return INSTANCE;
-    }
+  public static NonStdQueue getInstance() {
+    return INSTANCE;
+  }
 
+  public void addPHINMSProperties(PHINMSProperties phinmsProperties) {
+    phinmsPropertiesList.add(phinmsProperties);
+  }
 
-    public void addPHINMSProperties(PHINMSProperties phinmsProperties) {
-        phinmsPropertiesList.add(phinmsProperties);
-    }
+  public void clearPHINMSProperties() {
+    phinmsPropertiesList.clear();
+  }
 
-    public void clearPHINMSProperties() {
-        phinmsPropertiesList.clear();
-    }
-
-
-    public List<PHINMSProperties> getPhinmsPropertiesList() {
-        return new ArrayList<>(phinmsPropertiesList); // defensive copy
-    }
+  public List<PHINMSProperties> getPhinmsPropertiesList() {
+    return new ArrayList<>(phinmsPropertiesList); // defensive copy
+  }
 }

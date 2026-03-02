@@ -7,6 +7,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ApiDltResponseModel<T> {
-    private CaseNotificationDlt caseNotificationDlt;
-    private T payload;
+  private CaseNotificationDlt caseNotificationDlt;
+  private T payload;
 }

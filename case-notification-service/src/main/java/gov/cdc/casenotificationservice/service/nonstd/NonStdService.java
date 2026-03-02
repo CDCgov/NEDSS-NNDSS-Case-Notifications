@@ -18,101 +18,106 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-
 @Service
 public class NonStdService implements INonStdService {
-    private static final Logger logger = LoggerFactory.getLogger(NonStdService.class); //NOSONAR
+  private static final Logger logger = LoggerFactory.getLogger(NonStdService.class); // NOSONAR
 
-    @Value("${service.timezone}")
-    private String tz = "UTC";
-    private final IPHINMSService phinmsService;
-    private final INonStdBatchService batchService;
-    private final TransportQOutRepository transportQOutRepository;
-    private final CNTraportqOutRepository cnTraportqOutRepository;
-    private final CaseNotificationConfigRepository caseNotificationConfigRepository;
-    private final Hl7MessageBuilder hl7MessageBuilder;
+  @Value("${service.timezone}")
+  private String tz = "UTC";
 
-    public NonStdService(IPHINMSService phinmsService,
-                         INonStdBatchService batchService,
-                         TransportQOutRepository transportQOutRepository,
-                         CNTraportqOutRepository cnTraportqOutRepository,
-                         CaseNotificationConfigRepository caseNotificationConfigRepository,
-                         Hl7MessageBuilder hl7MessageBuilder) {
-        this.phinmsService = phinmsService;
-        this.batchService = batchService;
-        this.transportQOutRepository = transportQOutRepository;
-        this.cnTraportqOutRepository = cnTraportqOutRepository;
-        this.caseNotificationConfigRepository = caseNotificationConfigRepository;
-        this.hl7MessageBuilder = hl7MessageBuilder;
-    }
+  private final IPHINMSService phinmsService;
+  private final INonStdBatchService batchService;
+  private final TransportQOutRepository transportQOutRepository;
+  private final CNTraportqOutRepository cnTraportqOutRepository;
+  private final CaseNotificationConfigRepository caseNotificationConfigRepository;
+  private final Hl7MessageBuilder hl7MessageBuilder;
 
-    public void nonStdProcessor(MessageAfterStdChecker messageAfterStdChecker, boolean hl7ValidationEnabled) throws IgnorableException, NonStdProcessorServiceException, NonStdBatchProcessorServiceException {
-            PHINMSProperties phinmsProperties = new PHINMSProperties();
-            CaseNotificationConfig stdConfig = caseNotificationConfigRepository.findNonStdConfig();
-            var cnTransport = cnTraportqOutRepository.findTopByRecordUid(messageAfterStdChecker.getCnTransportqOutUid());
+  public NonStdService(
+      IPHINMSService phinmsService,
+      INonStdBatchService batchService,
+      TransportQOutRepository transportQOutRepository,
+      CNTraportqOutRepository cnTraportqOutRepository,
+      CaseNotificationConfigRepository caseNotificationConfigRepository,
+      Hl7MessageBuilder hl7MessageBuilder) {
+    this.phinmsService = phinmsService;
+    this.batchService = batchService;
+    this.transportQOutRepository = transportQOutRepository;
+    this.cnTraportqOutRepository = cnTraportqOutRepository;
+    this.caseNotificationConfigRepository = caseNotificationConfigRepository;
+    this.hl7MessageBuilder = hl7MessageBuilder;
+  }
 
+  public void nonStdProcessor(
+      MessageAfterStdChecker messageAfterStdChecker, boolean hl7ValidationEnabled)
+      throws IgnorableException,
+          NonStdProcessorServiceException,
+          NonStdBatchProcessorServiceException {
+    PHINMSProperties phinmsProperties = new PHINMSProperties();
+    CaseNotificationConfig stdConfig = caseNotificationConfigRepository.findNonStdConfig();
+    var cnTransport =
+        cnTraportqOutRepository.findTopByRecordUid(messageAfterStdChecker.getCnTransportqOutUid());
+
+    try {
+      var payload =
+          hl7MessageBuilder.buildHl7Message(cnTransport.getMessagePayload(), hl7ValidationEnabled);
+      if (payload.isEmpty()) {
+        throw new IgnorableException("Payload is empty");
+      }
+
+      phinmsProperties.setCnTransportUid(cnTransport.getCnTransportqOutUid());
+      phinmsProperties.setPMessageUid(cnTransport.getNotificationLocalId());
+      phinmsProperties.setPNotificationId(String.valueOf(cnTransport.getNotificationUid()));
+      phinmsProperties.setPPublicHealthCaseLocalId(cnTransport.getPublicHealthCaseLocalId());
+      phinmsProperties.setPReportStatusCd(cnTransport.getReportStatusCd());
+      phinmsProperties.setNETSS_MESSAGE_ONLY("queued");
+      phinmsProperties.setBATCH_MESSAGE_PROFILE_ID(stdConfig.getBatchMesageProfileId());
+
+      PHINMSProperties updatedPhinmsProperties;
+
+      try {
+        updatedPhinmsProperties =
+            phinmsService.gettingPHIMNSProperties(payload, phinmsProperties, stdConfig);
+      } catch (Exception e) {
+        throw new NonStdProcessorServiceException("Failure at PHINMS processor", e);
+      }
+
+      if (batchService.isBatchConditionApplied(updatedPhinmsProperties, stdConfig)) {
         try {
-            var payload = hl7MessageBuilder.buildHl7Message(cnTransport.getMessagePayload(), hl7ValidationEnabled);
-            if (payload.isEmpty()) {
-                throw new IgnorableException("Payload is empty");
-            }
-
-            phinmsProperties.setCnTransportUid(cnTransport.getCnTransportqOutUid());
-            phinmsProperties.setPMessageUid(cnTransport.getNotificationLocalId());
-            phinmsProperties.setPNotificationId(String.valueOf(cnTransport.getNotificationUid()));
-            phinmsProperties.setPPublicHealthCaseLocalId(cnTransport.getPublicHealthCaseLocalId());
-            phinmsProperties.setPReportStatusCd(cnTransport.getReportStatusCd());
-            phinmsProperties.setNETSS_MESSAGE_ONLY("queued");
-            phinmsProperties.setBATCH_MESSAGE_PROFILE_ID(stdConfig.getBatchMesageProfileId());
-
-            PHINMSProperties updatedPhinmsProperties;
-
-            try {
-                updatedPhinmsProperties = phinmsService.gettingPHIMNSProperties(payload, phinmsProperties, stdConfig);
-            } catch (Exception e) {
-                throw new NonStdProcessorServiceException("Failure at PHINMS processor", e);
-            }
-
-            if (batchService.isBatchConditionApplied(updatedPhinmsProperties, stdConfig)) {
-                try {
-                    batchNonStdProcessor(updatedPhinmsProperties);
-                } catch (Exception e) {
-                    throw new NonStdBatchProcessorServiceException("Failure at batch processor", e);
-                }
-            }
-            else
-            {
-                try {
-                    nonStdProcessor(updatedPhinmsProperties);
-                } catch (Exception e) {
-                    throw new NonStdProcessorServiceException("Failure at Non Std DB Logic", e);
-
-                }
-
-            }
-        } catch (XmlHl7ParserException e) {
-            logger.error("NonStdService failed to convert XML payload to HL7", e);
-            throw new NonStdProcessorServiceException("Failed to convert XML payload to HL7", e);
-        }
-    }
-
-    public void releaseHoldQueueAndProcessBatchNonStd() throws NonRetryableException {
-        var updatedPhinmsPropertiesForBatch = batchService.ReleaseQueuePopulateBatchFooterProperties();
-        nonStdProcessor(updatedPhinmsPropertiesForBatch);
-    }
-
-    protected void nonStdProcessor(PHINMSProperties PHINMSProperties) throws NonRetryableException {
-        TransportQOut transportQOut = new TransportQOut(PHINMSProperties, tz);
-        transportQOutRepository.save(transportQOut);
-
-        try {
-            cnTraportqOutRepository.updateStatusToQueued(PHINMSProperties.getCnTransportUid()); // "WHERE IS THIS ID COME FROM"
+          batchNonStdProcessor(updatedPhinmsProperties);
         } catch (Exception e) {
-            throw new NonRetryableException(e.getMessage(), e);
+          throw new NonStdBatchProcessorServiceException("Failure at batch processor", e);
         }
+      } else {
+        try {
+          nonStdProcessor(updatedPhinmsProperties);
+        } catch (Exception e) {
+          throw new NonStdProcessorServiceException("Failure at Non Std DB Logic", e);
+        }
+      }
+    } catch (XmlHl7ParserException e) {
+      logger.error("NonStdService failed to convert XML payload to HL7", e);
+      throw new NonStdProcessorServiceException("Failed to convert XML payload to HL7", e);
     }
+  }
 
-    protected void batchNonStdProcessor(PHINMSProperties PHINMSProperties) {
-        batchService.holdQueue(PHINMSProperties);
+  public void releaseHoldQueueAndProcessBatchNonStd() throws NonRetryableException {
+    var updatedPhinmsPropertiesForBatch = batchService.ReleaseQueuePopulateBatchFooterProperties();
+    nonStdProcessor(updatedPhinmsPropertiesForBatch);
+  }
+
+  protected void nonStdProcessor(PHINMSProperties PHINMSProperties) throws NonRetryableException {
+    TransportQOut transportQOut = new TransportQOut(PHINMSProperties, tz);
+    transportQOutRepository.save(transportQOut);
+
+    try {
+      cnTraportqOutRepository.updateStatusToQueued(
+          PHINMSProperties.getCnTransportUid()); // "WHERE IS THIS ID COME FROM"
+    } catch (Exception e) {
+      throw new NonRetryableException(e.getMessage(), e);
     }
+  }
+
+  protected void batchNonStdProcessor(PHINMSProperties PHINMSProperties) {
+    batchService.holdQueue(PHINMSProperties);
+  }
 }

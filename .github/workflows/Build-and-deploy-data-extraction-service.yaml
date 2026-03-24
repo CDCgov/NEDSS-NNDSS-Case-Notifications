@@ -40,7 +40,7 @@ jobs:
     needs: extract-version-suffix
     uses: CDCgov/NEDSS-Workflows/.github/workflows/Build-gradle-microservice-container.yaml@main
     with:
-      microservice_name: nnd-case-notification-service/data-extraction-service
+      microservice_name: nbs7-data-extraction-service
       dockerfile_relative_path: -f ./data-extraction-service/Dockerfile .
       environment_classifier: ${{ needs.extract-version-suffix.outputs.image_tag }}
       java_version: "21"

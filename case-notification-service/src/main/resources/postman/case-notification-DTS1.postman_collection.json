@@ -28,11 +28,6 @@
 						"value": "text/plain"
 					},
 					{
-						"key": "Authorization",
-						"value": "Basic ZGl0ZWFtYWRtaW46dGVtcDEyMw==",
-						"disabled": true
-					},
-					{
 						"key": "clientid",
 						"value": "di-keycloak-client",
 						"type": "text"
@@ -71,13 +66,7 @@
 			"request": {
 				"auth": {
 					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "",
-							"type": "string"
-						}
-					]
+					"bearer": []
 				},
 				"method": "POST",
 				"header": [
@@ -93,11 +82,6 @@
 					{
 						"key": "Content-Type",
 						"value": "text/plain"
-					},
-					{
-						"key": "Authorization",
-						"value": "Basic ZGl0ZWFtYWRtaW46dGVtcDEyMw==",
-						"disabled": true
 					},
 					{
 						"key": "clientid",
@@ -139,13 +123,7 @@
 			"request": {
 				"auth": {
 					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "",
-							"type": "string"
-						}
-					]
+					"bearer": []
 				},
 				"method": "GET",
 				"header": [
@@ -161,11 +139,6 @@
 					{
 						"key": "Content-Type",
 						"value": "text/plain"
-					},
-					{
-						"key": "Authorization",
-						"value": "Basic ZGl0ZWFtYWRtaW46dGVtcDEyMw==",
-						"disabled": true
 					},
 					{
 						"key": "clientid",
@@ -208,13 +181,7 @@
 			"request": {
 				"auth": {
 					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "",
-							"type": "string"
-						}
-					]
+					"bearer": []
 				},
 				"method": "GET",
 				"header": [
@@ -230,11 +197,6 @@
 					{
 						"key": "Content-Type",
 						"value": "text/plain"
-					},
-					{
-						"key": "Authorization",
-						"value": "Basic ZGl0ZWFtYWRtaW46dGVtcDEyMw==",
-						"disabled": true
 					},
 					{
 						"key": "clientid",
@@ -279,13 +241,7 @@
 			"request": {
 				"auth": {
 					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "",
-							"type": "string"
-						}
-					]
+					"bearer": []
 				},
 				"method": "PUT",
 				"header": [
@@ -301,11 +257,6 @@
 					{
 						"key": "Content-Type",
 						"value": "text/plain"
-					},
-					{
-						"key": "Authorization",
-						"value": "Basic ZGl0ZWFtYWRtaW46dGVtcDEyMw==",
-						"disabled": true
 					},
 					{
 						"key": "clientid",
@@ -358,13 +309,7 @@
 			"request": {
 				"auth": {
 					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "",
-							"type": "string"
-						}
-					]
+					"bearer": []
 				},
 				"method": "GET",
 				"header": [
@@ -380,11 +325,6 @@
 					{
 						"key": "Content-Type",
 						"value": "text/plain"
-					},
-					{
-						"key": "Authorization",
-						"value": "Basic ZGl0ZWFtYWRtaW46dGVtcDEyMw==",
-						"disabled": true
 					},
 					{
 						"key": "clientid",
@@ -444,13 +384,7 @@
 			"request": {
 				"auth": {
 					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "",
-							"type": "string"
-						}
-					]
+					"bearer": []
 				},
 				"method": "GET",
 				"header": [
@@ -466,11 +400,6 @@
 					{
 						"key": "Content-Type",
 						"value": "text/plain"
-					},
-					{
-						"key": "Authorization",
-						"value": "Basic ZGl0ZWFtYWRtaW46dGVtcDEyMw==",
-						"disabled": true
 					},
 					{
 						"key": "clientid",
@@ -510,13 +439,7 @@
 			"request": {
 				"auth": {
 					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "",
-							"type": "string"
-						}
-					]
+					"bearer": []
 				},
 				"method": "POST",
 				"header": [
@@ -532,11 +455,6 @@
 					{
 						"key": "Content-Type",
 						"value": "text/plain"
-					},
-					{
-						"key": "Authorization",
-						"value": "Basic ZGl0ZWFtYWRtaW46dGVtcDEyMw==",
-						"disabled": true
 					},
 					{
 						"key": "clientid",
@@ -576,13 +494,7 @@
 			"request": {
 				"auth": {
 					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "",
-							"type": "string"
-						}
-					]
+					"bearer": []
 				},
 				"method": "POST",
 				"header": [
@@ -599,11 +511,6 @@
 					{
 						"key": "Content-Type",
 						"value": "text/plain"
-					},
-					{
-						"key": "Authorization",
-						"value": "Basic ZGl0ZWFtYWRtaW46dGVtcDEyMw==",
-						"disabled": true
 					},
 					{
 						"key": "clientid",

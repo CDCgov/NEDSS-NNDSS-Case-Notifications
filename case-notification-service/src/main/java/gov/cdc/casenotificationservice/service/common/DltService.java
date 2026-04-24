@@ -9,7 +9,7 @@ import gov.cdc.casenotificationservice.model.ApiDltResponseModel;
 import gov.cdc.casenotificationservice.model.MessageAfterStdChecker;
 import gov.cdc.casenotificationservice.repository.msg.CaseNotificationDltRepository;
 import gov.cdc.casenotificationservice.repository.msg.model.CaseNotificationDlt;
-import gov.cdc.casenotificationservice.repository.odse.CNTraportqOutRepository;
+import gov.cdc.casenotificationservice.repository.odse.CNTransportqOutRepository;
 import gov.cdc.casenotificationservice.service.common.interfaces.IDltService;
 import java.sql.Timestamp;
 import java.util.UUID;
@@ -31,15 +31,15 @@ public class DltService implements IDltService {
   private String stdTopic;
 
   private final CaseNotificationDltRepository caseNotificationDltRepository;
-  private final CNTraportqOutRepository cnTraportqOutRepository;
+  private final CNTransportqOutRepository cnTransportqOutRepository;
   private final CaseNotificationProducer caseNotificationProducer;
 
   public DltService(
       CaseNotificationDltRepository caseNotificationDltRepository,
-      CNTraportqOutRepository cnTraportqOutRepository,
+      CNTransportqOutRepository cnTransportqOutRepository,
       CaseNotificationProducer caseNotificationProducer) {
     this.caseNotificationDltRepository = caseNotificationDltRepository;
-    this.cnTraportqOutRepository = cnTraportqOutRepository;
+    this.cnTransportqOutRepository = cnTransportqOutRepository;
     this.caseNotificationProducer = caseNotificationProducer;
   }
 
@@ -73,7 +73,7 @@ public class DltService implements IDltService {
 
     var cnTransportqOut =
         (data != null && data.getCnTransportqOutUid() != null)
-            ? cnTraportqOutRepository.findTopByRecordUid(data.getCnTransportqOutUid())
+            ? cnTransportqOutRepository.findTopByRecordUid(data.getCnTransportqOutUid())
             : null;
 
     CaseNotificationDlt caseNotificationDlt = new CaseNotificationDlt();
@@ -93,7 +93,7 @@ public class DltService implements IDltService {
     caseNotificationDltRepository.save(caseNotificationDlt);
 
     if (data != null && data.getCnTransportqOutUid() != null) {
-      cnTraportqOutRepository.updateStatus(data.getCnTransportqOutUid(), status);
+      cnTransportqOutRepository.updateStatus(data.getCnTransportqOutUid(), status);
     }
   }
 
@@ -129,9 +129,9 @@ public class DltService implements IDltService {
     caseNotificationDltRepository.save(caseNotificationDlt);
 
     var cnTransportqOut =
-        cnTraportqOutRepository.findTopByRecordUid(dltResult.get().getCnTranportqOutUid());
+        cnTransportqOutRepository.findTopByRecordUid(dltResult.get().getCnTranportqOutUid());
     cnTransportqOut.setMessagePayload(payload); // UPDATE NEW PAYLOAD TO CN TRANSPORT
-    cnTraportqOutRepository.save(cnTransportqOut);
+    cnTransportqOutRepository.save(cnTransportqOut);
 
     String topic;
     if (caseNotificationDlt.getSource().equalsIgnoreCase(nonStdTopic)) {

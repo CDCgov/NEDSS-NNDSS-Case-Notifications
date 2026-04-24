@@ -7,7 +7,7 @@ import gov.cdc.casenotificationservice.repository.msg.CaseNotificationConfigRepo
 import gov.cdc.casenotificationservice.repository.msg.TransportQOutRepository;
 import gov.cdc.casenotificationservice.repository.msg.model.CaseNotificationConfig;
 import gov.cdc.casenotificationservice.repository.msg.model.TransportQOut;
-import gov.cdc.casenotificationservice.repository.odse.CNTraportqOutRepository;
+import gov.cdc.casenotificationservice.repository.odse.CNTransportqOutRepository;
 import gov.cdc.casenotificationservice.service.nonstd.interfaces.INonStdBatchService;
 import gov.cdc.casenotificationservice.service.nonstd.interfaces.INonStdService;
 import gov.cdc.casenotificationservice.service.nonstd.interfaces.IPHINMSService;
@@ -28,7 +28,7 @@ public class NonStdService implements INonStdService {
   private final IPHINMSService phinmsService;
   private final INonStdBatchService batchService;
   private final TransportQOutRepository transportQOutRepository;
-  private final CNTraportqOutRepository cnTraportqOutRepository;
+  private final CNTransportqOutRepository cnTransportqOutRepository;
   private final CaseNotificationConfigRepository caseNotificationConfigRepository;
   private final Hl7MessageBuilder hl7MessageBuilder;
 
@@ -36,13 +36,13 @@ public class NonStdService implements INonStdService {
       IPHINMSService phinmsService,
       INonStdBatchService batchService,
       TransportQOutRepository transportQOutRepository,
-      CNTraportqOutRepository cnTraportqOutRepository,
+      CNTransportqOutRepository cnTransportqOutRepository,
       CaseNotificationConfigRepository caseNotificationConfigRepository,
       Hl7MessageBuilder hl7MessageBuilder) {
     this.phinmsService = phinmsService;
     this.batchService = batchService;
     this.transportQOutRepository = transportQOutRepository;
-    this.cnTraportqOutRepository = cnTraportqOutRepository;
+    this.cnTransportqOutRepository = cnTransportqOutRepository;
     this.caseNotificationConfigRepository = caseNotificationConfigRepository;
     this.hl7MessageBuilder = hl7MessageBuilder;
   }
@@ -53,9 +53,9 @@ public class NonStdService implements INonStdService {
           NonStdProcessorServiceException,
           NonStdBatchProcessorServiceException {
     PHINMSProperties phinmsProperties = new PHINMSProperties();
-    CaseNotificationConfig stdConfig = caseNotificationConfigRepository.findNonStdConfig();
+    CaseNotificationConfig stdConfig = caseNotificationConfigRepository.findAppliedNonStdConfig();
     var cnTransport =
-        cnTraportqOutRepository.findTopByRecordUid(messageAfterStdChecker.getCnTransportqOutUid());
+        cnTransportqOutRepository.findTopByRecordUid(messageAfterStdChecker.getCnTransportqOutUid());
 
     try {
       var payload =
@@ -110,7 +110,7 @@ public class NonStdService implements INonStdService {
     transportQOutRepository.save(transportQOut);
 
     try {
-      cnTraportqOutRepository.updateStatusToQueued(
+      cnTransportqOutRepository.updateStatusToQueued(
           PHINMSProperties.getCnTransportUid()); // "WHERE IS THIS ID COME FROM"
     } catch (Exception e) {
       throw new NonRetryableException(e.getMessage(), e);

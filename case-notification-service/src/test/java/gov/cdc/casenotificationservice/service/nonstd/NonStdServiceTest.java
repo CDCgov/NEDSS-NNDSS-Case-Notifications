@@ -8,7 +8,7 @@ import gov.cdc.casenotificationservice.repository.msg.CaseNotificationConfigRepo
 import gov.cdc.casenotificationservice.repository.msg.TransportQOutRepository;
 import gov.cdc.casenotificationservice.repository.msg.model.CaseNotificationConfig;
 import gov.cdc.casenotificationservice.repository.msg.model.TransportQOut;
-import gov.cdc.casenotificationservice.repository.odse.CNTraportqOutRepository;
+import gov.cdc.casenotificationservice.repository.odse.CNTransportqOutRepository;
 import gov.cdc.casenotificationservice.repository.odse.model.CNTransportqOut;
 import gov.cdc.casenotificationservice.service.nonstd.interfaces.INonStdBatchService;
 import gov.cdc.casenotificationservice.service.nonstd.interfaces.IPHINMSService;
@@ -29,7 +29,7 @@ class NonStdServiceTest {
 
   @Mock private TransportQOutRepository transportQOutRepository;
 
-  @Mock private CNTraportqOutRepository cnTraportqOutRepository;
+  @Mock private CNTransportqOutRepository cnTransportqOutRepository;
 
   @Mock private CaseNotificationConfigRepository caseNotificationConfigRepository;
 
@@ -60,8 +60,8 @@ class NonStdServiceTest {
     when(hl7MessageBuilder.buildHl7Message(mockTransport.getMessagePayload(), true))
         .thenReturn("TEST");
 
-    when(caseNotificationConfigRepository.findNonStdConfig()).thenReturn(config);
-    when(cnTraportqOutRepository.findTopByRecordUid(123L)).thenReturn(mockTransport);
+    when(caseNotificationConfigRepository.findAppliedNonStdConfig()).thenReturn(config);
+    when(cnTransportqOutRepository.findTopByRecordUid(123L)).thenReturn(mockTransport);
     when(phinmsService.gettingPHIMNSProperties(any(), any(), any())).thenReturn(props);
     when(batchService.isBatchConditionApplied(props, config)).thenReturn(true);
 
@@ -89,15 +89,15 @@ class NonStdServiceTest {
 
     when(hl7MessageBuilder.buildHl7Message(mockTransport.getMessagePayload(), true))
         .thenReturn("TEST");
-    when(caseNotificationConfigRepository.findNonStdConfig()).thenReturn(config);
-    when(cnTraportqOutRepository.findTopByRecordUid(124L)).thenReturn(mockTransport);
+    when(caseNotificationConfigRepository.findAppliedNonStdConfig()).thenReturn(config);
+    when(cnTransportqOutRepository.findTopByRecordUid(124L)).thenReturn(mockTransport);
     when(phinmsService.gettingPHIMNSProperties(any(), any(), any())).thenReturn(props);
     when(batchService.isBatchConditionApplied(props, config)).thenReturn(false);
 
     nonStdService.nonStdProcessor(checker, true);
 
     verify(transportQOutRepository).save(any(TransportQOut.class));
-    verify(cnTraportqOutRepository).updateStatusToQueued(null);
+    verify(cnTransportqOutRepository).updateStatusToQueued(null);
   }
 
   @Test
@@ -110,6 +110,6 @@ class NonStdServiceTest {
     nonStdService.releaseHoldQueueAndProcessBatchNonStd();
 
     verify(transportQOutRepository).save(any(TransportQOut.class));
-    verify(cnTraportqOutRepository).updateStatusToQueued(null);
+    verify(cnTransportqOutRepository).updateStatusToQueued(null);
   }
 }

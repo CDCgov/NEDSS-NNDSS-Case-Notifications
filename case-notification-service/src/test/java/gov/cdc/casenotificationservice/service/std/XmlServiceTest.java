@@ -8,7 +8,7 @@ import gov.cdc.casenotificationservice.model.MessageAfterStdChecker;
 import gov.cdc.casenotificationservice.model.Netss;
 import gov.cdc.casenotificationservice.repository.msg.NetssTransportQOutRepository;
 import gov.cdc.casenotificationservice.repository.msg.model.NetssTransportQOut;
-import gov.cdc.casenotificationservice.repository.odse.CNTraportqOutRepository;
+import gov.cdc.casenotificationservice.repository.odse.CNTransportqOutRepository;
 import gov.cdc.casenotificationservice.repository.odse.model.CNTransportqOut;
 import gov.cdc.casenotificationservice.service.std.interfaces.IStdMapperService;
 import java.io.IOException;
@@ -22,18 +22,18 @@ import org.mockito.ArgumentCaptor;
 
 class XmlServiceTest {
 
-  private CNTraportqOutRepository cnTraportqOutRepository;
+  private CNTransportqOutRepository cnTransportqOutRepository;
   private IStdMapperService stdMapperService;
   private NetssTransportQOutRepository netssTransportQOutRepository;
   private XmlService xmlService;
 
   @BeforeEach
   void setUp() {
-    cnTraportqOutRepository = mock(CNTraportqOutRepository.class);
+    cnTransportqOutRepository = mock(CNTransportqOutRepository.class);
     stdMapperService = mock(IStdMapperService.class);
     netssTransportQOutRepository = mock(NetssTransportQOutRepository.class);
     xmlService =
-        new XmlService(cnTraportqOutRepository, stdMapperService, netssTransportQOutRepository);
+        new XmlService(cnTransportqOutRepository, stdMapperService, netssTransportQOutRepository);
   }
 
   @Test
@@ -46,7 +46,7 @@ class XmlServiceTest {
     cnTransportqOut.setMessagePayload(readFileFromResources("std_test.txt"));
     cnTransportqOut.setRecordStatusCd("A");
 
-    when(cnTraportqOutRepository.findTopByRecordUid(123L)).thenReturn(cnTransportqOut);
+    when(cnTransportqOutRepository.findTopByRecordUid(123L)).thenReturn(cnTransportqOut);
 
     Netss mappedNetss = new Netss();
     mappedNetss.setCaseReportId("CASE123");
@@ -79,7 +79,7 @@ class XmlServiceTest {
     cnTransportqOut.setMessagePayload(readFileFromResources("std_test.txt"));
     cnTransportqOut.setRecordStatusCd("X");
 
-    when(cnTraportqOutRepository.findTopByRecordUid(456L)).thenReturn(cnTransportqOut);
+    when(cnTransportqOutRepository.findTopByRecordUid(456L)).thenReturn(cnTransportqOut);
 
     Netss mappedNetss = new Netss();
     mappedNetss.setCaseReportId("CASE456");

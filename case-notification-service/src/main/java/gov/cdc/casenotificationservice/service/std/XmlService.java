@@ -11,7 +11,7 @@ import gov.cdc.casenotificationservice.model.NetssPersistModel;
 import gov.cdc.casenotificationservice.model.generated.jaxb.NBSNNDIntermediaryMessage;
 import gov.cdc.casenotificationservice.repository.msg.NetssTransportQOutRepository;
 import gov.cdc.casenotificationservice.repository.msg.model.NetssTransportQOut;
-import gov.cdc.casenotificationservice.repository.odse.CNTraportqOutRepository;
+import gov.cdc.casenotificationservice.repository.odse.CNTransportqOutRepository;
 import gov.cdc.casenotificationservice.service.std.interfaces.IStdMapperService;
 import gov.cdc.casenotificationservice.service.std.interfaces.IXmlService;
 import jakarta.xml.bind.JAXBContext;
@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class XmlService implements IXmlService {
 
-  private final CNTraportqOutRepository cnTraportqOutRepository;
+  private final CNTransportqOutRepository cnTransportqOutRepository;
   private final IStdMapperService stdMapperService;
   private final NetssTransportQOutRepository netssTransportQOutRepository;
 
@@ -31,10 +31,10 @@ public class XmlService implements IXmlService {
   private String tz = "UTC";
 
   public XmlService(
-      CNTraportqOutRepository cnTraportqOutRepository,
+      CNTransportqOutRepository cnTransportqOutRepository,
       IStdMapperService stdMapperService,
       NetssTransportQOutRepository netssTransportQOutRepository) {
-    this.cnTraportqOutRepository = cnTraportqOutRepository;
+    this.cnTransportqOutRepository = cnTransportqOutRepository;
     this.stdMapperService = stdMapperService;
     this.netssTransportQOutRepository = netssTransportQOutRepository;
   }
@@ -43,7 +43,7 @@ public class XmlService implements IXmlService {
   public void mappingXmlStringToObject(MessageAfterStdChecker messageAfterStdChecker)
       throws StdProcessorServiceException, NonRetryableException {
     var cnTransportqOut =
-        cnTraportqOutRepository.findTopByRecordUid(messageAfterStdChecker.getCnTransportqOutUid());
+        cnTransportqOutRepository.findTopByRecordUid(messageAfterStdChecker.getCnTransportqOutUid());
     String netssSummary;
     NetssPersistModel netssPersistModel = new NetssPersistModel();
 

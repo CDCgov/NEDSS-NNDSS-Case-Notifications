@@ -2,6 +2,8 @@
 
 This document outlines how the CDC Case Notification system operates end-to-end.
 
+## TODO: update README for service consolidation
+
 ---
 
 ## Input

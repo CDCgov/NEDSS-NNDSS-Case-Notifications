@@ -55,7 +55,8 @@ public class NonStdService implements INonStdService {
     PHINMSProperties phinmsProperties = new PHINMSProperties();
     CaseNotificationConfig stdConfig = caseNotificationConfigRepository.findAppliedNonStdConfig();
     var cnTransport =
-        cnTransportqOutRepository.findTopByRecordUid(messageAfterStdChecker.getCnTransportqOutUid());
+        cnTransportqOutRepository.findTopByRecordUid(
+            messageAfterStdChecker.getCnTransportqOutUid());
 
     try {
       var payload =

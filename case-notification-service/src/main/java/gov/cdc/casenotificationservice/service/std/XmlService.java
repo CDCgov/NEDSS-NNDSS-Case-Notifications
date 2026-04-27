@@ -43,7 +43,8 @@ public class XmlService implements IXmlService {
   public void mappingXmlStringToObject(MessageAfterStdChecker messageAfterStdChecker)
       throws StdProcessorServiceException, NonRetryableException {
     var cnTransportqOut =
-        cnTransportqOutRepository.findTopByRecordUid(messageAfterStdChecker.getCnTransportqOutUid());
+        cnTransportqOutRepository.findTopByRecordUid(
+            messageAfterStdChecker.getCnTransportqOutUid());
     String netssSummary;
     NetssPersistModel netssPersistModel = new NetssPersistModel();
 

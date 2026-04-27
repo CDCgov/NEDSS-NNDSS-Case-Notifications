@@ -30,3 +30,6 @@ build
 .env
 
 .tool-versions
+
+# Spring local application config
+application-local.yaml

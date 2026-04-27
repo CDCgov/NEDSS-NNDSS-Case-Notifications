@@ -45,7 +45,7 @@ public class ConfigurationService implements IConfigurationService {
   }
 
   public CaseNotificationConfig getAppliedCaseNotificationConfig() {
-    return caseNotificationConfigRepository.findNonStdConfig();
+    return caseNotificationConfigRepository.findAppliedNonStdConfig();
   }
 
   public CaseNotificationConfig saveConfig(CaseNotificationConfigDto configDto) {

@@ -31,6 +31,9 @@ public class KafkaConsumerConfig {
   @Value("${spring.kafka.group-id.non-std-group-id}")
   private String nonStdGroupId;
 
+  @Value("${spring.kafka.group-id.cn-transportq-out-group-id}")
+  private String cnTransportQOutGroupId;
+
   private Map<String, Object> baseConsumerConfigs(String groupId) {
     Map<String, Object> config = new HashMap<>();
     config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
@@ -79,5 +82,11 @@ public class KafkaConsumerConfig {
   public ConcurrentKafkaListenerContainerFactory<String, String>
       kafkaListenerContainerFactoryConsumerForNonStd() {
     return createContainerFactory(nonStdGroupId);
+  }
+
+  @Bean
+  public ConcurrentKafkaListenerContainerFactory<String, String>
+      kafkaListenerContainerFactoryDebeziumConsumer() {
+    return createContainerFactory(cnTransportQOutGroupId);
   }
 }

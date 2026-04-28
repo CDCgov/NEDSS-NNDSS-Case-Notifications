@@ -1,6 +1,7 @@
 package gov.cdc.casenotificationservice.kafka.consumer;
 
 import com.google.gson.Gson;
+import gov.cdc.casenotificationservice.exception.NonRetryableException;
 import gov.cdc.casenotificationservice.kafka.producer.CNTransportProducer;
 import gov.cdc.casenotificationservice.model.CnTransportqOutMessage;
 import gov.cdc.casenotificationservice.model.CnTransportqOutValue;
@@ -13,6 +14,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.annotation.RetryableTopic;
+import org.springframework.kafka.retrytopic.DltStrategy;
+import org.springframework.kafka.retrytopic.TopicSuffixingStrategy;
+import org.springframework.retry.annotation.Backoff;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -35,6 +40,17 @@ public class CNTransportQOutConsumer {
     this.caseNotificationConfigRepository = caseNotificationConfigRepository;
   }
 
+  @RetryableTopic(
+      attempts = "${spring.kafka.retry.max-retry}",
+      autoCreateTopics = "false",
+      dltStrategy = DltStrategy.FAIL_ON_ERROR,
+      retryTopicSuffix = "${spring.kafka.retry.suffix}",
+      dltTopicSuffix = "${spring.kafka.dlt.suffix}",
+      // retry topic name, such as topic-retry-1, topic-retry-2, etc
+      topicSuffixingStrategy = TopicSuffixingStrategy.SUFFIX_WITH_INDEX_VALUE,
+      // time to wait before attempting to retry
+      backoff = @Backoff(delay = 1000, multiplier = 2.0),
+      exclude = {NonRetryableException.class})
   @KafkaListener(
       topics = "${spring.kafka.topic.cn-transportq-out-topic}",
       containerFactory = "kafkaListenerContainerFactoryDebeziumConsumer")

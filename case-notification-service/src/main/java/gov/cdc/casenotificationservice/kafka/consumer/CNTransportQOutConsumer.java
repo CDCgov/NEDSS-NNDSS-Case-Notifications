@@ -1,14 +1,16 @@
 package gov.cdc.casenotificationservice.kafka.consumer;
 
 import com.google.gson.Gson;
-import gov.cdc.casenotificationservice.exception.NonRetryableException;
-import gov.cdc.casenotificationservice.kafka.producer.CNTransportProducer;
+import gov.cdc.casenotificationservice.exception.*;
 import gov.cdc.casenotificationservice.model.CnTransportqOutMessage;
 import gov.cdc.casenotificationservice.model.CnTransportqOutValue;
 import gov.cdc.casenotificationservice.model.MessageAfterStdChecker;
 import gov.cdc.casenotificationservice.repository.msg.CaseNotificationConfigRepository;
 import gov.cdc.casenotificationservice.service.cntransportqout.StdCheckerTransformerService;
 import gov.cdc.casenotificationservice.service.cntransportqout.UpdateService;
+import gov.cdc.casenotificationservice.service.common.ConfigurationService;
+import gov.cdc.casenotificationservice.service.nonstd.NonStdService;
+import gov.cdc.casenotificationservice.service.std.XmlService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,15 +31,29 @@ public class CNTransportQOutConsumer {
 
   @Autowired private StdCheckerTransformerService transformerService;
 
-  @Autowired private CNTransportProducer producerService;
-
   @Autowired private UpdateService updateService;
+
+  @Autowired private ConfigurationService configurationService;
+
+  @Autowired private XmlService xmlService;
+
+  @Autowired private NonStdService nonStdService;
 
   private final CaseNotificationConfigRepository caseNotificationConfigRepository;
 
   public CNTransportQOutConsumer(
-      CaseNotificationConfigRepository caseNotificationConfigRepository) {
+      StdCheckerTransformerService transformerService,
+      UpdateService updateService,
+      CaseNotificationConfigRepository caseNotificationConfigRepository,
+      ConfigurationService configurationService,
+      XmlService xmlService,
+      NonStdService nonStdService) {
+    this.transformerService = transformerService;
+    this.updateService = updateService;
     this.caseNotificationConfigRepository = caseNotificationConfigRepository;
+    this.configurationService = configurationService;
+    this.xmlService = xmlService;
+    this.nonStdService = nonStdService;
   }
 
   @RetryableTopic(
@@ -69,8 +85,8 @@ public class CNTransportQOutConsumer {
           if (transformed != null) {
             logger.info("Transformed message ready: {}", transformed);
 
-            // Send to downstream Kafka
-            producerService.sendMessage(transformed);
+            // Process event found in message
+            processEvent(transformed);
 
             // Update database record_status_cd
             if (transformed.isStdMessageDetected()
@@ -93,5 +109,32 @@ public class CNTransportQOutConsumer {
     } catch (Exception e) {
       logger.error("ConsumerService.handleMessage: {}", e.getMessage(), e);
     }
+  }
+
+  /**
+   * Call the requisite service for the given message. Service call is based upon whether message is
+   * STD or NON-STD.
+   */
+  void processEvent(MessageAfterStdChecker messageAfterStdChecker)
+      throws IgnorableException,
+          NonStdProcessorServiceException,
+          NonStdBatchProcessorServiceException,
+          NonRetryableException,
+          StdProcessorServiceException {
+    String messageType = messageAfterStdChecker.isStdMessageDetected() ? "std" : "non-std";
+    logger.info("Received {} message", messageType);
+    if (!configurationService.checkConfigurationAvailable()) {
+      logger.warn("configuration not available, unable to process {} message", messageType);
+      return;
+    }
+
+    if (messageAfterStdChecker.isStdMessageDetected()) {
+      xmlService.mappingXmlStringToObject(messageAfterStdChecker);
+    } else {
+      nonStdService.nonStdProcessor(
+          messageAfterStdChecker, configurationService.checkHl7ValidationApplied());
+    }
+
+    logger.info("Completed {} message", messageType);
   }
 }

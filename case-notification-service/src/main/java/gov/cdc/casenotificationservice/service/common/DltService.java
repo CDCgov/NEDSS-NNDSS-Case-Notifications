@@ -9,7 +9,7 @@ import gov.cdc.casenotificationservice.model.ApiDltResponseModel;
 import gov.cdc.casenotificationservice.model.MessageAfterStdChecker;
 import gov.cdc.casenotificationservice.repository.msg.CaseNotificationDltRepository;
 import gov.cdc.casenotificationservice.repository.msg.model.CaseNotificationDlt;
-import gov.cdc.casenotificationservice.repository.odse.CNTransportqOutRepository;
+import gov.cdc.casenotificationservice.repository.odse.CNTransportQOutRepository;
 import gov.cdc.casenotificationservice.service.common.interfaces.IDltService;
 import java.sql.Timestamp;
 import java.util.UUID;
@@ -31,12 +31,12 @@ public class DltService implements IDltService {
   private String stdTopic;
 
   private final CaseNotificationDltRepository caseNotificationDltRepository;
-  private final CNTransportqOutRepository cnTransportqOutRepository;
+  private final CNTransportQOutRepository cnTransportqOutRepository;
   private final CaseNotificationProducer caseNotificationProducer;
 
   public DltService(
       CaseNotificationDltRepository caseNotificationDltRepository,
-      CNTransportqOutRepository cnTransportqOutRepository,
+      CNTransportQOutRepository cnTransportqOutRepository,
       CaseNotificationProducer caseNotificationProducer) {
     this.caseNotificationDltRepository = caseNotificationDltRepository;
     this.cnTransportqOutRepository = cnTransportqOutRepository;

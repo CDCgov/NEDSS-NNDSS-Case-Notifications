@@ -8,7 +8,7 @@ import gov.cdc.casenotificationservice.repository.msg.CaseNotificationConfigRepo
 import gov.cdc.casenotificationservice.repository.msg.TransportQOutRepository;
 import gov.cdc.casenotificationservice.repository.msg.model.CaseNotificationConfig;
 import gov.cdc.casenotificationservice.repository.msg.model.TransportQOut;
-import gov.cdc.casenotificationservice.repository.odse.CNTransportqOutRepository;
+import gov.cdc.casenotificationservice.repository.odse.CNTransportQOutRepository;
 import gov.cdc.casenotificationservice.repository.odse.model.CNTransportqOut;
 import gov.cdc.casenotificationservice.service.nonstd.interfaces.INonStdBatchService;
 import gov.cdc.casenotificationservice.service.nonstd.interfaces.IPHINMSService;
@@ -29,7 +29,7 @@ class NonStdServiceTest {
 
   @Mock private TransportQOutRepository transportQOutRepository;
 
-  @Mock private CNTransportqOutRepository cnTransportqOutRepository;
+  @Mock private CNTransportQOutRepository cnTransportqOutRepository;
 
   @Mock private CaseNotificationConfigRepository caseNotificationConfigRepository;
 

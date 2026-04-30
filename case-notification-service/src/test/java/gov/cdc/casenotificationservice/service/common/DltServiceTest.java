@@ -6,7 +6,7 @@ import gov.cdc.casenotificationservice.exception.DltServiceException;
 import gov.cdc.casenotificationservice.kafka.producer.CaseNotificationProducer;
 import gov.cdc.casenotificationservice.repository.msg.CaseNotificationDltRepository;
 import gov.cdc.casenotificationservice.repository.msg.model.CaseNotificationDlt;
-import gov.cdc.casenotificationservice.repository.odse.CNTransportqOutRepository;
+import gov.cdc.casenotificationservice.repository.odse.CNTransportQOutRepository;
 import gov.cdc.casenotificationservice.repository.odse.model.CNTransportqOut;
 import java.sql.Timestamp;
 import java.util.List;
@@ -25,7 +25,7 @@ public class DltServiceTest {
 
   @Mock private CaseNotificationDltRepository dltRepository;
 
-  @Mock private CNTransportqOutRepository cnTransportqOutRepository;
+  @Mock private CNTransportQOutRepository cnTransportqOutRepository;
 
   @Mock private CaseNotificationProducer producer;
 

@@ -11,7 +11,7 @@ import gov.cdc.casenotificationservice.model.NetssPersistModel;
 import gov.cdc.casenotificationservice.model.generated.jaxb.NBSNNDIntermediaryMessage;
 import gov.cdc.casenotificationservice.repository.msg.NetssTransportQOutRepository;
 import gov.cdc.casenotificationservice.repository.msg.model.NetssTransportQOut;
-import gov.cdc.casenotificationservice.repository.odse.CNTransportqOutRepository;
+import gov.cdc.casenotificationservice.repository.odse.CNTransportQOutRepository;
 import gov.cdc.casenotificationservice.service.std.interfaces.IStdMapperService;
 import gov.cdc.casenotificationservice.service.std.interfaces.IXmlService;
 import jakarta.xml.bind.JAXBContext;
@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class XmlService implements IXmlService {
 
-  private final CNTransportqOutRepository cnTransportqOutRepository;
+  private final CNTransportQOutRepository cnTransportqOutRepository;
   private final IStdMapperService stdMapperService;
   private final NetssTransportQOutRepository netssTransportQOutRepository;
 
@@ -31,7 +31,7 @@ public class XmlService implements IXmlService {
   private String tz = "UTC";
 
   public XmlService(
-      CNTransportqOutRepository cnTransportqOutRepository,
+      CNTransportQOutRepository cnTransportqOutRepository,
       IStdMapperService stdMapperService,
       NetssTransportQOutRepository netssTransportQOutRepository) {
     this.cnTransportqOutRepository = cnTransportqOutRepository;

@@ -8,20 +8,20 @@ import gov.cdc.casenotificationservice.model.view_model.TransportOutVM;
 import gov.cdc.casenotificationservice.repository.msg.CaseNotificationDltRepository;
 import gov.cdc.casenotificationservice.repository.msg.NetssTransportQOutRepository;
 import gov.cdc.casenotificationservice.repository.msg.TransportQOutRepository;
-import gov.cdc.casenotificationservice.repository.odse.CNTransportqOutRepository;
+import gov.cdc.casenotificationservice.repository.odse.CNTransportQOutRepository;
 import gov.cdc.casenotificationservice.repository.odse.model.CNTransportqOut;
 import gov.cdc.casenotificationservice.service.common.interfaces.IStatusService;
 import org.springframework.stereotype.Service;
 
 @Service
 public class StatusService implements IStatusService {
-  private final CNTransportqOutRepository cnTransportqOutRepository;
+  private final CNTransportQOutRepository cnTransportqOutRepository;
   private final TransportQOutRepository transportQOutRepository;
   private final NetssTransportQOutRepository netssTransportQOutRepository;
   private final CaseNotificationDltRepository caseNotificationDltRepository;
 
   public StatusService(
-      CNTransportqOutRepository cnTransportqOutRepository,
+      CNTransportQOutRepository cnTransportqOutRepository,
       TransportQOutRepository transportQOutRepository,
       NetssTransportQOutRepository netssTransportQOutRepository,
       CaseNotificationDltRepository caseNotificationDltRepository) {

@@ -8,7 +8,7 @@ import gov.cdc.casenotificationservice.model.MessageAfterStdChecker;
 import gov.cdc.casenotificationservice.model.Netss;
 import gov.cdc.casenotificationservice.repository.msg.NetssTransportQOutRepository;
 import gov.cdc.casenotificationservice.repository.msg.model.NetssTransportQOut;
-import gov.cdc.casenotificationservice.repository.odse.CNTransportqOutRepository;
+import gov.cdc.casenotificationservice.repository.odse.CNTransportQOutRepository;
 import gov.cdc.casenotificationservice.repository.odse.model.CNTransportqOut;
 import gov.cdc.casenotificationservice.service.std.interfaces.IStdMapperService;
 import java.io.IOException;
@@ -22,14 +22,14 @@ import org.mockito.ArgumentCaptor;
 
 class XmlServiceTest {
 
-  private CNTransportqOutRepository cnTransportqOutRepository;
+  private CNTransportQOutRepository cnTransportqOutRepository;
   private IStdMapperService stdMapperService;
   private NetssTransportQOutRepository netssTransportQOutRepository;
   private XmlService xmlService;
 
   @BeforeEach
   void setUp() {
-    cnTransportqOutRepository = mock(CNTransportqOutRepository.class);
+    cnTransportqOutRepository = mock(CNTransportQOutRepository.class);
     stdMapperService = mock(IStdMapperService.class);
     netssTransportQOutRepository = mock(NetssTransportQOutRepository.class);
     xmlService =

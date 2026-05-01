@@ -59,18 +59,18 @@ public class DltService implements IDltService {
     var gson = new Gson();
     CnTransportqOutMessage data = gson.fromJson(message, CnTransportqOutMessage.class);
 
-    // ensure proper data shape
+    // ensure proper data shape for message
     if (data == null || data.getPayload() == null || data.getPayload().getAfter() == null) {
       log.error("Invalid data found in message: {}", message);
       throw new RuntimeException("Invalid data found in message: " + message);
     }
 
-    // get the existing entry in odse.cn_transportq_out table
+    // get the existing entry in `odse.cn_transportq_out` table
     CNTransportqOut cnTransportqOut =
         cnTransportqOutRepository.findTopByRecordUid(
             data.getPayload().getAfter().getCn_transportq_out_uid());
 
-    // create a DLT entry
+    // create a CaseNotificationDlt entry
     CaseNotificationDlt cnDlt = new CaseNotificationDlt();
     cnDlt.setCnTranportqOutUid(data.getPayload().getAfter().getCn_transportq_out_uid());
     cnDlt.setOriginalPayload(
@@ -80,7 +80,7 @@ public class DltService implements IDltService {
     cnDlt.setCreatedOn(getCurrentTimeStamp(tz));
     cnDlt.setUpdatedOn(getCurrentTimeStamp(tz));
 
-    // save DLT entry and update status on the odse.cn_transportq_out entry
+    // save CaseNotificationDlt entry and update status on the odse.cn_transportq_out entry
     caseNotificationDltRepository.save(cnDlt);
     cnTransportqOutRepository.updateStatus(
         data.getPayload().getAfter().getCn_transportq_out_uid(), "PROCESSING_ERROR");

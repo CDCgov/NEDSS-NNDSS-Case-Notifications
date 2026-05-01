@@ -119,6 +119,9 @@ public class CNTransportQOutConsumer {
     }
   }
 
+  /**
+   * Process DLT messages through the {@link DltService}.
+   */
   @DltHandler
   public void handleDlt(
       String message,

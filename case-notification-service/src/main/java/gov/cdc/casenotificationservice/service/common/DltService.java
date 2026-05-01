@@ -6,13 +6,15 @@ import com.google.gson.Gson;
 import gov.cdc.casenotificationservice.exception.DltServiceException;
 import gov.cdc.casenotificationservice.kafka.producer.CaseNotificationProducer;
 import gov.cdc.casenotificationservice.model.ApiDltResponseModel;
-import gov.cdc.casenotificationservice.model.MessageAfterStdChecker;
+import gov.cdc.casenotificationservice.model.CnTransportqOutMessage;
 import gov.cdc.casenotificationservice.repository.msg.CaseNotificationDltRepository;
 import gov.cdc.casenotificationservice.repository.msg.model.CaseNotificationDlt;
 import gov.cdc.casenotificationservice.repository.odse.CNTransportQOutRepository;
+import gov.cdc.casenotificationservice.repository.odse.model.CNTransportqOut;
 import gov.cdc.casenotificationservice.service.common.interfaces.IDltService;
 import java.sql.Timestamp;
 import java.util.UUID;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,6 +22,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 public class DltService implements IDltService {
   @Value("${service.timezone}")
   private String tz = "UTC";
@@ -48,53 +51,39 @@ public class DltService implements IDltService {
     return res.orElse(null);
   }
 
+  /**
+   * Save given message to the `NBS_MSGOUTE.case_notification_dlt` table and update its status in
+   * `NBS_ODSE.CN_transportq_out`.
+   */
   public void creatingDlt(String message, String topic, String stacktrace, String origin) {
     var gson = new Gson();
-    String status;
-    MessageAfterStdChecker data = null;
-    try {
-      if (message == null || message.trim().isEmpty()) {
-        status = "INVALID_ERR";
-      } else {
-        data = gson.fromJson(message, MessageAfterStdChecker.class);
-        if (data == null || data.getCnTransportqOutUid() == null) {
-          status = "INVALID_ERR";
-        } else if (Boolean.TRUE.equals(data.isStdMessageDetected())) {
-          status = "STD_ERR";
-        } else if (Boolean.FALSE.equals(data.isStdMessageDetected())) {
-          status = "NONSTD_ERR";
-        } else {
-          status = "UNKNOWN_ERR";
-        }
-      }
-    } catch (Exception e) {
-      status = "INVALID_ERR";
+    CnTransportqOutMessage data = gson.fromJson(message, CnTransportqOutMessage.class);
+
+    // ensure proper data shape
+    if (data == null || data.getPayload() == null || data.getPayload().getAfter() == null) {
+      log.error("Invalid data found in message: {}", message);
+      throw new RuntimeException("Invalid data found in message: " + message);
     }
 
-    var cnTransportqOut =
-        (data != null && data.getCnTransportqOutUid() != null)
-            ? cnTransportqOutRepository.findTopByRecordUid(data.getCnTransportqOutUid())
-            : null;
+    // get the existing entry in odse.cn_transportq_out table
+    CNTransportqOut cnTransportqOut =
+        cnTransportqOutRepository.findTopByRecordUid(
+            data.getPayload().getAfter().getCn_transportq_out_uid());
 
-    CaseNotificationDlt caseNotificationDlt = new CaseNotificationDlt();
-    if (data != null) {
-      caseNotificationDlt.setCnTranportqOutUid(data.getCnTransportqOutUid());
-    }
-    if (cnTransportqOut != null) {
-      caseNotificationDlt.setOriginalPayload(cnTransportqOut.getMessagePayload());
-    } else {
-      caseNotificationDlt.setOriginalPayload(message);
-    }
-    caseNotificationDlt.setSource(origin);
-    caseNotificationDlt.setErrorStackTrace(stacktrace);
-    caseNotificationDlt.setCreatedOn(getCurrentTimeStamp(tz));
-    caseNotificationDlt.setUpdatedOn(getCurrentTimeStamp(tz));
+    // create a DLT entry
+    CaseNotificationDlt cnDlt = new CaseNotificationDlt();
+    cnDlt.setCnTranportqOutUid(data.getPayload().getAfter().getCn_transportq_out_uid());
+    cnDlt.setOriginalPayload(
+        cnTransportqOut == null ? message : cnTransportqOut.getMessagePayload());
+    cnDlt.setSource(origin);
+    cnDlt.setErrorStackTrace(stacktrace);
+    cnDlt.setCreatedOn(getCurrentTimeStamp(tz));
+    cnDlt.setUpdatedOn(getCurrentTimeStamp(tz));
 
-    caseNotificationDltRepository.save(caseNotificationDlt);
-
-    if (data != null && data.getCnTransportqOutUid() != null) {
-      cnTransportqOutRepository.updateStatus(data.getCnTransportqOutUid(), status);
-    }
+    // save DLT entry and update status on the odse.cn_transportq_out entry
+    caseNotificationDltRepository.save(cnDlt);
+    cnTransportqOutRepository.updateStatus(
+        data.getPayload().getAfter().getCn_transportq_out_uid(), "PROCESSING_ERROR");
   }
 
   public Page<CaseNotificationDlt> getDltsBetweenWithPagination(

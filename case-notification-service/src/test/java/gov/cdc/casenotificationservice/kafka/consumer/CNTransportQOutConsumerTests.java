@@ -46,7 +46,12 @@ public class CNTransportQOutConsumerTests {
   }
 
   @Test
-  public void handleMessage_stdMessage() {
+  public void handleMessage_stdMessage()
+      throws IgnorableException,
+          NonRetryableException,
+          NonStdProcessorServiceException,
+          StdProcessorServiceException,
+          NonStdBatchProcessorServiceException {
     CaseNotificationConfig config = new CaseNotificationConfig();
     config.setConfigApplied(true);
     when(caseNotificationConfigRepositoryMock.findNonStdConfig()).thenReturn(config);
@@ -69,7 +74,12 @@ public class CNTransportQOutConsumerTests {
   }
 
   @Test
-  public void handleMessage_nonStdMessage() {
+  public void handleMessage_nonStdMessage()
+      throws IgnorableException,
+          NonRetryableException,
+          NonStdProcessorServiceException,
+          StdProcessorServiceException,
+          NonStdBatchProcessorServiceException {
     CaseNotificationConfig config = new CaseNotificationConfig();
     config.setConfigApplied(true);
     when(caseNotificationConfigRepositoryMock.findNonStdConfig()).thenReturn(config);

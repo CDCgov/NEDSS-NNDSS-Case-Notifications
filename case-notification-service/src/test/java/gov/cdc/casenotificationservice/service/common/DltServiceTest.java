@@ -1,9 +1,15 @@
 package gov.cdc.casenotificationservice.service.common;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
+import com.google.gson.Gson;
 import gov.cdc.casenotificationservice.exception.DltServiceException;
 import gov.cdc.casenotificationservice.kafka.producer.CaseNotificationProducer;
+import gov.cdc.casenotificationservice.model.CnTransportqOutMessage;
+import gov.cdc.casenotificationservice.model.CnTransportqOutValue;
+import gov.cdc.casenotificationservice.model.EnvelopePayload;
 import gov.cdc.casenotificationservice.repository.msg.CaseNotificationDltRepository;
 import gov.cdc.casenotificationservice.repository.msg.model.CaseNotificationDlt;
 import gov.cdc.casenotificationservice.repository.odse.CNTransportQOutRepository;
@@ -12,6 +18,7 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -31,22 +38,71 @@ public class DltServiceTest {
 
   @InjectMocks private DltService dltService;
 
+  private AutoCloseable mockAutoClosable;
+
   private final String jsonPayload = "{\"cnTransportqOutUid\":12345}";
   private final String uuid = UUID.randomUUID().toString();
 
   @BeforeEach
   public void setUp() {
-    MockitoAnnotations.openMocks(this);
+    mockAutoClosable = MockitoAnnotations.openMocks(this);
+  }
+
+  @AfterEach
+  public void afterEach() throws Exception {
+    mockAutoClosable.close();
+  }
+
+  @Test
+  public void creatingDlt_badInput() {
+    // throws with null
+    assertThrows(
+        RuntimeException.class,
+        () -> dltService.creatingDlt(null, "topic", "stacktrace", "origin"));
+
+    Gson gson = new Gson();
+    CnTransportqOutMessage cnTransportqOutMessage = new CnTransportqOutMessage();
+
+    // throws with null payload
+    assertThrows(
+        RuntimeException.class,
+        () ->
+            dltService.creatingDlt(
+                gson.toJson(cnTransportqOutMessage), "topic", "stacktrace", "origin"));
+
+    EnvelopePayload envelopePayload = new EnvelopePayload();
+    cnTransportqOutMessage.setPayload(envelopePayload);
+
+    // throws with incomplete payload
+    assertThrows(
+        RuntimeException.class,
+        () ->
+            dltService.creatingDlt(
+                gson.toJson(cnTransportqOutMessage), "topic", "stacktrace", "origin"));
+
+    envelopePayload.setAfter(new CnTransportqOutValue());
+
+    // does not throw with complete payload
+    assertDoesNotThrow(
+        () ->
+            dltService.creatingDlt(
+                gson.toJson(cnTransportqOutMessage), "topic", "stacktrace", "origin"));
   }
 
   @Test
   public void testCreatingDlt() {
+    CnTransportqOutMessage cnTransportqOutMessage = new CnTransportqOutMessage();
+    EnvelopePayload envelopePayload = new EnvelopePayload();
+    envelopePayload.setAfter(new CnTransportqOutValue());
+    cnTransportqOutMessage.setPayload(envelopePayload);
+    String json = new Gson().toJson(cnTransportqOutMessage);
+
     CNTransportqOut mockTransport = new CNTransportqOut();
     mockTransport.setMessagePayload("mock-payload");
 
     when(cnTransportqOutRepository.findTopByRecordUid(12345L)).thenReturn(mockTransport);
 
-    dltService.creatingDlt(jsonPayload, "non-std-topic", "stacktrace", "root");
+    dltService.creatingDlt(json, "non-std-topic", "stacktrace", "root");
 
     verify(dltRepository, times(1)).save(any(CaseNotificationDlt.class));
   }

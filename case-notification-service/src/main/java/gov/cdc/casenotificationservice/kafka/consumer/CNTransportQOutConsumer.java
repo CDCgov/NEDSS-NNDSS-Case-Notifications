@@ -7,12 +7,14 @@ import gov.cdc.casenotificationservice.model.CnTransportqOutValue;
 import gov.cdc.casenotificationservice.model.MessageAfterStdChecker;
 import gov.cdc.casenotificationservice.repository.msg.CaseNotificationConfigRepository;
 import gov.cdc.casenotificationservice.repository.msg.model.CaseNotificationConfig;
+import gov.cdc.casenotificationservice.repository.msg.model.CaseNotificationDlt;
 import gov.cdc.casenotificationservice.service.cntransportqout.StdCheckerTransformerService;
 import gov.cdc.casenotificationservice.service.cntransportqout.UpdateService;
 import gov.cdc.casenotificationservice.service.common.ConfigurationService;
 import gov.cdc.casenotificationservice.service.common.DltService;
 import gov.cdc.casenotificationservice.service.nonstd.NonStdService;
 import gov.cdc.casenotificationservice.service.std.XmlService;
+import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class CNTransportQOutConsumer {
   private static final Logger logger = LoggerFactory.getLogger(CNTransportQOutConsumer.class);
+
+  // n.b. naive UUID regex based on MSSQL's output for `newid()` (which is the default `id` value
+  // for the `case_notification_dlt` table)
+  private static final Pattern uuidRegex =
+      Pattern.compile("[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}");
 
   @Value("${spring.kafka.topic.cn-transportq-out-topic}")
   private String transportOutQTopic;
@@ -79,19 +86,27 @@ public class CNTransportQOutConsumer {
   @KafkaListener(
       topics = "${spring.kafka.topic.cn-transportq-out-topic}",
       containerFactory = "kafkaListenerContainerFactoryDebeziumConsumer")
-  public void handleMessage(String messages)
+  public void handleMessage(String message)
       throws IgnorableException,
           NonRetryableException,
           NonStdProcessorServiceException,
           StdProcessorServiceException,
           NonStdBatchProcessorServiceException {
+    // messages sent for re-processing will be a UUID used for lookup and not JSON
+    if (uuidRegex.matcher(message).matches()) {
+      handleReprocessedMessage(message);
+      return;
+    }
+
     CaseNotificationConfig config = caseNotificationConfigRepository.findNonStdConfig();
     if (config != null && config.getConfigApplied()) {
-      logger.info("Raw message: {}", messages);
+      logger.info("Raw message: {}", message);
       Gson gson = new Gson();
-      CnTransportqOutMessage message = gson.fromJson(messages, CnTransportqOutMessage.class);
 
-      CnTransportqOutValue after = message.getPayload().getAfter();
+      CnTransportqOutMessage cnTransportqOutMessage =
+          gson.fromJson(message, CnTransportqOutMessage.class);
+      CnTransportqOutValue after = cnTransportqOutMessage.getPayload().getAfter();
+
       if (after != null) {
         MessageAfterStdChecker transformed = transformerService.transform(after);
 
@@ -120,8 +135,25 @@ public class CNTransportQOutConsumer {
   }
 
   /**
-   * Process DLT messages through the {@link DltService}.
+   * Handle when a message comes in that is only a UUID and not a JSON object, as this implies it is
+   * a request coming from the {@link DltService}.
    */
+  public void handleReprocessedMessage(String uuid)
+      throws IgnorableException,
+          NonRetryableException,
+          NonStdProcessorServiceException,
+          StdProcessorServiceException,
+          NonStdBatchProcessorServiceException {
+    CaseNotificationDlt dlt = dltService.getDlt(uuid);
+    MessageAfterStdChecker messageAfterStdChecker = new MessageAfterStdChecker();
+
+    messageAfterStdChecker.setCnTransportqOutUid(dlt.getCnTranportqOutUid());
+    messageAfterStdChecker.setReprocessApplied(true);
+
+    processEvent(messageAfterStdChecker);
+  }
+
+  /** Process DLT messages through the {@link DltService}. */
   @DltHandler
   public void handleDlt(
       String message,

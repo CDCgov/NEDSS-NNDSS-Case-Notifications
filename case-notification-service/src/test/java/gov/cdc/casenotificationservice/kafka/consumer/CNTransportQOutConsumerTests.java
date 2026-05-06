@@ -11,7 +11,6 @@ import gov.cdc.casenotificationservice.model.EnvelopePayload;
 import gov.cdc.casenotificationservice.model.MessageAfterStdChecker;
 import gov.cdc.casenotificationservice.repository.msg.CaseNotificationConfigRepository;
 import gov.cdc.casenotificationservice.repository.msg.model.CaseNotificationConfig;
-import gov.cdc.casenotificationservice.repository.msg.model.CaseNotificationDlt;
 import gov.cdc.casenotificationservice.service.cntransportqout.StdCheckerTransformerService;
 import gov.cdc.casenotificationservice.service.cntransportqout.UpdateService;
 import gov.cdc.casenotificationservice.service.common.ConfigurationService;
@@ -102,24 +101,6 @@ public class CNTransportQOutConsumerTests {
     consumer.handleMessage(new Gson().toJson(msg));
 
     verify(updateServiceMock).updateRecordStatus(eq(19L), eq("NON_STD_PROCESSING"));
-  }
-
-  @Test
-  public void handleMessage_dltReprocess()
-      throws IgnorableException,
-          NonRetryableException,
-          NonStdProcessorServiceException,
-          StdProcessorServiceException,
-          NonStdBatchProcessorServiceException {
-    String message = "B0812BFD-8786-4BB4-9F8D-C47FAE6E40A5";
-    CaseNotificationDlt caseNotificationDlt = new CaseNotificationDlt();
-    caseNotificationDlt.setCnTranportqOutUid(19L);
-
-    when(dltServiceMock.getDlt(eq(message))).thenReturn(caseNotificationDlt);
-
-    consumer.handleMessage(message);
-
-    verify(dltServiceMock).getDlt(eq(message));
   }
 
   @Test

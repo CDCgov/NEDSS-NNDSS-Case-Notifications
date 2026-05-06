@@ -5,16 +5,17 @@ import static gov.cdc.casenotificationservice.util.TimeStampHelper.getCurrentTim
 import com.google.gson.Gson;
 import gov.cdc.casenotificationservice.exception.DltServiceException;
 import gov.cdc.casenotificationservice.kafka.producer.CaseNotificationProducer;
-import gov.cdc.casenotificationservice.model.ApiDltResponseModel;
-import gov.cdc.casenotificationservice.model.CnTransportqOutMessage;
+import gov.cdc.casenotificationservice.model.*;
 import gov.cdc.casenotificationservice.repository.msg.CaseNotificationDltRepository;
 import gov.cdc.casenotificationservice.repository.msg.model.CaseNotificationDlt;
 import gov.cdc.casenotificationservice.repository.odse.CNTransportQOutRepository;
 import gov.cdc.casenotificationservice.repository.odse.model.CNTransportqOut;
 import gov.cdc.casenotificationservice.service.common.interfaces.IDltService;
 import java.sql.Timestamp;
+import java.util.Optional;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,11 +28,8 @@ public class DltService implements IDltService {
   @Value("${service.timezone}")
   private String tz = "UTC";
 
-  @Value("${spring.kafka.topic.non-std-topic}")
-  private String nonStdTopic;
-
-  @Value("${spring.kafka.topic.std-topic}")
-  private String stdTopic;
+  @Value("${spring.kafka.topic.cn-transportq-out-topic}")
+  private String transportOutQTopic;
 
   private final CaseNotificationDltRepository caseNotificationDltRepository;
   private final CNTransportQOutRepository cnTransportqOutRepository;
@@ -106,28 +104,42 @@ public class DltService implements IDltService {
     return apiResponse;
   }
 
+  /**
+   * Given the UUID of an entry in the DLT table, retrieve the information and send it to Kafka for
+   * re-processing. Optionally, replace the data's payload with a passed in payload String.
+   */
   public void reprocessingCaseNotification(String payload, String uuid) throws DltServiceException {
-    // push message back to queue and let it process then update this specific record to injected
-    var dltResult = caseNotificationDltRepository.findById(UUID.fromString(uuid));
+    Optional<CaseNotificationDlt> dltResult =
+        caseNotificationDltRepository.findById(UUID.fromString(uuid));
     if (dltResult.isEmpty()) {
       throw new DltServiceException("No DLT Found for Id " + uuid);
     }
-    var caseNotificationDlt = dltResult.get();
+
+    CaseNotificationDlt caseNotificationDlt = dltResult.get();
+    CNTransportqOut cnTransportqOut =
+        cnTransportqOutRepository.findTopByRecordUid(caseNotificationDlt.getCnTranportqOutUid());
+
+    // update the CNTransportqOut payload if there is a new payload
+    if (!Strings.isBlank(payload)) {
+      cnTransportqOut.setMessagePayload(payload);
+      cnTransportqOutRepository.save(cnTransportqOut);
+    }
+
+    // convert found data into the proper messaging format and send
+    CnTransportqOutMessage cnTransportqOutMessage = new CnTransportqOutMessage();
+    EnvelopePayload envelopePayload = new EnvelopePayload();
+    CnTransportqOutValue cnTransportqOutValue =
+        CnTransportqOutValue.fromCNTransportqOut(cnTransportqOut);
+    cnTransportqOutValue.setRecord_status_cd("UNPROCESSED");
+    envelopePayload.setAfter(cnTransportqOutValue);
+    cnTransportqOutMessage.setPayload(envelopePayload);
+
+    caseNotificationProducer.sendMessage(
+        new Gson().toJson(cnTransportqOutMessage), transportOutQTopic);
+
+    // mark as reprocessed in the DLT table
     caseNotificationDlt.setDltStatus("REPROCESSED");
     caseNotificationDlt.setUpdatedOn(getCurrentTimeStamp(tz));
     caseNotificationDltRepository.save(caseNotificationDlt);
-
-    var cnTransportqOut =
-        cnTransportqOutRepository.findTopByRecordUid(dltResult.get().getCnTranportqOutUid());
-    cnTransportqOut.setMessagePayload(payload); // UPDATE NEW PAYLOAD TO CN TRANSPORT
-    cnTransportqOutRepository.save(cnTransportqOut);
-
-    String topic;
-    if (caseNotificationDlt.getSource().equalsIgnoreCase(nonStdTopic)) {
-      topic = nonStdTopic;
-    } else {
-      topic = stdTopic;
-    }
-    caseNotificationProducer.sendMessage(uuid, topic);
   }
 }

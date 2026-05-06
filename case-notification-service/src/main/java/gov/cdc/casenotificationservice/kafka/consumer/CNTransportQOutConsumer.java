@@ -7,14 +7,12 @@ import gov.cdc.casenotificationservice.model.CnTransportqOutValue;
 import gov.cdc.casenotificationservice.model.MessageAfterStdChecker;
 import gov.cdc.casenotificationservice.repository.msg.CaseNotificationConfigRepository;
 import gov.cdc.casenotificationservice.repository.msg.model.CaseNotificationConfig;
-import gov.cdc.casenotificationservice.repository.msg.model.CaseNotificationDlt;
 import gov.cdc.casenotificationservice.service.cntransportqout.StdCheckerTransformerService;
 import gov.cdc.casenotificationservice.service.cntransportqout.UpdateService;
 import gov.cdc.casenotificationservice.service.common.ConfigurationService;
 import gov.cdc.casenotificationservice.service.common.DltService;
 import gov.cdc.casenotificationservice.service.nonstd.NonStdService;
 import gov.cdc.casenotificationservice.service.std.XmlService;
-import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,11 +30,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class CNTransportQOutConsumer {
   private static final Logger logger = LoggerFactory.getLogger(CNTransportQOutConsumer.class);
-
-  // n.b. naive UUID regex based on MSSQL's output for `newid()` (which is the default `id` value
-  // for the `case_notification_dlt` table)
-  private static final Pattern uuidRegex =
-      Pattern.compile("[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}");
 
   @Value("${spring.kafka.topic.cn-transportq-out-topic}")
   private String transportOutQTopic;
@@ -92,65 +85,45 @@ public class CNTransportQOutConsumer {
           NonStdProcessorServiceException,
           StdProcessorServiceException,
           NonStdBatchProcessorServiceException {
-    // messages sent for re-processing will be a UUID used for lookup and not JSON
-    if (uuidRegex.matcher(message).matches()) {
-      handleReprocessedMessage(message);
+    CaseNotificationConfig config = caseNotificationConfigRepository.findNonStdConfig();
+
+    // if config is not found or `configApplied` is false, do not process
+    if (config == null || !config.getConfigApplied()) {
+      logger.warn("config not found or is not applied");
       return;
     }
 
-    CaseNotificationConfig config = caseNotificationConfigRepository.findNonStdConfig();
-    if (config != null && config.getConfigApplied()) {
-      logger.info("Raw message: {}", message);
-      Gson gson = new Gson();
+    CnTransportqOutMessage cnTransportqOutMessage =
+        new Gson().fromJson(message, CnTransportqOutMessage.class);
+    CnTransportqOutValue after = cnTransportqOutMessage.getPayload().getAfter();
 
-      CnTransportqOutMessage cnTransportqOutMessage =
-          gson.fromJson(message, CnTransportqOutMessage.class);
-      CnTransportqOutValue after = cnTransportqOutMessage.getPayload().getAfter();
-
-      if (after != null) {
-        MessageAfterStdChecker transformed = transformerService.transform(after);
-
-        if (transformed != null) {
-          logger.info("Transformed message ready: {}", transformed);
-
-          // Process event found in message
-          processEvent(transformed);
-
-          // Update database record_status_cd
-          if (transformed.isStdMessageDetected()
-              && ("NETSS_MESSAGE_ONLY".equals(transformed.getNetssMessageOnly())
-                  || "BOTH".equals(transformed.getNetssMessageOnly()))) {
-            updateService.updateRecordStatus(transformed.getCnTransportqOutUid(), "STD_PROCESSING");
-          } else {
-            updateService.updateRecordStatus(
-                transformed.getCnTransportqOutUid(), "NON_STD_PROCESSING");
-          }
-        } else {
-          logger.info("Message skipped - did not meet the criteria");
-        }
-      } else {
-        logger.info("Change Data Capture event ignored (no 'after' state)");
-      }
+    // don't process if there isn't an "after" payload
+    if (after == null) {
+      logger.info("Change Data Capture event ignored (no 'after' state)");
+      return;
     }
-  }
 
-  /**
-   * Handle when a message comes in that is only a UUID and not a JSON object, as this implies it is
-   * a request coming from the {@link DltService}.
-   */
-  public void handleReprocessedMessage(String uuid)
-      throws IgnorableException,
-          NonRetryableException,
-          NonStdProcessorServiceException,
-          StdProcessorServiceException,
-          NonStdBatchProcessorServiceException {
-    CaseNotificationDlt dlt = dltService.getDlt(uuid);
-    MessageAfterStdChecker messageAfterStdChecker = new MessageAfterStdChecker();
+    MessageAfterStdChecker transformed = transformerService.transform(after);
 
-    messageAfterStdChecker.setCnTransportqOutUid(dlt.getCnTranportqOutUid());
-    messageAfterStdChecker.setReprocessApplied(true);
+    // don't process if the transformerService returned null
+    if (transformed == null) {
+      logger.info("Message skipped - did not meet the criteria");
+      return;
+    }
 
-    processEvent(messageAfterStdChecker);
+    logger.info("Transformed message ready: {}", transformed);
+
+    // Process event found in message
+    processEvent(transformed);
+
+    // Update database record_status_cd
+    if (transformed.isStdMessageDetected()
+        && ("NETSS_MESSAGE_ONLY".equals(transformed.getNetssMessageOnly())
+            || "BOTH".equals(transformed.getNetssMessageOnly()))) {
+      updateService.updateRecordStatus(transformed.getCnTransportqOutUid(), "STD_PROCESSING");
+    } else {
+      updateService.updateRecordStatus(transformed.getCnTransportqOutUid(), "NON_STD_PROCESSING");
+    }
   }
 
   /** Process DLT messages through the {@link DltService}. */

@@ -13,8 +13,7 @@ import gov.cdc.casenotificationservice.service.common.ConfigurationService;
 import gov.cdc.casenotificationservice.service.common.DltService;
 import gov.cdc.casenotificationservice.service.nonstd.NonStdService;
 import gov.cdc.casenotificationservice.service.std.XmlService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.DltHandler;
@@ -28,8 +27,8 @@ import org.springframework.retry.annotation.Backoff;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 public class CNTransportQOutConsumer {
-  private static final Logger logger = LoggerFactory.getLogger(CNTransportQOutConsumer.class);
 
   @Value("${spring.kafka.topic.cn-transportq-out-topic}")
   private String transportOutQTopic;
@@ -89,7 +88,7 @@ public class CNTransportQOutConsumer {
 
     // if config is not found or `configApplied` is false, do not process
     if (config == null || !config.getConfigApplied()) {
-      logger.warn("config not found or is not applied");
+      log.warn("config not found or is not applied");
       return;
     }
 
@@ -99,7 +98,7 @@ public class CNTransportQOutConsumer {
 
     // don't process if there isn't an "after" payload
     if (after == null) {
-      logger.info("Change Data Capture event ignored (no 'after' state)");
+      log.warn("Change Data Capture event ignored (no 'after' state)");
       return;
     }
 
@@ -107,11 +106,11 @@ public class CNTransportQOutConsumer {
 
     // don't process if the transformerService returned null
     if (transformed == null) {
-      logger.info("Message skipped - did not meet the criteria");
+      log.warn("Message skipped - did not meet the criteria");
       return;
     }
 
-    logger.info("Transformed message ready: {}", transformed);
+    log.info("Transformed message ready: {}", transformed);
 
     // Process event found in message
     processEvent(transformed);
@@ -132,7 +131,7 @@ public class CNTransportQOutConsumer {
       String message,
       @Header(KafkaHeaders.RECEIVED_TOPIC) String topic,
       @Header(KafkaHeaders.EXCEPTION_STACKTRACE) String stacktrace) {
-    logger.info("Received DLT message: {}", message);
+    log.info("Received DLT message: {}", message);
     dltService.creatingDlt(message, topic, stacktrace, topic);
   }
 
@@ -147,9 +146,9 @@ public class CNTransportQOutConsumer {
           NonRetryableException,
           StdProcessorServiceException {
     String messageType = messageAfterStdChecker.isStdMessageDetected() ? "std" : "non-std";
-    logger.info("Received {} message", messageType);
+    log.info("Received {} message", messageType);
     if (!configurationService.checkConfigurationAvailable()) {
-      logger.warn("configuration not available, unable to process {} message", messageType);
+      log.warn("configuration not available, unable to process {} message", messageType);
       return;
     }
 
@@ -160,6 +159,6 @@ public class CNTransportQOutConsumer {
           messageAfterStdChecker, configurationService.checkHl7ValidationApplied());
     }
 
-    logger.info("Completed {} message", messageType);
+    log.info("Completed {} message", messageType);
   }
 }

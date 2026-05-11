@@ -14,7 +14,6 @@ import gov.cdc.casenotificationservice.repository.msg.model.CaseNotificationConf
 import gov.cdc.casenotificationservice.service.cntransportqout.StdCheckerTransformerService;
 import gov.cdc.casenotificationservice.service.cntransportqout.UpdateService;
 import gov.cdc.casenotificationservice.service.common.ConfigurationService;
-import gov.cdc.casenotificationservice.service.common.DltService;
 import gov.cdc.casenotificationservice.service.nonstd.NonStdService;
 import gov.cdc.casenotificationservice.service.std.XmlService;
 import org.junit.jupiter.api.AfterEach;
@@ -32,7 +31,6 @@ public class CNTransportQOutConsumerTests {
   @Mock private ConfigurationService configurationServiceMock;
   @Mock private XmlService xmlServiceMock;
   @Mock private NonStdService nonStdServiceMock;
-  @Mock private DltService dltServiceMock;
   @InjectMocks private CNTransportQOutConsumer consumer;
 
   private AutoCloseable mocksAutoClosable;
@@ -45,6 +43,85 @@ public class CNTransportQOutConsumerTests {
   @AfterEach
   void afterEach() throws Exception {
     mocksAutoClosable.close();
+  }
+
+  @Test
+  public void handleMessage_nullConfig()
+      throws IgnorableException,
+          NonRetryableException,
+          NonStdProcessorServiceException,
+          StdProcessorServiceException,
+          NonStdBatchProcessorServiceException {
+    when(caseNotificationConfigRepositoryMock.findNonStdConfig()).thenReturn(null);
+
+    consumer.handleMessage("");
+
+    verify(updateServiceMock, times(0)).updateRecordStatus(anyLong(), anyString());
+    verify(xmlServiceMock, times(0)).mappingXmlStringToObject(any(MessageAfterStdChecker.class));
+    verify(nonStdServiceMock, times(0))
+        .nonStdProcessor(any(MessageAfterStdChecker.class), anyBoolean());
+  }
+
+  @Test
+  public void handleMessage_configNotApplied()
+      throws IgnorableException,
+          NonRetryableException,
+          NonStdProcessorServiceException,
+          StdProcessorServiceException,
+          NonStdBatchProcessorServiceException {
+    CaseNotificationConfig caseNotificationConfig = new CaseNotificationConfig();
+    caseNotificationConfig.setConfigApplied(false);
+    when(caseNotificationConfigRepositoryMock.findNonStdConfig())
+        .thenReturn(caseNotificationConfig);
+
+    consumer.handleMessage("");
+
+    verify(updateServiceMock, times(0)).updateRecordStatus(anyLong(), anyString());
+    verify(xmlServiceMock, times(0)).mappingXmlStringToObject(any(MessageAfterStdChecker.class));
+    verify(nonStdServiceMock, times(0))
+        .nonStdProcessor(any(MessageAfterStdChecker.class), anyBoolean());
+  }
+
+  @Test
+  public void handleMessage_noAfterPayload()
+      throws IgnorableException,
+          NonRetryableException,
+          NonStdProcessorServiceException,
+          StdProcessorServiceException,
+          NonStdBatchProcessorServiceException {
+    CaseNotificationConfig caseNotificationConfig = new CaseNotificationConfig();
+    caseNotificationConfig.setConfigApplied(true);
+    when(caseNotificationConfigRepositoryMock.findNonStdConfig())
+        .thenReturn(caseNotificationConfig);
+
+    consumer.handleMessage("{payload: {}}");
+
+    verify(updateServiceMock, times(0)).updateRecordStatus(anyLong(), anyString());
+    verify(xmlServiceMock, times(0)).mappingXmlStringToObject(any(MessageAfterStdChecker.class));
+    verify(nonStdServiceMock, times(0))
+        .nonStdProcessor(any(MessageAfterStdChecker.class), anyBoolean());
+  }
+
+  @Test
+  public void handleMessage_nullTransformed()
+      throws IgnorableException,
+          NonRetryableException,
+          NonStdProcessorServiceException,
+          StdProcessorServiceException,
+          NonStdBatchProcessorServiceException {
+    CaseNotificationConfig caseNotificationConfig = new CaseNotificationConfig();
+    caseNotificationConfig.setConfigApplied(true);
+    when(caseNotificationConfigRepositoryMock.findNonStdConfig())
+        .thenReturn(caseNotificationConfig);
+
+    when(transformerServiceMock.transform(any(CnTransportqOutValue.class))).thenReturn(null);
+
+    consumer.handleMessage("{payload: {after: {}}}");
+
+    verify(updateServiceMock, times(0)).updateRecordStatus(anyLong(), anyString());
+    verify(xmlServiceMock, times(0)).mappingXmlStringToObject(any(MessageAfterStdChecker.class));
+    verify(nonStdServiceMock, times(0))
+        .nonStdProcessor(any(MessageAfterStdChecker.class), anyBoolean());
   }
 
   @Test

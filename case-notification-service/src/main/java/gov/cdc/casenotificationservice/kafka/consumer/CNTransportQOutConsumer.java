@@ -116,13 +116,13 @@ public class CNTransportQOutConsumer {
     processEvent(transformed);
 
     // Update database record_status_cd
-    if (transformed.isStdMessageDetected()
-        && ("NETSS_MESSAGE_ONLY".equals(transformed.getNetssMessageOnly())
-            || "BOTH".equals(transformed.getNetssMessageOnly()))) {
-      updateService.updateRecordStatus(transformed.getCnTransportqOutUid(), "STD_PROCESSING");
-    } else {
-      updateService.updateRecordStatus(transformed.getCnTransportqOutUid(), "NON_STD_PROCESSING");
-    }
+    String newStatus =
+        transformed.isStdMessageDetected()
+                && ("NETSS_MESSAGE_ONLY".equals(transformed.getNetssMessageOnly())
+                    || "BOTH".equals(transformed.getNetssMessageOnly()))
+            ? "STD_PROCESSING"
+            : "NON_STD_PROCESSING";
+    updateService.updateRecordStatus(transformed.getCnTransportqOutUid(), newStatus);
   }
 
   /** Process DLT messages through the {@link DltService}. */

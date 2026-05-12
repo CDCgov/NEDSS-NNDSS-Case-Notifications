@@ -17,3 +17,10 @@ WHERE messageId LIKE 'NOT-PERF-%';
 
 PRINT CONCAT('Deleted ', @@ROWCOUNT, ' rows from TransportQ_out');
 GO
+
+-- Delete any dlt rows
+USE NBS_MSGOUTE;
+DELETE FROM case_notification_dlt;
+
+PRINT CONCAT('Deleted ', @@ROWCOUNT, ' rows from case_notification_dlt');
+GO

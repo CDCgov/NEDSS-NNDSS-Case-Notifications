@@ -31,6 +31,9 @@ public class KafkaConsumerConfig {
   @Value("${spring.kafka.group-id.non-std-group-id}")
   private String nonStdGroupId;
 
+  @Value("${spring.kafka.group-id.cn-transportq-out-group-id}")
+  private String cnTransportQOutGroupId;
+
   private Map<String, Object> baseConsumerConfigs(String groupId) {
     Map<String, Object> config = new HashMap<>();
     config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
@@ -47,7 +50,7 @@ public class KafkaConsumerConfig {
         10 * 1024 * 1024); // Fetch up to 10MB per partition
     config.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 500); // Max 500 records per poll
     config.put(
-        ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG, 600000); // Allow 5 minutes for processing
+        ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG, 600000); // Allow 10 minutes for processing
     config.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, 30000); // 30-second session timeout
     config.put(ConsumerConfig.HEARTBEAT_INTERVAL_MS_CONFIG, 10000); // Heartbeat every 10 seconds
     config.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, true); // Manual commit
@@ -79,5 +82,23 @@ public class KafkaConsumerConfig {
   public ConcurrentKafkaListenerContainerFactory<String, String>
       kafkaListenerContainerFactoryConsumerForNonStd() {
     return createContainerFactory(nonStdGroupId);
+  }
+
+  @Bean
+  public ConcurrentKafkaListenerContainerFactory<String, String>
+      kafkaListenerContainerFactoryDebeziumConsumer() {
+    Map<String, Object> consumerConfig = baseConsumerConfigs(cnTransportQOutGroupId);
+    // n.b. was disabled when this container factory was a part of `data-extraction-service`
+    consumerConfig.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
+
+    DefaultKafkaConsumerFactory<Object, Object> kafkaConsumerFactory =
+        new DefaultKafkaConsumerFactory<>(consumerConfig);
+    ConcurrentKafkaListenerContainerFactory<String, String>
+        concurrentKafkaListenerContainerFactory = new ConcurrentKafkaListenerContainerFactory<>();
+
+    concurrentKafkaListenerContainerFactory.setConsumerFactory(kafkaConsumerFactory);
+    concurrentKafkaListenerContainerFactory.setConcurrency(thread);
+
+    return concurrentKafkaListenerContainerFactory;
   }
 }

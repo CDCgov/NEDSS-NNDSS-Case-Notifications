@@ -8,24 +8,24 @@ import gov.cdc.casenotificationservice.model.view_model.TransportOutVM;
 import gov.cdc.casenotificationservice.repository.msg.CaseNotificationDltRepository;
 import gov.cdc.casenotificationservice.repository.msg.NetssTransportQOutRepository;
 import gov.cdc.casenotificationservice.repository.msg.TransportQOutRepository;
-import gov.cdc.casenotificationservice.repository.odse.CNTraportqOutRepository;
+import gov.cdc.casenotificationservice.repository.odse.CNTransportQOutRepository;
 import gov.cdc.casenotificationservice.repository.odse.model.CNTransportqOut;
 import gov.cdc.casenotificationservice.service.common.interfaces.IStatusService;
 import org.springframework.stereotype.Service;
 
 @Service
 public class StatusService implements IStatusService {
-  private final CNTraportqOutRepository cnTraportqOutRepository;
+  private final CNTransportQOutRepository cnTransportqOutRepository;
   private final TransportQOutRepository transportQOutRepository;
   private final NetssTransportQOutRepository netssTransportQOutRepository;
   private final CaseNotificationDltRepository caseNotificationDltRepository;
 
   public StatusService(
-      CNTraportqOutRepository cnTraportqOutRepository,
+      CNTransportQOutRepository cnTransportqOutRepository,
       TransportQOutRepository transportQOutRepository,
       NetssTransportQOutRepository netssTransportQOutRepository,
       CaseNotificationDltRepository caseNotificationDltRepository) {
-    this.cnTraportqOutRepository = cnTraportqOutRepository;
+    this.cnTransportqOutRepository = cnTransportqOutRepository;
     this.transportQOutRepository = transportQOutRepository;
     this.netssTransportQOutRepository = netssTransportQOutRepository;
     this.caseNotificationDltRepository = caseNotificationDltRepository;
@@ -34,7 +34,7 @@ public class StatusService implements IStatusService {
   public ApiStatusResponseModel getProcessedStatus(Long cnTraportqOutId) {
     ApiStatusResponseModel aStatusResponseModel = new ApiStatusResponseModel();
 
-    var cnTransportOpt = cnTraportqOutRepository.findById(cnTraportqOutId);
+    var cnTransportOpt = cnTransportqOutRepository.findById(cnTraportqOutId);
     if (cnTransportOpt.isPresent()) {
       CNTransportqOut cnTraportqOut = cnTransportOpt.get();
 

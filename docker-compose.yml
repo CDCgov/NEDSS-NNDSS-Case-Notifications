@@ -41,17 +41,3 @@ services:
       NND_DE_SECRET: ${NND_DE_SECRET}
     depends_on:
       - kafka
-
-  data-extraction-service:
-    build:
-      context: .
-      dockerfile: data-extraction-service/Dockerfile
-    ports:
-      - "8090:8090"
-    environment:
-      NBS_DBSERVER: host.docker.internal:1433
-      NBS_DBUSER: ${NBS_DBUSER}
-      NBS_DBPASSWORD: ${NBS_DBPASSWORD}
-      KAFKA_BOOTSTRAP_SERVER: kafka:9092
-    depends_on:
-      - kafka

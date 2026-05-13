@@ -6,7 +6,7 @@ import gov.cdc.casenotificationservice.exception.DltServiceException;
 import gov.cdc.casenotificationservice.kafka.producer.CaseNotificationProducer;
 import gov.cdc.casenotificationservice.repository.msg.CaseNotificationDltRepository;
 import gov.cdc.casenotificationservice.repository.msg.model.CaseNotificationDlt;
-import gov.cdc.casenotificationservice.repository.odse.CNTraportqOutRepository;
+import gov.cdc.casenotificationservice.repository.odse.CNTransportQOutRepository;
 import gov.cdc.casenotificationservice.repository.odse.model.CNTransportqOut;
 import java.sql.Timestamp;
 import java.util.List;
@@ -25,7 +25,7 @@ public class DltServiceTest {
 
   @Mock private CaseNotificationDltRepository dltRepository;
 
-  @Mock private CNTraportqOutRepository cnTraportqOutRepository;
+  @Mock private CNTransportQOutRepository cnTransportqOutRepository;
 
   @Mock private CaseNotificationProducer producer;
 
@@ -44,7 +44,7 @@ public class DltServiceTest {
     CNTransportqOut mockTransport = new CNTransportqOut();
     mockTransport.setMessagePayload("mock-payload");
 
-    when(cnTraportqOutRepository.findTopByRecordUid(12345L)).thenReturn(mockTransport);
+    when(cnTransportqOutRepository.findTopByRecordUid(12345L)).thenReturn(mockTransport);
 
     dltService.creatingDlt(jsonPayload, "non-std-topic", "stacktrace", "root");
 
@@ -100,7 +100,7 @@ public class DltServiceTest {
     CNTransportqOut mockTransport = new CNTransportqOut();
     mockTransport.setMessagePayload("mock-payload");
     mockTransport.setCnTransportqOutUid(123L);
-    when(cnTraportqOutRepository.findTopByRecordUid(123L)).thenReturn(mockTransport);
+    when(cnTransportqOutRepository.findTopByRecordUid(123L)).thenReturn(mockTransport);
     dltService.reprocessingCaseNotification(jsonPayload, uuid);
 
     verify(dltRepository).save(any(CaseNotificationDlt.class));

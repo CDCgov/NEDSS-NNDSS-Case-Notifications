@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CNTraportqOutRepository extends JpaRepository<CNTransportqOut, Long> {
+public interface CNTransportQOutRepository extends JpaRepository<CNTransportqOut, Long> {
   @Query(
       value = "SELECT TOP 1 * FROM dbo.CN_transportq_out WHERE record_status_cd = :recordStatusCd",
       nativeQuery = true)

@@ -10,9 +10,8 @@ The pipeline begins with a **Debezium source connector** configured on the `ODSE
 
 - Any new data inserted into this table is detected by the connector.
 - The connector publishes the data to a **Kafka topic**.
-- This topic is consumed by the **Data Extraction** service.
 
-The **Case Notification** process depends on predefined configurations stored in the `MSOUTE..Case_Notification_Config` table.
+The **Case Notification** process depends on predefined configurations stored in the `MSOUTE..NBS_Case_Notification_Config` table.
 
 - This table contains all essential settings required for the pipeline to operate correctly.
 - It includes **PHINMS properties** that are critical for downstream processing.
@@ -30,21 +29,6 @@ The **Case Notification** process depends on predefined configurations stored in
     - For further investigation by analysts.
 
 ---
-
-## Service Requirements
-
-To function correctly, **all three services** must be available:
-
-- **Data Extraction**
-- **Case Notification**
-- **HL7 Parser**
-
----
-
-## Data Extraction
-
-- Continuously extracts and categorizes data.
-- Sends data downstream using Debezium and Kafka.
 
 ### Requirements:
 
@@ -71,7 +55,7 @@ To function correctly, **all three services** must be available:
     - `NetssTransportQOut`
 - Invalid events are ignored.
 - Faulty MMG or STD events are pushed to:
-    - `Case_Notification_DLT`
+    - `case_notification_dlt`
 
 ### API Capabilities:
 
@@ -101,17 +85,6 @@ To function correctly, **all three services** must be available:
 ---
 
 ## ⚙️ Required Environment Variables
-
-### Data Extraction
-
-| Variable              | Description              |
-|-----------------------|--------------------------|
-| `NBS_DBSERVER`        | Database URL             |
-| `NBS_DBUSER`          | Database username        |
-| `NBS_DBPASSWORD`      | Database password        |
-| `KAFKA_BOOTSTRAP_SERVER` | Kafka URL              |
-
----
 
 ### Case Notification
 
@@ -170,7 +143,6 @@ To function correctly, **all three services** must be available:
     - **Kafka** on port `9092`
     - **Kafka UI** on port `8080`
     - **Case Notification Service** on port `8093`
-    - **Data Extraction Service** on port `8090`
 
 3. To run in the background:
 

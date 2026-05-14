@@ -40,7 +40,7 @@ jobs:
   call-build-microservice-container-workflow:
     uses: CDCgov/NEDSS-Workflows/.github/workflows/Release-gradle-microservice-container.yaml@main
     with:
-      microservice_name: nnd-case-notification-service/${{inputs.microservice_name}}
+      microservice_name: ${{inputs.microservice_name}}
       existing-image-tag: ${{inputs.existing-image-tag}}
       build-new-container: ${{inputs.build-new-container}}
       dockerfile_relative_path: ${{inputs.dockerfile_relative_path}}
@@ -52,14 +52,14 @@ jobs:
       GIT_USER_NAME: ${{secrets.GIT_USER_NAME}}
       HELM_TOKEN: ${{secrets.HELM_TOKEN}}
 
-  call-update-helm:
-    needs: call-build-microservice-container-workflow
-    uses: CDCgov/NEDSS-Workflows/.github/workflows/Update-helm-charts.yaml@main
-    with:
-      microservice_name: nnd-case-notification-service/${{inputs.microservice_name}}
-      values_file_with_path: ${{inputs.values_file_with_path}}
-      new_image_tag: ${{ needs.call-build-microservice-container-workflow.outputs.output_image_tag }}
-    secrets:
-      GIT_USER_EMAIL: ${{secrets.GIT_USER_EMAIL}}
-      GIT_USER_NAME: ${{secrets.GIT_USER_NAME}}
-      HELM_TOKEN: ${{secrets.HELM_TOKEN}}
+  # call-update-helm:
+  #   needs: call-build-microservice-container-workflow
+  #   uses: CDCgov/NEDSS-Workflows/.github/workflows/Update-helm-charts.yaml@main
+  #   with:
+  #     microservice_name: nnd-case-notification-service/${{inputs.microservice_name}}
+  #     values_file_with_path: ${{inputs.values_file_with_path}}
+  #     new_image_tag: ${{ needs.call-build-microservice-container-workflow.outputs.output_image_tag }}
+  #   secrets:
+  #     GIT_USER_EMAIL: ${{secrets.GIT_USER_EMAIL}}
+  #     GIT_USER_NAME: ${{secrets.GIT_USER_NAME}}
+  #     HELM_TOKEN: ${{secrets.HELM_TOKEN}}

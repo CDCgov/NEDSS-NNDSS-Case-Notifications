@@ -89,28 +89,13 @@ public class CNTransportQOutConsumerTests {
   }
 
   @Test
-  public void handleMessage_messageNullOrEmpty()
+  public void handleMessage_messageEmptyOrWithNoPayload()
       throws IgnorableException,
           NonRetryableException,
           NonStdProcessorServiceException,
           StdProcessorServiceException,
           NonStdBatchProcessorServiceException {
-    assertThrows(NonRetryableException.class, () -> consumer.handleMessage(null));
-    assertThrows(NonRetryableException.class, () -> consumer.handleMessage(""));
-
-    verify(updateServiceMock, times(0)).updateRecordStatus(anyLong(), anyString());
-    verify(xmlServiceMock, times(0)).mappingXmlStringToObject(any(MessageAfterStdChecker.class));
-    verify(nonStdServiceMock, times(0))
-        .nonStdProcessor(any(MessageAfterStdChecker.class), anyBoolean());
-  }
-
-  @Test
-  public void handleMessage_messageWithNoPayload()
-      throws IgnorableException,
-          NonRetryableException,
-          NonStdProcessorServiceException,
-          StdProcessorServiceException,
-          NonStdBatchProcessorServiceException {
+    assertThrows(NonRetryableException.class, () -> consumer.handleMessage(" "));
     assertThrows(NonRetryableException.class, () -> consumer.handleMessage("{}"));
 
     verify(updateServiceMock, times(0)).updateRecordStatus(anyLong(), anyString());

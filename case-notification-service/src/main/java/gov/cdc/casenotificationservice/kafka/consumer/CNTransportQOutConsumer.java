@@ -86,10 +86,6 @@ public class CNTransportQOutConsumer {
           NonStdBatchProcessorServiceException {
     CaseNotificationConfig config = caseNotificationConfigRepository.findNonStdConfig();
 
-    if (message == null || message.isEmpty()) {
-      throw new NonRetryableException("passed in JSON is null or empty");
-    }
-
     if (config == null || !config.getConfigApplied()) {
       throw new RuntimeException("config not found or is not applied");
     }
@@ -97,8 +93,9 @@ public class CNTransportQOutConsumer {
     CnTransportqOutMessage cnTransportqOutMessage =
         new Gson().fromJson(message, CnTransportqOutMessage.class);
 
-    if (cnTransportqOutMessage.getPayload() == null) {
-      throw new NonRetryableException("payload missing from passed in message");
+    if (cnTransportqOutMessage == null || cnTransportqOutMessage.getPayload() == null) {
+      throw new NonRetryableException(
+          "message null/empty or payload missing from passed in message");
     }
 
     CnTransportqOutValue after = cnTransportqOutMessage.getPayload().getAfter();

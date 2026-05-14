@@ -86,47 +86,38 @@ public class CNTransportQOutConsumer {
           NonStdBatchProcessorServiceException {
     CaseNotificationConfig config = caseNotificationConfigRepository.findNonStdConfig();
 
-    // if config is not found or `configApplied` is false, do not process
-    if (config == null || !config.getConfigApplied()) {
-      log.warn("config not found or is not applied");
-      return;
+    if (message == null || message.isEmpty()) {
+      throw new NonRetryableException("passed in JSON is null or empty");
     }
 
-    if (message == null || message.isEmpty()) {
-      log.warn("passed in JSON is null or empty");
-      return;
+    if (config == null || !config.getConfigApplied()) {
+      throw new RuntimeException("config not found or is not applied");
     }
 
     CnTransportqOutMessage cnTransportqOutMessage =
         new Gson().fromJson(message, CnTransportqOutMessage.class);
 
     if (cnTransportqOutMessage.getPayload() == null) {
-      log.warn("payload missing from passed in message");
-      return;
+      throw new NonRetryableException("payload missing from passed in message");
     }
 
     CnTransportqOutValue after = cnTransportqOutMessage.getPayload().getAfter();
 
-    // don't process if there isn't an "after" payload
     if (after == null) {
-      log.warn("Change Data Capture event ignored (no 'after' state)");
-      return;
+      throw new NonRetryableException("payload does not contain an after state");
     }
 
     MessageAfterStdChecker transformed = transformerService.transform(after);
 
-    // don't process if the transformerService returned null
     if (transformed == null) {
-      log.warn("Message skipped - did not meet the criteria");
-      return;
+      throw new NonRetryableException(
+          "CnTransportqOutValue to MessageAfterStdChecker conversion yieled null");
     }
 
     log.info("Transformed message ready: {}", transformed);
 
-    // Process event found in message
     processEvent(transformed);
 
-    // Update database record_status_cd
     String newStatus =
         transformed.isStdMessageDetected()
                 && ("NETSS_MESSAGE_ONLY".equals(transformed.getNetssMessageOnly())

@@ -92,8 +92,19 @@ public class CNTransportQOutConsumer {
       return;
     }
 
+    if (message == null || message.isEmpty()) {
+      log.warn("passed in JSON is null or empty");
+      return;
+    }
+
     CnTransportqOutMessage cnTransportqOutMessage =
         new Gson().fromJson(message, CnTransportqOutMessage.class);
+
+    if (cnTransportqOutMessage.getPayload() == null) {
+      log.warn("payload missing from passed in message");
+      return;
+    }
+
     CnTransportqOutValue after = cnTransportqOutMessage.getPayload().getAfter();
 
     // don't process if there isn't an "after" payload

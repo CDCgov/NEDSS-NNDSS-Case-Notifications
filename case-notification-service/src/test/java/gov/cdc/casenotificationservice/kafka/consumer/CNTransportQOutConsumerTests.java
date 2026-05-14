@@ -1,5 +1,6 @@
 package gov.cdc.casenotificationservice.kafka.consumer;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -83,6 +84,47 @@ public class CNTransportQOutConsumerTests {
   }
 
   @Test
+  public void handleMessage_nullOrEmpty()
+      throws IgnorableException,
+          NonRetryableException,
+          NonStdProcessorServiceException,
+          StdProcessorServiceException,
+          NonStdBatchProcessorServiceException {
+    CaseNotificationConfig caseNotificationConfig = new CaseNotificationConfig();
+    caseNotificationConfig.setConfigApplied(true);
+    when(caseNotificationConfigRepositoryMock.findNonStdConfig())
+        .thenReturn(caseNotificationConfig);
+
+    assertDoesNotThrow(() -> consumer.handleMessage(null));
+    assertDoesNotThrow(() -> consumer.handleMessage(""));
+
+    verify(updateServiceMock, times(0)).updateRecordStatus(anyLong(), anyString());
+    verify(xmlServiceMock, times(0)).mappingXmlStringToObject(any(MessageAfterStdChecker.class));
+    verify(nonStdServiceMock, times(0))
+        .nonStdProcessor(any(MessageAfterStdChecker.class), anyBoolean());
+  }
+
+  @Test
+  public void handleMessage_noPayload()
+      throws IgnorableException,
+          NonRetryableException,
+          NonStdProcessorServiceException,
+          StdProcessorServiceException,
+          NonStdBatchProcessorServiceException {
+    CaseNotificationConfig caseNotificationConfig = new CaseNotificationConfig();
+    caseNotificationConfig.setConfigApplied(true);
+    when(caseNotificationConfigRepositoryMock.findNonStdConfig())
+        .thenReturn(caseNotificationConfig);
+
+    assertDoesNotThrow(() -> consumer.handleMessage("{}"));
+
+    verify(updateServiceMock, times(0)).updateRecordStatus(anyLong(), anyString());
+    verify(xmlServiceMock, times(0)).mappingXmlStringToObject(any(MessageAfterStdChecker.class));
+    verify(nonStdServiceMock, times(0))
+        .nonStdProcessor(any(MessageAfterStdChecker.class), anyBoolean());
+  }
+
+  @Test
   public void handleMessage_noAfterPayload()
       throws IgnorableException,
           NonRetryableException,
@@ -94,7 +136,7 @@ public class CNTransportQOutConsumerTests {
     when(caseNotificationConfigRepositoryMock.findNonStdConfig())
         .thenReturn(caseNotificationConfig);
 
-    consumer.handleMessage("{payload: {}}");
+    assertDoesNotThrow(() -> consumer.handleMessage("{payload: {}}"));
 
     verify(updateServiceMock, times(0)).updateRecordStatus(anyLong(), anyString());
     verify(xmlServiceMock, times(0)).mappingXmlStringToObject(any(MessageAfterStdChecker.class));

@@ -1,4 +1,4 @@
-FROM amazoncorretto:21 as builder
+FROM amazoncorretto:25 as builder
 WORKDIR /usr/src/dataextractionservice
 #Copy project config
 COPY gradle gradle
@@ -17,7 +17,7 @@ WORKDIR /usr/src/dataextractionservice
 #Build report service along with any required libraries
 RUN ./gradlew :data-extraction-service:buildNeeded -x test --no-daemon
 
-FROM amazoncorretto:21
+FROM amazoncorretto:25
 
 COPY --from=builder /usr/src/dataextractionservice/data-extraction-service/build/libs/data-extraction-service*.jar data-extraction-service.jar
 

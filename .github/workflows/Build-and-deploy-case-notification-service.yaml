@@ -45,11 +45,9 @@ jobs:
       environment_classifier: ${{ needs.extract-version-suffix.outputs.image_tag }}
       java_version: "21"
     secrets:
-      CDC_NBS_SANDBOX_SHARED_SERVICES_ACCOUNTID: ${{secrets.CDC_NBS_SANDBOX_SHARED_SERVICES_ACCOUNTID}}
-      ECR_REPO_BASE_NAME: ${{secrets.ECR_REPO_BASE_NAME}}
-      GIT_USER_EMAIL: ${{secrets.GIT_USER_EMAIL}}
-      GIT_USER_NAME: ${{secrets.GIT_USER_NAME}}
-      HELM_TOKEN: ${{secrets.HELM_TOKEN}}
+      NBS_ACCOUNTID: ${{secrets.NBS_ACCOUNTID}}
+      HARBOR_ROBOT_USERNAME: ${{secrets.HARBOR_ROBOT_USERNAME}}
+      HARBOR_ROBOT_SECRET: ${{secrets.HARBOR_ROBOT_SECRET}}
 
   call-update-helm-case-notification-service:
     name: Request DEV deployment

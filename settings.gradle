@@ -6,8 +6,6 @@
  */
 
 rootProject.name = 'NEDSS-NNDSS-Case-Notifications'
-include 'data-extraction-service'
-
 include 'case-notification-service'
 
 include ':xml-hl7-parser'

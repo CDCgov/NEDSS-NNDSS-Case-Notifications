@@ -6,6 +6,7 @@ on:
       - master
       - update-github-action-**
     paths:
+      - '.github/workflows/**'
       - 'case-notification-service/**'
 jobs:
   extract-version-suffix:
@@ -39,27 +40,16 @@ jobs:
     name: Build Container
     needs: extract-version-suffix
     uses: CDCgov/NEDSS-Workflows/.github/workflows/Build-gradle-microservice-container.yaml@main
+    permissions:
+      id-token: write
+      contents: read
+      security-events: write
     with:
-      microservice_name: nnd-case-notification-service/case-notification-service
+      microservice_name: nbs7-case-notification-service
       dockerfile_relative_path: -f ./case-notification-service/Dockerfile .
       environment_classifier: ${{ needs.extract-version-suffix.outputs.image_tag }}
       java_version: "21"
     secrets:
-      CDC_NBS_SANDBOX_SHARED_SERVICES_ACCOUNTID: ${{secrets.CDC_NBS_SANDBOX_SHARED_SERVICES_ACCOUNTID}}
-      ECR_REPO_BASE_NAME: ${{secrets.ECR_REPO_BASE_NAME}}
-      GIT_USER_EMAIL: ${{secrets.GIT_USER_EMAIL}}
-      GIT_USER_NAME: ${{secrets.GIT_USER_NAME}}
-      HELM_TOKEN: ${{secrets.HELM_TOKEN}}
-
-  call-update-helm-case-notification-service:
-    name: Request DEV deployment
-    needs: call-build-microservice-container-workflow
-    uses: CDCgov/NEDSS-Workflows/.github/workflows/Update-helm-charts.yaml@main
-    with:
-      microservice_name: case-notification-service
-      values_file_with_path: charts/case-notification-service/values-dts1.yaml
-      new_image_tag: ${{ needs.call-build-microservice-container-workflow.outputs.output_image_tag }}
-    secrets:
-      GIT_USER_EMAIL: ${{secrets.GIT_USER_EMAIL}}
-      GIT_USER_NAME: ${{secrets.GIT_USER_NAME}}
-      HELM_TOKEN: ${{secrets.HELM_TOKEN}}
+      NBS_ACCOUNTID: ${{secrets.NBS_ACCOUNTID}}
+      HARBOR_ROBOT_USERNAME: ${{secrets.HARBOR_ROBOT_USERNAME}}
+      HARBOR_ROBOT_SECRET: ${{secrets.HARBOR_ROBOT_SECRET}}

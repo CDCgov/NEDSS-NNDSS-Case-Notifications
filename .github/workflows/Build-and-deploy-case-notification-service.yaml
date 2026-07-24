@@ -52,6 +52,9 @@ jobs:
       GIT_USER_EMAIL: ${{secrets.GIT_USER_EMAIL}}
       GIT_USER_NAME: ${{secrets.GIT_USER_NAME}}
       HELM_TOKEN: ${{secrets.HELM_TOKEN}}
+      NBS_ACCOUNTID: ${{secrets.NBS_ACCOUNTID}}
+      HARBOR_ROBOT_USERNAME: ${{secrets.HARBOR_ROBOT_USERNAME}}
+      HARBOR_ROBOT_SECRET: ${{secrets.HARBOR_ROBOT_SECRET}}
 
   call-update-helm-case-notification-service:
     name: Request DEV deployment

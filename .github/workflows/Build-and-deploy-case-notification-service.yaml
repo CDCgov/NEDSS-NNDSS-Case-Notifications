@@ -41,6 +41,10 @@ jobs:
     name: Build Container
     needs: extract-version-suffix
     uses: CDCgov/NEDSS-Workflows/.github/workflows/Build-gradle-microservice-container.yaml@main
+    permissions:
+      id-token: write
+      contents: read
+      security-events: write
     with:
       microservice_name: nbs7-case-notification-service
       dockerfile_relative_path: -f ./case-notification-service/Dockerfile .

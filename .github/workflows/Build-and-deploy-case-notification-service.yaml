@@ -7,7 +7,7 @@ on:
       - update-github-action-**
       - tdb/cn-bump
     paths:
-      - .github/workflows/**''
+      - '.github/workflows/**'
       - 'case-notification-service/**'
 jobs:
   extract-version-suffix:

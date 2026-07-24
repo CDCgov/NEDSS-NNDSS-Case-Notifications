@@ -54,16 +54,3 @@ jobs:
       NBS_ACCOUNTID: ${{secrets.NBS_ACCOUNTID}}
       HARBOR_ROBOT_USERNAME: ${{secrets.HARBOR_ROBOT_USERNAME}}
       HARBOR_ROBOT_SECRET: ${{secrets.HARBOR_ROBOT_SECRET}}
-
-  call-update-helm-case-notification-service:
-    name: Request DEV deployment
-    needs: call-build-microservice-container-workflow
-    uses: CDCgov/NEDSS-Workflows/.github/workflows/Update-helm-charts.yaml@main
-    with:
-      microservice_name: case-notification-service
-      values_file_with_path: charts/case-notification-service/values-dts1.yaml
-      new_image_tag: ${{ needs.call-build-microservice-container-workflow.outputs.output_image_tag }}
-    secrets:
-      GIT_USER_EMAIL: ${{secrets.GIT_USER_EMAIL}}
-      GIT_USER_NAME: ${{secrets.GIT_USER_NAME}}
-      HELM_TOKEN: ${{secrets.HELM_TOKEN}}

@@ -1,5 +1,9 @@
 FROM amazoncorretto:21 as builder
 WORKDIR /usr/src/casenotificationservice
+
+# Install required build tools
+RUN yum -y install findutils && yum clean all
+
 #Copy project config
 COPY gradle gradle
 COPY gradlew .

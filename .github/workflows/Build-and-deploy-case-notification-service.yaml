@@ -5,6 +5,7 @@ on:
       - main
       - master
       - update-github-action-**
+      - tdb/cn-bump
     paths:
       - 'case-notification-service/**'
 jobs:

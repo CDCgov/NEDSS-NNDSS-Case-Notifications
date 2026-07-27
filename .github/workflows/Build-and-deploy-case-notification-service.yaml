@@ -5,6 +5,7 @@ on:
       - main
       - master
       - update-github-action-**
+      - tdb/cve
     paths:
       - '.github/workflows/**'
       - 'case-notification-service/**'

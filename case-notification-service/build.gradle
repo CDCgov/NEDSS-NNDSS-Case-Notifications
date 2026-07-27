@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.5.11'
+    id 'org.springframework.boot' version '3.5.14'
     id 'io.spring.dependency-management' version '1.1.6'
 }
 
@@ -71,7 +71,7 @@ dependencies {
 
 dependencyManagement {
     dependencies {
-        dependency 'org.apache.tomcat.embed:tomcat-embed-core:11.0.15'
+        dependency 'org.apache.tomcat.embed:tomcat-embed-core:11.0.22'
         dependency 'org.apache.tomcat.embed:tomcat-embed-el:10.1.42'
         dependency 'org.apache.tomcat.embed:tomcat-embed-websocket:10.1.42'
     }

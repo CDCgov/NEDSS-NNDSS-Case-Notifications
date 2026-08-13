@@ -5,6 +5,7 @@ on:
       - main
       - master
       - update-github-action-**
+      - tdb/app-992-vulns
     paths:
       - '.github/workflows/**'
       - 'case-notification-service/**'

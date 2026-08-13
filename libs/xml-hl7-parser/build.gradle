@@ -20,8 +20,8 @@ configurations.all {
 
 dependencies {
     // HL7 parsing
-    api 'ca.uhn.hapi:hapi-base:2.5.1'
-    api 'ca.uhn.hapi:hapi-structures-v25:2.5.1'
+    api 'ca.uhn.hapi:hapi-base:2.6.0'
+    api 'ca.uhn.hapi:hapi-structures-v25:2.6.0'
 
     // JAXB for XML binding
     api 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.2'
